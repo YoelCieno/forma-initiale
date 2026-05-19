@@ -1,23 +1,23 @@
 <script setup lang="ts">
 // ref, onMounted auto-imported by unplugin-auto-import
-import type { Product } from '@repo/domain'
-import { GetProductsAdapter } from '@repo/infra'
+import type { Product } from "@repo/domain";
+import { GetProductsAdapter } from "@repo/infra";
 
-const products = ref<Product[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+const products = ref<Product[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
-const adapter = new GetProductsAdapter()
+const adapter = new GetProductsAdapter();
 
 onMounted(async () => {
   try {
-    products.value = await adapter.execute()
+    products.value = await adapter.execute();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to load products'
+    error.value = e instanceof Error ? e.message : "Failed to load products";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 </script>
 
 <template>
