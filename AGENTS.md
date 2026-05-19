@@ -16,10 +16,10 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 | cmd | what |
 |---|---|
 | `bun run dev` | turbo dev — all apps, persistent |
-| `bun run build` | turbo build — vite build each app (web: `vite build`, docs: `tsc && vite build`) |
+| `bun run build` | turbo build — vite build each app (web-vue: `vite build`, docs: `tsc && vite build`) |
 | `bun run lint` | turbo lint — eslint all packages |
 | `bun run format` | prettier on `*.{ts,tsx,md}` |
-| `cd apps/web && bun run dev` | web only |
+| `cd apps/web-vue && bun run dev` | web-vue only |
 | `cd apps/docs && bun run dev` | docs only |
 | `bun add <pkg>` | add dep (bun workspace-aware) |
 | `bun add -d <pkg>` | dev dep |
@@ -28,7 +28,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 
 ```
 apps/
-  web/        — Vite 5 Vue 3 app (Vue, auto-import, components resolver)
+  web-vue/    — Vite 5 Vue 3 app (Vue, auto-import, components resolver)
   docs/       — Vite 5 TS app → VitePress (planned, phase 1+)
 packages/
   domain/     — pure TS models/ports (@repo/domain)
@@ -44,14 +44,14 @@ Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
 
 - `packages/domain/` — pure TS models (no framework deps) — EXISTS
 - `packages/infra/` — adapters implementing domain contracts — EXISTS
-- `apps/web/` → Vue 3 (Vite, unplugin-auto-import, unplugin-vue-components) — ACTIVE
+- `apps/web-vue/` → Vue 3 (Vite, unplugin-auto-import, unplugin-vue-components) — ACTIVE
 - `apps/docs/` → VitePress — PLANNED
 - `packages/ui/` → shared Vue 3 SFCs — IN PROGRESS
 
 ## Key config details
 
 - **TypeScript:** 5.5.4, `noEmit: true` (Vite handles bundling, TS is type-check only)
-- **strictNullChecks:** ONLY in `apps/web/tsconfig.json` (local override), NOT in base
+- **strictNullChecks:** ONLY in `apps/web-vue/tsconfig.json` (local override), NOT in base
 - **ESLint 8 CJS:** `packages/eslint-config/index.js` uses `module.exports` (CJS in ESM project; works because ESLint loads via its own resolver)
 - **Root `.eslintrc.js`:** extends `@repo/eslint-config/index.js`, sets `root: true`
 - **App build:** web → `vite build` (Vue SFCs need `vue-tsc` for typecheck, not yet added). docs → `tsc && vite build`
@@ -76,14 +76,14 @@ Import from apps: `import { ... } from '@repo/ui/counter'`
 
 ## Gotchas & quirks
 
-1. **strictNullChecks is scoped** — only `apps/web` overrides it. New packages/apps likely need the same override.
+1. **strictNullChecks is scoped** — only `apps/web-vue` overrides it. New packages/apps likely need the same override.
 2. **Vue type checking** — `tsc` doesn't process `.vue` files. `vue-tsc` would be needed for type checking Vue SFCs; not yet added (Phase 0 uses Vite esbuild transpilation only).
 3. **ESLint hoisting** — bun keeps `@typescript-eslint/*` plugins isolated inside `eslint-config/node_modules`. Root `devDependencies` ensures all packages can resolve them. If adding new ESLint plugins, mirror in root devDeps.
 4. **App build divergence** — web: `vite build` (no tsc). docs: `tsc && vite build`. Turbo `^build` handles the dep graph, but individual build scripts differ.
 5. **TypeScript config packages** — `vite.json` extends `base.json`. `base.json` has `strict: true` but `noUnusedLocals/noUnusedParameters: false` (those are in `vite.json` instead).
 6. **`.gitignore`** covers `dist`, `dist-ssr`, `*.local`, `.env`, `.turbo`, `node_modules`.
-7. **`apps/web/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
-8. **`apps/web/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
+7. **`apps/web-vue/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
+8. **`apps/web-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
 
 ## Agent rules
 
