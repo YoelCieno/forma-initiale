@@ -1,23 +1,6 @@
 <script setup lang="ts">
-// ref, onMounted auto-imported by unplugin-auto-import
-import type { Product } from "@repo/domain";
-import { GetProductsAdapter } from "@repo/infra";
-
-const products = ref<Product[]>([]);
-const loading = ref(true);
-const error = ref<string | null>(null);
-
-const adapter = new GetProductsAdapter();
-
-onMounted(async () => {
-  try {
-    products.value = await adapter.execute();
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : "Failed to load products";
-  } finally {
-    loading.value = false;
-  }
-});
+// useProducts auto-imported by unplugin-auto-import (from src/composables/)
+const { products, loading, error } = useProducts();
 </script>
 
 <template>

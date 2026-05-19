@@ -1,6 +1,6 @@
 # Phase 1 — Docs & UI Layer
 
-**Status:** 🔍 RESEARCH
+**Status:** 🔧 IN PROGRESS
 
 ## Goal
 Find KISSME docs solution (agnostic, simple), create composables layer for web-vue, finalize framework-agnostic UI components.
@@ -30,9 +30,11 @@ Decision: KISSME — lowest effort for good docs.
 ## Tasks
 
 - [x] Research and choose docs solution → Astro + Starlight
-- [ ] Replace `apps/docs` with Astro + Starlight
-- [ ] Audit `packages/ui/` — ensure zero framework deps
+- [x] Replace `apps/docs` with Astro + Starlight
+- [x] Audit `packages/ui/` — clean, zero framework deps
 - [ ] Create composables layer (`apps/web-vue/src/composables/`) if needed
+- [ ] Integrate Vite+ (vp CLI) — replace raw Vite CLI, update turbo.json
+- [ ] Keep deps updated — check Astro, Starlight, Vite versions periodically
 - [ ] Verify build + lint passes
 
 ## Decisions
@@ -41,3 +43,5 @@ Decision: KISSME — lowest effort for good docs.
 |----------|--------|
 | Docs framework | Astro + Starlight ✅ |
 | packages/ui paradigm | Framework‑agnostic (vanilla TS) |
+| Vite+ integration | Phase 1 — pending |
+| Deps maintenance | Recurring task |
