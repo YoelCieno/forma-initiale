@@ -1,1 +1,1 @@
-export { GetProductsAdapter } from './adapters/get-products.adapter'
+export { getProducts } from './adapters/get-products.adapter'

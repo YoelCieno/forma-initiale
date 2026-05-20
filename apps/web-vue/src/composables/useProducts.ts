@@ -1,6 +1,6 @@
 import type { Ref } from "vue";
 import type { Product } from "@repo/domain";
-import { GetProductsAdapter } from "@repo/infra";
+import { getProducts } from "@repo/infra";
 
 interface UseProducts {
   products: Ref<Product[]>;
@@ -14,12 +14,10 @@ export function useProducts(): UseProducts {
   const loading = ref(true);
   const error = ref<string | undefined>();
 
-  const adapter = new GetProductsAdapter();
-
   async function fetchProducts(): Promise<void> {
     loading.value = true;
     try {
-      products.value = await adapter.execute();
+      products.value = await getProducts();
     } catch (e) {
       error.value = e instanceof Error ? e.message : "Failed to load products";
     } finally {
