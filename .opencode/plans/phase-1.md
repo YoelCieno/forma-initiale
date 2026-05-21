@@ -33,7 +33,7 @@ Decision: KISSME — lowest effort for good docs.
 - [x] Replace `apps/docs` with Astro + Starlight
 - [x] Audit `packages/ui/` — clean, zero framework deps
 - [x] Create composables layer (`apps/web-vue/src/composables/`) — useProducts()
-- [ ] Integrate Vite+ (vp CLI) — replace raw Vite CLI, update turbo.json
+- [x] Integrate Vite+ (vp CLI) — replace raw Vite CLI, update turbo.json
 - [ ] Keep deps updated — check Astro, Starlight, Vite versions periodically
 - [ ] Verify build + lint passes
 
@@ -43,5 +43,5 @@ Decision: KISSME — lowest effort for good docs.
 |----------|--------|
 | Docs framework | Astro + Starlight ✅ |
 | packages/ui paradigm | Framework‑agnostic (vanilla TS) |
-| Vite+ integration | Phase 1 — pending |
+| Vite+ integration | Phase 1 — complete ✅ |
 | Deps maintenance | Recurring task |

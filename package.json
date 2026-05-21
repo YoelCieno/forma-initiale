@@ -16,8 +16,13 @@
     "eslint-plugin-vue": "^9",
     "prettier": "^3.2.5",
     "turbo": "^2.9.14",
+    "vite-plus": "*",
     "vitest": "^4.1.7",
     "vue-eslint-parser": "^9"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
   },
   "name": "forma-initiale",
   "packageManager": "bun@1.3.13",

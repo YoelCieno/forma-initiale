@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --clearScreen false",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "vp dev",
+    "build": "vp build",
+    "preview": "vp preview",
     "lint": "eslint \"src/**/*.{ts,vue}\"",
-    "test": "vitest run"
+    "test": "vp test"
   },
   "dependencies": {
     "@repo/domain": "*",
