@@ -9,3 +9,12 @@ dist-ssr
 .cache
 server/dist
 public/dist
+
+# Astro build output
+*.astro/
+
+# serena build output
+*.serena/
+
+# Coverage reports
+coverage/

@@ -1,7 +1,6 @@
 {
-  "extends": "@repo/typescript-config/vite.json",
-  "include": ["src"],
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "strictNullChecks": true
+    "jsx": "preserve"
   }
 }
