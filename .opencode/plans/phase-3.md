@@ -34,3 +34,17 @@ Architecture where a base app can be inherited and components/styles overridden 
 - Minimal duplication
 - Type-safe overrides
 - Build-time or runtime? (prefer build-time for perf)
+
+## Ideas
+
+### App scaffolder/generator
+
+Create a CLI tool (`bun run create:app` or similar) that scaffolds a new app with framework selection prompt. Should:
+
+1. Ask user to pick a framework: Vue, React, Angular, Svelte, Solid, Lit, or vanilla web components
+2. Generate the app package under `apps/<app-name>` with the right config (vite.config.ts, tsconfig, package.json, etc.)
+3. Wire up `packages/ui` (framework-agnostic) + framework-specific wrappers layer
+4. Register in Turbo pipeline
+5. Optionally scaffold a basic page/component to verify the setup works
+
+This makes the hexagonal architecture truly extensible — adding a new framework is one command away.

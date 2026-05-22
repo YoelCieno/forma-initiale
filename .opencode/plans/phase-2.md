@@ -12,7 +12,7 @@ Integrate AgnosticUI (unstyled, modern component library) as base UI layer, crea
 
 ## Tasks
 
-- [ ] Research AgnosticUI Vue integration
+- [ ] Research AgnosticUI lit / Vue, React, Angular integration
 - [ ] Create wrapper components in `packages/ui/`
 - [ ] Style wrappers with DS tokens (when available)
 - [ ] Test in `apps/web-vue`
