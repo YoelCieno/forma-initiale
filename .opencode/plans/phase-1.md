@@ -50,4 +50,4 @@ Decision: KISSME — lowest effort for good docs.
 
 - **Astro 6 / Starlight 0.39 upgrade**: Breaking change (Astro 5 → 6, legacy collections removed). Defer to dedicated upgrade task.
 
-- **Renovate + taze setup**: Renovate (GitHub) auto-creates PRs every 2 weeks — no automerge, all manual review. taze+turbo is the portable fallback for non-GitHub hosts. See [`/thoughts/dependency-management.md`] for full guide.
+- **Renovate + taze setup**: Renovate (GitHub) auto-creates PRs every 2 weeks — no automerge, all manual review. taze+turbo is the portable fallback for non-GitHub hosts. See [`/docs/dependency-management.md`] for full guide.

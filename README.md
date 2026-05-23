@@ -1,33 +1,75 @@
-# `Turborepo` Vite starter
+# forma-initiale
 
-This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+Build systems monorepo scaffold using hexagonal architecture with Turborepo + bun.
 
-## Using this example
+## Architecture
 
-Run the following command:
+Hexagonal (Ports & Adapters):
 
-```sh
-npx create-turbo@latest -e with-vite
+```
+domain → infra → packages/ui (agnostic) → apps (framework-specific)
 ```
 
-## What's inside?
+- **domain** — core business logic, pure TS, zero framework deps
+- **infra** — adapters implementing domain contracts (API clients, storage, etc.)
+- **packages/ui** — shared components, framework-agnostic (vanilla TS)
+- **apps** — framework-specific application wrappers
 
-This Turborepo includes the following packages and apps:
+| App | Stack | Status |
+|-----|-------|--------|
+| `apps/web-vue` | Vue 3 + Vite 6 | Active |
+| `apps/docs` | Astro + Starlight | Active |
+| `apps/web-angular` | Angular | Future |
+| `apps/web-react` | React | Future |
 
-### Apps and Packages
+## Project structure
 
-- `docs`: a vanilla [vite](https://vitejs.dev) ts app
-- `web`: another vanilla [vite](https://vitejs.dev) ts app
-- `@repo/ui`: a stub component & utility library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: shared `eslint` configurations
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+```
+forma-initiale/
+├── apps/
+│   ├── web-vue/          # Vue 3 app (Vite 6 via Vite+)
+│   └── docs/             # Documentation site
+├── packages/
+│   ├── domain/           # Pure TS models, ports
+│   ├── infra/            # Adapters (domain contracts)
+│   ├── ui/               # Framework-agnostic shared components
+│   ├── eslint-config/    # Shared ESLint 8 config (CJS)
+│   └── typescript-config/# Shared tsconfigs (base.json, vite.json)
+├── package.json          # Root workspace config
+├── turbo.json            # Turborepo pipeline
+└── .mise.toml            # Tool version manager
+```
 
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Getting started
 
-### Utilities
+```bash
+bun install
+bun run dev
+```
 
-This Turborepo has some additional tools already setup for you:
+Starts all apps in dev mode (web-vue on localhost:5173, docs on localhost:4321).
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## Commands
+
+| Command | Action |
+|---------|--------|
+| `bun run dev` | Start all apps (dev mode, persistent) |
+| `bun run build` | Build all apps |
+| `bun run lint` | Lint all packages |
+| `bun run test` | Run tests (Vitest) |
+| `bun run format` | Format code (Prettier) |
+
+## Documentation
+
+- `docs/dependency-management.md` — Dependency update strategies (taze + turbo, Renovate)
+- `docs/decisions/docs-solution.md` — Docs solution decision record
+
+## Tech stack
+
+- **Framework:** Vue 3 (`apps/web-vue`)
+- **Language:** TypeScript 5.5.4
+- **Build:** Vite 6 (via Vite+ `vp` CLI), Turborepo 2.9.14
+- **Package manager:** bun 1.3.13
+- **Test:** Vitest (via Vite+), Vue Test Utils, jsdom
+- **Lint:** ESLint 8 (CJS), Prettier 3
+- **Tools:** unplugin-auto-import, unplugin-vue-components
