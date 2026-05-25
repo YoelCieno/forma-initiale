@@ -6,10 +6,20 @@ const { products, loading, error } = useProducts();
 <template>
   <div class="products-page">
     <h1>Products</h1>
-    <p v-if="loading">Loading...</p>
-    <p v-if="error" class="error">{{ error }}</p>
+    <p v-if="loading">
+      Loading...
+    </p>
+    <p
+      v-if="error"
+      class="error"
+    >
+      {{ error }}
+    </p>
     <ul v-else>
-      <li v-for="product in products" :key="product.id">
+      <li
+        v-for="product in products"
+        :key="product.id"
+      >
         {{ product.title }} — ${{ product.price }}
       </li>
     </ul>

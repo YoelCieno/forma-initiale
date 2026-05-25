@@ -14,7 +14,8 @@
     "@repo/domain": "*",
     "@repo/infra": "*",
     "@repo/ui": "*",
-    "vue": "^3.5.0"
+    "vue": "^3.5.0",
+    "vue-router": "^4"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

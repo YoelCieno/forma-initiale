@@ -35,7 +35,7 @@ If you switch host, drop `renovate.json` and use `taze` above. The `check-update
 | apps/web-vue | vue, vite, @vitejs/plugin-vue, unplugin-* |
 | packages/domain | (pure TS) |
 | packages/infra | @repo/domain |
-| packages/ui | (vanilla TS) |
+| packages/ui | hybrids, @awesome.me/webawesome |
 | root (dev) | eslint, typescript, turbo, vitest, prettier |
 
 ## Upgrade policy
@@ -45,3 +45,41 @@ If you switch host, drop `renovate.json` and use `taze` above. The `check-update
 - **Astro/Starlight**: Major-breaking (5→6). Dedicated upgrade task.
 - **ESLint**: 8→9→10 are breaking. ESLint 8 stays for now (CJS config).
 - **TypeScript**: 5.5.4 pinned. 6.0 is major-breaking.
+
+## ESLint Fix-on-Save (Zed editor)
+
+Zed has native ESLint integration via `code_actions_on_format`.
+
+### Setup
+
+Create `.zed/settings.json` at project root (or Cmd+Shift+P → "Open Project Settings"):
+
+```json
+{
+  "languages": {
+    "TypeScript": {
+      "formatter": [],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    },
+    "Vue.js": {
+      "formatter": [],
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      }
+    }
+  }
+}
+```
+
+`"formatter": []` disables Prettier so ESLint fixes aren't overwritten.
+
+### Other editors
+
+| Editor | Config |
+|--------|--------|
+| VSCode | `"editor.codeActionsOnSave": { "source.fixAll.eslint": true }` |
+| JetBrains | Settings → Languages & Frameworks → ESLint → "Run eslint --fix on save" |
+| Neovim | `conform.nvim` with `format_on_save` |
+| Vim | `ALE` with `let g:ale_fix_on_save = 1` |
