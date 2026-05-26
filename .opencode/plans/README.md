@@ -1,28 +1,14 @@
-# forma-initiale — Roadmap
+# forma-initiale — Plans
 
-Monorepo plan overview.
+Index of plans in this monorepo.
 
-## Phase Table
-
-| Phase | Focus | Status |
-|-------|-------|--------|
-| 0 | Hexagonal skeleton: domain + infra pkgs, web-vue app, auto-import | ✅ COMPLETED |
-| 1 | Docs solution research + implementation, UI components conversion | 🔧 IN PROGRESS |
-| 2 | AgnosticUI wrappers, design system base | ❌ PENDING |
-| 3 | White-label extend layer (main goal): inherit app, override components/styles | ❌ PENDING |
+| Plan | Description | Status |
+|------|-------------|--------|
+| [core-foundation](./core-foundation/README.md) | Build platform foundation: hexagonal skeleton → docs solution → Web Awesome UI layer → white-label extend layer | 🔧 IN PROGRESS |
 
 ## Conventions
 
-- Plans live in `.opencode/plans/` — committed, shared context
-- Each phase file tracks: goal, tasks, decisions, status
-- Research before implementation (Phase 1 starts with research)
-- KISSME principle: add layers only when needed
-
-## Notes
-
-- `apps/web` renamed to `apps/web-vue` ✅
-
-## Maintenance
-
-- **Keep deps updated**: Periodically check Astro, Starlight, Vite versions
-- **Vite+**: Integration planned for Phase 1
+- Each plan lives in `.opencode/plans/<plan-name>/`
+- Each plan directory has a `README.md` as entry point with phase table, and `phase-*.md` files for detailed phase docs
+- Plans are committed and shared context
+- See [core-foundation/README.md](./core-foundation/README.md) for current roadmap

@@ -4,8 +4,12 @@
 <template>
   <div>
     <nav>
-      <a href="#/">Products</a>
-      <a href="#/buttons">Button Demo</a>
+      <RouterLink to="/">
+        Products
+      </RouterLink>
+      <RouterLink to="/buttons">
+        Button Demo
+      </RouterLink>
     </nav>
     <main>
       <RouterView />
@@ -18,13 +22,20 @@ nav {
   padding: 1rem;
   border-bottom: 1px solid #ccc;
   margin-bottom: 1rem;
-}
-nav a {
-  margin-right: 1rem;
-  text-decoration: none;
-  color: #333;
-}
-nav a:hover {
-  text-decoration: underline;
+
+  a {
+    margin-right: 1rem;
+    text-decoration: none;
+    color: #333;
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.router-link-exact-active {
+      color: darkviolet;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
 }
 </style>

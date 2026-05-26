@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import "@repo/ui/fe-button";
+
+function onClickNeutral() {
+  alert('Neutral button clicked');
+}
 </script>
 
 <template>
@@ -8,7 +12,10 @@ import "@repo/ui/fe-button";
 
     <section>
       <h2>Variants</h2>
-      <fe-button variant="neutral">
+      <fe-button
+        variant="neutral"
+        @click="onClickNeutral"
+      >
         Neutral
       </fe-button>
       <fe-button variant="brand">
@@ -77,7 +84,7 @@ import "@repo/ui/fe-button";
 
 <style scoped>
 .button-demo-page {
-  padding: 0 2.5rem;
+  padding: 0 1rem;
 }
 
 section {
