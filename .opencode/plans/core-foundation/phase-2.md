@@ -1,11 +1,11 @@
 # Phase 2 — Web Awesome UI Layer
 
 **Status:** 🔧 IN PROGRESS
-**Last updated:** 2026-05-24
+**Last updated:** 2026-05-27
 
 ## Goal
 
-Integrate Web Awesome (web component library, works with Vue 3 + Angular + React) as the base UI layer for the forma-initiale monorepo. Components live as thin re-export wrappers in `packages/ui/` so all framework-specific apps import from `@repo/ui/*` rather than directly from Web Awesome. Theming is managed via CSS custom property overrides (`--wa-*` variables) with design token files in `packages/ui/styles/`.
+Integrate Web Awesome (web component library, works with Vue 3 + Angular + React) as the base UI layer for the forma-initiale monorepo. Components live as thin re-export wrappers in `packages/ui/` so all framework-specific apps import from `@repo/ui/*` rather than directly from Web Awesome. Apps MUST only use `fe-*` elements (e.g., `<fe-button>`) in templates, never `<wa-*>` directly. The `fe-*` wrappers are the single entry point for all framework apps. Theming is managed via CSS custom property overrides (`--wa-*` variables) with design token files in `packages/ui/styles/`.
 
 ## 1. Architecture Decision: Hybrids (Functional WC Library)
 
@@ -24,7 +24,7 @@ After evaluating six WC frameworks (Lit, Stencil, Atomico, Hybrids, Haunted, Ele
 
 ### Comparison: Native CE vs hybridJS for fe-button
 
-| Aspect | Native CE (current) | hybridJS |
+| Aspect | Native CE (original) | hybridJS (current) |
 |--------|--------------------|----------|
 | Lines of code | ~97 | ~30 |
 | Class | `extends HTMLElement` | Plain object + functions |
@@ -33,25 +33,35 @@ After evaluating six WC frameworks (Lit, Stencil, Atomico, Hybrids, Haunted, Ele
 | Template | `innerHTML` string | `html\`...\`` tagged literal |
 | Change detection | Manual | Built-in cache + equality check |
 
-### Why the FeButton.vue pattern is wrong
+### Apps use fe-* wrappers, not wa-* directly
 
-An earlier approach created `apps/web-vue/src/components/FeButton.vue` — a Vue SFC that wraps `<wa-button>`. This defeats the purpose of `packages/ui/` as a single source of truth for the UI layer. The whole point is to define each component once in framework-agnostic TypeScript. Per-app framework wrappers would duplicate every prop, event, and slot mapping across Vue, Angular, and React, multiplying maintenance effort without benefit.
+An earlier approach created `apps/web-vue/src/components/FeButton.vue` — a Vue SFC that wraps `<wa-button>`. This was discarded for two reasons:
+1. It defeats `packages/ui/` as single source of truth — would need duplicate wrappers per app framework
+2. The pattern of using `wa-*` directly in app templates is also wrong
 
-Correct approach: use `<wa-button>` directly in Vue templates. No Vue wrapper needed. The component is already a native custom element; Vue renders it with `isCustomElement` configuration in `vite.config.ts`.
+**Correct approach:** Every component lives once in `packages/ui/` as an `fe-*` custom element (e.g., `<fe-button>`). Apps import the side-effect module (`@repo/ui/fe-button`) and use the `fe-*` tag in templates. The `fe-*` wrapper internally composes `<wa-button>` and any other needed WA elements. Apps never import or reference WA directly — they only see `fe-*` elements.
 
-### Future evolution: When to add Lit
+This gives us:
+- **One definition** — the wrapper logic lives once in `packages/ui/`
+- **Framework-agnostic** — `fe-*` are native custom elements, usable in Vue 3, Angular, React without adapters
+- **Abstraction layer** — WA can be swapped out without touching app code
+- **Clean DX** — apps use a consistent `fe-*` naming convention
 
-Lit (Google-backed, ~5 KB, used internally by Web Awesome) is the recommended WC library for when custom component logic is required. The following table guides when to add it:
+### hybridJS as the WC library for custom wrappers
+
+hybridJS (`hybrids` v9.1.22, 0 deps, MIT) is the established WC library for custom component logic in `packages/ui/`. The `fe-button` wrapper already uses `define()` from hybridJS (see §2). Future compound components follow the same pattern — no additional library needed.
+
+When to use hybridJS vs thin re-export:
 
 | Scenario | Action |
 |----------|--------|
-| Re-export a single WA component | Thin wrapper (current pattern) — no Lit needed |
-| Compose 2+ WA components into a compound UI | Build a Lit component that composes them |
-| Controlled form component with custom validation | Build a Lit component wrapping the WA form control |
-| Brand-new component not in WA catalog | Build a Lit component from scratch |
-| Any wrapper that only adds event/prop typing | Thin wrapper — no Lit needed |
+| Re-export a single WA component with zero logic | Thin re-export (side-effect import + type re-export) — no hybridJS needed |
+| Compose 2+ WA components into a compound UI | Build a hybridJS component with `define()` + `html` tagged literal (like fe-button) |
+| Controlled form component with custom validation | Build a hybridJS component wrapping the WA form control |
+| Brand-new component not in WA catalog | Build a hybridJS component from scratch |
+| Any wrapper that only adds event/prop typing | Thin re-export — no hybridJS needed |
 
-Lit is not added now. When the first compound component is needed, add `lit` to `packages/ui/package.json` dependencies and create the component in `packages/ui/lit/` (a new directory).
+All hybridJS wrappers live in `packages/ui/components/` alongside thin re-exports. No separate `lit/` directory needed.
 
 ## 2. Package Structure
 
@@ -60,13 +70,13 @@ Lit is not added now. When the first compound component is needed, add `lit` to 
 ```
 packages/ui/
   components/
-    button.ts        # WaButton wrapper
-    input.ts          # WaInput wrapper (on-demand)
-    icon.ts           # WaIcon wrapper (on-demand)
+    fe-button.ts     # hybridJS wrapper composing wa-button + wa-icon
+    fe-input.ts        # hybridJS wrapper composing wa-input
+    fe-icon.ts         # hybridJS wrapper composing wa-icon
     ...
   styles/
     webawesome.ts    # Re-exports WA CSS barrel
-  index.ts           # Barrel — re-exports types from all components
+  index.ts           # Barrel — re-exports types + FeButton constant
   package.json       # Exports map: ./<name> → ./components/<name>.ts
   tsconfig.json      # Extends @repo/typescript-config/vite.json
 ```
@@ -75,21 +85,38 @@ packages/ui/
 
 Every exported component follows three rules:
 
-1. **Named type export** — The wrapper file exports the WA component type under its standard name: `export type { WaButton }`. Only the type is exported; the side-effect (custom element registration) runs on import.
-2. **`package.json` entry** — Each component gets an exports map entry: `"./button": "./components/button.ts"`. This keeps imports clean (`@repo/ui/button`) and enables tree-shaking.
-3. **Barrel re-export** — Each type is re-exported from `index.ts`: `export type { WaButton } from './components/button.js'`. The barrel is convenient for tools that import types en masse (e.g., `import type { WaButton, WaInput } from '@repo/ui'`).
+1. **Named type export + component constant** — The wrapper file exports the element interface and the `define()` result where applicable: `export type { FeButtonElement }` and `export const FeButton`. For thin re-exports, only the WA component type is re-exported. The side-effect (custom element registration) runs on import.
+2. **`package.json` entry** — Each component gets an exports map entry: `"./fe-button": "./components/fe-button.ts"`. This keeps imports clean (`@repo/ui/fe-button`) and enables tree-shaking.
+3. **Barrel re-export** — Each type and component constant is re-exported from `index.ts`. The barrel is convenient for tools that import types en masse (e.g., `import type { FeButtonElement } from '@repo/ui'`).
 
 ### Component onboarding process
 
 Adding a new WA component wrapper follows seven steps:
 
 1. **Identify** — Determine which Web Awesome component is needed (e.g., `<wa-input>`).
-2. **Create wrapper** — Create `packages/ui/components/<name>.ts` with the side-effect import and type re-export.
+2. **Create wrapper** — Create `packages/ui/components/fe-<name>.ts`. For thin re-exports: side-effect import + type re-export. For hybridJS wrappers: `define()` from hybridJS composing the `<wa-*>` element.
 3. **Export map** — Add `"./<name>": "./components/<name>.ts"` to `packages/ui/package.json` exports field.
-4. **Barrel** — Add the type re-export to `packages/ui/index.ts`.
-5. **App-level config** — Vue: no extra config needed (`isCustomElement` already catches all `wa-*` tags). Angular: add `CUSTOM_ELEMENTS_SCHEMA` to the module or component standalone config. React: import the side-effect module before using the component in JSX.
-6. **Spec file** — Add `packages/ui/components/<name>.spec.ts` only if the wrapper contains logic beyond the re-export pattern. Thin pure-type wrappers need no spec.
+4. **Barrel** — Add the type + component constant re-export to `packages/ui/index.ts`.
+5. **App-level config** — Vue: add `fe-` prefix to `isCustomElement` in `vite.config.ts` (already done for `fe-*`). Angular: add `CUSTOM_ELEMENTS_SCHEMA`. React: import the side-effect module before using the component in JSX.
+6. **Spec file** — Add `packages/ui/components/<name>.spec.ts` for hybridJS wrappers (tests shadow DOM rendering, property forwarding, events). Thin pure-type wrappers need no spec.
 7. **Verify** — Run `bun run build` (tsc + vite build), `bun run lint`, and confirm the component renders in the app.
+
+### `sideEffects` field
+
+`packages/ui/package.json` currently omits the `sideEffects` field — bundlers treat this as `sideEffects: true`, meaning no file is tree-shaken. This is correct because every component file registers a custom element as a side effect (`define({ tag: 'fe-*', ... })`).
+
+Setting `sideEffects: false` would cause bundlers to drop `import '@repo/ui/fe-button'` when its exports are unused by the consumer — breaking all custom element registrations at runtime.
+
+If later the package adds pure TS modules with zero side effects (e.g., `utils/`, `constants/`, `types/`), switch to a fine-grained array:
+
+```json
+"sideEffects": [
+  "./components/fe-*.ts",
+  "./styles/*.ts"
+]
+```
+
+This protects CE-registering files from tree-shaking while letting pure modules be optimized. Not needed now — premature optimization.
 
 ## 3. Theming / Design Tokens
 
@@ -98,9 +125,9 @@ Web Awesome exposes all visual properties as CSS custom properties prefixed with
 Token strategy:
 
 - **Global overrides** — `packages/ui/styles/webawesome.ts` re-exports the WA CSS barrel. Apps that import `@repo/ui/styles` get WA defaults. Overrides go in each app's own stylesheet.
-- **Design token files** — `packages/ui/styles/tokens/` can host token CSS files (e.g., `tokens/colors.css`, `tokens/typography.css`). These files declare `--wa-*` variable overrides mapped to design-system intent. This directory is scaffolded but empty until formal design tokens are defined.
-- **Per-component overrides** — Vue SFCs can scope token overrides via `scoped` styles: `:deep(wa-button) { --wa-button-border-radius: var(--radius-sm); }`.
-- **App-level themes** — Each app can switch themes by applying a CSS class to a root element and using descendant selectors on `--wa-*` variables. For example, `.theme-dark wa-button { --wa-button-background: #333; }`.
+- **Design token files** — `packages/ui/styles/tokens/` will host token CSS files (e.g., `tokens/colors.css`, `tokens/typography.css`). These files declare `--wa-*` variable overrides mapped to design-system intent. This directory is not yet created — it's a pending task (see §6).
+- **Per-component overrides** — Vue SFCs can scope token overrides via `scoped` styles: `:deep(fe-button) { --wa-button-border-radius: var(--radius-sm); }`.
+- **App-level themes** — Each app can switch themes by applying a CSS class to a root element and using descendant selectors on `--wa-*` variables. For example, `.theme-dark fe-button { --wa-button-background: #333; }`.
 
 WA components that ship their own shadow DOM styles are encapsulated; overrides require CSS custom properties (the `::part()` pseudo-element is also available for specific internal elements WA exposes).
 
@@ -114,7 +141,7 @@ WA components that ship their own shadow DOM styles are encapsulated; overrides 
 vue({
   template: {
     compilerOptions: {
-      isCustomElement: (tag) => tag.startsWith('wa-'),
+      isCustomElement: (tag) => tag.startsWith('fe-'),
     },
   },
 }),
@@ -126,47 +153,55 @@ vue({
 import '@repo/ui/styles';
 ```
 
-**Component usage in templates** — Use `<wa-button>` etc. directly. No Vue wrapper component is needed. Example:
+**Component usage in templates** — Use `<fe-button>` etc. in templates. Import the side-effect module to register the custom element:
 
 ```vue
-<template>
-  <wa-button variant="primary" size="medium" @click="handleClick">
-    {{ label }}
-  </wa-button>
-</template>
-
 <script setup lang="ts">
-function handleClick() { /* ... */ }
+import "@repo/ui/fe-button";
+import type { FeButtonElement } from "@repo/ui/fe-button";
+
+defineProps<{ label: string }>();
+const emit = defineEmits<{ clicked: [] }>();
 </script>
+
+<template>
+  <fe-button variant="primary" size="medium" @click="emit('clicked')">
+    {{ label }}
+  </fe-button>
+</template>
 ```
 
-**`v-model` on form controls** — Vue's `v-model` has inconsistent support on Web Components because they do not emit native `input` events with the standard `event.target.value` pattern. Web Awesome recommends one of these patterns:
+**`v-model` on form controls** — Vue's `v-model` has inconsistent support on Web Components. The `fe-*` hybridJS wrappers normalize events so apps can use the same pattern:
 
 ```vue
-<!-- ❌ May not work reliably on WC — avoid -->
-<wa-input v-model="name" />
-
 <!-- ✅ Recommended: explicit :value + @input -->
-<wa-input :value="name" @wa-input="name = $event.target.value" />
+<fe-input :value="name" @input="name = $event.detail.value" />
 
-<!-- ✅ Alternative: .prop modifier forces property binding -->
-<wa-input v-model.prop="name" />
+<!-- Alternative: .prop modifier -->
+<fe-input v-model.prop="name" />
 ```
 
-The `.prop` modifier is the most concise option but should be tested per component. The `:value + @input` pattern is the safest default.
+**hybridJS wrappers (fe-button)** — Use `<fe-button>` in Vue templates just like native WA elements. The custom element is registered globally by importing `@repo/ui/fe-button`:
 
-**TypeScript types** — Import WA types alongside the side-effect:
+```vue
+<script setup lang="ts">
+import "@repo/ui/fe-button";
 
-```ts
-import '@repo/ui/button';
-import type { WaButton } from '@repo/ui/button';
+function onClick() { alert('clicked'); }
+</script>
+
+<template>
+  <fe-button variant="brand" icon="check" @click="onClick">
+    Click Me
+  </fe-button>
+</template>
 ```
 
-TypeScript then knows the properties and events of `WaButton` when you access the element via `ref`.
+The `fe-` prefix is already registered in `vite.config.ts` `isCustomElement`.
 
 ### Angular (future — `apps/web-angular/`)
 
-**Schema setup** — Add `CUSTOM_ELEMENTS_SCHEMA` to the module or standalone component configuration. This prevents Angular's template compiler from throwing on unknown `wa-*` tags.
+**Schema setup** — Add `CUSTOM_ELEMENTS_SCHEMA` to the module or standalone component configuration. This prevents Angular's template compiler from throwing on unknown `fe-*` tags.
 
 ```ts
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -179,43 +214,41 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 **Event binding** — Angular binds to DOM events with parentheses:
 
 ```html
-<wa-button (wa-click)="handleClick($event)"></wa-button>
+<fe-button (click)="handleClick($event)"></fe-button>
 ```
 
 **Property binding** — Use square brackets for input properties:
 
 ```html
-<wa-input [value]="name" (wa-input)="name = $event.target.value"></wa-input>
+<fe-input [value]="name" (input)="name = $event.detail.value"></fe-input>
 ```
 
-**Import side-effects** — Import WA component wrappers once in `main.ts` or the app module:
+**Import side-effects** — Import `fe-*` component wrappers once in `main.ts` or the app module:
 
 ```ts
-import '@repo/ui/button';
-import '@repo/ui/input';
+import '@repo/ui/fe-button';
+import '@repo/ui/fe-input';
 ```
 
 ### React (future — `apps/web-react/`)
 
-**Import side-effects** — React does not auto-register custom elements. Import each WA component's registration module before using it:
+**Import side-effects** — React does not auto-register custom elements. Import each `fe-*` component's registration module before using it:
 
 ```tsx
-import '@repo/ui/button';
+import '@repo/ui/fe-button';
 ```
 
-**JSX usage** — Web Components work in React 18+ via `ref` access to the underlying DOM element. React 19 has improved custom element support (properties pass as props automatically).
+**JSX usage** — `fe-*` wrappers ship as native custom elements. React 19 works with them directly — properties pass as props automatically.
 
 ```tsx
 function MyComponent() {
-  const inputRef = useRef<WaInput>(null);
+  const inputRef = useRef<FeInputElement>(null);
 
-  return <wa-input ref={inputRef} value={name} onWaInput={(e) => setName(e.target.value)} />;
+  return <fe-input ref={inputRef} value={name} onInput={(e) => setName(e.target.value)} />;
 }
 ```
 
-**React wrappers available** — Web Awesome ships React wrapper components at `dist/react/*`. These provide a more ergonomic React API (camelCase props, React event system). If React ergonomics become a priority, define React wrappers in `packages/ui/react/` that wrap the WA React re-exports. This is deferred until the React app is built.
-
-**TypeScript** — React's JSX namespace needs augmentation for WA elements. Without it, `<wa-button>` is typed as `unknown` props. Add JSX type declarations either in a central `packages/ui/react/jsx-types.ts` or in the React app's own type declarations.
+**TypeScript** — `fe-*` element types are available from `@repo/ui`. React's JSX namespace needs augmentation for custom elements. Without it, `<fe-button>` is typed as `unknown` props. Add JSX type declarations either in a central `packages/ui/react/jsx-types.ts` or in the React app's own type declarations.
 
 ## 5. Testing Strategy
 
@@ -223,10 +256,11 @@ function MyComponent() {
 
 Thin re-export wrappers contain no logic — they are a side-effect import and a type re-export. They require no unit tests. A spec file is added co-located at `packages/ui/components/<name>.spec.ts` **only when** the wrapper contains additional logic (prop transformation, default values, event normalization).
 
-When custom Lit components are added to `packages/ui/lit/`, each gets a co-located spec file testing:
-- Shadow DOM rendering (via `@lit/react` or `@web/test-runner`)
-- Property/attribute reflection
-- Event dispatch
+Custom hybridJS wrappers (like `fe-button`) get a co-located spec file testing:
+- Shadow DOM rendering (via jsdom + hybridJS render cycle)
+- Property forwarding to inner WA elements
+- Conditional rendering (e.g., icon shown/hidden based on property)
+- Event dispatch (bubbled events from inner WA elements)
 - Slotted content
 
 ### App-level integration tests
@@ -240,14 +274,14 @@ import { mount } from '@vue/test-utils';
 import ButtonDemo from './ButtonDemo.vue';
 
 describe('ButtonDemo', () => {
-  it('renders wa-button element', () => {
+  it('renders fe-button element', () => {
     const wrapper = mount(ButtonDemo);
-    expect(wrapper.find('wa-button').exists()).toBe(true);
+    expect(wrapper.find('fe-button').exists()).toBe(true);
   });
 
   it('emits click event', async () => {
     const wrapper = mount(ButtonDemo);
-    await wrapper.find('wa-button').trigger('click');
+    await wrapper.find('fe-button').trigger('click');
     expect(wrapper.emitted('click')).toBeTruthy();
   });
 });
@@ -259,15 +293,16 @@ describe('ButtonDemo', () => {
 
 | File | Location | Status | Notes |
 |------|----------|--------|-------|
-| WaButton.spec.ts | `__tests__/` | Removed | Was a unit test for an early wrapper pattern that no longer exists |
+| fe-button.spec.ts | `packages/ui/components/` | Exists | Tests hybridJS fe-button wrapper — shadow DOM, property forwarding, events |
 | ProductsPage.spec.ts | `apps/web-vue/src/pages/` | Exists | Tests product page rendering |
+| ButtonDemoPage.spec.ts | `apps/web-vue/src/pages/` | Exists | Tests fe-button rendering in ButtonDemoPage |
 
 ### Coverage target
 
 80%+ statement coverage for:
 - `apps/web-vue/src/pages/` (integration tests)
 - `apps/web-vue/src/composables/` (unit tests)
-- Custom Lit components in `packages/ui/components/` (unit tests, future)
+- Custom hybridJS wrappers in `packages/ui/components/` (unit tests)
 
 Coverage is not measured for thin re-export wrappers (no logic to cover) or for framework-agnostic type declarations.
 
@@ -285,6 +320,7 @@ Coverage is not measured for thin re-export wrappers (no logic to cover) or for 
 - [x] Install hybridJS in `packages/ui/` (`bun add hybrids@^9`)
 - [x] Rewrite `packages/ui/components/fe-button.ts` using hybridJS `define()`
 - [x] Update fe-button spec to test hybridJS component
+- [ ] Adopt MSW as API mocking strategy — add MSW dep to web-* + infra, create handler structure, verify dev + test interception
 - [ ] Set up DS tokens scaffold (`packages/ui/styles/tokens/`) with `--wa-*` CSS var overrides
 - [ ] Add WaInput wrapper (`packages/ui/components/input.ts`)
 - [ ] Add WaIcon wrapper (`packages/ui/components/icon.ts`)
@@ -295,18 +331,19 @@ Coverage is not measured for thin re-export wrappers (no logic to cover) or for 
 
 | # | Decision | Choice | Rationale |
 |---|----------|--------|-----------|
-| 1 | WC library for `packages/ui/` | None (thin re-exports) | WA ships native custom elements. Adding Lit/Stencil for wrappers is premature complexity. |
+| 1 | WC library for `packages/ui/` | hybridJS (v9.1.22) | Plain objects + pure functions, 0 deps, 3.2k ⭐, auto attr reflection, framework-agnostic. Used for fe-button wrapper. Replaces native CE pattern. |
 | 2 | Framework-specific wrappers in apps (FeButton.vue) | Do not create | Defeats the single-source-of-truth purpose of `packages/ui/`. Every prop/event mapping would be duplicated across Vue/Angular/React. |
 | 3 | `v-model` on WA form controls in Vue | Use `:value + @input` pattern | Vue's WC `v-model` support is inconsistent across components. Explicit binding is reliable and framework-version independent. |
-| 4 | Future custom components | Build with Lit | WA uses Lit internally. Google-backed, ~5 KB, proven ecosystem. Avoids introducing a second WC library. |
+| 4 | Future custom components | Build with hybridJS | hybridJS (0 deps, MIT) already in use for fe-button. Plain object/function model fits project philosophy better than Lit class-based model. No second library needed. |
 | 5 | Component registration mechanism | Side-effect import in wrapper file | Per-component imports are tree-shakable, avoid a global bundle, and make dependencies explicit per file. |
 | 6 | Token directory location | `packages/ui/styles/tokens/` | Keeps tokens co-located with the styles barrel import. Separated from component wrappers (components/ is for WA mirrors, not CSS). |
 | 7 | Testing approach for thin wrappers | No unit tests | Wrappers are pure type re-exports with no logic. Integration tests in apps cover rendering. |
-| 8 | Lit addition trigger | Superseded by hybridJS | Lit was considered for custom WC logic. Replaced by hybridJS (v9.1.22, 0 deps, MIT) — plain object + function model better fits project philosophy. |
+| 8 | Lit addition trigger (historical) | Superseded by hybridJS | Lit was considered for custom WC logic. Replaced by hybridJS (v9.1.22, 0 deps, MIT) — plain object + function model better fits project philosophy. Decision 4 updated accordingly. |
 | 9 | Hybrids library for packages/ui | Selected | hybridJS v9.1.22 — 0 deps, 3.2k ⭐, v9 stable, plain objects + pure functions, auto attr reflection, framework-agnostic WC output. Replaces native CE pattern for custom wrappers. |
+| 10 | API mocking strategy | MSW | Single tool for dev + test, realistic `fetch` interception, type-safe handlers, no external dep, works offline |
 
 ## 8. Research References
 
 - `docs/decisions/docs-solution.md` — Docs solution ADR
 - `https://github.com/shoelace-style/webawesome` — Web Awesome GitHub repository (v3.7.0)
-- `https://lit.dev/` — Lit library documentation (future evolution path)
+- `https://github.com/hybridsjs/hybrids` — hybridJS GitHub repository (v9.1.22)

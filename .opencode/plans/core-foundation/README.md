@@ -7,8 +7,8 @@ Monorepo plan overview.
 | Phase | Focus | Location | Status |
 |-------|-------|----------|--------|
 | 0 | Hexagonal skeleton: domain + infra pkgs, web-vue app, auto-import | `phase-0.md` | ✅ COMPLETED |
-| 1 | Docs solution research + implementation, UI components conversion | `phase-1.md` | 🔧 IN PROGRESS |
-| 2 | AgnosticUI wrappers, design system base | `phase-2.md` | ❌ PENDING |
+| 1 | Docs solution research + implementation, UI components conversion | `phase-1.md` | ✅ COMPLETE |
+| 2 | Web Awesome UI layer (WA + hybridJS wrappers) | `phase-2.md` | 🔧 IN PROGRESS |
 | 3 | White-label extend layer (main goal): inherit app, override components/styles | `phase-3.md` | ❌ PENDING |
 
 ## Conventions
