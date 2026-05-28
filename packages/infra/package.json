@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./mocks/browser": "./src/mocks/browser.ts",
+    "./mocks/server": "./src/mocks/server.ts"
   },
   "license": "MIT",
   "scripts": {
@@ -18,6 +20,7 @@
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
+    "msw": "^2.14.6",
     "typescript": "5.5.4"
   }
 }

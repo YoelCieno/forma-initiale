@@ -320,12 +320,12 @@ Coverage is not measured for thin re-export wrappers (no logic to cover) or for 
 - [x] Install hybridJS in `packages/ui/` (`bun add hybrids@^9`)
 - [x] Rewrite `packages/ui/components/fe-button.ts` using hybridJS `define()`
 - [x] Update fe-button spec to test hybridJS component
-- [ ] Adopt MSW as API mocking strategy — add MSW dep to web-* + infra, create handler structure, verify dev + test interception
+
 - [ ] Set up DS tokens scaffold (`packages/ui/styles/tokens/`) with `--wa-*` CSS var overrides
 - [ ] Add WaInput wrapper (`packages/ui/components/input.ts`)
 - [ ] Add WaIcon wrapper (`packages/ui/components/icon.ts`)
 - [ ] Create Vue integration doc (`docs/integration/vue.md`)
-- [ ] Test Web Awesome integration in remaining framework apps (Angular, React — Phase 3)
+- [x] Adopt MSW as API mocking strategy — add MSW dep to web-vue + infra, create handler structure, verify dev + test interception
 
 ## 7. Decision Log
 
@@ -341,6 +341,9 @@ Coverage is not measured for thin re-export wrappers (no logic to cover) or for 
 | 8 | Lit addition trigger (historical) | Superseded by hybridJS | Lit was considered for custom WC logic. Replaced by hybridJS (v9.1.22, 0 deps, MIT) — plain object + function model better fits project philosophy. Decision 4 updated accordingly. |
 | 9 | Hybrids library for packages/ui | Selected | hybridJS v9.1.22 — 0 deps, 3.2k ⭐, v9 stable, plain objects + pure functions, auto attr reflection, framework-agnostic WC output. Replaces native CE pattern for custom wrappers. |
 | 10 | API mocking strategy | MSW | Single tool for dev + test, realistic `fetch` interception, type-safe handlers, no external dep, works offline |
+| 11 | Mock handler location | packages/infra/mocks/ | Co-located with infra adapters, keeps domain clean |
+| 12 | Data generation | Factories (no faker) + fixtures for edge cases | Sequential counter + sensible defaults. Fresh objects per call, test isolation, hybrid approach |
+| 13 | Type sharing | Domain types imported directly | Handlers import Product from @repo/domain. Handler response shape = what real API returns (KISSME-SINE) |
 
 ## 8. Research References
 

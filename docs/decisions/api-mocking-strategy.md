@@ -46,11 +46,13 @@ If fullstack BE experience is desired later, build a Fastify `apps/mock-api/` se
 | 1 | API mocking strategy | MSW | Single tool for dev + test, realistic `fetch` interception, type-safe handlers, no external dep, works offline |
 | 2 | Fastify mock server | Postpone | Future stretch goal if fullstack BE exp desired. MSW covers current needs |
 
-## Open Questions
+## Resolved Questions
 
-- Where do MSW handlers live? (`packages/infra/mock/` or `packages/ms-api/`?)
-- Static fixtures vs factory functions for handler data?
-- Type sharing: domain types → mock handlers → infra adapters?
+| Question | Decision |
+|----------|----------|
+| Where do MSW handlers live? | `packages/infra/mocks/` |
+| Static fixtures vs factory functions? | Factories (no faker, sequential counter + sensible defaults). Static fixtures for edge-case scenarios. Hybrid approach. |
+| Type sharing? | Handlers import domain types directly (`@repo/domain`). Handler response shape matches real API envelope. KISSME-SINE — no extra abstraction layer until needed. |
 
 ## References
 
