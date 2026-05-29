@@ -85,7 +85,11 @@ packages/ui/
 │   └── fe-button.spec.ts    # CE unit tests (188 lines, full coverage)
 │
 └── styles/
-    └── webawesome.ts        # Imports WA global CSS
+    ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
+    └── themes/
+        ├── default.ts       # WA default theme (for web-vue)
+        ├── awesome.ts       # WA awesome theme (for future web-angular)
+        └── shoelace.ts      # WA shoelace theme (for future web-react)
 ```
 
 ---
@@ -100,14 +104,17 @@ apps/web-vue/
 ├── vitest.config.ts         # Vitest: jsdom, setup, custom elements
 ├── vitest.setup.ts          # Mocks @repo/ui/fe-button, custom element config
 ├── .eslintrc.cjs            # Vue ESLint config
-├── index.html               # SPA entry HTML
+├── index.html               # SPA entry HTML (fe-theme-default class on html)
 ├── components.d.ts          # Auto-generated component type declarations
-│
+
 ├── public/                  # Static assets
-│
+
 └── src/
-    ├── main.ts              # App entry: createApp, router, WA styles
-    ├── App.vue              # Root SFC: nav + RouterView
+    ├── main.ts              # App entry: createApp, router, WA base + theme + DS tokens
+    ├── App.vue              # Root SFC: nav + RouterView (uses --wa-* tokens)
+    ├── styles/
+    │   └── tokens/
+    │       └── base.css     # DS token overrides (brand colors, typography, radius)
     ├── router.ts            # Hash-based router (/, /buttons)
     ├── vite-env.d.ts        # Vite client types, Vue module declaration
     ├── auto-imports.d.ts    # Auto-generated global type declarations

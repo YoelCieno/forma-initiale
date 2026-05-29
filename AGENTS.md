@@ -69,27 +69,37 @@ Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
 ```json
 {
   "./fe-button": "./components/fe-button.ts",
-  "./styles": "./styles/webawesome.ts"
+  "./styles": "./styles/webawesome.ts",
+  "./styles/themes/default": "./styles/themes/default.ts",
+  "./styles/themes/awesome": "./styles/themes/awesome.ts",
+  "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
 }
 ```
 
-Import from apps: `import '@repo/ui/fe-button'; import type { FeButtonElement } from '@repo/ui/fe-button'`
+Import from apps:
+```typescript
+import '@repo/ui/fe-button'
+import type { FeButtonElement } from '@repo/ui/fe-button'
+import '@repo/ui/styles'              // WA base (native+utilities, no theme)
+import '@repo/ui/styles/themes/default' // WA theme
+```
 
 ## Gotchas & quirks
 
-1. **strictNullChecks is scoped** — only `apps/web-vue` overrides it. New packages/apps likely need the same override.
-2. **Vue type checking** — `tsc` doesn't process `.vue` files. `vue-tsc` would be needed for type checking Vue SFCs; not yet added (Phase 0 uses Vite esbuild transpilation only).
-3. **ESLint hoisting** — bun keeps `@typescript-eslint/*` plugins isolated inside `eslint-config/node_modules`. Root `devDependencies` ensures all packages can resolve them. If adding new ESLint plugins, mirror in root devDeps.
-4. **App build divergence** — web: `vite build` (no tsc). docs: `tsc && vite build`. Turbo `^build` handles the dep graph, but individual build scripts differ.
-5. **TypeScript config packages** — `vite.json` extends `base.json`. `base.json` has `strict: true` but `noUnusedLocals/noUnusedParameters: false` (those are in `vite.json` instead).
-6. **`.gitignore`** covers `dist`, `dist-ssr`, `*.local`, `.env`, `.turbo`, `node_modules`.
-7. **`apps/web-vue/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
-8. **`apps/web-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
-9. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
+1. **WA styles split into base + theme** — `@repo/ui/styles` now imports only `native.css` + `utilities.css` (no theme). Apps must **separately** import `@repo/ui/styles/themes/<name>` to get WA component styling. Forgetting the theme import causes unstyled WA components.
+2. **strictNullChecks is scoped** — only `apps/web-vue` overrides it. New packages/apps likely need the same override.
+3. **Vue type checking** — `tsc` doesn't process `.vue` files. `vue-tsc` would be needed for type checking Vue SFCs; not yet added (Phase 0 uses Vite esbuild transpilation only).
+4. **ESLint hoisting** — bun keeps `@typescript-eslint/*` plugins isolated inside `eslint-config/node_modules`. Root `devDependencies` ensures all packages can resolve them. If adding new ESLint plugins, mirror in root devDeps.
+5. **App build divergence** — web: `vite build` (no tsc). docs: `tsc && vite build`. Turbo `^build` handles the dep graph, but individual build scripts differ.
+6. **TypeScript config packages** — `vite.json` extends `base.json`. `base.json` has `strict: true` but `noUnusedLocals/noUnusedParameters: false` (those are in `vite.json` instead).
+7. **`.gitignore`** covers `dist`, `dist-ssr`, `*.local`, `.env`, `.turbo`, `node_modules`.
+8. **`apps/web-vue/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
+9. **`apps/web-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
+10. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
 
 ## Agent rules
 
-- **Never hardcode colors/spacing/typography** — always use design system CSS custom properties (DS tokens not yet defined; add DS var rather than hardcoding if missing)
+- **Never hardcode colors/spacing/typography** — always use design system CSS custom properties (`--wa-*` vars). Overrides in `apps/*/src/styles/tokens/base.css`. Never hardcode literal values.
 - **Prefer i18n keys over hardcoded labels** — framework i18n (setup pending)
 - **Standalone components** — Angular/Vue components must be standalone
 - **Unidirectional data flow** — no two-way bindings for state logic

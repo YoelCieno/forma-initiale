@@ -1,21 +1,19 @@
 <template>
-  <nav>
-    <RouterLink to="/">
-      Products
-    </RouterLink>
-    <RouterLink to="/buttons">
-      Button Demo
-    </RouterLink>
-  </nav>
-  <main>
+  <main class="fe-theme-default fe-palette-default fe-brand-blue">
+    <nav>
+      <RouterLink to="/">
+        Products
+      </RouterLink>
+      <RouterLink to="/buttons">
+        Button Demo
+      </RouterLink>
+    </nav>
+
     <RouterView />
   </main>
 </template>
 
 <style scoped>
-h1, h2, h3, h4, h5, h6 {
-  color: darkslategray;
-}
 nav {
   padding: 1rem;
   border-bottom: 1px solid lightgray;
@@ -30,7 +28,7 @@ nav {
     }
 
     &.router-link-exact-active {
-      color: darkviolet;
+      color: var(--wa-color-brand-fill-loud);
       font-weight: 600;
       text-decoration: underline;
     }

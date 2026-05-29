@@ -125,6 +125,24 @@ git commit -m "chore(web): update MSW worker"
 - `docs/dependency-management.md` — Dependency update strategies (taze + turbo, Renovate)
 - `docs/decisions/docs-solution.md` — Docs solution decision record
 
+## Theming & Design Tokens
+
+The project uses WebAwesome 3.7 as its design system. Styles are split into three layers:
+
+1. **WA base** (`@repo/ui/styles`) — imports `native.css` + `utilities.css` (theme-agnostic reset + utilities)
+2. **WA theme** (`@repo/ui/styles/themes/<name>`) — each app imports its chosen theme (default, awesome, shoelace)
+3. **DS tokens** (`apps/*/src/styles/tokens/`) — app-level `--wa-*` CSS custom property overrides (brand colors, typography, spacing)
+
+All apps load them via `main.ts`:
+
+```typescript
+import '@repo/ui/styles'           // WA base (no theme)
+import '@repo/ui/styles/themes/default'  // WA default theme
+import './styles/tokens/base.css'   // DS token overrides
+```
+
+**Rule**: Never hardcode colors/spacing/typography — always use `var(--wa-*)` CSS custom properties.
+
 ## Tech stack
 
 - **Framework:** Vue 3 (`apps/web-vue`)

@@ -61,13 +61,19 @@ const products = await getProducts()
 - `index.ts` — Barrel exports (FeButton, FeButtonElement type)
 - `components/fe-button.ts` — `<fe-button>` custom element definition
 - `components/fe-button.spec.ts` — Tests
-- `styles/webawesome.ts` — WA CSS import
+- `styles/webawesome.ts` — WA base CSS (native.css + utilities.css, no theme)
+- `styles/themes/default.ts` — WA default theme (for web-vue)
+- `styles/themes/awesome.ts` — WA awesome theme (for future web-angular)
+- `styles/themes/shoelace.ts` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
 - `vitest.setup.ts` — ElementInternals stub for jsdom
 
 **Package Exports**:
 - `@repo/ui/fe-button` → `./components/fe-button.ts`
 - `@repo/ui/styles` → `./styles/webawesome.ts`
+- `@repo/ui/styles/themes/default` → `./styles/themes/default.ts`
+- `@repo/ui/styles/themes/awesome` → `./styles/themes/awesome.ts`
+- `@repo/ui/styles/themes/shoelace` → `./styles/themes/shoelace.ts`
 
 **Dependencies**:
 - `hybrids` (^9) — Web Component library (define, html)
@@ -172,7 +178,8 @@ module.exports = {
 **Build**: `vp dev` / `vp build` (Vite+ CLI)
 
 **Key Files**:
-- `src/main.ts` — App entry, registers plugins (router, WA styles)
+- `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens)
+- `src/styles/tokens/base.css` — Design system token overrides (`--wa-*` vars)
 - `src/App.vue` — Root component (nav + RouterView)
 - `src/router.ts` — Hash-based routes (/, /buttons)
 - `src/composables/useProducts.ts` — Product data composable
