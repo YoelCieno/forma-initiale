@@ -1,26 +1,24 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div>
-    <nav>
-      <RouterLink to="/">
-        Products
-      </RouterLink>
-      <RouterLink to="/buttons">
-        Button Demo
-      </RouterLink>
-    </nav>
-    <main>
-      <RouterView />
-    </main>
-  </div>
+  <nav>
+    <RouterLink to="/">
+      Products
+    </RouterLink>
+    <RouterLink to="/buttons">
+      Button Demo
+    </RouterLink>
+  </nav>
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>
+h1, h2, h3, h4, h5, h6 {
+  color: darkslategray;
+}
 nav {
   padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid lightgray;
   margin-bottom: 1rem;
 
   a {

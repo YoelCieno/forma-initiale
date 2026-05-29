@@ -85,13 +85,14 @@ function onClickNeutral() {
 <style scoped>
 .button-demo-page {
   padding: 0 1rem;
-}
 
-section {
-  margin-bottom: 1rem;
-}
-fe-button {
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
+  section {
+    margin-bottom: 1rem;
+  }
+
+  fe-button {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 </style>

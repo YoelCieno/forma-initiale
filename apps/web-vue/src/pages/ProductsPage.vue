@@ -5,7 +5,7 @@ const { products, loading, error } = useProducts();
 
 <template>
   <div class="products-page">
-    <h1>Products</h1>
+    <h1>Your list</h1>
     <p v-if="loading">
       Loading...
     </p>
@@ -15,10 +15,14 @@ const { products, loading, error } = useProducts();
     >
       {{ error }}
     </p>
-    <ul v-else>
+    <ul
+      v-else
+      class="product-list"
+    >
       <li
         v-for="product in products"
         :key="product.id"
+        class="product-card"
       >
         {{ product.title }} — ${{ product.price }}
       </li>
@@ -28,9 +32,20 @@ const { products, loading, error } = useProducts();
 
 <style scoped>
 .products-page {
-  max-width: 640px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 1rem;
+}
+.product-list {
+  list-style: none;
+  color: slategrey;
+}
+.product-card {
+  max-width: 25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin:  0 0 0.5rem 0;
+  line-height: normal;
 }
 .error {
   color: #e53e3e;
