@@ -4,8 +4,8 @@
       <RouterLink to="/">
         Products
       </RouterLink>
-      <RouterLink to="/buttons">
-        Button Demo
+      <RouterLink to="/demo">
+        Demo
       </RouterLink>
     </nav>
 

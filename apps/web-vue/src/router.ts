@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import ProductsPage from './pages/ProductsPage.vue'
-import ButtonDemoPage from './pages/ButtonDemoPage.vue'
+import DemoPage from './pages/DemoPage.vue'
 
 const routes = [
   { path: '/', name: 'products', component: ProductsPage },
-  { path: '/buttons', name: 'buttons', component: ButtonDemoPage },
+  { path: '/demo', name: 'demo', component: DemoPage },
 ]
 
 export default createRouter({

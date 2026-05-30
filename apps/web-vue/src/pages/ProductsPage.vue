@@ -11,20 +11,21 @@ const { products, loading, error } = useProducts();
     </p>
     <p
       v-if="error"
-      class="error"
+      class="products-page__error"
     >
       {{ error }}
     </p>
     <ul
       v-else
-      class="product-list"
+      class="products-page__list"
     >
       <li
         v-for="product in products"
         :key="product.id"
-        class="product-card"
+        class="products-page__card"
       >
-        {{ product.title }} — ${{ product.price }}
+        <span class="products-page__card-title">{{ product.title }}</span>
+        <span class="products-page__card-price">${{ product.price }}</span>
       </li>
     </ul>
   </div>
@@ -35,11 +36,11 @@ const { products, loading, error } = useProducts();
   margin: 0 auto;
   padding: 0 1rem;
 }
-.product-list {
+.products-page__list {
   list-style: none;
   color: slategrey;
 }
-.product-card {
+.products-page__card {
   max-width: 25rem;
   border: 1px solid #e2e8f0;
   border-radius: 0.5rem;
@@ -47,7 +48,16 @@ const { products, loading, error } = useProducts();
   margin:  0 0 0.5rem 0;
   line-height: normal;
 }
-.error {
+.products-page__card-title {
+  display: block;
+  font-weight: 600;
+}
+.products-page__card-price {
+  display: block;
+  font-size: 0.875rem;
+  color: #666;
+}
+.products-page__error {
   color: #e53e3e;
 }
 </style>

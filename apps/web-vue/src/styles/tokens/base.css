@@ -5,7 +5,7 @@
 
 /* #region Brand Colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 :where(:root) {
-  color-scheme: light;
+  color-scheme: light dark;
   --wa-color-brand-fill-quiet: #e0e7ff;
   --wa-color-brand-fill-normal: #4f46e5; /* indigo-600 */
   --wa-color-brand-fill-loud: #4338ca; /* indigo-700 */
