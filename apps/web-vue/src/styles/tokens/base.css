@@ -4,9 +4,7 @@
  */
 
 /* #region Brand Colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-:where(:root),
-.fe-light,
-.fe-dark .fe-invert {
+:where(:root) {
   color-scheme: light;
   --wa-color-brand-fill-quiet: #e0e7ff;
   --wa-color-brand-fill-normal: #4f46e5; /* indigo-600 */
@@ -16,24 +14,18 @@
   --wa-color-brand-border-loud: #6366f1;
   --wa-color-brand-on-quiet: #3730a3;
   --wa-color-brand-on-normal: #ffffff;
-  --wa-color-brand-on-loud: #ffffff;
-}
-/* #endregion */
+  --wa-color-brand-on-loud: #e8f3ff;
+  /* #endregion */
 
-/* #region Typography ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-:where(:root),
-.fe-theme-default {
-  --wa-font-family-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* #region Typography ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  /*--wa-font-family-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
   --wa-font-family-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --wa-font-family-code: "JetBrains Mono", ui-monospace, monospace;
-}
-/* #endregion */
+  --wa-font-family-code: "JetBrains Mono", ui-monospace, monospace;*/
+  /* #endregion */
 
-/* #region Border Radius ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-:where(:root),
-.fe-theme-default {
+  /* #region Border Radius ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   --wa-border-radius-s: 0.25rem;
   --wa-border-radius-m: 0.5rem;
   --wa-border-radius-l: 0.75rem;
+  /* #endregion */
 }
-/* #endregion */

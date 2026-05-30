@@ -1,5 +1,5 @@
 <template>
-  <main class="fe-theme-default fe-palette-default fe-brand-blue">
+  <main>
     <nav>
       <RouterLink to="/">
         Products

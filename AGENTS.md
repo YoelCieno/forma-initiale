@@ -84,6 +84,41 @@ import '@repo/ui/styles'              // WA base (native+utilities, no theme)
 import '@repo/ui/styles/themes/default' // WA theme
 ```
 
+## WebAwesome Agent Skill Reference
+
+Web Awesome publishes an Agent Skill (`@awesome.me/webawesome@3.7.0`) with full component API docs. Copied to stable project path:
+
+`.opencode/references/webawesome/`
+
+### Structure
+
+```
+.opencode/references/webawesome/
+├── SKILL.md                          # Overview, component listing, quick start, themes
+└── references/
+    ├── components/                   # Per-component docs: API, props, events, slots, CSS parts
+    │   ├── button.md, card.md, icon.md, input.md, ... (50+ files)
+    ├── frameworks/                   # React, Vue, Angular, Svelte guides
+    │   └── vue.md
+    ├── tokens/                       # Design tokens: color, typography, spacing, shadows
+    ├── utilities/                    # Layout, rounding, native styles, vis-hidden
+    ├── themes.md                     # Theme + palette usage
+    ├── installation.md
+    ├── usage.md
+    ├── form-controls.md
+    ├── customizing.md
+    └── localization.md
+```
+
+### When to load
+
+When implementing or modifying `fe-*` wrapper components in `packages/ui/`, consult the relevant WA component docs in `.opencode/references/webawesome/references/components/<component>.md` for:
+- Component API (props, events, methods, slots)
+- CSS custom properties for styling
+- CSS parts for internal element targeting
+
+When styling with WA design tokens, see `.opencode/references/webawesome/references/tokens/`.
+
 ## Gotchas & quirks
 
 1. **WA styles split into base + theme** — `@repo/ui/styles` now imports only `native.css` + `utilities.css` (no theme). Apps must **separately** import `@repo/ui/styles/themes/<name>` to get WA component styling. Forgetting the theme import causes unstyled WA components.
@@ -96,6 +131,7 @@ import '@repo/ui/styles/themes/default' // WA theme
 8. **`apps/web-vue/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
 9. **`apps/web-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
 10. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
+11. **WA Agent Skill available** — WA publishes an Agent Skill at `.opencode/references/webawesome/` with full component docs (API, events, CSS parts, tokens). When building `fe-*` wrappers, read the relevant `<component>.md` first for API contract.
 
 ## Agent rules
 
