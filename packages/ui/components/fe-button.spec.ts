@@ -2,12 +2,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import './fe-button'
 import type { FeButtonElement } from './fe-button'
 
-interface WaButtonElement extends HTMLElement {
-  disabled: boolean
-  loading: boolean
-  pill: boolean
-}
-
 describe('fe-button', () => {
   let el: FeButtonElement
 
@@ -112,9 +106,9 @@ describe('fe-button', () => {
   it('forwards disabled property to inner wa-button', async () => {
     el.disabled = true
     await Promise.resolve() // hybridJS re-render
-    await Promise.resolve() // Lit update
+    // await Promise.resolve() // Lit update
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.disabled).toBe(true)
+    expect(Reflect.get(waButton!, 'disabled')).toBe(true)
   })
 
   it('removes disabled property from inner wa-button when host disables it', async () => {
@@ -125,7 +119,7 @@ describe('fe-button', () => {
     await Promise.resolve()
     await Promise.resolve()
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.disabled).toBe(false)
+    expect(Reflect.get(waButton!, 'disabled')).toBe(false)
   })
 
   // ── loading ────────────────────────────────────────────────
@@ -135,7 +129,7 @@ describe('fe-button', () => {
     await Promise.resolve()
     await Promise.resolve()
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.loading).toBe(true)
+    expect(Reflect.get(waButton!, 'loading')).toBe(true)
   })
 
   it('removes loading property from inner wa-button when host disables it', async () => {
@@ -146,7 +140,7 @@ describe('fe-button', () => {
     await Promise.resolve()
     await Promise.resolve()
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.loading).toBe(false)
+    expect(Reflect.get(waButton!, 'loading')).toBe(false)
   })
 
   // ── pill ────────────────────────────────────────────────────
@@ -156,7 +150,7 @@ describe('fe-button', () => {
     await Promise.resolve()
     await Promise.resolve()
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.pill).toBe(true)
+    expect(Reflect.get(waButton!, 'pill')).toBe(true)
   })
 
   it('removes pill property from inner wa-button when host disables it', async () => {
@@ -167,7 +161,7 @@ describe('fe-button', () => {
     await Promise.resolve()
     await Promise.resolve()
     const waButton = el.shadowRoot?.querySelector('wa-button')
-    expect((waButton as WaButtonElement)?.pill).toBe(false)
+    expect(Reflect.get(waButton!, 'pill')).toBe(false)
   })
 
   // ── Click event ──────────────────────────────────────────────

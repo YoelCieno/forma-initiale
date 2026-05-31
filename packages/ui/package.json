@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "exports": {
     "./fe-button": "./components/fe-button.ts",
+    "./fe-icon": "./components/fe-icon.ts",
     "./styles": "./styles/webawesome.ts",
     "./styles/themes/default": "./styles/themes/default.ts",
     "./styles/themes/awesome": "./styles/themes/awesome.ts",

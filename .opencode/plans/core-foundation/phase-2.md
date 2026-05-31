@@ -1,7 +1,7 @@
 # Phase 2 — Web Awesome UI Layer
 
 **Status:** 🔧 IN PROGRESS
-**Last updated:** 2026-05-29
+**Last updated:** 2026-05-30
 
 ## Goal
 
@@ -43,6 +43,7 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 - [ ] Adopt BEM CSS naming convention across all component styles
 - [ ] Add fe-icon component (`packages/ui/components/fe-icon.ts`)
 - [ ] Add fe-card component (`packages/ui/components/fe-card.ts`)
+- [ ] **[Product Integration](./phase-2/2.6-product-integration.md)** — domain model update, presenter, fe-card, grid refactor, tests
 - [ ] Create Vue integration doc (`docs/integration/vue.md`)
 
 ## Decisions
@@ -75,3 +76,4 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 | [`phase-2/2.3-theming.md`](./phase-2/2.3-theming.md) | Design token strategy, CSS custom property overrides, per-component and app-level theming |
 | [`phase-2/2.4-app-integration.md`](./phase-2/2.4-app-integration.md) | Vue 3, Angular (future), React (future) integration patterns, code examples |
 | [`phase-2/2.5-testing-strategy.md`](./phase-2/2.5-testing-strategy.md) | packages/ui testing approach, app integration tests, current coverage table, targets |
+| [`phase-2/2.6-product-integration.md`](./phase-2/2.6-product-integration.md) | Domain model update, presenter layer, fe-card wrapper, products grid, tests |
