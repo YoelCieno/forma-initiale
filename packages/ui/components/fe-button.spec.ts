@@ -106,7 +106,7 @@ describe('fe-button', () => {
   it('forwards disabled property to inner wa-button', async () => {
     el.disabled = true
     await Promise.resolve() // hybridJS re-render
-    // await Promise.resolve() // Lit update
+    await Promise.resolve() // Lit update + reflection
     const waButton = el.shadowRoot?.querySelector('wa-button')
     expect(Reflect.get(waButton!, 'disabled')).toBe(true)
   })

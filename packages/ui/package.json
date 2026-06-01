@@ -5,6 +5,7 @@
     "./fe-button": "./components/fe-button.ts",
     "./fe-card": "./components/fe-card.ts",
     "./fe-icon": "./components/fe-icon.ts",
+    "./fe-rating": "./components/fe-rating.ts",
     "./styles": "./styles/webawesome.ts",
     "./styles/themes/default": "./styles/themes/default.ts",
     "./styles/themes/awesome": "./styles/themes/awesome.ts",
