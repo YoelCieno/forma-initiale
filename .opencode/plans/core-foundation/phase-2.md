@@ -43,7 +43,7 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 - [ ] Adopt BEM CSS naming convention across all component styles
 - [x] Add fe-icon component (`packages/ui/components/fe-icon.ts`)
 - [x] Add fe-card component (`packages/ui/components/fe-card.ts`)
-- [ ] **[Demo Page Expansion](./phase-2/2.6-demo-page-expansion.md)** — fe-icon + fe-card showcases, UX polish
+- [x] **[Demo Page Expansion](./phase-2/2.6-demo-page-expansion.md)** — fe-icon + fe-card showcases, UX polish
 - [ ] **[Product Integration](./phase-2/2.7-product-integration.md)** — domain model update, presenter, fe-card, grid refactor, tests
 - [ ] Create Vue integration doc (`docs/integration/vue.md`)
 
