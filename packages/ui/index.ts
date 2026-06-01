@@ -4,4 +4,5 @@
 //
 // Barrel re-exports types and component constants.
 export type { FeButtonElement } from './components/fe-button.js';
+export type { FeCardElement } from './components/fe-card.js';
 export { FeButton } from './components/fe-button.js';

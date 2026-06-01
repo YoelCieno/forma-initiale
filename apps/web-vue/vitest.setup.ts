@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import { config } from "@vue/test-utils";
 
 config.global.config.compilerOptions = {
-  isCustomElement: (tag: string) => tag.startsWith("wa-") || tag.startsWith("fe-"),
+  isCustomElement: (tag: string) => tag.startsWith("fe-"),
 };
 
 // Mock @repo/ui/fe-button to prevent Lit web component registration.
@@ -13,5 +13,13 @@ config.global.config.compilerOptions = {
 // and Vue falls back to setAttribute — which is what tests check via `wrapper.attributes()`.
 // Vue's `isCustomElement` config already handles <wa-button> rendering as custom element.
 vi.mock("@repo/ui/fe-button", () => {
+  return {};
+});
+
+vi.mock("@repo/ui/fe-icon", () => {
+  return {};
+});
+
+vi.mock("@repo/ui/fe-card", () => {
   return {};
 });

@@ -38,11 +38,11 @@ const { products, loading, error } = useProducts();
 }
 .products-page__list {
   list-style: none;
-  color: slategrey;
+  color: var(--color-text-muted);
 }
 .products-page__card {
   max-width: 25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border-light);
   border-radius: 0.5rem;
   padding: 1rem;
   margin:  0 0 0.5rem 0;
@@ -51,13 +51,14 @@ const { products, loading, error } = useProducts();
 .products-page__card-title {
   display: block;
   font-weight: 600;
+  color: var(--color-text-body);
 }
 .products-page__card-price {
   display: block;
-  font-size: 0.875rem;
-  color: #666;
+  font-size: var(--fs-s);
+  color: var(--color-text-muted);
 }
 .products-page__error {
-  color: #e53e3e;
+  color: var(--color-error);
 }
 </style>

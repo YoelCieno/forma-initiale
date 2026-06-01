@@ -45,4 +45,62 @@ describe('DemoPage', () => {
     const loading = wrapper.find('fe-button[loading]')
     expect(loading.exists()).toBe(true)
   })
+
+  it('renders fe-icon section heading', () => {
+    const wrapper = mount(DemoPage)
+    expect(wrapper.text()).toContain('Icons')
+  })
+
+  it('renders basic icons', () => {
+    const wrapper = mount(DemoPage)
+    const check = wrapper.find('fe-icon[name="check"]')
+    const star = wrapper.find('fe-icon[name="star"]')
+    expect(check.exists()).toBe(true)
+    expect(star.exists()).toBe(true)
+  })
+
+  it('renders animated icons', () => {
+    const wrapper = mount(DemoPage)
+    const spin = wrapper.find('fe-icon[animation="spin"]')
+    const pulse = wrapper.find('fe-icon[animation="pulse"]')
+    expect(spin.exists()).toBe(true)
+    expect(pulse.exists()).toBe(true)
+  })
+
+  it('renders size-variant icons', () => {
+    const wrapper = mount(DemoPage)
+    const rocketXs = wrapper.find('fe-icon[name="rocket"]')
+    expect(rocketXs.exists()).toBe(true)
+  })
+
+  it('renders fe-card section heading', () => {
+    const wrapper = mount(DemoPage)
+    expect(wrapper.text()).toContain('Cards')
+  })
+
+  it('renders default fe-card', () => {
+    const wrapper = mount(DemoPage)
+    const card = wrapper.find('fe-card')
+    expect(card.exists()).toBe(true)
+  })
+
+  it('renders appearance variant cards', () => {
+    const wrapper = mount(DemoPage)
+    // WA components use JS properties not HTML attrs; check via text
+    expect(wrapper.text()).toContain('Outlined (default)')
+    expect(wrapper.text()).toContain('Filled')
+    expect(wrapper.text()).toContain('Accent')
+    expect(wrapper.text()).toContain('Plain')
+  })
+
+  it('renders card with header slot', () => {
+    const wrapper = mount(DemoPage)
+    expect(wrapper.text()).toContain('Card Title')
+  })
+
+  it('renders horizontal card', () => {
+    const wrapper = mount(DemoPage)
+    // WA uses JS properties not HTML attrs; check via text content
+    expect(wrapper.text()).toContain('Horizontal card')
+  })
 })

@@ -41,9 +41,10 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 - [x] Adopt MSW as API mocking strategy — add MSW dep to web-vue + infra, create handler structure, verify dev + test interception
 - [ ] Set up DS tokens scaffold (`packages/ui/styles/tokens/`) with `--wa-*` CSS var overrides
 - [ ] Adopt BEM CSS naming convention across all component styles
-- [ ] Add fe-icon component (`packages/ui/components/fe-icon.ts`)
-- [ ] Add fe-card component (`packages/ui/components/fe-card.ts`)
-- [ ] **[Product Integration](./phase-2/2.6-product-integration.md)** — domain model update, presenter, fe-card, grid refactor, tests
+- [x] Add fe-icon component (`packages/ui/components/fe-icon.ts`)
+- [x] Add fe-card component (`packages/ui/components/fe-card.ts`)
+- [ ] **[Demo Page Expansion](./phase-2/2.6-demo-page-expansion.md)** — fe-icon + fe-card showcases, UX polish
+- [ ] **[Product Integration](./phase-2/2.7-product-integration.md)** — domain model update, presenter, fe-card, grid refactor, tests
 - [ ] Create Vue integration doc (`docs/integration/vue.md`)
 
 ## Decisions
@@ -76,4 +77,5 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 | [`phase-2/2.3-theming.md`](./phase-2/2.3-theming.md) | Design token strategy, CSS custom property overrides, per-component and app-level theming |
 | [`phase-2/2.4-app-integration.md`](./phase-2/2.4-app-integration.md) | Vue 3, Angular (future), React (future) integration patterns, code examples |
 | [`phase-2/2.5-testing-strategy.md`](./phase-2/2.5-testing-strategy.md) | packages/ui testing approach, app integration tests, current coverage table, targets |
-| [`phase-2/2.6-product-integration.md`](./phase-2/2.6-product-integration.md) | Domain model update, presenter layer, fe-card wrapper, products grid, tests |
+| [`phase-2/2.6-demo-page-expansion.md`](./phase-2/2.6-demo-page-expansion.md) | Demo page: fe-icon + fe-card showcases, CSS UX polish |
+| [`phase-2/2.7-product-integration.md`](./phase-2/2.7-product-integration.md) | Domain model update, presenter layer, fe-card wrapper, products grid, tests |

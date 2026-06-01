@@ -85,17 +85,17 @@ describe('fe-button', () => {
 
   // ── Icon ────────────────────────────────────────────────────
 
-  it('renders wa-icon inside shadow root when icon property is set', async () => {
+  it('renders fe-icon inside shadow root when icon property is set', async () => {
     el.icon = 'check'
-    await Promise.resolve() // hybridJS re-render (creates wa-icon)
-    await Promise.resolve() // Lit reflect name attribute
-    const icon = el.shadowRoot?.querySelector('wa-icon')
+    await Promise.resolve() // hybridJS re-render (creates fe-icon)
+    await Promise.resolve() // render fe-icon's internal wa-icon with name attr
+    const icon = el.shadowRoot?.querySelector('fe-icon')
     expect(icon).toBeDefined()
     expect(icon?.getAttribute('name')).toBe('check')
   })
 
-  it('omits wa-icon when icon property is empty', () => {
-    const icon = el.shadowRoot?.querySelector('wa-icon')
+  it('omits fe-icon when icon property is empty', () => {
+    const icon = el.shadowRoot?.querySelector('fe-icon')
     expect(icon).toBeNull()
   })
 

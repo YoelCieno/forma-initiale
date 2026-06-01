@@ -1,5 +1,5 @@
 import '@awesome.me/webawesome/dist/components/button/button.js'
-import '@awesome.me/webawesome/dist/components/icon/icon.js'
+
 import { define, html } from 'hybrids'
 
 export interface FeButtonElement extends HTMLElement {
@@ -31,7 +31,7 @@ export const FeButton = define<FeButtonElement>({
         loading="${host.loading}"
         pill="${host.pill}"
       >
-        ${host.icon && html`<wa-icon name="${host.icon}"></wa-icon>`}
+        ${host.icon && html`<fe-icon name="${host.icon}"></fe-icon>`}
         <slot></slot>
       </wa-button>
     `,
