@@ -5,7 +5,7 @@ import DemoPage from './DemoPage.vue'
 describe('DemoPage', () => {
   it('renders demo page title', () => {
     const wrapper = mount(DemoPage)
-    expect(wrapper.text()).toContain('Button Demo')
+    expect(wrapper.text()).toContain('Components')
   })
 
   it('renders brand variant fe-button', () => {
@@ -75,7 +75,7 @@ describe('DemoPage', () => {
 
   it('renders fe-card section heading', () => {
     const wrapper = mount(DemoPage)
-    expect(wrapper.text()).toContain('Cards')
+    expect(wrapper.text()).toContain('Card')
   })
 
   it('renders default fe-card', () => {

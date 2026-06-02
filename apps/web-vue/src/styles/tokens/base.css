@@ -51,19 +51,19 @@
   /* #endregion */
 
   /* #region Font Size Scale ~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  --fs-xs: 0.75rem;
-  --fs-s: 0.875rem;
-  --fs-m: 1rem;
-  --fs-l: 1.25rem;
-  --fs-xl: 1.5rem;
+  --fs-xs: 0.75rem; /* 12px */
+  --fs-s: 0.875rem; /* 14px */
+  --fs-m: 1rem; /* 16px */
+  --fs-l: 1.25rem; /* 20px */
+  --fs-xl: 1.5rem; /* 24px */
   --wa-font-size-2xl: round(calc(var(--fs-l) * 1.125 * 1.125), 1px); /* 25px */
   --wa-font-size-3xl: round(calc(var(--fs-xl) * 1.125 * 1.125), 1px); /* 36px */
   /* #endregion */
 
   /* #region Border Radius ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  --wa-border-radius-s: 0.15rem;
-  --wa-border-radius-m: 0.3rem;
-  --wa-border-radius-l: 0.45rem;
+  --wa-border-radius-s: 0.15rem; /* 2.4px */
+  --wa-border-radius-m: 0.3rem; /* 4.8px */
+  --wa-border-radius-l: 0.45rem; /* 7.2px */
   /* #endregion */
 }
 

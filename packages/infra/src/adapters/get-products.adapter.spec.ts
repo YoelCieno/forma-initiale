@@ -6,24 +6,23 @@ const mockProducts = [
   { id: '2', title: 'Product 2', price: 24.99 },
 ]
 
+function mockOkResponse(data: unknown) {
+  return { ok: true, json: () => Promise.resolve(data) }
+}
+
 describe('getProducts', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
 
   it('returns products on successful fetch', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockProducts),
-      }),
-    )
+    const apiResponse = { data: mockProducts, total: mockProducts.length }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
     const result = await getProducts()
 
-    expect(result).toEqual(mockProducts)
-    expect(fetch).toHaveBeenCalledWith('https://api.example.com/products')
+    expect(result).toEqual(apiResponse)
+    expect(fetch).toHaveBeenCalledWith('https://api.example.com/api/products')
   })
 
   it('throws on non-ok response (HTTP 500)', async () => {
@@ -63,17 +62,12 @@ describe('getProducts', () => {
     await expect(getProducts()).rejects.toThrow('Network failure')
   })
 
-  it('returns empty array when API returns empty', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve([]),
-      }),
-    )
+  it('returns empty result when API returns empty', async () => {
+    const apiResponse = { data: [], total: 0 }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
     const result = await getProducts()
 
-    expect(result).toEqual([])
+    expect(result).toEqual(apiResponse)
   })
 })
