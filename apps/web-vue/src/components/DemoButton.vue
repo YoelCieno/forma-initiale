@@ -14,7 +14,7 @@ function onClickNeutral() {
         Variants
       </h3>
       <fe-card>
-        <div class="demo-button__wrapper">
+        <div class="demo-button__row">
           <fe-button
             variant="neutral"
             @click="onClickNeutral"
@@ -45,7 +45,7 @@ function onClickNeutral() {
         Sizes
       </h3>
       <fe-card>
-        <div class="demo-button__wrapper">
+        <div class="demo-button__row">
           <fe-button size="xs">
             XS
           </fe-button>
@@ -70,7 +70,7 @@ function onClickNeutral() {
         Appearances
       </h3>
       <fe-card>
-        <div class="demo-button__wrapper">
+        <div class="demo-button__row">
           <fe-button appearance="accent">
             Accent
           </fe-button>
@@ -92,7 +92,7 @@ function onClickNeutral() {
         States
       </h3>
       <fe-card>
-        <div class="demo-button__wrapper">
+        <div class="demo-button__row">
           <fe-button disabled>
             Disabled
           </fe-button>
@@ -111,7 +111,7 @@ function onClickNeutral() {
   flex-direction: column;
   gap: 1rem;
 }
-.demo-button__wrapper {
+.demo-button__row {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
