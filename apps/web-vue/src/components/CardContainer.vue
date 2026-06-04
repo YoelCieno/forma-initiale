@@ -4,9 +4,9 @@ import "@repo/ui/fe-icon";
 </script>
 
 <template>
-  <div class="demo-card">
+  <div class="card-container">
     <div>
-      <h3 class="demo-card__subheading">
+      <h3 class="h3__subheading">
         Default
       </h3>
       <fe-card>
@@ -15,10 +15,10 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="demo-card__subheading">
+      <h3 class="h3__subheading">
         Appearances
       </h3>
-      <div class="demo-card__wrapper">
+      <div class="card-container__wrapper">
         <fe-card appearance="outlined">
           <p>Outlined (default)</p>
         </fe-card>
@@ -32,7 +32,7 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="demo-card__subheading">
+      <h3 class="h3__subheading">
         With Header & Footer
       </h3>
       <fe-card>
@@ -43,7 +43,7 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="demo-card__subheading">
+      <h3 class="h3__subheading">
         Horizontal
       </h3>
       <fe-card orientation="horizontal">
@@ -55,20 +55,14 @@ import "@repo/ui/fe-icon";
 </template>
 
 <style scoped>
-.demo-card {
+.card-container {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
 }
-.demo-card__wrapper {
+.card-container__wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   flex-direction: column;
-}
-.demo-card__subheading {
-  margin: 0 0 0.25rem;
-  font-size: var(--fs-s);
-  color: var(--color-text-muted);
-  font-weight: bold;
 }
 </style>

@@ -8,13 +8,13 @@ function onClickNeutral() {
 </script>
 
 <template>
-  <div class="demo-button">
+  <div class="button-container">
     <div>
-      <h3 class="demo-button__subheading">
+      <h3 class="h3__subheading">
         Variants
       </h3>
       <fe-card>
-        <div class="demo-button__row">
+        <div class="button-container__row">
           <fe-button
             variant="neutral"
             @click="onClickNeutral"
@@ -41,11 +41,11 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="demo-button__subheading">
+      <h3 class="h3__subheading">
         Sizes
       </h3>
       <fe-card>
-        <div class="demo-button__row">
+        <div class="button-container__row">
           <fe-button size="xs">
             XS
           </fe-button>
@@ -66,11 +66,11 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="demo-button__subheading">
+      <h3 class="h3__subheading">
         Appearances
       </h3>
       <fe-card>
-        <div class="demo-button__row">
+        <div class="button-container__row">
           <fe-button appearance="accent">
             Accent
           </fe-button>
@@ -88,11 +88,11 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="demo-button__subheading">
+      <h3 class="h3__subheading">
         States
       </h3>
       <fe-card>
-        <div class="demo-button__row">
+        <div class="button-container__row">
           <fe-button disabled>
             Disabled
           </fe-button>
@@ -106,20 +106,14 @@ function onClickNeutral() {
 </template>
 
 <style scoped>
-.demo-button {
+.button-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
-.demo-button__row {
+.button-container__row {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-.demo-button__subheading {
-  margin: 0 0 0.25rem;
-  font-size: var(--fs-s);
-  color: var(--color-text-muted);
-  font-weight: bold;
 }
 </style>

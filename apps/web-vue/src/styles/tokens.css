@@ -10,15 +10,15 @@
   --brand-fill-normal: #4f46e5; /* indigo-600 */
   --brand-fill-loud: #4338ca; /* indigo-700 */
   --brand-border-quiet: #c7d2fe;
-  --brand-border-normal: #818cf8;
+  --brand-border-normal: #e3e5ef;
   --brand-border-loud: #6366f1;
   --brand-on-quiet: #3730a3;
   --brand-on-normal: #fff;
   --brand-on-loud: #e8f3ff;
-  --wa-color-neutral-fill-quiet: var(--brand-fill-quiet);
   --wa-color-brand-fill-quiet: var(--brand-fill-quiet);
   --wa-color-brand-fill-normal: var(--brand-fill-normal);
   --wa-color-brand-fill-loud: var(--brand-fill-loud);
+  --wa-color-neutral-fill-quiet: var(--brand-fill-quiet);
   --wa-color-brand-border-quiet: var(--brand-border-quiet);
   --wa-color-brand-border-normal: var(--brand-border-normal);
   --wa-color-brand-border-loud: var(--brand-border-loud);
@@ -38,7 +38,6 @@
   --wa-color-text-quiet: var(--color-text-muted);
   --wa-color-surface-default: var(--brand-on-normal);
   /* #endregion */
-
   /* #region Typography ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   /*--wa-font-family-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
   --wa-font-family-body: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -46,7 +45,7 @@
   /* #endregion */
 
   /* #region Layout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  --min-width-layout: 320px;
+  --min-width-layout: 250px;
   --max-width-layout: 1200px;
   /* #endregion */
 

@@ -5,9 +5,9 @@ import "@repo/ui/fe-card";
 </script>
 
 <template>
-  <div class="demo-rating">
+  <div class="rating-container">
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         Basic
       </h3>
       <fe-card>
@@ -16,7 +16,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         With Initial Value
       </h3>
       <fe-card>
@@ -25,7 +25,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         Readonly
       </h3>
       <fe-card>
@@ -34,7 +34,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         Disabled
       </h3>
       <fe-card>
@@ -43,7 +43,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         Different Max
       </h3>
       <fe-card>
@@ -52,19 +52,19 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="demo-rating__subheading">
+      <h3 class="h3__subheading">
         Half-Star Precision
       </h3>
       <fe-card>
         <fe-rating precision="0.5" value="2.5" />
       </fe-card>
     </div>
-    <div class="demo-rating__row--last">
-      <h3 class="demo-rating__subheading">
+    <div class="rating-container__row">
+      <h3 class="h3__subheading">
         Sizes
       </h3>
       <fe-card>
-        <div class="demo-rating__row--inline">
+        <div class="rating-container__row--inline">
           <fe-rating size="xs" value="3" />
           <fe-rating size="s" value="3" />
           <fe-rating size="m" value="3" />
@@ -77,26 +77,15 @@ import "@repo/ui/fe-card";
 </template>
 
 <style scoped>
-.demo-rating {
+.rating-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(10.75rem, 1fr));
+  gap: 1.5rem;
 }
-.demo-rating__row {
-  display: flex;
-  align-items: center;
-}
-.demo-rating__row--last {
+.rating-container__row {
   grid-column: 1 / -1;
 }
-.demo-rating__row--inline {
+.rating-container__row--inline {
   display: inline;
-}
-
-.demo-rating__subheading {
-  margin: 0 0 0.25rem;
-  font-size: var(--fs-s);
-  color: var(--color-text-muted);
-  font-weight: bold;
 }
 </style>

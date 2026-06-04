@@ -42,7 +42,7 @@ const { products, loading, error } = useProducts();
 }
 .products-page__card {
   max-width: 25rem;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 1rem;
   margin:  0 0 0.5rem 0;

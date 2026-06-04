@@ -82,7 +82,13 @@ packages/ui/
 │
 ├── components/
 │   ├── fe-button.ts         # <fe-button> custom element (hybridJS)
-│   └── fe-button.spec.ts    # CE unit tests (188 lines, full coverage)
+│   ├── fe-button.spec.ts    # CE unit tests (188 lines, full coverage)
+│   ├── fe-card.ts           # <fe-card> WC subclass of WaCard (appearance, orientation, slots)
+│   ├── fe-card.spec.ts      # CE unit tests (registration, props, slots)
+│   ├── fe-icon.ts           # <fe-icon> hybridJS wrapper over <wa-icon> (name, library, animation, etc.)
+│   ├── fe-icon.spec.ts      # CE unit tests (registration, property forwarding)
+│   ├── fe-rating.ts         # <fe-rating> hybridJS wrapper over <wa-rating> (value, max, precision, etc.)
+│   └── fe-rating.spec.ts    # CE unit tests (23 tests, 9 props, events)
 │
 └── styles/
     ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
@@ -116,19 +122,19 @@ apps/web-vue/
     │   ├── index.ts         # Styles entry point, imports tokens.css + base.css
     │   ├── tokens.css       # DS token overrides (brand colors, typography, radius)
     │   └── base.css         # Base element styles (body, .h3, .h3__subheading)
-    ├── router.ts            # Hash-based router (/, /demo)
+    ├── router.ts            # Hash-based router (/, /components)
     ├── vite-env.d.ts        # Vite client types, Vue module declaration
     ├── auto-imports.d.ts    # Auto-generated global type declarations
     │
     ├── components/
-    │   ├── DemoButton.vue       # Button demos (variants, sizes, icons)
-    │   ├── DemoButton.spec.ts   # Tests for DemoButton
-    │   ├── DemoCard.vue         # Card demos
-    │   ├── DemoCard.spec.ts     # Tests for DemoCard
-    │   ├── DemoIcon.vue         # Icon demos
-    │   ├── DemoIcon.spec.ts     # Tests for DemoIcon
-    │   ├── DemoRating.vue       # Rating demos
-    │   └── DemoRating.spec.ts   # Tests for DemoRating
+    │   ├── ButtonContainer.vue      # Button demos (variants, sizes, appearances, states)
+    │   ├── ButtonContainer.spec.ts  # Tests for ButtonContainer
+    │   ├── CardContainer.vue        # Card demos (appearances, slots, orientation)
+    │   ├── CardContainer.spec.ts    # Tests for CardContainer
+    │   ├── IconContainer.vue        # Icon demos (basic, animated, sizes)
+    │   ├── IconContainer.spec.ts    # Tests for IconContainer
+    │   ├── RatingContainer.vue      # Rating demos (value, readonly, disabled, precision, sizes)
+    │   └── RatingContainer.spec.ts  # Tests for RatingContainer
     │
     ├── composables/
     │   ├── useProducts.ts        # Product data composable (ref, fetch, error)
@@ -137,7 +143,7 @@ apps/web-vue/
     └── pages/
         ├── ProductsPage.vue      # Product list with loading/error states
         ├── ProductsPage.spec.ts  # Page component tests (65 lines)
-        └── DemoPage.vue          # Component demo hub (button, icon, rating, card)
+        └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
 ```
 
 ---

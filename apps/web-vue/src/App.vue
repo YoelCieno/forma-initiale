@@ -3,8 +3,8 @@
     <RouterLink to="/">
       Products
     </RouterLink>
-    <RouterLink to="/demo">
-      Demo
+    <RouterLink to="/components">
+      Components
     </RouterLink>
   </nav>
 
@@ -16,7 +16,7 @@
 <style scoped>
 nav {
   padding: 1rem;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1rem;
 
   a {
@@ -35,6 +35,6 @@ nav {
   }
 }
 main {
-  padding: 0 1rem;
+  margin: 0 1rem;
 }
 </style>
