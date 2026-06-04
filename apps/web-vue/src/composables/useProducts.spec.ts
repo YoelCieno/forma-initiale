@@ -3,8 +3,8 @@ import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
 const mockProducts = [
-  { id: '1', title: 'Widget', price: 9.99 },
-  { id: '2', title: 'Gadget', price: 19.99 },
+  { id: '1', name: 'vue', previousPrice: 29.99, price: 0, rate: 4 },
+  { id: '2', name: 'react', previousPrice: 19.99, price: 0, rate: 5 },
 ]
 
 function mockOkResponse(data: unknown) {
@@ -45,7 +45,9 @@ describe('useProducts', () => {
     await vi.waitFor(() => {
       expect(wrapper.vm.loading).toBe(false)
     })
-    expect(wrapper.vm.products).toEqual(mockProducts)
+    expect(wrapper.vm.products).toHaveLength(2)
+    expect(wrapper.vm.products[0].title).toBe('Vue')
+    expect(wrapper.vm.products[0].name).toBe('vue')
     expect(wrapper.vm.error).toBeUndefined()
   })
 
@@ -90,13 +92,16 @@ describe('useProducts', () => {
     })
 
     // Second call with new data
-    const newProducts = [{ id: '3', title: 'New', price: 49.99 }]
+    const newProducts = [
+      { id: '3', name: 'svelte', previousPrice: 0, price: 0, rate: 5 },
+    ]
     const newApiResponse = { data: newProducts, total: 1 }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(newApiResponse)))
 
     wrapper.vm.fetch()
     await vi.waitFor(() => {
-      expect(wrapper.vm.products).toEqual(newProducts)
+      expect(wrapper.vm.products).toHaveLength(1)
+      expect(wrapper.vm.products[0].title).toBe('Svelte')
     })
   })
 })

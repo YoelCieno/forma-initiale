@@ -23,7 +23,7 @@ export const productHandlers = [
 
   http.post('*/api/products', async ({ request }: { request: Request }) => {
     const body: Partial<Product> = await request.json()
-    const newProduct = buildProduct({ title: body.title, price: body.price })
+    const newProduct = buildProduct({ name: body.name, previousPrice: body.previousPrice, price: body.price, rate: body.rate })
     products = [ ...products, newProduct]
 
     return HttpResponse.json({ data: newProduct }, { status: 201 })

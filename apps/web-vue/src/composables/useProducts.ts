@@ -1,16 +1,17 @@
 import type { Ref } from "vue";
-import type { Product } from "@repo/domain";
 import { getProducts } from "@repo/infra";
+import { toProductViewList } from "../presenters/product.presenter";
+import type { ProductView } from "../presenters/product.presenter";
 
 interface UseProducts {
-  products: Ref<Product[]>;
+  products: Ref<ProductView[]>;
   loading: Ref<boolean>;
   error: Ref<string | undefined>;
   fetch: () => Promise<void>;
 }
 
 export function useProducts(): UseProducts {
-  const products = ref<Product[]>([]);
+  const products = ref<ProductView[]>([]);
   const loading = ref(true);
   const error = ref<string | undefined>();
 
@@ -18,7 +19,7 @@ export function useProducts(): UseProducts {
     loading.value = true;
     try {
       const { data } = await getProducts();
-      products.value = data;
+      products.value = toProductViewList(data);
     } catch (e) {
       error.value = e instanceof Error ? e.message : "Failed to load products";
     } finally {
