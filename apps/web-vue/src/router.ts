@@ -1,10 +1,16 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import ProductsPage from './pages/ProductsPage.vue'
-import DemoPage from './pages/DemoPage.vue'
 
 const routes = [
   { path: '/', name: 'products', component: ProductsPage },
-  { path: '/demo', name: 'demo', component: DemoPage },
+  // route level code-splitting
+  // this generates a separate chunk (About.[hash].js) for this route
+  // which is lazy-loaded when the route is visited.
+  {
+    path: '/demo',
+    name: 'demo',
+    component: () => import('./pages/DemoPage.vue'),
+  },
 ]
 
 export default createRouter({

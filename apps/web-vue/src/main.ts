@@ -1,6 +1,6 @@
-import '@repo/ui/styles';
-import '@repo/ui/styles/themes/default';
-import './styles/tokens/base.css';
+import '@repo/ui/styles'
+import '@repo/ui/styles/themes/default'
+import './styles'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

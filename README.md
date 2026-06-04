@@ -138,7 +138,7 @@ All apps load them via `main.ts`:
 ```typescript
 import '@repo/ui/styles'           // WA base (no theme)
 import '@repo/ui/styles/themes/default'  // WA default theme
-import './styles/tokens/base.css'   // DS token overrides
+import './styles/tokens.css'         // DS token overrides
 ```
 
 **Rule**: Never hardcode colors/spacing/typography — always use `var(--wa-*)` CSS custom properties.

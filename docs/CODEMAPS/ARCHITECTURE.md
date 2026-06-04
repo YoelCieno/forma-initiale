@@ -40,7 +40,7 @@ Domain (pure TS)          Infra (adapters)          UI (agnostic)
                     │  web-vue           │◄──────────────┘
                     │  ├─ App.vue        │  <fe-button>  
                     │  ├─ ProductsPage   │                
-                    │  ├─ ButtonDemoPage │                
+                    │  ├─ DemoPage       │                
                     │  └─ useProducts    │                
                     │     (composable)   │                
                     └────────────────────┘                

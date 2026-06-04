@@ -1,0 +1,11 @@
+body {
+  background-color: var(--wa-color-surface-lowered);
+}
+.h3 {
+  font-size: var(--fs-s);
+  color: var(--color-text-muted);
+  font-weight: bold;
+}
+.h3__subheading {
+  margin: 0 0 0.25rem;
+}

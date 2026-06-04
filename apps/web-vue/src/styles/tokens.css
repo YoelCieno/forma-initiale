@@ -66,7 +66,3 @@
   --wa-border-radius-l: 0.45rem; /* 7.2px */
   /* #endregion */
 }
-
-body {
-  background-color: var(--wa-color-surface-lowered);
-}

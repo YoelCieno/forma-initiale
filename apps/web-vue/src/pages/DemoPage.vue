@@ -2,8 +2,7 @@
 
 </script>
 <template>
-  <h1>Components</h1>
-  <div class="demo-page__container">
+  <div class="demo-page">
     <section class="demo-page__section">
       <h2 class="demo-page__heading">
         Button
@@ -34,10 +33,11 @@
 </template>
 
 <style scoped>
-.demo-page__container {
+.demo-page {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--min-width-layout), 1fr));
   max-width: var(--max-width-layout);
+  margin: 0 auto;
 }
 .demo-page__section {
   margin: 0 2.175rem 1rem 0;

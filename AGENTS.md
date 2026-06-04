@@ -136,7 +136,7 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
 ## Agent rules
 
 - **BEM CSS naming** — Vue SFCs use BEM convention: `.block__element--modifier`. See `apps/web-vue/src/styles/README.md`. No nested element selectors — always explicit BEM class names. Not for `fe-*` wrappers (WA shadow DOM only).
-- **Never hardcode colors/spacing/typography** — always use design system CSS custom properties (`--wa-*` vars). Overrides in `apps/*/src/styles/tokens/base.css`. Never hardcode literal values.
+- **Never hardcode colors/spacing/typography** — always use design system CSS custom properties (`--wa-*` vars). Overrides in `apps/*/src/styles/tokens.css`. Never hardcode literal values.
 - **Prefer i18n keys over hardcoded labels** — framework i18n (setup pending)
 - **Standalone components** — Angular/Vue components must be standalone
 - **Unidirectional data flow** — no two-way bindings for state logic

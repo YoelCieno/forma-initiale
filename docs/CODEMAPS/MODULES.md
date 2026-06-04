@@ -178,15 +178,21 @@ module.exports = {
 **Build**: `vp dev` / `vp build` (Vite+ CLI)
 
 **Key Files**:
-- `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens)
-- `src/styles/tokens/base.css` — Design system token overrides (`--wa-*` vars)
+- `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens); imports `./styles`
+- `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
+- `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
+- `src/styles/base.css` — Base element styles (body, `.h3`, `.h3__subheading`)
 - `src/App.vue` — Root component (nav + RouterView)
-- `src/router.ts` — Hash-based routes (/, /buttons)
+- `src/router.ts` — Hash-based routes (/, /demo)
+- `src/components/DemoButton.vue` — Button demos
+- `src/components/DemoCard.vue` — Card demos
+- `src/components/DemoIcon.vue` — Icon demos
+- `src/components/DemoRating.vue` — Rating demos
 - `src/composables/useProducts.ts` — Product data composable
 - `src/pages/ProductsPage.vue` — Product listing page
-- `src/pages/ButtonDemoPage.vue` — Button demo page
+- `src/pages/DemoPage.vue` — Component demo hub (uses DemoButton, DemoCard, DemoIcon, DemoRating)
 - `vite.config.ts` — Vite plugins (vue, auto-import, components)
-- `vitest.config.ts` — Test config
+- `vitest.config.ts` — Test config (Components plugin with `dts: './src/components.d.ts'`)
 
 **Dependencies**:
 - `@repo/domain` — Product type
@@ -205,7 +211,7 @@ module.exports = {
 | Path | Page | Description |
 |------|------|-------------|
 | `/` | ProductsPage | Product list with loading/error states |
-| `/buttons` | ButtonDemoPage | fe-button demo showing all variants |
+| `/demo` | DemoPage | Component demo hub (button, card, icon, rating) |
 
 ---
 

@@ -110,14 +110,25 @@ apps/web-vue/
 ├── public/                  # Static assets
 
 └── src/
-    ├── main.ts              # App entry: createApp, router, WA base + theme + DS tokens
+    ├── main.ts              # App entry: createApp, router, WA base + theme + DS tokens; imports './styles'
     ├── App.vue              # Root SFC: nav + RouterView (uses --wa-* tokens)
     ├── styles/
-    │   └── tokens/
-    │       └── base.css     # DS token overrides (brand colors, typography, radius)
-    ├── router.ts            # Hash-based router (/, /buttons)
+    │   ├── index.ts         # Styles entry point, imports tokens.css + base.css
+    │   ├── tokens.css       # DS token overrides (brand colors, typography, radius)
+    │   └── base.css         # Base element styles (body, .h3, .h3__subheading)
+    ├── router.ts            # Hash-based router (/, /demo)
     ├── vite-env.d.ts        # Vite client types, Vue module declaration
     ├── auto-imports.d.ts    # Auto-generated global type declarations
+    │
+    ├── components/
+    │   ├── DemoButton.vue       # Button demos (variants, sizes, icons)
+    │   ├── DemoButton.spec.ts   # Tests for DemoButton
+    │   ├── DemoCard.vue         # Card demos
+    │   ├── DemoCard.spec.ts     # Tests for DemoCard
+    │   ├── DemoIcon.vue         # Icon demos
+    │   ├── DemoIcon.spec.ts     # Tests for DemoIcon
+    │   ├── DemoRating.vue       # Rating demos
+    │   └── DemoRating.spec.ts   # Tests for DemoRating
     │
     ├── composables/
     │   ├── useProducts.ts        # Product data composable (ref, fetch, error)
@@ -126,8 +137,7 @@ apps/web-vue/
     └── pages/
         ├── ProductsPage.vue      # Product list with loading/error states
         ├── ProductsPage.spec.ts  # Page component tests (65 lines)
-        ├── ButtonDemoPage.vue    # fe-button variant/size/appearance demo
-        └── ButtonDemoPage.spec.ts # Page component tests (48 lines)
+        └── DemoPage.vue          # Component demo hub (button, icon, rating, card)
 ```
 
 ---
