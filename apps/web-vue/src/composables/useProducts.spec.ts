@@ -7,6 +7,10 @@ const mockProducts = [
   { id: '2', title: 'Gadget', price: 19.99 },
 ]
 
+function mockOkResponse(data: unknown) {
+  return { ok: true, json: () => Promise.resolve(data) }
+}
+
 describe('useProducts', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -33,13 +37,8 @@ describe('useProducts', () => {
   })
 
   it('sets products after successful fetch', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockProducts),
-      }),
-    )
+    const apiResponse = { data: mockProducts, total: mockProducts.length }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
     const wrapper = mount(createTestHarness())
 
@@ -50,7 +49,7 @@ describe('useProducts', () => {
     expect(wrapper.vm.error).toBeUndefined()
   })
 
-  it('sets error message on HTTP failure', async () => {
+  it('sets error message on HTTP failure with status code 500', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -76,17 +75,13 @@ describe('useProducts', () => {
     await vi.waitFor(() => {
       expect(wrapper.vm.loading).toBe(false)
     })
+    expect(wrapper.vm.products).toEqual([])
     expect(wrapper.vm.error).toBe('Failed to load products')
   })
 
   it('fetch can be called manually after mount', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockProducts),
-      }),
-    )
+    const apiResponse = { data: mockProducts, total: mockProducts.length }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
     const wrapper = mount(createTestHarness())
 
@@ -96,13 +91,8 @@ describe('useProducts', () => {
 
     // Second call with new data
     const newProducts = [{ id: '3', title: 'New', price: 49.99 }]
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(newProducts),
-      }),
-    )
+    const newApiResponse = { data: newProducts, total: 1 }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(newApiResponse)))
 
     wrapper.vm.fetch()
     await vi.waitFor(() => {

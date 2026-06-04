@@ -1,0 +1,12 @@
+body {
+  background-color: var(--wa-color-surface-lowered);
+}
+h2 {
+  font-style: italic;
+}
+.h3__subheading {
+  margin: 0 0 0.25rem;
+  font-size: var(--fs-s);
+  color: var(--color-text-muted);
+  font-style: italic;
+}

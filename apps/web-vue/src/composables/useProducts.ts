@@ -17,7 +17,8 @@ export function useProducts(): UseProducts {
   async function fetchProducts(): Promise<void> {
     loading.value = true;
     try {
-      products.value = await getProducts();
+      const { data } = await getProducts();
+      products.value = data;
     } catch (e) {
       error.value = e instanceof Error ? e.message : "Failed to load products";
     } finally {

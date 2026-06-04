@@ -2,18 +2,29 @@
   "name": "@repo/ui",
   "version": "0.0.0",
   "exports": {
-    "./counter": "./components/counter.ts",
-    "./header": "./components/header.ts",
-    "./setup-counter": "./utils/counter.ts"
+    "./fe-button": "./components/fe-button.ts",
+    "./fe-card": "./components/fe-card.ts",
+    "./fe-icon": "./components/fe-icon.ts",
+    "./fe-rating": "./components/fe-rating.ts",
+    "./styles": "./styles/webawesome.ts",
+    "./styles/themes/default": "./styles/themes/default.ts",
+    "./styles/themes/awesome": "./styles/themes/awesome.ts",
+    "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
   },
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"**/*.ts\""
+    "lint": "eslint \"**/*.ts\"",
+    "test": "vp test"
+  },
+  "dependencies": {
+    "@awesome.me/webawesome": "3.7.0",
+    "hybrids": "^9"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
+    "jsdom": "^29.1.1",
     "typescript": "5.5.4"
   }
 }

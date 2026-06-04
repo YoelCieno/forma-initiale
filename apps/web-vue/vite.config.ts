@@ -5,14 +5,20 @@ import Components from 'unplugin-vue-components/vite'
 
 export default defineConfig({
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag: string) => tag.startsWith('fe-'),
+        },
+      },
+    }),
     AutoImport({
-      imports: ['vue'],
+      imports: ['vue', 'vue-router'],
       dirs: ['./src/composables'],
       dts: './src/auto-imports.d.ts',
     }),
     Components({
-      dirs: ['./src/components'],
+      dirs: ['./src/components', './src/pages'],
       dts: './src/components.d.ts',
     }),
   ],
