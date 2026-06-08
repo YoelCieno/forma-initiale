@@ -60,7 +60,7 @@ describe('ButtonContainer', () => {
     const subheadings = wrapper.findAll('h3')
     expect(subheadings.length).toBe(4)
     subheadings.forEach(h3 => {
-      expect(h3.classes()).toContain('h3__subheading')
+      expect(h3.classes()).toContain('subheading__h3')
     })
   })
 

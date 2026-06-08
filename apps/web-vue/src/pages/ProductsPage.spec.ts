@@ -17,14 +17,22 @@ describe('ProductsPage', () => {
     vi.restoreAllMocks()
   })
 
-  it('shows loading state while fetching', () => {
+  it('shows loading state while fetching', async () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
 
     const wrapper = mount(ProductsPage)
+    // Flush hybridJS + Lit microtasks for WC initialization
+    await Promise.resolve()
+    await Promise.resolve()
 
-    expect(wrapper.text()).toContain('Loading...')
-    expect(wrapper.find('.products-page__error').exists()).toBe(false)
-    expect(wrapper.find('.products-page__grid').exists()).toBe(false)
+    await vi.waitFor(() => {
+      expect(wrapper.text()).toContain('Loading...')
+    })
+    // With fe-async-content, slot elements are always in light DOM.
+    // During loading, error text is empty (error=undefined → empty interpolation).
+    expect(wrapper.find('.products-page__error').text()).toBe('')
+    // Grid element exists but has no product cards yet
+    expect(wrapper.findAll('fe-card')).toHaveLength(0)
   })
 
   it('renders product card grid after successful fetch', async () => {
@@ -33,11 +41,12 @@ describe('ProductsPage', () => {
 
     const wrapper = mount(ProductsPage)
 
+    // Wait for cards to appear (fe-async-content projects default slot)
     await vi.waitFor(() => {
-      expect(wrapper.text()).not.toContain('Loading...')
+      const cards = wrapper.findAll('fe-card')
+      expect(cards.length).toBeGreaterThan(0)
     })
 
-    expect(wrapper.find('.products-page__grid').exists()).toBe(true)
     const cards = wrapper.findAll('fe-card')
     expect(cards).toHaveLength(2)
     expect(wrapper.text()).toContain('Vue')
@@ -62,10 +71,13 @@ describe('ProductsPage', () => {
 
     const wrapper = mount(ProductsPage)
 
+    // Wait for error TEXT to appear (not just element — element is always present
+    // in light DOM, but text updates after fetch resolves)
     await vi.waitFor(() => {
-      expect(wrapper.find('.products-page__error').exists()).toBe(true)
+      expect(wrapper.find('.products-page__error').text()).toContain('Failed to fetch')
     })
     expect(wrapper.text()).toContain('Failed to fetch products: HTTP 500')
-    expect(wrapper.find('.products-page__grid').exists()).toBe(false)
+    // Grid element exists in light DOM but has no product cards
+    expect(wrapper.findAll('fe-card')).toHaveLength(0)
   })
 })

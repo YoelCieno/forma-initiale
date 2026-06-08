@@ -1,35 +1,33 @@
-import type { Ref } from "vue";
 import { getProducts } from "@repo/infra";
 import { toProductViewList } from "../presenters/product.presenter";
 import type { ProductView } from "../presenters/product.presenter";
+import { useAsyncState } from "@vueuse/core";
 
-interface UseProducts {
-  products: Ref<ProductView[]>;
-  loading: Ref<boolean>;
-  error: Ref<string | undefined>;
-  fetch: () => Promise<void>;
-}
+export function useProducts() {
+  const formattedError = ref<string | undefined>();
 
-export function useProducts(): UseProducts {
-  const products = ref<ProductView[]>([]);
-  const loading = ref(true);
-  const error = ref<string | undefined>();
+  const { state, isLoading, execute } = useAsyncState<ProductView[]>(
+    async () => {
+      formattedError.value = undefined;
+			const { data } = await getProducts();
 
-  async function fetchProducts(): Promise<void> {
-    loading.value = true;
-    try {
-      const { data } = await getProducts();
-      products.value = toProductViewList(data);
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : "Failed to load products";
-    } finally {
-      loading.value = false;
+      return toProductViewList(data);
+    },
+    [],
+    {
+      immediate: true,
+      onError(e: unknown) {
+				formattedError.value = e instanceof Error
+					? e.message
+					: "Failed to load products";
+      },
     }
-  }
+  );
 
-  onBeforeMount(() => {
-    fetchProducts();
-  });
-
-  return { products, loading, error, fetch: fetchProducts };
+  return {
+    products: state,
+    loading: isLoading,
+    error: formattedError,
+    fetch: () => execute(),
+  };
 }

@@ -281,7 +281,7 @@ module.exports = {
 - `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens); imports `./styles`
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
 - `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
-- `src/styles/base.css` — Base element styles (body, `.h3`, `.h3__subheading`)
+- `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`)
 - `src/App.vue` — Root component (nav + RouterView)
 - `src/router.ts` — Hash-based routes (/, /demo)
 - `src/components/ButtonContainer.vue` — Button demos (variants, sizes, appearances, states)

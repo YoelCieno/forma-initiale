@@ -121,7 +121,7 @@ apps/web-vue/
     ├── styles/
     │   ├── index.ts         # Styles entry point, imports tokens.css + base.css
     │   ├── tokens.css       # DS token overrides (brand colors, typography, radius)
-    │   └── base.css         # Base element styles (body, .h3, .h3__subheading)
+    │   └── base.css         # Base element styles (body, .h3, .subheading__h3)
     ├── router.ts            # Hash-based router (/, /components)
     ├── vite-env.d.ts        # Vite client types, Vue module declaration
     ├── auto-imports.d.ts    # Auto-generated global type declarations

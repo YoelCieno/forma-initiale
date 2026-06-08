@@ -1,6 +1,6 @@
 import type { Product } from '@repo/domain'
 
-const FRAMEWORK_NAMES = ['vue', 'angular', 'react', 'svelte', 'solid'] as const
+const FRAMEWORK_NAMES = ['solid', 'react', 'vue', 'svelte', 'angular'] as const
 let counter = 0
 
 export function buildProduct(overrides?: Partial<Product>): Product {
@@ -16,6 +16,7 @@ export function buildProduct(overrides?: Partial<Product>): Product {
 }
 
 export function buildProductList(count = 3): Product[] {
+	console.log('🚀~count:', count)
   return Array.from({ length: count }, () => buildProduct())
 }
 

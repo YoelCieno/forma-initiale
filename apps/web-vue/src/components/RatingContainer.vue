@@ -7,7 +7,7 @@ import "@repo/ui/fe-card";
 <template>
   <div class="rating-container">
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Basic
       </h3>
       <fe-card>
@@ -16,7 +16,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         With Initial Value
       </h3>
       <fe-card>
@@ -25,7 +25,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Readonly
       </h3>
       <fe-card>
@@ -34,7 +34,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Disabled
       </h3>
       <fe-card>
@@ -43,7 +43,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Different Max
       </h3>
       <fe-card>
@@ -52,7 +52,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Half-Star Precision
       </h3>
       <fe-card>
@@ -60,7 +60,7 @@ import "@repo/ui/fe-card";
       </fe-card>
     </div>
     <div class="rating-container__row">
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Sizes
       </h3>
       <fe-card>

@@ -10,7 +10,7 @@ function onClickNeutral() {
 <template>
   <div class="button-container">
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Variants
       </h3>
       <fe-card>
@@ -41,7 +41,7 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Sizes
       </h3>
       <fe-card>
@@ -66,7 +66,7 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Appearances
       </h3>
       <fe-card>
@@ -88,7 +88,7 @@ function onClickNeutral() {
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         States
       </h3>
       <fe-card>

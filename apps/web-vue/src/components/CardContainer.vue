@@ -6,7 +6,7 @@ import "@repo/ui/fe-icon";
 <template>
   <div class="card-container">
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Default
       </h3>
       <fe-card>
@@ -15,7 +15,7 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Appearances
       </h3>
       <div class="card-container__wrapper">
@@ -32,18 +32,18 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         With Header & Footer
       </h3>
       <fe-card>
-        <h4 slot="header">Card Title</h4>
+        <h4 slot="header" class="card__h4">Card Title</h4>
         <p>Main content goes here. This card has a header and footer.</p>
         <fe-icon slot="footer" name="star" />
       </fe-card>
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Horizontal
       </h3>
       <fe-card orientation="horizontal">

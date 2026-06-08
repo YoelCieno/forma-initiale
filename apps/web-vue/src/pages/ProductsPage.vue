@@ -2,6 +2,7 @@
 import "@repo/ui/fe-icon";
 import "@repo/ui/fe-rating";
 import "@repo/ui/fe-card";
+import "@repo/ui/fe-async-content";
 
 const { products, loading, error } = useProducts();
 </script>
@@ -10,10 +11,10 @@ const { products, loading, error } = useProducts();
   <div class="products-page">
     <h1 class="products-page__title">Free Bundles by Frameworks</h1>
 
-    <p v-if="loading" class="products-page__loading">Loading...</p>
-    <template v-else>
-      <p v-if="error" class="products-page__error">{{ error }}</p>
-      <div v-else class="products-page__grid">
+    <fe-async-content :loading="loading" :error="error">
+      <p slot="loading" class="products-page__loading">Loading...</p>
+      <p slot="error" class="products-page__error">{{ error }}</p>
+      <div class="products-page__grid">
         <fe-card
           v-for="product in products"
           :key="product.name"
@@ -21,7 +22,6 @@ const { products, loading, error } = useProducts();
         >
           <fe-icon
             slot="media"
-            auto-width
             :name="product.logo"
             :family="product.logoFamily"
             class="products-page__card-icon"
@@ -45,7 +45,7 @@ const { products, loading, error } = useProducts();
           </div>
         </fe-card>
       </div>
-    </template>
+    </fe-async-content>
   </div>
 </template>
 
@@ -77,6 +77,9 @@ const { products, loading, error } = useProducts();
   gap: 1rem;
 }
 
+.products-page__card {
+  display: grid;
+}
 .products-page__card-icon {
   font-size: 4.75rem;
   display: flex;
@@ -93,6 +96,7 @@ const { products, loading, error } = useProducts();
   color: var(--color-text-muted);
   font-size: var(--fs-s);
   margin: 0;
+  min-height: 2.7rem;
 }
 
 .products-page__card-footer {

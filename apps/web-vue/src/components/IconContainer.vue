@@ -7,7 +7,7 @@ import "@repo/ui/fe-card";
 <template>
   <div class="icon-container">
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Basic Icons
       </h3>
       <fe-card>
@@ -22,7 +22,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Animations
       </h3>
       <fe-card>
@@ -35,7 +35,7 @@ import "@repo/ui/fe-card";
     </div>
 
     <div>
-      <h3 class="h3__subheading">
+      <h3 class="subheading__h3">
         Sizes
       </h3>
       <fe-card>
