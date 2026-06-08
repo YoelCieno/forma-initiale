@@ -48,7 +48,7 @@ packages/domain/
 └── src/
     ├── index.ts             # Barrel: re-exports Product type
     └── models/
-        └── Product.ts       # Product interface {id, title, price}
+        └── Product.ts       # Product interface {id, name, previousPrice, price, rate}
 ```
 
 ---
@@ -81,14 +81,16 @@ packages/ui/
 ├── vitest.setup.ts          # ElementInternals polyfill for jsdom
 │
 ├── components/
-│   ├── fe-button.ts         # <fe-button> custom element (hybridJS)
-│   ├── fe-button.spec.ts    # CE unit tests (188 lines, full coverage)
-│   ├── fe-card.ts           # <fe-card> WC subclass of WaCard (appearance, orientation, slots)
-│   ├── fe-card.spec.ts      # CE unit tests (registration, props, slots)
-│   ├── fe-icon.ts           # <fe-icon> hybridJS wrapper over <wa-icon> (name, library, animation, etc.)
-│   ├── fe-icon.spec.ts      # CE unit tests (registration, property forwarding)
-│   ├── fe-rating.ts         # <fe-rating> hybridJS wrapper over <wa-rating> (value, max, precision, etc.)
-│   └── fe-rating.spec.ts    # CE unit tests (23 tests, 9 props, events)
+│   ├── fe-async-content.ts      # <fe-async-content> hybridJS CE for loading/error/content states
+│   ├── fe-async-content.spec.ts # CE unit tests (7 tests, 3 states, slot overrides, transitions)
+│   ├── fe-button.ts             # <fe-button> custom element (hybridJS)
+│   ├── fe-button.spec.ts        # CE unit tests (188 lines, full coverage)
+│   ├── fe-card.ts               # <fe-card> hybridJS CE forwarding to <wa-card> (appearance, orientation, disabled, slot detection)
+│   ├── fe-card.spec.ts          # CE unit tests (registration, props, slots, header/footer/media detection)
+│   ├── fe-icon.ts               # <fe-icon> hybridJS wrapper over <wa-icon> (name, library, animation, etc.)
+│   ├── fe-icon.spec.ts          # CE unit tests (registration, property forwarding)
+│   ├── fe-rating.ts             # <fe-rating> hybridJS wrapper over <wa-rating> (value, max, precision, etc.)
+│   └── fe-rating.spec.ts        # CE unit tests (23 tests, 9 props, events)
 │
 └── styles/
     ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
@@ -136,13 +138,17 @@ apps/web-vue/
     │   ├── RatingContainer.vue      # Rating demos (value, readonly, disabled, precision, sizes)
     │   └── RatingContainer.spec.ts  # Tests for RatingContainer
     │
+    ├── presenters/
+    │   ├── product.presenter.ts      # ProductView mapping: Product → ProductView with framework metadata
+    │   └── product.presenter.spec.ts # Presenter tests (6 framework maps, edge cases, list mapping)
+    │
     ├── composables/
-    │   ├── useProducts.ts        # Product data composable (ref, fetch, error)
-    │   └── useProducts.spec.ts   # Composable tests (112 lines)
+    │   ├── useProducts.ts        # Product data composable (via @vueuse/core useAsyncState, formatted error)
+    │   └── useProducts.spec.ts   # Composable tests (loading, success, HTTP failure, manual fetch)
     │
     └── pages/
-        ├── ProductsPage.vue      # Product list with loading/error states
-        ├── ProductsPage.spec.ts  # Page component tests (65 lines)
+        ├── ProductsPage.vue      # Product grid with fe-async-content (loading/error/content states)
+        ├── ProductsPage.spec.ts  # Page component tests (loading, success grid, error display)
         └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
 ```
 

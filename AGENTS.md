@@ -69,6 +69,10 @@ Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
 ```json
 {
   "./fe-button": "./components/fe-button.ts",
+  "./fe-async-content": "./components/fe-async-content.ts",
+  "./fe-card": "./components/fe-card.ts",
+  "./fe-icon": "./components/fe-icon.ts",
+  "./fe-rating": "./components/fe-rating.ts",
   "./styles": "./styles/webawesome.ts",
   "./styles/themes/default": "./styles/themes/default.ts",
   "./styles/themes/awesome": "./styles/themes/awesome.ts",
@@ -80,6 +84,8 @@ Import from apps:
 ```typescript
 import '@repo/ui/fe-button'
 import type { FeButtonElement } from '@repo/ui/fe-button'
+import '@repo/ui/fe-card'
+import '@repo/ui/fe-async-content'
 import '@repo/ui/styles'              // WA base (native+utilities, no theme)
 import '@repo/ui/styles/themes/default' // WA theme
 ```

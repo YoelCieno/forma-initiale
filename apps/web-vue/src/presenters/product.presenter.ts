@@ -52,7 +52,12 @@ const frameworkMap: Record<string, FrameworkMeta> = {
 }
 
 function getFrameworkMeta(name: string): FrameworkMeta {
-  return frameworkMap[name] ?? { title: name, description: '', logo: 'code', logoFamily: 'classic' }
+	return frameworkMap[name] ?? {
+		title: name,
+		description: '',
+		logo: 'code',
+		logoFamily: 'classic'
+	}
 }
 
 export function toProductView(product: Product): ProductView {

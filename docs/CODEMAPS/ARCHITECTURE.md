@@ -60,10 +60,10 @@ User Action
     │
     ▼
 Vue Component (ProductsPage.vue)
-    │
+    │  uses fe-async-content for loading/error/content
     ▼
 Composable (useProducts.ts)
-    │  calls
+    │  calls getProducts → pipe through presenter
     ▼
 Infra Adapter (getProducts.adapter.ts)  ── fetch() ──► MSW (dev/test) or External API (prod)
     │
@@ -71,10 +71,13 @@ Infra Adapter (getProducts.adapter.ts)  ── fetch() ──► MSW (dev/test) 
 Domain Model (Product interface)
     │
     ▼
-Vue Reactive State (ref<Product[]>)
+Presenter (product.presenter.ts)
+    │  Product → ProductView (enrich with framework name, logo, description)
+    ▼
+Vue Reactive State (ref<ProductView[]>)
     │
     ▼
-Template renders (v-for, v-if)
+Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
 ```
 
 ## Dependency Graph
@@ -110,7 +113,8 @@ Template renders (v-for, v-if)
 | Design system | WebAwesome 3.7 | Accessible, themed, WA-compatible |
 | Ports/Adapters | Domain → Infra | Pure domain, swappable infra |
 | Custom elements | `<fe-*>` wrapper → `<wa-*>` | Single definition in @repo/ui |
-| State mgmt | Composables + ref/reactive | Vue native, no external lib |
+| State mgmt | Composables + ref/reactive + @vueuse/core | Vue native + useAsyncState for async |
+| Presenter | Pure TS transform layer (domain model → view model) | Decouples API shape from template, enriches with UI metadata |
 | Routing | vue-router (hash mode) | SPA hash-based routing |
 | Type checking | tsc (noEmit) | Type-check only, Vite for bundling |
 | Testing | Vitest + jsdom + @vue/test-utils | Vite-native, fast |

@@ -8,9 +8,7 @@ export function useProducts() {
 
   const { state, isLoading, execute } = useAsyncState<ProductView[]>(
     async () => {
-      formattedError.value = undefined;
 			const { data } = await getProducts();
-
       return toProductViewList(data);
     },
     [],

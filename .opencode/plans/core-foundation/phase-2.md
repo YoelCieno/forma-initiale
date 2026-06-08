@@ -46,7 +46,7 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 - [x] **[Demo Page Expansion](./phase-2/2.6-demo-page-expansion.md)** — fe-icon + fe-card + fe-rating showcases, UX polish, component rename (Demo* → *Container), route /demo → /components
 - [x] **[Product Integration](./phase-2/2.7-product-integration.md)** — domain model update, presenter layer, ProductsPage grid refactor with fe-card/fe-icon/fe-rating, tests
 - [x] **[Component Refinement](./phase-2/2.8-component-refinement.md)** — fe-card hybridJS conversion, disabled property, fe-async-content component, ProductsPage integration
-- [ ] Create Vue integration doc (`docs/integration/vue.md`)
+- [x] Create Vue integration doc (`docs/integrations/*.md`)
 
 ## Decisions
 

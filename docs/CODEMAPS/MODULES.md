@@ -17,7 +17,7 @@
 **Dependencies**: None (pure TS)
 
 **Exports**:
-- `Product` (type) — `{ id: string; title: string; price: number }`
+- `Product` (type) — `{ id: string; name: string; previousPrice: number; price: number; rate: number }`
 
 **Usage**:
 ```typescript
@@ -59,10 +59,12 @@ const products = await getProducts()
 
 **Key Files**:
 - `index.ts` — Barrel exports (FeButton, FeButtonElement type)
+- `components/fe-async-content.ts` — `<fe-async-content>` hybridJS CE for loading/error/content states
+- `components/fe-async-content.spec.ts` — Tests (7 tests, 3 states, slot overrides, transitions)
 - `components/fe-button.ts` — `<fe-button>` custom element definition (hybridJS)
 - `components/fe-button.spec.ts` — Tests
-- `components/fe-card.ts` — `<fe-card>` WC subclass of WaCard (appearance, orientation, slots)
-- `components/fe-card.spec.ts` — Tests
+- `components/fe-card.ts` — `<fe-card>` hybridJS CE forwarding to `<wa-card>` (appearance, orientation, disabled, slot content detection)
+- `components/fe-card.spec.ts` — Tests (slot detection, appearance, orientation, header/footer/media forwarding)
 - `components/fe-icon.ts` — `<fe-icon>` hybridJS wrapper over `<wa-icon>`
 - `components/fe-icon.spec.ts` — Tests
 - `components/fe-rating.ts` — `<fe-rating>` hybridJS wrapper over `<wa-rating>`
@@ -75,6 +77,7 @@ const products = await getProducts()
 - `vitest.setup.ts` — ElementInternals stub for jsdom
 
 **Package Exports**:
+- `@repo/ui/fe-async-content` → `./components/fe-async-content.ts`
 - `@repo/ui/fe-button` → `./components/fe-button.ts`
 - `@repo/ui/fe-card` → `./components/fe-card.ts`
 - `@repo/ui/fe-icon` → `./components/fe-icon.ts`
@@ -117,6 +120,41 @@ import '@repo/ui/fe-button'
 import type { FeButtonElement } from '@repo/ui/fe-button'
 ```
 
+### `<fe-async-content>`
+
+**Interface**: `FeAsyncContentElement extends HTMLElement`
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `loading` | `boolean` | `false` | Show loading state (wa-spinner) |
+| `error` | `string \| undefined` | `undefined` | Error message to display |
+
+**Implementation**: hybridJS `define()` with 3-state render (loading → error → default). Each state has a named slot for override. Default loading shows `<wa-spinner>` + "Loading..." text. Default error shows error string. Default content passes through `<slot>`.
+
+**Slots**: `loading` (override loading UI), `error` (override error UI), default (content when idle).
+
+**States**:
+| `loading` | `error` | Rendered |
+|-----------|---------|----------|
+| `false` | `undefined` | Default `<slot>` content |
+| `true` | *any* | Loading slot (default: wa-spinner) |
+| `false` | `string` | Error slot (default: error text) |
+
+**Usage**:
+```html
+<fe-async-content :loading="loading" :error="error">
+  <p slot="loading">Custom loading...</p>
+  <p slot="error" class="error">{{ error }}</p>
+  <div>Main content when loaded</div>
+</fe-async-content>
+```
+
+**Import**:
+```typescript
+import '@repo/ui/fe-async-content'
+import type { FeAsyncContentElement } from '@repo/ui/fe-async-content'
+```
+
 ### `<fe-card>`
 
 **Interface**: `FeCardElement extends HTMLElement`
@@ -125,12 +163,13 @@ import type { FeButtonElement } from '@repo/ui/fe-button'
 |----------|------|---------|-------------|
 | `appearance` | `string` | `'filled'` | accent, filled, outlined, filled-outlined, plain |
 | `orientation` | `string` | `'vertical'` | horizontal, vertical |
+| `disabled` | `boolean` | `false` | Disabled visual state (opacity + inert) |
 
-**Implementation**: WC subclass of WaCard (zero custom logic). Not hybridJS because WaCard is already a registered CE.
+**Implementation**: hybridJS `define()` forwarding to `<wa-card>`. Detect slots (header/footer/media) before render to conditionally render slot elements. `disabled` sets `inert` attribute + opacity 0.5.
 
-**Slots**: `header`, `footer`, `media`, `actions`, `footer-actions`, `header-actions`.
+**Slots**: `header`, `footer`, `media`, `actions`.
 
-**Shadow DOM**: Delegates entirely to `<wa-card>`.
+**Shadow DOM**: `<wa-card>` with conditional slot forwarding.
 
 **Usage**:
 ```html
@@ -281,15 +320,16 @@ module.exports = {
 - `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens); imports `./styles`
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
 - `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
-- `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`)
+- `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`); h2 italic, card BEM classes
 - `src/App.vue` — Root component (nav + RouterView)
-- `src/router.ts` — Hash-based routes (/, /demo)
-- `src/components/ButtonContainer.vue` — Button demos (variants, sizes, appearances, states)
-- `src/components/CardContainer.vue` — Card demos (appearances, slots, orientation)
-- `src/components/IconContainer.vue` — Icon demos (basic icons, animated, size variants)
-- `src/components/RatingContainer.vue` — Rating demos (value, readonly, disabled, precision, sizes)
-- `src/composables/useProducts.ts` — Product data composable
-- `src/pages/ProductsPage.vue` — Product listing page
+- `src/router.ts` — Hash-based routes (/, /components)
+- `src/components/ButtonContainer.vue` — Button demos (variants, sizes, appearances, states) wrapped in fe-card sections
+- `src/components/CardContainer.vue` — Card demos (appearances, slots, header/footer, orientation)
+- `src/components/IconContainer.vue` — Icon demos (basic icons, animated, size variants) wrapped in fe-card
+- `src/components/RatingContainer.vue` — Rating demos (value, readonly, disabled, precision, sizes) wrapped in fe-card
+- `src/presenters/product.presenter.ts` — ProductView mapping: Product → framework name/description/logo
+- `src/composables/useProducts.ts` — Product data composable (via @vueuse/core useAsyncState, formatted error)
+- `src/pages/ProductsPage.vue` — Product grid with fe-async-content (loading/error/content states)
 - `src/pages/ComponentsPage.vue` — Component showcase hub (uses ButtonContainer, CardContainer, IconContainer, RatingContainer)
 - `vite.config.ts` — Vite plugins (vue, auto-import, components)
 - `vitest.config.ts` — Test config (Components plugin with `dts: './src/components.d.ts'`)
@@ -297,7 +337,8 @@ module.exports = {
 **Dependencies**:
 - `@repo/domain` — Product type
 - `@repo/infra` — getProducts adapter
-- `@repo/ui` — fe-button, fe-card, fe-icon, fe-rating, WA styles
+- `@repo/ui` — fe-button, fe-async-content, fe-card, fe-icon, fe-rating, WA styles
+- `@vueuse/core` (^14.3.0) — useAsyncState for composable async state management
 - `vue` (^3.5.0)
 - `vue-router` (^4)
 
@@ -310,7 +351,7 @@ module.exports = {
 
 | Path | Page | Description |
 |------|------|-------------|
-| `/` | ProductsPage | Product list with loading/error states |
+| `/` | ProductsPage | Product grid with fe-async-content (loading/error/content), fe-card per product, fe-rating + pricing |
 | `/components` | ComponentsPage | Component showcase hub (button, card, icon, rating) — lazy-loaded |
 
 ---

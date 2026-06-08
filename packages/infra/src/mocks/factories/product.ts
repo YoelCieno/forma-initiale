@@ -1,6 +1,6 @@
 import type { Product } from '@repo/domain'
 
-const FRAMEWORK_NAMES = ['solid', 'react', 'vue', 'svelte', 'angular'] as const
+const FRAMEWORK_NAMES = ['react', 'angular', 'vue', 'svelte', 'solid'] as const
 let counter = 0
 
 export function buildProduct(overrides?: Partial<Product>): Product {
