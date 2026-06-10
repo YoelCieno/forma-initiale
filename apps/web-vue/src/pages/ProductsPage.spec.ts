@@ -4,8 +4,8 @@ import { mount } from '@vue/test-utils'
 import ProductsPage from './ProductsPage.vue'
 
 const mockProducts = [
-  { id: '1', title: 'Alpha', price: 10 },
-  { id: '2', title: 'Beta', price: 20.5 },
+  { id: '1', name: 'vue', previousPrice: 29.99, price: 0, rate: 4 },
+  { id: '2', name: 'react', previousPrice: 19.99, price: 0, rate: 5 },
 ]
 
 function mockOkResponse(data: unknown) {
@@ -17,32 +17,47 @@ describe('ProductsPage', () => {
     vi.restoreAllMocks()
   })
 
-  it('shows loading state while fetching', () => {
+  it('shows loading state while fetching', async () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
 
     const wrapper = mount(ProductsPage)
+    // Flush hybridJS + Lit microtasks for WC initialization
+    await Promise.resolve()
+    await Promise.resolve()
 
-    expect(wrapper.text()).toContain('Loading...')
-    expect(wrapper.find('.products-page__error').exists()).toBe(false)
-    // ul has v-else on error v-if, so it renders when no error (even while loading)
-    // but li count is 0 since products is empty
-    expect(wrapper.findAll('li')).toHaveLength(0)
+    await vi.waitFor(() => {
+      expect(wrapper.text()).toContain('Loading...')
+    })
+    // With fe-async-content, slot elements are always in light DOM.
+    // During loading, error text is empty (error=undefined → empty interpolation).
+    expect(wrapper.find('.products-page__error').text()).toBe('')
+    // Grid element exists but has no product cards yet
+    expect(wrapper.findAll('fe-card')).toHaveLength(0)
   })
 
-  it('renders product list after successful fetch', async () => {
+  it('renders product card grid after successful fetch', async () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
     const wrapper = mount(ProductsPage)
 
+    // Wait for cards to appear (fe-async-content projects default slot)
     await vi.waitFor(() => {
-      expect(wrapper.text()).not.toContain('Loading...')
+      const cards = wrapper.findAll('fe-card')
+      expect(cards.length).toBeGreaterThan(0)
     })
-    expect(wrapper.text()).toContain('Alpha')
-    expect(wrapper.text()).toContain('$10')
-    expect(wrapper.text()).toContain('Beta')
-    expect(wrapper.text()).toContain('$20.5')
-    expect(wrapper.findAll('li')).toHaveLength(2)
+
+    const cards = wrapper.findAll('fe-card')
+    expect(cards).toHaveLength(2)
+    expect(wrapper.text()).toContain('Vue')
+    expect(wrapper.text()).toContain('React')
+    expect(wrapper.text()).toContain('Progressive framework for building UIs')
+    expect(wrapper.text()).toContain('Library for building user interfaces')
+    expect(wrapper.text()).toContain('Free')
+    expect(wrapper.text()).toContain('$29.99')
+    expect(wrapper.text()).toContain('$19.99')
+    const ratings = wrapper.findAll('fe-rating')
+    expect(ratings).toHaveLength(2)
   })
 
   it('displays error message on fetch failure', async () => {
@@ -56,10 +71,13 @@ describe('ProductsPage', () => {
 
     const wrapper = mount(ProductsPage)
 
+    // Wait for error TEXT to appear (not just element — element is always present
+    // in light DOM, but text updates after fetch resolves)
     await vi.waitFor(() => {
-      expect(wrapper.find('.products-page__error').exists()).toBe(true)
+      expect(wrapper.find('.products-page__error').text()).toContain('Failed to fetch')
     })
     expect(wrapper.text()).toContain('Failed to fetch products: HTTP 500')
-    expect(wrapper.find('ul').exists()).toBe(false)
+    // Grid element exists in light DOM but has no product cards
+    expect(wrapper.findAll('fe-card')).toHaveLength(0)
   })
 })

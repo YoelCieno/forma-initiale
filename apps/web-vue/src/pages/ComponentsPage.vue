@@ -1,6 +1,3 @@
-<script setup lang="ts">
-
-</script>
 <template>
   <div class="components-page">
     <section class="components-page__section">

@@ -20,8 +20,10 @@ describe('products API handlers', () => {
     expect(body.data).toBeInstanceOf(Array)
     expect(body.data.length).toBeGreaterThan(0)
     expect(body.data[0]).toHaveProperty('id')
-    expect(body.data[0]).toHaveProperty('title')
+    expect(body.data[0]).toHaveProperty('name')
+    expect(body.data[0]).toHaveProperty('previousPrice')
     expect(body.data[0]).toHaveProperty('price')
+    expect(body.data[0]).toHaveProperty('rate')
     expect(body.total).toBe(body.data.length)
   })
 
@@ -36,8 +38,10 @@ describe('products API handlers', () => {
 
     const body = (await res.json()) as { data: Product }
     expect(body.data.id).toBe(knownId)
-    expect(body.data).toHaveProperty('title')
+    expect(body.data).toHaveProperty('name')
+    expect(body.data).toHaveProperty('previousPrice')
     expect(body.data).toHaveProperty('price')
+    expect(body.data).toHaveProperty('rate')
   })
 
   it('GET /api/products/:id returns 404 for unknown ID', async () => {
@@ -49,7 +53,7 @@ describe('products API handlers', () => {
   })
 
   it('POST /api/products creates and returns a new product', async () => {
-    const newProduct = { title: 'Test Product', price: 29.99 }
+    const newProduct = { name: 'Test Product', previousPrice: 49.99, price: 0, rate: 4 }
 
     const res = await fetch(`${BASE_URL}/api/products`, {
       method: 'POST',
@@ -60,8 +64,10 @@ describe('products API handlers', () => {
     expect(res.status).toBe(201)
 
     const body = (await res.json()) as { data: Product }
-    expect(body.data.title).toBe('Test Product')
-    expect(body.data.price).toBe(29.99)
+    expect(body.data.name).toBe('Test Product')
+    expect(body.data.previousPrice).toBe(49.99)
+    expect(body.data.price).toBe(0)
+    expect(body.data.rate).toBe(4)
     expect(body.data).toHaveProperty('id')
     expect(body.data.id).toMatch(/^prod-\d+$/)
   })

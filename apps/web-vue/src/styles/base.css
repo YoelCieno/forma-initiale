@@ -4,9 +4,12 @@ body {
 h2 {
   font-style: italic;
 }
-.h3__subheading {
+.subheading__h3 {
   margin: 0 0 0.25rem;
   font-size: var(--fs-s);
   color: var(--color-text-muted);
   font-style: italic;
+}
+.card__h4 {
+  margin-bottom: 0;
 }

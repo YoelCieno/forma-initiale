@@ -44,8 +44,9 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 - [x] Add fe-icon component (`packages/ui/components/fe-icon.ts`)
 - [x] Add fe-card component (`packages/ui/components/fe-card.ts`)
 - [x] **[Demo Page Expansion](./phase-2/2.6-demo-page-expansion.md)** — fe-icon + fe-card + fe-rating showcases, UX polish, component rename (Demo* → *Container), route /demo → /components
-- [ ] **[Product Integration](./phase-2/2.7-product-integration.md)** — domain model update, presenter layer, ProductsPage grid refactor with fe-card/fe-icon/fe-rating, tests
-- [ ] Create Vue integration doc (`docs/integration/vue.md`)
+- [x] **[Product Integration](./phase-2/2.7-product-integration.md)** — domain model update, presenter layer, ProductsPage grid refactor with fe-card/fe-icon/fe-rating, tests
+- [x] **[Component Refinement](./phase-2/2.8-component-refinement.md)** — fe-card hybridJS conversion, disabled property, fe-async-content component, ProductsPage integration
+- [x] Create Vue integration doc (`docs/integrations/*.md`)
 
 ## Decisions
 
@@ -61,9 +62,10 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 | 8 | API mocking | MSW | Single tool for dev + test, realistic fetch interception |
 | 9 | Mock handler location | `packages/infra/mocks/` | Co-located with infra adapters |
 | 10 | Data generation | Factories + fixtures | Sequential counter + sensible defaults, test isolation |
-| 11 | fe-card implementation | WC subclass (extends WaCard) | WaCard already registered CE — hybridJS cannot override existing tag; subclass for new `<fe-card>` tag |
+| 11 | fe-card implementation | hybridJS `define()` | WaCard shadow DOM is isolated; hybridJS rewrite using `define()` + `html` + `shadow: true` with `<wa-card>` inside template |
 | 12 | fe-rating implementation | hybridJS `define()` | wa-rating not registered by default, hybridJS is the standard approach |
 | 13 | WA attr reflection in tests | Use `Reflect.get()` | WA components don't reflect boolean/string props to attrs |
+| 14 | fe-async-content (new) | hybridJS `define()` | Pure view-state component: loading/error/default. No data-fetching logic, no framework coupling. |
 
 ## Notes
 

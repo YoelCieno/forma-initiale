@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { getProducts } from './get-products.adapter'
 
 const mockProducts = [
-  { id: '1', title: 'Product 1', price: 10.99 },
-  { id: '2', title: 'Product 2', price: 24.99 },
+  { id: '1', name: 'Product 1', previousPrice: 20.99, price: 10.99, rate: 4 },
+  { id: '2', name: 'Product 2', previousPrice: 34.99, price: 24.99, rate: 5 },
 ]
 
 function mockOkResponse(data: unknown) {

@@ -56,6 +56,7 @@ If fullstack BE experience is desired later, build a Fastify `apps/mock-api/` se
 
 ## References
 
+- [Design Patterns and Principles ADR](../ADRS/design-patterns.md) — KISSME and SINE principles
 - [MSW docs](https://mswjs.io)
 - [Mocking APIs with MSW (dev.to)](https://dev.to/kevin-uehara/mocking-your-apis-calls-using-mocking-service-worker-msw-7k6)
 

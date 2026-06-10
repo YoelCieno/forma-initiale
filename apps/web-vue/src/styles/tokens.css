@@ -38,6 +38,7 @@
   --wa-color-text-quiet: var(--color-text-muted);
   --wa-color-surface-default: var(--brand-on-normal);
   /* #endregion */
+
   /* #region Typography ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   /*--wa-font-family-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
   --wa-font-family-body: "Inter", ui-sans-serif, system-ui, sans-serif;

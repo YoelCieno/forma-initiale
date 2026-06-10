@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "exports": {
     "./fe-button": "./components/fe-button.ts",
+    "./fe-async-content": "./components/fe-async-content.ts",
     "./fe-card": "./components/fe-card.ts",
     "./fe-icon": "./components/fe-icon.ts",
     "./fe-rating": "./components/fe-rating.ts",
