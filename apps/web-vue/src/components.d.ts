@@ -12,6 +12,7 @@ declare module 'vue' {
     CardContainer: typeof import('./components/CardContainer.vue')['default']
     ComponentsPage: typeof import('./pages/ComponentsPage.vue')['default']
     IconContainer: typeof import('./components/IconContainer.vue')['default']
+    ProductCard: typeof import('./components/ProductCard.vue')['default']
     ProductsPage: typeof import('./pages/ProductsPage.vue')['default']
     RatingContainer: typeof import('./components/RatingContainer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

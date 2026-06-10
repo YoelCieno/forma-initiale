@@ -51,6 +51,21 @@ import "@repo/ui/fe-icon";
         <fe-icon slot="actions" name="gear" />
       </fe-card>
     </div>
+
+    <div>
+      <h3 class="subheading__h3">Framework Card</h3>
+      <div class="card-container__wrapper">
+        <ProductCard
+          title="FW Name"
+          description="Generic FW"
+          logo="code"
+          logo-family="classic"
+          price="Free"
+          previous-price="$99"
+          :rate="4.5"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

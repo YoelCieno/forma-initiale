@@ -6,8 +6,8 @@ export interface ProductView {
   description: string
   logo: string
   logoFamily: string
-  previousPrice: number
-  price: number
+  previousPrice?: string
+  price: string
   rate: number
 }
 
@@ -69,14 +69,12 @@ export function toProductView(product: Product): ProductView {
     description: meta.description,
     logo: meta.logo,
     logoFamily: meta.logoFamily,
-    previousPrice: product.previousPrice,
-    price: product.price,
+    previousPrice: product.previousPrice ? `$${product.previousPrice}` : undefined,
+    price: product.price ? `$${product.price}` : 'Free',
     rate: product.rate,
   }
 }
 
-export function toProductViewList(
-  products: Product[],
-): ProductView[] {
+export function toProductViewList(products: Product[]): ProductView[] {
   return products.map(toProductView)
 }

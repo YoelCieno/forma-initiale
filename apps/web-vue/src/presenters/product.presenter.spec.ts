@@ -125,16 +125,16 @@ describe('toProductView', () => {
     expect(result.name).toBe('vue')
   })
 
-  it('passes previousPrice through unchanged', () => {
+  it('formats previousPrice with currency prefix', () => {
     const result = toProductView(vueProduct)
 
-    expect(result.previousPrice).toBe(100)
+    expect(result.previousPrice).toBe('$100')
   })
 
-  it('passes price through unchanged', () => {
+  it('formats price with currency prefix', () => {
     const result = toProductView(vueProduct)
 
-    expect(result.price).toBe(80)
+    expect(result.price).toBe('$80')
   })
 
   it('passes rate through unchanged', () => {
@@ -155,8 +155,8 @@ describe('toProductView', () => {
   it('handles very high previousPrice', () => {
     const result = toProductView(edgeHighPriceProduct)
 
-    expect(result.previousPrice).toBe(999999)
-    expect(result.price).toBe(800000)
+    expect(result.previousPrice).toBe('$999999')
+    expect(result.price).toBe('$800000')
     expect(result.title).toBe('Angular')
     expect(result.description).toBe('Platform for building mobile & desktop web apps')
   })
@@ -186,8 +186,8 @@ describe('toProductViewList', () => {
 
     results.forEach((p, i) => {
       expect(p.name).toBe(products[i].name)
-      expect(p.previousPrice).toBe(products[i].previousPrice)
-      expect(p.price).toBe(products[i].price)
+      expect(p.previousPrice).toBe(`$${products[i].previousPrice}`)
+      expect(p.price).toBe(`$${products[i].price}`)
       expect(p.rate).toBe(products[i].rate)
     })
   })
