@@ -1,0 +1,183 @@
+# C. `fake-plants-vue` — Example Tenant (Manual)
+
+**Goal:** Create a tenant app manually to validate the layer mechanism end-to-end before building the generator.
+
+## Sources
+
+| Source file | Content |
+|------------|---------|
+| `apps/white-label-vue/` | Layer base to extend |
+| `apps/white-label-vue/layer.config.ts` | Component dirs, routes exported |
+| `apps/white-label-vue/src/app.ts` | `createWhiteLabelApp()` factory |
+| `apps/white-label-vue/vite.config.ts` | Plugin setup pattern |
+| `apps/white-label-vue/src/styles/tokens.css` | Token file format |
+
+## Tasks
+
+### C1. Create tenant directory
+
+- [ ] `mkdir -p apps/fake-plants-vue/src/overrides/{components,pages,styles}`
+
+### C2. `package.json`
+
+- [ ] Create `apps/fake-plants-vue/package.json`:
+  ```json
+  {
+    "name": "fake-plants-vue",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+      "dev": "vp dev",
+      "build": "vp build",
+      "preview": "vp preview"
+    },
+    "dependencies": {
+      "@repo/white-label-vue": "workspace:*",
+      "@repo/ui": "*",
+      "vue": "^3.5.0",
+      "vue-router": "^4"
+    },
+    "devDependencies": {
+      "@vitejs/plugin-vue": "^5.0.0",
+      "unplugin-auto-import": "^19.0.0",
+      "unplugin-vue-components": "^28.0.0",
+      "vite": "^6.0.0",
+      "typescript": "5.5.4"
+    }
+  }
+  ```
+
+### C3. `vite.config.ts`
+
+- [ ] Create `apps/fake-plants-vue/vite.config.ts`:
+  ```typescript
+  import { defineConfig } from 'vite'
+  import vue from '@vitejs/plugin-vue'
+  import AutoImport from 'unplugin-auto-import/vite'
+  import Components from 'unplugin-vue-components/vite'
+  import { layerConfig } from '@repo/white-label-vue/layer.config'
+
+  export default defineConfig({
+    plugins: [
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag: string) => tag.startsWith('fe-'),
+          },
+        },
+      }),
+      AutoImport({
+        imports: ['vue', 'vue-router'],
+        dts: './src/auto-imports.d.ts',
+      }),
+      Components({
+        dirs: ['./src/overrides/components', ...layerConfig.componentDirs],
+        dts: './src/components.d.ts',
+        resolvers: [],
+      }),
+    ],
+  })
+  ```
+
+### C4. `index.html`
+
+- [ ] Create `apps/fake-plants-vue/index.html` — standard Vite HTML entry with `<script type="module" src="/src/main.ts">`, `<div id="app">`, proper `<title>`
+
+### C5. `tsconfig.json`
+
+- [ ] Create `apps/fake-plants-vue/tsconfig.json`:
+  ```json
+  {
+    "extends": "@repo/typescript-config/vite.json",
+    "include": ["src", "vite.config.ts"],
+    "compilerOptions": {
+      "strictNullChecks": true
+    }
+  }
+  ```
+
+### C6. `src/main.ts`
+
+- [ ] Create `apps/fake-plants-vue/src/main.ts`:
+  ```typescript
+  import '@repo/ui/styles'
+  import '@repo/ui/styles/themes/default'
+  import { createWhiteLabelApp } from '@repo/white-label-vue/app'
+  import './overrides/styles/tokens.css'
+
+  const { app, element } = createWhiteLabelApp({
+    routes: [
+      { path: '/', name: 'products', component: () => import('@repo/white-label-vue/src/pages/ProductsPage.vue') },
+      // Tenant-specific route
+      { path: '/about', name: 'about', component: () => import('./overrides/pages/AboutPage.vue') },
+    ],
+  })
+
+  app.mount(element)
+  ```
+
+### C7. Override tokens.css
+
+- [ ] Create `apps/fake-plants-vue/src/overrides/styles/tokens.css`:
+  ```css
+  /* Fake Plants brand override */
+  :where(:root) {
+    --brand-fill-quiet: #dcfce7;
+    --brand-fill-normal: #16a34a;  /* green-600 */
+    --brand-fill-loud: #15803d;    /* green-700 */
+    --brand-border-quiet: #bbf7d0;
+    --brand-border-normal: #86efac;
+    --brand-border-loud: #22c55e;
+    --brand-on-quiet: #166534;
+    --brand-on-normal: #fff;
+    --brand-on-loud: #f0fdf4;
+  }
+  ```
+
+### C8. Override a component
+
+- [ ] Create `apps/fake-plants-vue/src/overrides/components/ProductCard.vue`:
+  - Overrides the white-label `ProductCard.vue`
+  - Uses loremflickr plant images: `https://loremflickr.com/320/200/plant,fake/all`
+  - Different layout/styling from white-label version
+
+- [ ] Create `apps/fake-plants-vue/src/overrides/pages/AboutPage.vue` (new tenant-specific page)
+  - Simple page explaining Fake Plants is a demo tenant
+
+### C9. Verify: Token override works
+
+- [ ] `cd apps/fake-plants-vue && bun run dev`
+- [ ] Open browser — brand colors are green (not indigo)
+- [ ] Check computed CSS on elements — `--wa-color-brand-fill-normal` resolves to `#16a34a`
+
+### C10. Verify: Component override works
+
+- [ ] Product cards show plant images from loremflickr
+- [ ] ProductCard layout matches the override file, not white-label default
+- [ ] If ProductCard not overridden — OR add a simple override like changing card title color
+
+### C11. Verify: Layer resolution works
+
+- [ ] White-label components (ButtonContainer, IconContainer, etc.) still render as fallbacks
+- [ ] Routes merge: `/` shows products (from white-label), `/about` shows new page (tenant override)
+- [ ] White-label styles (base.css) apply, tenant tokens override on top
+
+### C12. Verify build
+
+- [ ] `cd apps/fake-plants-vue && bun run build` — succeeds
+- [ ] `bun run build` from root — succeeds (turbo picks up new workspace)
+
+## Validation Checks
+
+- [ ] **Style override:** Green brand tokens visible
+- [ ] **Component override:** Overridden ProductCard renders with plant images
+- [ ] **New component:** AboutPage renders at `/about`
+- [ ] **Layer fallback:** White-label components (IconContainer, RatingContainer, etc.) render correctly
+- [ ] **No file duplication:** White-label unchanged, tenant only has diffs
+
+## ✅ Manual Confirmation
+
+- [ ] Human visually inspects: styles overridden correctly
+- [ ] Human visually inspects: component override works
+- [ ] Human confirms: "Layer mechanism validated, proceed to D"
