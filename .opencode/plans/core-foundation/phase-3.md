@@ -6,14 +6,14 @@
 
 See [`phase-3/README.md`](./phase-3/README.md) for full task breakdown with sub-docs per deliverable.
 
-| Letter | Deliverable | Doc | Status |
+| # | Deliverable | Doc | Status |
 |--------|------------|-----|--------|
-| A | `@repo/presenter` (pre-req) | [`phase-3/A-presenter.md`](./phase-3/A-presenter.md) | ❌ PENDING |
-| B | Rename web-vue → white-label-vue + layer factory | [`phase-3/B-white-label-rename.md`](./phase-3/B-white-label-rename.md) | ❌ PENDING |
-| C | `fake-plants-vue` example tenant (manual) | [`phase-3/C-fake-plants-vue.md`](./phase-3/C-fake-plants-vue.md) | ❌ PENDING |
-| D | `@repo/generator` + Vue tenant Pinion generator | [`phase-3/D-generator.md`](./phase-3/D-generator.md) | ❌ PENDING |
-| E | Turborepo pipeline update | [`phase-3/E-turbo-pipeline.md`](./phase-3/E-turbo-pipeline.md) | ❌ PENDING |
-| F | Documentation updates | [`phase-3/F-documentation.md`](./phase-3/F-documentation.md) | ❌ PENDING |
+| 3.1 | `@repo/presenters` (pre-req) | [`phase-3/3.1-presenters.md`](./phase-3/3.1-presenters.md) | ❌ PENDING |
+| 3.2 | Rename web-vue → white-label-vue + layer factory | [`phase-3/3.2-white-label-rename.md`](./phase-3/3.2-white-label-rename.md) | ❌ PENDING |
+| 3.3 | `fake-plants-vue` example tenant (manual) | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md) | ❌ PENDING |
+| 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`phase-3/3.4-generator.md`](./phase-3/3.4-generator.md) | ❌ PENDING |
+| 3.5 | Turborepo pipeline update | [`phase-3/3.5-turbo-pipeline.md`](./phase-3/3.5-turbo-pipeline.md) | ❌ PENDING |
+| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ❌ PENDING |
 
 ## Goal
 
@@ -22,13 +22,13 @@ Complete the hexagonal architecture stack with a Presenter layer, then enable mu
 ## Architecture (after Phase 3)
 
 ```
-domain → infra → presenter → apps/white-label-* → apps/tenant-*
+domain → infra → presenters → apps/white-label-* → apps/tenant-*
 ```
 
 Packages:
 - `@repo/domain` — pure TS models/ports (exists)
 - `@repo/infra` — adapters (exists)
-- `@repo/presenter` — DomainModel → ViewModel transformations **(NEW)**
+- `@repo/presenters` — DomainModel → ViewModel transformations **(NEW)**
 - `@repo/ui` — WA web components (exists)
 - `@repo/generator` — Pinion-based code generator **(NEW)**
 
@@ -89,7 +89,7 @@ Tenant only holds override files. White-label is a workspace dependency. Changes
 
 - One codebase, multiple tenants
 - Build-time overrides (no runtime switching)
-- Type-safe transformations (presenter)
+- Type-safe transformations (presenters)
 - Minimal duplication — tenants only hold diff files
 - White-label changes auto-propagate to tenants
 - Tenant apps checked into git
@@ -115,5 +115,5 @@ Tenant only holds override files. White-label is a workspace dependency. Changes
 | Tenant file model | Reference + override (no full copy) |
 | White-label app structure | Factory (app.ts) + Standalone entry (main.ts) |
 | Example app | fake-plants-vue (manual creation, validates mechanism before generator) |
-| Presenter package name | @repo/presenter |
+| Presenter package name | @repo/presenters |
 | Presenter placement | Phase 3 pre-req |

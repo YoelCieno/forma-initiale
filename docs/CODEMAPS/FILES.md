@@ -135,8 +135,10 @@ apps/web-vue/
     │   ├── CardContainer.spec.ts    # Tests for CardContainer
     │   ├── IconContainer.vue        # Icon demos (basic, animated, sizes)
     │   ├── IconContainer.spec.ts    # Tests for IconContainer
-    │   ├── RatingContainer.vue      # Rating demos (value, readonly, disabled, precision, sizes)
-    │   └── RatingContainer.spec.ts  # Tests for RatingContainer
+    │   ├── ProductCard.vue                 # Product card with formatted pricing, logo, rating
+    │   ├── ProductCard.spec.ts             # Tests for ProductCard
+    │   ├── RatingContainer.vue             # Rating demos (value, readonly, disabled, precision, sizes)
+    │   └── RatingContainer.spec.ts         # Tests for RatingContainer
     │
     ├── presenters/
     │   ├── product.presenter.ts      # ProductView mapping: Product → ProductView with framework metadata
