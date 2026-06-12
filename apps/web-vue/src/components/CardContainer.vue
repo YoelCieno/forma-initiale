@@ -53,7 +53,7 @@ import "@repo/ui/fe-icon";
     </div>
 
     <div>
-      <h3 class="subheading__h3">Framework Card</h3>
+      <h3 class="subheading__h3">Product Card</h3>
       <div class="card-container__wrapper">
         <ProductCard
           title="FW Name"

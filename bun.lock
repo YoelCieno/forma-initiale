@@ -37,6 +37,7 @@
       "dependencies": {
         "@repo/domain": "*",
         "@repo/infra": "*",
+        "@repo/presenters": "*",
         "@repo/ui": "*",
         "@vueuse/core": "^14.3.0",
         "vue": "^3.5.0",
@@ -86,6 +87,19 @@
         "@repo/typescript-config": "*",
         "eslint": "^8.57.0",
         "msw": "^2.14.6",
+        "typescript": "5.5.4",
+      },
+    },
+    "packages/presenters": {
+      "name": "@repo/presenters",
+      "version": "0.0.0",
+      "dependencies": {
+        "@repo/domain": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "eslint": "^8.57.0",
         "typescript": "5.5.4",
       },
     },
@@ -471,6 +485,8 @@
     "@repo/eslint-config": ["@repo/eslint-config@workspace:packages/eslint-config"],
 
     "@repo/infra": ["@repo/infra@workspace:packages/infra"],
+
+    "@repo/presenters": ["@repo/presenters@workspace:packages/presenters"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
 

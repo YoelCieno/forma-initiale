@@ -2,7 +2,7 @@
 import "@repo/ui/fe-card"
 import "@repo/ui/fe-icon"
 import "@repo/ui/fe-rating"
-import { ProductView } from "../presenters/product.presenter";
+import type { ProductView } from "@repo/presenters";
 
 withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
   previousPrice: undefined,

@@ -39,12 +39,6 @@
   --wa-color-surface-default: var(--brand-on-normal);
   /* #endregion */
 
-  /* #region Typography ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  /*--wa-font-family-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --wa-font-family-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --wa-font-family-code: "JetBrains Mono", ui-monospace, monospace;*/
-  /* #endregion */
-
   /* #region Layout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
   --min-width-layout: 250px;
   --max-width-layout: 1200px;

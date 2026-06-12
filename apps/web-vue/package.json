@@ -13,6 +13,7 @@
   "dependencies": {
     "@repo/domain": "*",
     "@repo/infra": "*",
+    "@repo/presenters": "*",
     "@repo/ui": "*",
     "@vueuse/core": "^14.3.0",
     "vue": "^3.5.0",

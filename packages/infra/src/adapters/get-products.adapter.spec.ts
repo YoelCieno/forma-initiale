@@ -6,9 +6,7 @@ const mockProducts = [
   { id: '2', name: 'Product 2', previousPrice: 34.99, price: 24.99, rate: 5 },
 ]
 
-function mockOkResponse(data: unknown) {
-  return { ok: true, json: () => Promise.resolve(data) }
-}
+import { mockOkResponse } from '../mocks/helpers'
 
 describe('getProducts', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { getProducts } from "@repo/infra";
-import { toProductViewList } from "../presenters/product.presenter";
-import type { ProductView } from "../presenters/product.presenter";
+import { toProductViewList } from "@repo/presenters";
+import type { ProductView } from "@repo/presenters";
 import { useAsyncState } from "@vueuse/core";
 
 export function useProducts() {

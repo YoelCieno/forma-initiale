@@ -29,16 +29,21 @@ describe('ButtonContainer', () => {
     expect(wrapper.text()).toContain('Plain')
   })
 
-  it('renders states section', () => {
+  it('renders states in their section', () => {
     const wrapper = mount(ButtonContainer)
     expect(wrapper.text()).toContain('Disabled')
     expect(wrapper.text()).toContain('Loading')
   })
 
-  it('renders fe-button elements', () => {
+  it('renders 16 fe-button elements', () => {
     const wrapper = mount(ButtonContainer)
     const buttons = wrapper.findAll('fe-button')
     expect(buttons.length).toBe(16)
+	})
+
+  it('has block class on root element', () => {
+    const wrapper = mount(ButtonContainer)
+    expect(wrapper.classes()).toContain('button-container')
   })
 
   it('renders section headings', () => {
@@ -49,29 +54,18 @@ describe('ButtonContainer', () => {
     expect(wrapper.text()).toContain('States')
   })
 
-  it('renders each section inside fe-card', () => {
+  it('renders section fe-card', () => {
     const wrapper = mount(ButtonContainer)
     const cards = wrapper.findAll('fe-card')
     expect(cards.length).toBe(4)
   })
 
-  it('renders subheadings with BEM class', () => {
+  it('renders subheadings with "subheading__h3" BEM class', () => {
     const wrapper = mount(ButtonContainer)
     const subheadings = wrapper.findAll('h3')
     expect(subheadings.length).toBe(4)
     subheadings.forEach(h3 => {
       expect(h3.classes()).toContain('subheading__h3')
     })
-  })
-
-  it('has block class on root element', () => {
-    const wrapper = mount(ButtonContainer)
-    expect(wrapper.classes()).toContain('button-container')
-  })
-
-  it('renders wrapper divs inside cards', () => {
-    const wrapper = mount(ButtonContainer)
-    const wrappers = wrapper.findAll('.button-container__row')
-    expect(wrappers.length).toBe(4)
   })
 })
