@@ -2,8 +2,9 @@ import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
 import './styles'
 import { createApp } from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'
-import router from './router'
+import { routes } from './routes'
 
 async function bootstrap() {
   if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS === 'true') {
@@ -12,6 +13,11 @@ async function bootstrap() {
       onUnhandledRequest: 'bypass',
     })
   }
+
+  const router = createRouter({
+    history: createWebHashHistory(),
+    routes,
+  })
 
   createApp(App).use(router).mount('#app')
 }

@@ -21,3 +21,6 @@ coverage/
 
 # Zed editor config
 .zed/
+
+# Qwen editor config
+.qwen/
