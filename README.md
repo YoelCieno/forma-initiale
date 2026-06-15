@@ -61,6 +61,26 @@ Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhos
 | `bun run test` | Run tests (Vitest) |
 | `bun run format` | Format code (Prettier) |
 
+## Dependency Automation
+
+This repo uses **Renovate** via GitHub Actions to automatically create and merge PRs for outdated dependencies.
+
+### Configuration
+
+- **Schedule:** Every Monday at 5:00 AM UTC
+- **Auto-merge:** Enabled for minor & patch updates (CI must pass)
+- **Manual trigger:** Go to GitHub → Actions → `Renovate Dependencies` → `Run workflow`
+- **Config:** `.github/workflows/renovate.yml` + `renovate.json`
+
+### Requirements
+
+- **GitHub Secret:** `RENOVATE_TOKEN` (PAT with `repo` scope) — required for PR creation & auto-merge
+- **Lockfile:** `bun.lock` (detected automatically via `renovate.json` `bun.enabled: true`)
+
+### Major Updates
+
+Major version bumps require **manual approval** (disabled auto-merge) to prevent breaking changes. Review PRs carefully before merging.
+
 ## Environment variables
 
 Copy `apps/white-label-vue/.env.example` to `apps/white-label-vue/.env` and adjust:

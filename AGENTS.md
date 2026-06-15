@@ -65,6 +65,7 @@ Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
 - **Prettier 3.x:** root-level via `bun run format`
 - **ESLint plugin hoisting:** `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` in root `devDependencies` (fixes bun workspace hoisting issue where plugins stay isolated in eslint-config's node_modules). Similarly, `eslint-plugin-vue` and `vue-eslint-parser` hoisted in root for Vue SFC linting.
 - **`.mise.toml`** at root with `bun = "latest"` — source mise before running bun commands if not auto-activated
+- **Dependency Automation:** `.github/workflows/renovate.yml` runs weekly (Monday 5 AM UTC) + manual trigger. Uses `renovate.json` config with `bun` support (`bun.lock` detection, auto-merge minor/patch). Requires `RENOVATE_TOKEN` secret (PAT with `repo` scope).
 
 ## Package exports (`@repo/ui`)
 
