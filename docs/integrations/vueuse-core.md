@@ -1,6 +1,6 @@
 # VueUse Core Integration
 
-How `@vueuse/core` composables integrate into the forma-initiale web-vue app — usage, patterns, conventions.
+How `@vueuse/core` composables integrate into the forma-initiale white-label-vue app — usage, patterns, conventions.
 
 ---
 
@@ -11,7 +11,7 @@ Why VueUse in this project:
 - **Reduces boilerplate** for common reactive patterns (async state, timers, event listeners)
 - **Well-tested, tree-shakeable** — import only what you use, zero overhead for unused imports
 - **Vue 3 native** — works directly with Composition API (`ref`, `computed`, lifecycle hooks)
-- **Boundary-enforcing** — VueUse lives only in `apps/web-vue/`, never in `packages/` (hexagonal layer rule)
+- **Boundary-enforcing** — VueUse lives only in `apps/white-label-vue/`, never in `packages/` (hexagonal layer rule)
 
 VueUse composables handle Vue-reactivity concerns. They do not replace infra-layer adapters (HTTP I/O, storage, etc.).
 
@@ -29,7 +29,7 @@ Only one VueUse composable is used today. This document will grow as new composa
 
 ## 3. `useAsyncState` Pattern
 
-The core async data-fetching pattern. Source: `apps/web-vue/src/composables/useProducts.ts`.
+The core async data-fetching pattern. Source: `apps/white-label-vue/src/composables/useProducts.ts`.
 
 ```typescript
 import { useAsyncState } from "@vueuse/core";
@@ -170,8 +170,8 @@ Reference: `docs/integrations/layer-wiring.md` §5 (App Layer → Page Layer) fo
 
 ### Checklist
 
-1. **No install needed** — `@vueuse/core` already in `apps/web-vue/package.json` (`^14.3.0`)
-2. **Create file** — `apps/web-vue/src/composables/use<Feature>.ts`
+1. **No install needed** — `@vueuse/core` already in `apps/white-label-vue/package.json` (`^14.3.0`)
+2. **Create file** — `apps/white-label-vue/src/composables/use<Feature>.ts`
 3. **Import VueUse composable** from `@vueuse/core`
 4. **Follow the pattern:**
 
@@ -185,7 +185,7 @@ Reference: `docs/integrations/layer-wiring.md` §5 (App Layer → Page Layer) fo
    | Timers | `useTimeoutFn` | For delayed actions |
 
 5. **Return shape:** always `{ data, loading, error }` for async, or `{ value }` for sync. Keep it predictable
-6. **Test** — create `apps/web-vue/src/composables/use<Feature>.spec.ts`
+6. **Test** — create `apps/white-label-vue/src/composables/use<Feature>.spec.ts`
 
 ### Return shape convention
 
@@ -216,7 +216,7 @@ VueUse composables that would break the hexagonal architecture:
 | `useLocalStorage` / `useStorage` | Couples composable to browser storage. If persistence is needed, define a domain port and implement it as an infra adapter |
 | `useGeolocation` / `useMediaControls` / browser API wrappers | These are fine in apps but must be wrapped in a composable that isolates the platform dependency. Never use them directly in page components |
 
-**The rule:** VueUse composables that interact with Vue reactivity system are fine in `apps/web-vue`. VueUse composables that handle I/O (fetch, storage, etc.) must not duplicate infra-layer adapters. If a VueUse composable wraps a browser API not yet abstracted in infra, wrap it in a thin app-level composable that could later be swapped.
+**The rule:** VueUse composables that interact with Vue reactivity system are fine in `apps/white-label-vue`. VueUse composables that handle I/O (fetch, storage, etc.) must not duplicate infra-layer adapters. If a VueUse composable wraps a browser API not yet abstracted in infra, wrap it in a thin app-level composable that could later be swapped.
 
 ---
 
@@ -315,7 +315,7 @@ describe('useProducts', () => {
 
 - [VueUse docs](https://vueuse.org/) — full API reference
 - [`useAsyncState` API](https://vueuse.org/core/useAsyncState/) — options, return types, recipes
-- [`apps/web-vue/src/composables/useProducts.ts`](../../apps/web-vue/src/composables/useProducts.ts) — reference implementation
-- [`apps/web-vue/src/composables/useProducts.spec.ts`](../../apps/web-vue/src/composables/useProducts.spec.ts) — reference tests
+- [`apps/white-label-vue/src/composables/useProducts.ts`](../../apps/white-label-vue/src/composables/useProducts.ts) — reference implementation
+- [`apps/white-label-vue/src/composables/useProducts.spec.ts`](../../apps/white-label-vue/src/composables/useProducts.spec.ts) — reference tests
 - [`docs/integrations/layer-wiring.md`](layer-wiring.md) — composable role in the layer stack (§5)
 - [`docs/ADRS/design-patterns.md`](../ADRS/design-patterns.md) — SoC+CQS (composables own command/query orchestration)

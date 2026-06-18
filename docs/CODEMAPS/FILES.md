@@ -18,7 +18,7 @@ forma-initiale/
 ├── turbo.json             # Turborepo pipeline (build, test, lint, dev)
 │
 ├── apps/
-│   ├── web-vue/           # Vue 3 SPA application
+│   ├── white-label-vue/   # Vue 3 SPA — layer base for tenant apps
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
@@ -95,20 +95,21 @@ packages/ui/
 └── styles/
     ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
     └── themes/
-        ├── default.ts       # WA default theme (for web-vue)
+        ├── default.ts       # WA default theme (for white-label-vue)
         ├── awesome.ts       # WA awesome theme (for future web-angular)
         └── shoelace.ts      # WA shoelace theme (for future web-react)
 ```
 
 ---
 
-## apps/web-vue
+## apps/white-label-vue
 
 ```
-apps/web-vue/
-├── package.json             # web-vue — Vue 3, vite, vue-router
+apps/white-label-vue/
+├── package.json             # white-label-vue — Vue 3, vite, vue-router, exports ./app, ./vite.config.base
 ├── tsconfig.json            # extends vite.json, strictNullChecks: true
-├── vite.config.ts           # Vite plugins: vue, AutoImport, Components
+├── vite.config.ts           # Thin: calls defineWhiteLabelViteConfig() from base
+├── vite.config.base.ts      # Shared Vite config factory: Vue, AutoImport, Components — used by tenants
 ├── vitest.config.ts         # Vitest: jsdom, setup, custom elements
 ├── vitest.setup.ts          # Mocks @repo/ui/fe-button, custom element config
 ├── .eslintrc.cjs            # Vue ESLint config
@@ -118,13 +119,14 @@ apps/web-vue/
 ├── public/                  # Static assets
 
 └── src/
-    ├── main.ts              # App entry: createApp, router, WA base + theme + DS tokens; imports './styles'
+    ├── main.ts              # Entry: imports WA styles, calls createWhiteLabelApp({ routes })
+    ├── app.ts               # Factory: createWhiteLabelApp() — bootstraps Vue app, router, MSW
     ├── App.vue              # Root SFC: nav + RouterView (uses --wa-* tokens)
     ├── styles/
     │   ├── index.ts         # Styles entry point, imports tokens.css + base.css
     │   ├── tokens.css       # DS token overrides (brand colors, typography, radius)
     │   └── base.css         # Base element styles (body, .h3, .subheading__h3)
-    ├── router.ts            # Hash-based router (/, /components)
+    ├── routes.ts            # Route definitions (/, /components)
     ├── vite-env.d.ts        # Vite client types, Vue module declaration
     ├── auto-imports.d.ts    # Auto-generated global type declarations
     │
@@ -135,23 +137,35 @@ apps/web-vue/
     │   ├── CardContainer.spec.ts    # Tests for CardContainer
     │   ├── IconContainer.vue        # Icon demos (basic, animated, sizes)
     │   ├── IconContainer.spec.ts    # Tests for IconContainer
-    │   ├── ProductCard.vue                 # Product card with formatted pricing, logo, rating
-    │   ├── ProductCard.spec.ts             # Tests for ProductCard
-    │   ├── RatingContainer.vue             # Rating demos (value, readonly, disabled, precision, sizes)
-    │   └── RatingContainer.spec.ts         # Tests for RatingContainer
-    │
-    ├── presenters/
-    │   ├── product.presenter.ts      # ProductView mapping: Product → ProductView with framework metadata
-    │   └── product.presenter.spec.ts # Presenter tests (6 framework maps, edge cases, list mapping)
+    │   ├── ProductCard.vue          # Product card with formatted pricing, logo, rating
+    │   ├── ProductCard.spec.ts      # Tests for ProductCard
+    │   ├── RatingContainer.vue      # Rating demos (value, readonly, disabled, precision, sizes)
+    │   └── RatingContainer.spec.ts  # Tests for RatingContainer
     │
     ├── composables/
-    │   ├── useProducts.ts        # Product data composable (via @vueuse/core useAsyncState, formatted error)
+    │   ├── useProducts.ts        # Product data composable (uses @repo/presenters, @vueuse/core)
     │   └── useProducts.spec.ts   # Composable tests (loading, success, HTTP failure, manual fetch)
     │
     └── pages/
         ├── ProductsPage.vue      # Product grid with fe-async-content (loading/error/content states)
         ├── ProductsPage.spec.ts  # Page component tests (loading, success grid, error display)
         └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
+```
+
+### Presenters — Extracted to `packages/presenters`
+
+The presenter logic moved from `apps/white-label-vue/src/presenters/` to a dedicated package:
+
+```
+packages/presenters/
+├── package.json             # @repo/presenters — depends on @repo/domain
+├── tsconfig.json            # extends base.json
+├── .eslintrc.cjs
+│
+└── src/
+    ├── index.ts             # Barrel: re-exports toProductView, toProductViewList, ProductView
+    ├── product.presenter.ts # ProductView mapping (Product → ProductView with framework metadata)
+    └── product.presenter.spec.ts # Presenter tests
 ```
 
 ---

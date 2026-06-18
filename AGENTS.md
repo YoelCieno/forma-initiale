@@ -19,7 +19,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 | `bun run build` | turbo build — (white-label-vue: `vp build`, docs: `astro build`) |
 | `bun run lint` | turbo lint — eslint all packages |
 | `bun run format` | prettier on `*.{ts,tsx,md}` |
-| `bun run test` | turbo test — runs vitest in infra + ui + white-label-vue |
+| `bun run test` | turbo test — runs vitest in infra + ui + presenters + white-label-vue |
 | `cd apps/white-label-vue && bun run dev` | white-label-vue only |
 | `cd apps/docs && bun run dev` | docs only |
 | `bun add <pkg>` | add dep (bun workspace-aware) |
@@ -42,14 +42,14 @@ packages/
 
 ## Architecture direction
 
-Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
+Hexagonal + Vue 3 — all 4 layers active:
 
 - `packages/domain/` — pure TS models (no framework deps) — EXISTS
 - `packages/presenters/` — presentation layer (domain → view model transforms) — EXISTS
 - `packages/infra/` — adapters implementing domain contracts — EXISTS
-- `apps/white-label-vue/` → Vue 3 (Vite 6 via Vite+, auto-import, vue-router hash) — ACTIVE (layer base)
-- `apps/docs/` → Astro + Starlight — ACTIVE
 - `packages/ui/` → framework-agnostic hybridJS WC wrappers — ACTIVE
+- `apps/white-label-vue/` → Vue 3 (Vite 6 via Vite+, auto-import, vue-router hash) — ACTIVE (layer base, exports factory + base config)
+- `apps/docs/` → Astro + Starlight — ACTIVE
 
 ## Key config details
 
@@ -59,8 +59,11 @@ Hexagonal + Vue 3 — domain and infra now created (Phase 0 complete):
 - **Root `.eslintrc.js`:** extends `@repo/eslint-config/index.js`, sets `root: true`
 - **App build:** white-label-vue → `vp build` (Vue SFCs need `vue-tsc` for typecheck, not yet added). docs → `astro build`
 - **App dev:** `vite --clearScreen false` (suppresses vite startup banner)
-- **Vite 6.x (white-label-vue):** has `vite.config.ts` with `@vitejs/plugin-vue`, `unplugin-auto-import` (imports: ['vue', 'vue-router']), `unplugin-vue-components`. `isCustomElement` configured for `fe-` prefixed tags.
+- **Vite 6.x (white-label-vue):** has `vite.config.ts` with `@vitejs/plugin-vue`, `unplugin-auto-import` (imports: ['vue', 'vue-router']), `unplugin-vue-components`. `isCustomElement` configured for `fe-` prefixed tags. Tenants use `vite.config.base.ts` factory `defineWhiteLabelViteConfig()`.
 - **Vite+ integrated:** `vp` CLI. Vite v6.x for white-label-vue via Vite+ core. `vitest: ^4.1.7` bundles Vite 6 types.
+- **App factory pattern:** `apps/white-label-vue/src/app.ts` exports `createWhiteLabelApp()` — bootstraps Vue + router + MSW. `main.ts` calls it. Tenants import from `@repo/white-label-vue/app`.
+- **Routes extracted:** `apps/white-label-vue/src/routes.ts` exports route array. Tenants can merge with their own routes before passing to `createWhiteLabelApp()`.
+- **Presenters package:** Presenters moved from app to `packages/presenters/` (`@repo/presenters`). Composables import `toProductViewList` from `@repo/presenters`.
 - **Turbo `^build`:** deps build before consumers; vanilla TS packages w/o build script get skipped gracefully
 - **Prettier 3.x:** root-level via `bun run format`
 - **ESLint plugin hoisting:** `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` in root `devDependencies` (fixes bun workspace hoisting issue where plugins stay isolated in eslint-config's node_modules). Similarly, `eslint-plugin-vue` and `vue-eslint-parser` hoisted in root for Vue SFC linting.

@@ -32,7 +32,7 @@ If you switch host, drop `renovate.json` and use `taze` above. The `check-update
 | Workspace | Key deps |
 |-----------|----------|
 | apps/docs | astro, @astrojs/starlight, sharp |
-| apps/web-vue | vue, vite, @vitejs/plugin-vue, unplugin-* |
+| apps/white-label-vue | vue, vite, @vitejs/plugin-vue, unplugin-* |
 | packages/domain | (pure TS) |
 | packages/infra | @repo/domain |
 | packages/ui | hybrids, @awesome.me/webawesome |

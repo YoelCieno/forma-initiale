@@ -70,7 +70,7 @@ const products = await getProducts()
 - `components/fe-rating.ts` — `<fe-rating>` hybridJS wrapper over `<wa-rating>`
 - `components/fe-rating.spec.ts` — Tests (23 tests, 9 props, events)
 - `styles/webawesome.ts` — WA base CSS (native.css + utilities.css, no theme)
-- `styles/themes/default.ts` — WA default theme (for web-vue)
+- `styles/themes/default.ts` — WA default theme (for white-label-vue)
 - `styles/themes/awesome.ts` — WA awesome theme (for future web-angular)
 - `styles/themes/shoelace.ts` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
@@ -278,6 +278,34 @@ module.exports = {
 
 ---
 
+## @repo/presenters
+
+**Purpose**: Pure TS view-model transformers. Converts domain models into UI-ready shapes with metadata.
+
+**Location**: `packages/presenters/src/`
+
+**Key Files**:
+- `index.ts` — Barrel exports
+- `product.presenter.ts` — ProductView mapping: Product → ProductView with framework name/description/logo
+- `product.presenter.spec.ts` — Presenter tests (6 framework maps, edge cases, list mapping)
+
+**Dependencies**:
+- `@repo/domain` (Product type)
+
+**Exports**:
+- `ProductView` (type) — `{ name, title, description, logo, logoFamily, previousPrice?, price, rate }`
+- `toProductView(product: Product): ProductView`
+- `toProductViewList(products: Product[]): ProductView[]`
+
+**Usage**:
+```typescript
+import { toProductViewList } from '@repo/presenters'
+import type { ProductView } from '@repo/presenters'
+const views = toProductViewList(products)
+```
+
+---
+
 ## @repo/typescript-config
 
 **Purpose**: Shared TypeScript base configurations.
@@ -308,35 +336,47 @@ module.exports = {
 
 ---
 
-## web-vue
+## white-label-vue
 
-**Purpose**: Vue 3 SPA application — main user-facing app.
+**Purpose**: Vue 3 SPA — layer base for tenant apps. Exports factory functions and shared config for tenant reuse.
 
-**Location**: `apps/web-vue/`
+**Location**: `apps/white-label-vue/`
 
 **Build**: `vp dev` / `vp build` (Vite+ CLI)
 
 **Key Files**:
-- `src/main.ts` — App entry, registers plugins (router, WA base + theme + DS tokens); imports `./styles`
+- `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp({ routes })`.mount('#app')
+- `src/app.ts` — Factory: `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes` + optional `appShell` override
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
 - `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
 - `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`); h2 italic, card BEM classes
 - `src/App.vue` — Root component (nav + RouterView)
-- `src/router.ts` — Hash-based routes (/, /components)
+- `src/routes.ts` — Route definitions (/, /components) — exported for tenant merge
 - `src/components/ButtonContainer.vue` — Button demos (variants, sizes, appearances, states) wrapped in fe-card sections
 - `src/components/CardContainer.vue` — Card demos (appearances, slots, header/footer, orientation)
 - `src/components/IconContainer.vue` — Icon demos (basic icons, animated, size variants) wrapped in fe-card
 - `src/components/RatingContainer.vue` — Rating demos (value, readonly, disabled, precision, sizes) wrapped in fe-card
-- `src/presenters/product.presenter.ts` — ProductView mapping: Product → framework name/description/logo
-- `src/composables/useProducts.ts` — Product data composable (via @vueuse/core useAsyncState, formatted error)
+- `src/composables/useProducts.ts` — Product data composable (uses `@repo/presenters`, `@vueuse/core useAsyncState`)
 - `src/pages/ProductsPage.vue` — Product grid with fe-async-content (loading/error/content states)
 - `src/pages/ComponentsPage.vue` — Component showcase hub (uses ButtonContainer, CardContainer, IconContainer, RatingContainer)
-- `vite.config.ts` — Vite plugins (vue, auto-import, components)
+- `vite.config.ts` — Thin: calls `defineWhiteLabelViteConfig()` from base
+- `vite.config.base.ts` — Shared Vite config factory: Vue + AutoImport + Components with mergeable dirs
 - `vitest.config.ts` — Test config (Components plugin with `dts: './src/components.d.ts'`)
+
+**Package exports** (for tenant apps):
+- `@repo/white-label-vue/app` → `./src/app.ts` — exports:
+  - `createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<WhiteLabelApp>` — bootstraps Vue app, hash router, MSW
+  - `WhiteLabelAppOptions` — `{ routes: RouteRecordRaw[], appShell?: () => Promise<...> }`
+  - `WhiteLabelApp` — `{ app, router }`
+- `@repo/white-label-vue/vite.config.base` → `./vite.config.base.ts` — exports:
+  - `defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions): UserConfig` — pre-configured Vite config (Vue plugin, AutoImport, Components)
+  - `WhiteLabelViteOptions` — `{ componentDirs?: string[], autoImportDirs?: string[] }`
+- `@repo/white-label-vue/src/*` → `./src/*` (components/pages for lazy import in tenant routes)
 
 **Dependencies**:
 - `@repo/domain` — Product type
 - `@repo/infra` — getProducts adapter
+- `@repo/presenters` — toProductViewList, ProductView type
 - `@repo/ui` — fe-button, fe-async-content, fe-card, fe-icon, fe-rating, WA styles
 - `@vueuse/core` (^14.3.0) — useAsyncState for composable async state management
 - `vue` (^3.5.0)

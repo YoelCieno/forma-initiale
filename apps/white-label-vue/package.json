@@ -1,6 +1,11 @@
 {
   "name": "white-label-vue",
   "private": true,
+  "exports": {
+    "./app": "./src/app.ts",
+    "./vite.config.base": "./vite.config.base.ts",
+    "./src/*": "./src/*"
+  },
   "version": "0.0.0",
   "type": "module",
   "scripts": {
