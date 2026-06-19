@@ -64,10 +64,9 @@ apps/tenant-acme-vue/
   index.html
   src/
     main.ts               ← calls createWhiteLabelApp({ overrides })
-    overrides/
-      components/          ← ONLY files that differ from white-label
-      pages/               ← ONLY files that differ
-      styles/tokens.css    ← tenant brand (overrides white-label tokens)
+    components/          ← ONLY files that differ from white-label
+    pages/               ← ONLY files that differ
+    styles/tokens.css    ← tenant brand (overrides white-label tokens)
 ```
 
 ### Resolution order (highest → lowest priority)

@@ -304,7 +304,7 @@ Tenant apps consume the white-label layer as a workspace dependency, importing b
 ```typescript
 import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'
 export default defineWhiteLabelViteConfig({
-  componentDirs: ['./src/overrides/components'],
+  componentDirs: ['./src/components'],
 })
 ```
 
@@ -317,7 +317,7 @@ import { createWhiteLabelApp } from 'white-label-vue/app'
 createWhiteLabelApp({
   routes: [
     { path: '/', component: () => import('white-label-vue/src/pages/ProductsPage.vue') },
-    { path: '/about', component: () => import('./overrides/pages/AboutPage.vue') },
+    { path: '/about', component: () => import('./pages/AboutPage.vue') },
   ],
 }).then(({ app }) => app.mount('#app'))
 ```

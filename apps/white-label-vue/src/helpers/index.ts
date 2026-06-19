@@ -5,6 +5,4 @@ export const mockProducts: Product[] = [
   { id: '2', name: 'react', previousPrice: 19.99, price: 0, rate: 5 },
 ]
 
-export function mockOkResponse(data: unknown) {
-  return { ok: true, json: () => Promise.resolve(data) }
-}
+export { mockOkResponse } from '@repo/infra/mocks/helpers'
