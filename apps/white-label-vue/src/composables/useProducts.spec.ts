@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
 import { mockProducts, mockOkResponse } from '../helpers'
+import { frameworkMap } from '../../metadata'
 
 describe('useProducts', () => {
   beforeEach(() => {
@@ -10,11 +11,18 @@ describe('useProducts', () => {
   })
 
   function createTestHarness() {
+    // eslint-disable-next-line vue/one-component-per-file
     return defineComponent({
       setup() {
         return useProducts()
       },
       template: '<div></div>',
+    })
+  }
+
+  function mountWithFrameworkMap() {
+    return mount(createTestHarness(), {
+      global: { provide: { metaMap: frameworkMap } },
     })
   }
 
@@ -33,7 +41,7 @@ describe('useProducts', () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
-    const wrapper = mount(createTestHarness())
+    const wrapper = mountWithFrameworkMap()
 
     await vi.waitFor(() => {
       expect(wrapper.vm.loading).toBe(false)
@@ -78,7 +86,7 @@ describe('useProducts', () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
-    const wrapper = mount(createTestHarness())
+    const wrapper = mountWithFrameworkMap()
 
     await vi.waitFor(() => {
       expect(wrapper.vm.loading).toBe(false)
@@ -96,5 +104,39 @@ describe('useProducts', () => {
       expect(wrapper.vm.products).toHaveLength(1)
       expect(wrapper.vm.products[0].title).toBe('Svelte')
     })
+  })
+
+
+  it('uses injected metaMap when available', async () => {
+    const metaMap = {
+      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'classic' },
+    }
+
+    const apiResponse = { data: mockProducts, total: mockProducts.length }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
+
+    const wrapper = mount(
+      // eslint-disable-next-line vue/one-component-per-file
+      defineComponent({
+        setup() {
+          const result = useProducts()
+          return result
+        },
+        template: '<div></div>',
+      }),
+      {
+        global: {
+          provide: {
+            metaMap,
+          },
+        },
+      },
+    )
+
+    await vi.waitFor(() => {
+      expect(wrapper.vm.loading).toBe(false)
+    })
+    expect(wrapper.vm.products[0].title).toBe('Custom Vue')
+    expect(wrapper.vm.products[0].image).toBe('plant')
   })
 })

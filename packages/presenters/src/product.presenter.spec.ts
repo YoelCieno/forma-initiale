@@ -67,47 +67,48 @@ const edgeHighPriceProduct: Product = {
 }
 
 describe('toProductView', () => {
-  it('maps Vue.js product to correct presenter', () => {
+  it('uses product name as fallback title when no metaMap', () => {
     const result = toProductView(vueProduct)
 
-    expect(result.title).toBe('Vue')
-    expect(result.description).toBe('Progressive framework for building UIs')
-    expect(result.logo).toBe('vuejs')
-    expect(result.logoFamily).toBe('brands')
+    // without metaMap, fallback uses product.name as title
+    expect(result.title).toBe('vue')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
+    expect(result.imageFamily).toBe('classic')
     expect(result.rate).toBe(4.5)
   })
 
-  it('maps Angular product to correct presenter', () => {
+  it('uses product name as fallback for angular without metaMap', () => {
     const result = toProductView(angularProduct)
 
-    expect(result.title).toBe('Angular')
-    expect(result.description).toBe('Platform for building mobile & desktop web apps')
-    expect(result.logo).toBe('angular')
+    expect(result.title).toBe('angular')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
   })
 
-  it('maps React product to correct presenter', () => {
+  it('uses product name as fallback for react without metaMap', () => {
     const result = toProductView(reactProduct)
 
-    expect(result.title).toBe('React')
-    expect(result.description).toBe('Library for building user interfaces')
-    expect(result.logo).toBe('react')
+    expect(result.title).toBe('react')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
   })
 
-  it('maps Svelte product to correct presenter', () => {
+  it('uses product name as fallback for svelte without metaMap', () => {
     const result = toProductView(svelteProduct)
 
-    expect(result.title).toBe('Svelte')
-    expect(result.description).toBe('Cybernetically enhanced web apps')
-    expect(result.logo).toBe('svelte')
+    expect(result.title).toBe('svelte')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
   })
 
-  it('maps Solid product to correct presenter', () => {
+  it('uses product name as fallback for solid without metaMap', () => {
     const result = toProductView(solidProduct)
 
-    expect(result.title).toBe('Solid')
-    expect(result.description).toBe('Reactive UI library')
-    expect(result.logo).toBe('code')
-    expect(result.logoFamily).toBe('classic')
+    expect(result.title).toBe('solid')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
+    expect(result.imageFamily).toBe('classic')
   })
 
   it('maps unknown product to fallback defaults', () => {
@@ -115,8 +116,8 @@ describe('toProductView', () => {
 
     expect(result.title).toBe('Unknown')
     expect(result.description).toBe('')
-    expect(result.logo).toBe('code')
-    expect(result.logoFamily).toBe('classic')
+    expect(result.image).toBe('code')
+    expect(result.imageFamily).toBe('classic')
   })
 
   it('passes id through as name', () => {
@@ -147,9 +148,9 @@ describe('toProductView', () => {
     const result = toProductView(edgeZeroRateProduct)
 
     expect(result.rate).toBe(0)
-    expect(result.title).toBe('Vue')
-    expect(result.description).toBe('Progressive framework for building UIs')
-    expect(result.logo).toBe('vuejs')
+    expect(result.title).toBe('vue')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
   })
 
   it('handles very high previousPrice', () => {
@@ -157,21 +158,21 @@ describe('toProductView', () => {
 
     expect(result.previousPrice).toBe('$999999')
     expect(result.price).toBe('$800000')
-    expect(result.title).toBe('Angular')
-    expect(result.description).toBe('Platform for building mobile & desktop web apps')
+    expect(result.title).toBe('angular')
+    expect(result.description).toBe('')
   })
 })
 
 describe('toProductViewList', () => {
-  it('maps array of products to presenters', () => {
+  it('maps array of products to presenters with fallback titles', () => {
     const products = [vueProduct, angularProduct, unknownProduct]
     const results = toProductViewList(products)
 
     expect(results).toHaveLength(3)
-    expect(results[0].title).toBe('Vue')
-    expect(results[1].title).toBe('Angular')
+    expect(results[0].title).toBe('vue')
+    expect(results[1].title).toBe('angular')
     expect(results[2].title).toBe('Unknown')
-    expect(results[2].logo).toBe('code')
+    expect(results[2].image).toBe('code')
   })
 
   it('returns empty array for empty input', () => {
@@ -190,5 +191,59 @@ describe('toProductViewList', () => {
       expect(p.price).toBe(`$${products[i].price}`)
       expect(p.rate).toBe(products[i].rate)
     })
+  })
+
+
+  it('passes metaMap through to each product via toProductViewList', () => {
+    const metaMap = {
+      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'classic' },
+    }
+    const products = [vueProduct, angularProduct]
+    const results = toProductViewList(products, metaMap)
+
+    expect(results[0].title).toBe('Custom Vue')
+    expect(results[0].image).toBe('plant')
+    // angular not in metaMap so falls back to generic defaults
+    expect(results[1].title).toBe('angular')
+    expect(results[1].image).toBe('code')
+  })
+})
+
+describe('toProductView with metaMap', () => {
+  it('uses metaMap to override default fallback values', () => {
+    const metaMap = {
+      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'awesome' },
+    }
+    const result = toProductView(vueProduct, metaMap)
+
+    expect(result.title).toBe('Custom Vue')
+    expect(result.description).toBe('Custom desc')
+    expect(result.image).toBe('plant')
+    expect(result.imageFamily).toBe('awesome')
+    // non-meta fields preserved
+    expect(result.name).toBe('vue')
+    expect(result.price).toBe('$80')
+    expect(result.rate).toBe(4.5)
+  })
+
+  it('falls back to generic defaults when name not in metaMap', () => {
+    const metaMap = {
+      'non-existent': { title: 'Nope', description: 'Nope', image: 'nope', imageFamily: 'nope' },
+    }
+    const result = toProductView(vueProduct, metaMap)
+
+    expect(result.title).toBe('vue')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
+    expect(result.imageFamily).toBe('classic')
+  })
+
+  it('falls back to generic defaults when metaMap is undefined', () => {
+    const result = toProductView(vueProduct, undefined)
+
+    expect(result.title).toBe('vue')
+    expect(result.description).toBe('')
+    expect(result.image).toBe('code')
+    expect(result.imageFamily).toBe('classic')
   })
 })

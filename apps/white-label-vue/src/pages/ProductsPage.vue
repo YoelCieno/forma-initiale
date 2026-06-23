@@ -6,7 +6,7 @@ const { products, loading, error } = useProducts();
 
 <template>
   <div class="products-page">
-    <h1 class="products-page__title">Free Bundles by Frameworks</h1>
+    <h1 class="products-page__title">List of Products</h1>
 
     <fe-async-content :loading="loading" :error="error">
       <p slot="loading" class="products-page__loading">Loading...</p>

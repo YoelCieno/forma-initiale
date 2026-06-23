@@ -1,23 +1,46 @@
 import type { Product } from '@repo/domain'
+import { PRODUCT_TENANT_CONFIGS, RATE_VALUE } from '../mocked-data.js'
+import type { PriceConfig } from '../mocked-data.js'
 
-const FRAMEWORK_NAMES = ['react', 'angular', 'vue', 'svelte', 'solid'] as const
 let counter = 0
 
-export function buildProduct(overrides?: Partial<Product>): Product {
-  counter++
+type TenantId = keyof typeof PRODUCT_TENANT_CONFIGS
+
+function isValidTenant(id: string): id is TenantId {
+  return id in PRODUCT_TENANT_CONFIGS
+}
+
+function calculatePrice(counter: number, config?: PriceConfig): number {
+  if (!config) return 0
+  return parseFloat((config.base + counter * config.increment).toFixed(2))
+}
+
+function getPriceRecord(counter: number, tenantId: TenantId): Product {
+	const config = PRODUCT_TENANT_CONFIGS[tenantId]
   return {
     id: `prod-${counter}`,
-    name: FRAMEWORK_NAMES[(counter - 1) % FRAMEWORK_NAMES.length],
-    previousPrice: parseFloat((29.99 + counter * 10).toFixed(2)),
-    price: 0,
-    rate: (counter % 5) + 1,
-    ...overrides,
+    name: config.names[(counter - 1) % config.names.length],
+    previousPrice: calculatePrice(counter, config.previousPrice),
+    price: calculatePrice(counter, config.price),
+    rate: RATE_VALUE[config.rateType](counter),
   }
 }
 
-export function buildProductList(count = 3): Product[] {
-	console.log('🚀~count:', count)
-  return Array.from({ length: count }, () => buildProduct())
+export function buildProduct(tenantId: TenantId = 'wl', overrides?: Partial<Product>): Product {
+  if (!isValidTenant(tenantId)) {
+    throw new Error(`Unknown tenant: ${tenantId}`)
+  }
+
+  counter++
+	return {
+		...getPriceRecord(counter, tenantId),
+    ...overrides,
+	}
+}
+
+export function buildProductList(tenantId: TenantId): Product[] {
+	const count = PRODUCT_TENANT_CONFIGS[tenantId].names.length
+  return Array.from({ length: count }, () => buildProduct(tenantId))
 }
 
 export function resetProductCounter(): void {

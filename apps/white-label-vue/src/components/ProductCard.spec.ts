@@ -7,8 +7,8 @@ describe('ProductCard', () => {
   const baseProps = {
     title: 'Vue',
     description: 'Progressive framework for building UIs',
-    logo: 'vuejs',
-		logoFamily: 'brands',
+    image: 'vuejs',
+    imageFamily: 'brands',
     price: 'Free',
     rate: 4.5,
   }

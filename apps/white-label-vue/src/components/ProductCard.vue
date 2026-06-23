@@ -14,8 +14,8 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
   <fe-card class="product-card">
     <fe-icon
       slot="media"
-      :name="logo"
-      :family="logoFamily"
+      :name="image"
+      :family="imageFamily"
       class="product-card__icon"
     />
     <h2 slot="header" class="product-card__title">{{ title }}</h2>

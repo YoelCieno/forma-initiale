@@ -21,7 +21,8 @@ describe('CardContainer', () => {
   })
 
   it('renders horizontal card', () => {
-    const wrapper = mount(CardContainer)
+		const wrapper = mount(CardContainer)
+		// If orientation="horizontal" in fe-card
     expect(wrapper.text()).toContain('Horizontal card')
   })
 })

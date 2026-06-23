@@ -58,8 +58,8 @@ import "@repo/ui/fe-icon";
         <ProductCard
           title="FW Name"
           description="Generic FW"
-          logo="code"
-          logo-family="classic"
+          image="code"
+          image-family="classic"
           price="Free"
           previous-price="$99"
           :rate="4.5"

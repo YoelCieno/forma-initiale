@@ -4,77 +4,38 @@ export interface ProductView {
   name: string
   title: string
   description: string
-  logo: string
-  logoFamily: string
+  image: string
+  imageFamily: string
   previousPrice?: string
   price: string
   rate: number
 }
 
-interface FrameworkMeta {
+export interface ProductMeta {
   title: string
   description: string
-  logo: string
-  logoFamily: string
+  image: string
+  imageFamily: string
 }
 
-const frameworkMap: Record<string, FrameworkMeta> = {
-  vue: {
-    title: 'Vue',
-    description: 'Progressive framework for building UIs',
-    logo: 'vuejs',
-    logoFamily: 'brands',
-  },
-  angular: {
-    title: 'Angular',
-    description: 'Platform for building mobile & desktop web apps',
-    logo: 'angular',
-    logoFamily: 'brands',
-  },
-  react: {
-    title: 'React',
-    description: 'Library for building user interfaces',
-    logo: 'react',
-    logoFamily: 'brands',
-  },
-  svelte: {
-    title: 'Svelte',
-    description: 'Cybernetically enhanced web apps',
-    logo: 'svelte',
-    logoFamily: 'brands',
-  },
-  solid: {
-    title: 'Solid',
-    description: 'Reactive UI library',
-    logo: 'code',
-    logoFamily: 'classic',
-  },
-}
 
-function getFrameworkMeta(name: string): FrameworkMeta {
-	return frameworkMap[name] ?? {
-		title: name,
-		description: '',
-		logo: 'code',
-		logoFamily: 'classic'
-	}
-}
-
-export function toProductView(product: Product): ProductView {
-  const meta = getFrameworkMeta(product.name)
+export function toProductView(product: Product, metaMap?: Record<string, ProductMeta>): ProductView {
+  const override = metaMap?.[product.name]
+  const fallback = { title: product.name, description: '', image: 'code', imageFamily: 'classic' }
+  const meta = override ?? fallback
 
   return {
     name: product.name,
     title: meta.title,
     description: meta.description,
-    logo: meta.logo,
-    logoFamily: meta.logoFamily,
+    image: meta.image,
+    imageFamily: meta.imageFamily,
     previousPrice: product.previousPrice ? `$${product.previousPrice}` : undefined,
     price: product.price ? `$${product.price}` : 'Free',
     rate: product.rate,
   }
 }
 
-export function toProductViewList(products: Product[]): ProductView[] {
-  return products.map(toProductView)
+export function toProductViewList(products: Product[], metaMap?: Record<string, ProductMeta>): ProductView[] {
+  return products.map(p => toProductView(p, metaMap))
 }

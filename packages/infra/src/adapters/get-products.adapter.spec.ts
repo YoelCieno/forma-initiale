@@ -20,7 +20,9 @@ describe('getProducts', () => {
     const result = await getProducts()
 
     expect(result).toEqual(apiResponse)
-    expect(fetch).toHaveBeenCalledWith('https://api.example.com/api/products')
+    expect(fetch).toHaveBeenCalledWith('https://api.example.com/api/products', {
+      headers: { 'x-tenant-id': 'wl' },
+    })
   })
 
   it('throws on non-ok response (HTTP 500)', async () => {
@@ -67,5 +69,19 @@ describe('getProducts', () => {
     const result = await getProducts()
 
     expect(result).toEqual(apiResponse)
+  })
+
+  it('sends x-tenant-id header from VITE_TENANT_ID env var', async () => {
+    const apiResponse = { data: mockProducts, total: mockProducts.length }
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)));
+
+    // Simulate a non-default tenant ID
+    (import.meta.env as { VITE_TENANT_ID: string }).VITE_TENANT_ID = 'fp'
+    const result = await getProducts()
+
+    expect(result).toEqual(apiResponse)
+    expect(fetch).toHaveBeenCalledWith('https://api.example.com/api/products', {
+      headers: { 'x-tenant-id': 'fp' },
+    })
   })
 })

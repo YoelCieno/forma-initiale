@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils'
 import ProductsPage from './ProductsPage.vue'
 
 import { mockProducts, mockOkResponse } from '../helpers'
+import { frameworkMap } from '../../metadata'
 
 describe('ProductsPage', () => {
   beforeEach(() => {
@@ -13,7 +14,9 @@ describe('ProductsPage', () => {
   it('shows loading state while fetching', async () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
 
-    const wrapper = mount(ProductsPage)
+    const wrapper = mount(ProductsPage, {
+      global: { provide: { metaMap: frameworkMap } },
+    })
     // Flush hybridJS + Lit microtasks for WC initialization
     await Promise.resolve()
     await Promise.resolve()
@@ -32,7 +35,9 @@ describe('ProductsPage', () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
 
-    const wrapper = mount(ProductsPage)
+    const wrapper = mount(ProductsPage, {
+      global: { provide: { metaMap: frameworkMap } },
+    })
 
     // Wait for cards to appear (fe-async-content projects default slot)
     await vi.waitFor(() => {
@@ -62,7 +67,9 @@ describe('ProductsPage', () => {
       }),
     )
 
-    const wrapper = mount(ProductsPage)
+    const wrapper = mount(ProductsPage, {
+      global: { provide: { metaMap: frameworkMap } },
+    })
 
     // Wait for error TEXT to appear (not just element — element is always present
     // in light DOM, but text updates after fetch resolves)
