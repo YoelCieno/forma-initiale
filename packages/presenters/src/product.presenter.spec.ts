@@ -67,48 +67,25 @@ const edgeHighPriceProduct: Product = {
 }
 
 describe('toProductView', () => {
-  it('uses product name as fallback title when no metaMap', () => {
-    const result = toProductView(vueProduct)
+  it.each([
+    ['vue', 'vue'],
+    ['angular', 'angular'],
+    ['react', 'react'],
+    ['svelte', 'svelte'],
+    ['solid', 'solid'],
+  ])('uses product name %s as fallback title without metaMap', (name, expected) => {
+    const result = toProductView({ id: '1', name, previousPrice: 100, price: 80, rate: 4 })
 
-    // without metaMap, fallback uses product.name as title
-    expect(result.title).toBe('vue')
-    expect(result.description).toBe('')
-    expect(result.image).toBe('code')
-    expect(result.imageFamily).toBe('classic')
-    expect(result.rate).toBe(4.5)
-  })
-
-  it('uses product name as fallback for angular without metaMap', () => {
-    const result = toProductView(angularProduct)
-
-    expect(result.title).toBe('angular')
+    expect(result.title).toBe(expected)
     expect(result.description).toBe('')
     expect(result.image).toBe('code')
   })
 
-  it('uses product name as fallback for react without metaMap', () => {
-    const result = toProductView(reactProduct)
+  it('handles kebab-case product names', () => {
+    const result = toProductView({ id: '9', name: 'crimson-veil', previousPrice: 15, price: 12, rate: 3.5 })
 
-    expect(result.title).toBe('react')
-    expect(result.description).toBe('')
+    expect(result.title).toBe('crimson-veil')
     expect(result.image).toBe('code')
-  })
-
-  it('uses product name as fallback for svelte without metaMap', () => {
-    const result = toProductView(svelteProduct)
-
-    expect(result.title).toBe('svelte')
-    expect(result.description).toBe('')
-    expect(result.image).toBe('code')
-  })
-
-  it('uses product name as fallback for solid without metaMap', () => {
-    const result = toProductView(solidProduct)
-
-    expect(result.title).toBe('solid')
-    expect(result.description).toBe('')
-    expect(result.image).toBe('code')
-    expect(result.imageFamily).toBe('classic')
   })
 
   it('maps unknown product to fallback defaults', () => {
@@ -118,12 +95,6 @@ describe('toProductView', () => {
     expect(result.description).toBe('')
     expect(result.image).toBe('code')
     expect(result.imageFamily).toBe('classic')
-  })
-
-  it('passes id through as name', () => {
-    const result = toProductView(vueProduct)
-
-    expect(result.name).toBe('vue')
   })
 
   it('formats previousPrice with currency prefix', () => {

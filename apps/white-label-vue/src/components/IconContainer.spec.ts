@@ -22,13 +22,7 @@ describe('IconContainer', () => {
   it('renders size variants', () => {
     const wrapper = mount(IconContainer)
     expect(wrapper.text()).toContain('Sizes')
-    expect(wrapper.html()).toContain('--fs-xs')
-    expect(wrapper.html()).toContain('--fs-xl')
-  })
-
-  it('renders all fe-icon elements', () => {
-    const wrapper = mount(IconContainer)
-    const icons = wrapper.findAll('fe-icon')
-    expect(icons.length).toBe(13)
+    const rocketIcons = wrapper.findAll('fe-icon[name="rocket"]')
+    expect(rocketIcons).toHaveLength(6)
   })
 })

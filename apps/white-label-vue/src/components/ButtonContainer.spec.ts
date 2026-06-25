@@ -5,34 +5,45 @@ import ButtonContainer from './ButtonContainer.vue'
 describe('ButtonContainer', () => {
   it('renders all variant buttons', () => {
     const wrapper = mount(ButtonContainer)
-    expect(wrapper.text()).toContain('Neutral')
-    expect(wrapper.text()).toContain('Brand')
-    expect(wrapper.text()).toContain('Success')
-    expect(wrapper.text()).toContain('Warning')
-    expect(wrapper.text()).toContain('Danger')
+    const buttons = wrapper.findAll('fe-button')
+    const variants = ['neutral', 'brand', 'success', 'warning', 'danger']
+    variants.forEach((variant) => {
+      const found = buttons.some((b) => b.attributes('variant') === variant)
+      expect(found, `expected fe-button with variant="${variant}"`).toBe(true)
+    })
   })
 
   it('renders all size variants', () => {
     const wrapper = mount(ButtonContainer)
-    expect(wrapper.text()).toContain('XS')
-    expect(wrapper.text()).toContain('S')
-    expect(wrapper.text()).toContain('M')
-    expect(wrapper.text()).toContain('L')
-    expect(wrapper.text()).toContain('XL')
+    const buttons = wrapper.findAll('fe-button')
+    const sizes = ['xs', 's', 'm', 'l', 'xl']
+    sizes.forEach((size) => {
+      const found = buttons.some((b) => b.attributes('size') === size)
+      expect(found, `expected fe-button with size="${size}"`).toBe(true)
+    })
   })
 
   it('renders all appearance variants', () => {
     const wrapper = mount(ButtonContainer)
-    expect(wrapper.text()).toContain('Accent')
-    expect(wrapper.text()).toContain('Filled')
-    expect(wrapper.text()).toContain('Outlined')
-    expect(wrapper.text()).toContain('Plain')
+    const buttons = wrapper.findAll('fe-button')
+    const appearances = ['accent', 'filled', 'outlined', 'plain']
+    appearances.forEach((appearance) => {
+      const found = buttons.some(
+        (b) => b.attributes('appearance') === appearance,
+      )
+      expect(
+        found,
+        `expected fe-button with appearance="${appearance}"`,
+      ).toBe(true)
+    })
   })
 
   it('renders states in their section', () => {
     const wrapper = mount(ButtonContainer)
-    expect(wrapper.text()).toContain('Disabled')
-    expect(wrapper.text()).toContain('Loading')
+    const disabledButtons = wrapper.findAll('fe-button[disabled]')
+    expect(disabledButtons.length).toBeGreaterThanOrEqual(1)
+    const loadingButtons = wrapper.findAll('fe-button[loading]')
+    expect(loadingButtons.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders 16 fe-button elements', () => {
