@@ -7,10 +7,10 @@
 ```
 ┌──────────────────────────────────────────────────────┐
 │                   Apps (framework)                   │
-│  ┌───────────────┐  ┌────────────────────────────┐   │
-│  │white-label-vue│  │  docs                      │   │
-│  │  (Vue 3, Vite)│  │  (Astro + Starlight)       │   │
-│  └───────┬───────┘  └────────────────────────────┘   │
+│  ┌───────────────┐  ┌──────────────────────┐  ┌────────────────────────────┐
+│  │white-label-vue│  │  fake-plants-vue     │  │  docs                      │
+│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)      │  │  (Astro + Starlight)       │
+│  └───────┬───────┘  └──────────┬───────────┘  └────────────────────────────┘
 │          │                                           │
 ├──────────┼───────────────────────────────────────────┤
 │          │        packages (framework-agnostic)      │
@@ -36,8 +36,8 @@ Domain (pure TS)          Infra (adapters)          UI (agnostic)
 └──────────────┘         └──────────────┘         └──────┬───────┘
                                                          │
                     Apps (framework-specific)            │
-                     ┌────────────────────┐               │
-                     │  white-label-vue   │◄──────────────┘
+                     ┌────────────────────┐              │
+                     │  white-label-vue   │◄─────────────┘
                      │  ├─ App.vue        │  <fe-button>  
                      │  ├─ ProductsPage   │                
                      │  ├─ ComponentsPage │                
@@ -45,12 +45,19 @@ Domain (pure TS)          Infra (adapters)          UI (agnostic)
                      │     (composable)   │                
                      └────────────────────┘                
                                                          
-                    ┌────────────────────┐                
-                    │  docs              │                
-                    │  ├─ Architecture   │                
-                    │  ├─ Getting Started│                
-                    │  └─ Configuration  │                
-                    └────────────────────┘                
+                                                     
+                     ┌────────────────────┐                
+                     │  fake-plants-vue   │                
+                     │  ├─ App.vue        │                
+                     │  ├─ ProductsPage   │                
+                     │  └─ AboutPage      │                
+                     └────────────────────┘                
+                     ┌────────────────────┐                
+                     │  docs              │                
+                     │  ├─ Architecture   │                
+                     │  ├─ Getting Started│                
+                     │  └─ Configuration  │                
+                     └────────────────────┘                
 ```
 
 ## Data Flow
@@ -93,12 +100,16 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
          │           │                     │
          └──────┬────┘                     │
                 ▼                          │
-      @repo/presenters
-            │  deps: domain
-            │
-            ▼
-      white-label-vue ◄───────────────────────┘
+      @repo/presenters										 │
+            │  deps: domain                │
+            │															 │
+            ▼															 │
+      white-label-vue ◄────────────────────┘
             deps: domain, infra, presenters, ui, vue, vue-router
+                │													 │
+                ▼													 │
+      fake-plants-vue ◄────────────────────┘
+            deps: white-label-vue, domain, infra, presenters, ui
                 │
                 ▼
            docs

@@ -19,6 +19,7 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 | App | Stack | Status |
 |-----|-------|--------|
 | `apps/white-label-vue` | Vue 3 + Vite 6 | Active (layer base) |
+| `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active |
 | `apps/docs` | Astro + Starlight | Active |
 | `apps/web-angular` | Angular | Future |
 | `apps/web-react` | React | Future |
@@ -29,6 +30,7 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 forma-initiale/
 ├── apps/
 │   ├── white-label-vue/    # Vue 3 app (Vite 6 via Vite+), layer base for tenants
+│   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
 │   └── docs/             # Documentation site
 ├── packages/
 │   ├── domain/           # Pure TS models, ports

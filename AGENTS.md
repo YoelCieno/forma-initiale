@@ -19,7 +19,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 | `bun run build` | turbo build — (white-label-vue: `vp build`, docs: `astro build`) |
 | `bun run lint` | turbo lint — eslint all packages |
 | `bun run format` | prettier on `*.{ts,tsx,md}` |
-| `bun run test` | turbo test — runs vitest in infra + ui + presenters + white-label-vue |
+| `bun run test` | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
 | `cd apps/white-label-vue && bun run dev` | white-label-vue only |
 | `cd apps/docs && bun run dev` | docs only |
 | `bun add <pkg>` | add dep (bun workspace-aware) |
@@ -30,7 +30,8 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 ```
 apps/
   white-label-vue/ — Vite 6 Vue 3 app (via Vite+ `vp` CLI), layer base for tenants
-  docs/       — Astro + Starlight docs site
+  fake-plants-vue/ — Vue 3 tenant app — plants-themed store
+  docs/            — Astro + Starlight docs site
 packages/
   domain/     — pure TS models/ports (@repo/domain)
   presenters/ — presentation layer transforming domain models into view models (@repo/presenters)
@@ -42,7 +43,7 @@ packages/
 
 ## Architecture direction
 
-Hexagonal + Vue 3 — all 4 layers active:
+Hexagonal + Vue 3 — all 5 layers active:
 
 - `packages/domain/` — pure TS models (no framework deps) — EXISTS
 - `packages/presenters/` — presentation layer (domain → view model transforms) — EXISTS
@@ -50,6 +51,7 @@ Hexagonal + Vue 3 — all 4 layers active:
 - `packages/ui/` → framework-agnostic hybridJS WC wrappers — ACTIVE
 - `apps/white-label-vue/` → Vue 3 (Vite 6 via Vite+, auto-import, vue-router hash) — ACTIVE (layer base, exports factory + base config)
 - `apps/docs/` → Astro + Starlight — ACTIVE
+- `apps/fake-plants-vue/` → Vue 3 tenant app, extends white-label layer — ACTIVE
 
 ## Key config details
 

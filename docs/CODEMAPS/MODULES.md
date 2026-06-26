@@ -393,10 +393,50 @@ const views = toProductViewList(products)
 |------|------|-------------|
 | `/` | ProductsPage | Product grid with fe-async-content (loading/error/content), fe-card per product, fe-rating + pricing |
 | `/components` | ComponentsPage | Component showcase hub (button, card, icon, rating) — lazy-loaded |
+---
+
+## fake-plants-vue
+
+**Purpose**: Vue 3 tenant app — plants-themed store. Consumes white-label-vue factory and extends with plant-specific pages.
+
+**Location**: `apps/fake-plants-vue/`
+
+**Build**: `vp dev` / `vp build` (Vite+ CLI)
+
+**Key Files**:
+- `src/main.ts` — Entry: imports WA styles, calls `createWhiteLabelApp({ routes })`
+- `src/App.vue` — Root SFC (nav: RouterLink / → ProductsPage, /about → AboutPage + RouterView)
+- `src/App.spec.ts` — Tests (RouterLink routes, RouterView)
+- `src/components/ProductCard.vue` — Product card with formatted pricing, logo, rating
+- `src/components/ProductCard.spec.ts` — Tests (title, description, price, Free default, previousPrice, rating)
+- `src/pages/AboutPage.vue` — About page with fe-card
+- `src/pages/AboutPage.spec.ts` — Tests (h1, fe-card, paragraph content)
+- `metadata.ts` — Plant metadata: plantsMap with 7 entries
+- `vitest.config.ts` — Test config (vue plugin, jsdom)
+- `vitest.setup.ts` — Custom element config for fe-* components
+
+**Test Count**: 13 tests across 3 files (App: 3, ProductCard: 7, AboutPage: 3)
+
+**Dependencies**:
+- `@repo/white-label-vue` — Factory (createWhiteLabelApp, defineWhiteLabelViteConfig)
+- `@repo/domain` — Product type
+- `@repo/infra` — getProducts adapter
+- `@repo/presenters` — toProductViewList, ProductView type
+- `@repo/ui` — fe-card, fe-rating, WA styles
+- `vue` (^3.5.0)
+- `vue-router` (^4)
+
+**Routes**:
+
+| Path | Page | Description |
+|------|------|-------------|
+| `/` | ProductsPage | Product grid (inherited from white-label-vue) |
+| `/about` | AboutPage | About this store — fe-card with platform description |
 
 ---
 
 ## docs
+
 
 **Purpose**: Documentation site built with Astro + Starlight.
 

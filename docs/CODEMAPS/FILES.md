@@ -19,6 +19,7 @@ forma-initiale/
 │
 ├── apps/
 │   ├── white-label-vue/   # Vue 3 SPA — layer base for tenant apps
+│   ├── fake-plants-vue/   # Vue 3 tenant app — plants-themed store
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
@@ -150,6 +151,45 @@ apps/white-label-vue/
         ├── ProductsPage.vue      # Product grid with fe-async-content (loading/error/content states)
         ├── ProductsPage.spec.ts  # Page component tests (loading, success grid, error display)
         └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
+```
+
+### apps/fake-plants-vue
+
+Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory from @repo/white-label-vue.
+
+```
+apps/fake-plants-vue/
+├── package.json             # fake-plants-vue — depends on white-label-vue, domain, ui
+├── tsconfig.json            # extends vite.json
+├── vite.config.ts           # Uses defineWhiteLabelViteConfig() from white-label-vue base
+├── vitest.config.ts         # Vitest: jsdom, vue plugin, auto-import, components
+├── vitest.setup.ts          # Custom element config for fe-* components
+├── .eslintrc.cjs            # Vue ESLint config
+├── index.html               # SPA entry HTML
+├── metadata.ts              # Plant metadata mapping (name → {title, description, image})
+├── .env                     # Environment variables
+├── .env.example             # Env var template
+
+└── src/
+    ├── main.ts              # Entry: imports WA styles, calls createWhiteLabelApp({ routes })
+    ├── App.vue              # Root SFC: nav + RouterView
+    ├── App.spec.ts          # Tests for App.vue (RouterLink, RouterView)
+    ├── auto-imports.d.ts    # Auto-generated global type declarations
+    ├── components.d.ts      # Auto-generated component type declarations
+    ├── vite-env.d.ts        # Vite client types
+    │
+    ├── components/
+    │   └── ProductCard.vue          # Product card with formatted pricing, logo, rating
+    │   └── ProductCard.spec.ts      # Tests for ProductCard (title, price, Free default, rating)
+    │
+    ├── pages/
+    │   └── AboutPage.vue            # About page with fe-card
+    │   └── AboutPage.spec.ts        # Tests for AboutPage (h1, fe-card, paragraph)
+    │
+    └── styles/
+        ├── index.ts         # Styles entry
+        ├── tokens.css       # DS token overrides (brand colors)
+        └── base.css         # Base element styles
 ```
 
 ### Presenters — Extracted to `packages/presenters`

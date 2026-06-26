@@ -1,6 +1,6 @@
 # Phase 3 — Presenter Layer + White-Label Extend
 
-**Status:** ❌ PENDING
+**Status:** ✅ PARTIALLY COMPLETED (3.1-3.3, 3.5, 3.6 done; 3.4 PENDING)
 
 ## Granular Breakdown
 
@@ -8,12 +8,12 @@ See [`phase-3/README.md`](./phase-3/README.md) for full task breakdown with sub-
 
 | # | Deliverable | Doc | Status |
 |--------|------------|-----|--------|
-| 3.1 | `@repo/presenters` (pre-req) | [`phase-3/3.1-presenters.md`](./phase-3/3.1-presenters.md) | ❌ PENDING |
-| 3.2 | Rename web-vue → white-label-vue + layer factory | [`phase-3/3.2-white-label-rename.md`](./phase-3/3.2-white-label-rename.md) | ❌ PENDING |
-| 3.3 | `fake-plants-vue` example tenant (manual) | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md) | ❌ PENDING |
+| 3.1 | `@repo/presenters` (pre-req) | [`phase-3/3.1-presenters.md`](./phase-3/3.1-presenters.md) | ✅ COMPLETED |
+| 3.2 | Rename web-vue → white-label-vue + layer factory | [`phase-3/3.2-white-label-rename.md`](./phase-3/3.2-white-label-rename.md) | ✅ COMPLETED |
+| 3.3 | `fake-plants-vue` example tenant (manual) | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md) | ✅ COMPLETED |
 | 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`phase-3/3.4-generator.md`](./phase-3/3.4-generator.md) | ❌ PENDING |
-| 3.5 | Turborepo pipeline update | [`phase-3/3.5-turbo-pipeline.md`](./phase-3/3.5-turbo-pipeline.md) | ❌ PENDING |
-| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ❌ PENDING |
+| 3.5 | Turborepo pipeline update | [`phase-3/3.5-turbo-pipeline.md`](./phase-3/3.5-turbo-pipeline.md) | ✅ COMPLETED |
+| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS done, AGENTS.md/README.md synced) |
 
 ## Goal
 

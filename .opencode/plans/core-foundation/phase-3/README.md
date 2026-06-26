@@ -4,12 +4,12 @@
 
 | # | Deliverable | Doc | Status |
 |--------|------------|-----|--------|
-| 3.1 | `@repo/presenters` (pre-req) | [`3.1-presenters.md`](./3.1-presenters.md) | ❌ PENDING |
-| 3.2 | Rename web-vue → white-label-vue + layer factory | [`3.2-white-label-rename.md`](./3.2-white-label-rename.md) | ❌ PENDING |
-| 3.3 | `fake-plants-vue` example tenant (manual) | [`3.3-fake-plants-vue.md`](./3.3-fake-plants-vue.md) | ❌ PENDING |
+| 3.1 | `@repo/presenters` (pre-req) | [`3.1-presenters.md`](./3.1-presenters.md) | ✅ COMPLETED |
+| 3.2 | Rename web-vue → white-label-vue + layer factory | [`3.2-white-label-rename.md`](./3.2-white-label-rename.md) | ✅ COMPLETED |
+| 3.3 | `fake-plants-vue` example tenant (manual) | [`3.3-fake-plants-vue.md`](./3.3-fake-plants-vue.md) | ✅ COMPLETED |
 | 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`3.4-generator.md`](./3.4-generator.md) | ❌ PENDING |
-| 3.5 | Turborepo pipeline update | [`3.5-turbo-pipeline.md`](./3.5-turbo-pipeline.md) | ❌ PENDING |
-| 3.6 | Documentation updates | [`3.6-documentation.md`](./3.6-documentation.md) | ❌ PENDING |
+| 3.5 | Turborepo pipeline update | [`3.5-turbo-pipeline.md`](./3.5-turbo-pipeline.md) | ✅ COMPLETED |
+| 3.6 | Documentation updates | [`3.6-documentation.md`](./3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS done, AGENTS.md/README.md synced) |
 
 ## Cross-cutting
 
