@@ -1,0 +1,12 @@
+/* Fake Plants brand override */
+:where(:root) {
+  --brand-fill-quiet: #dcfce7;
+  --brand-fill-normal: #16a34a;  /* green-600 */
+  --brand-fill-loud: #15803d;    /* green-700 */
+  --brand-border-quiet: #bbf7d0;
+  --brand-border-normal: #86efac;
+  --brand-border-loud: #22c55e;
+  --brand-on-quiet: #166534;
+  --brand-on-normal: #fff;
+  --brand-on-loud: #f0fdf4;
+}

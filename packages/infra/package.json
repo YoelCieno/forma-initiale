@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./mocks/browser": "./src/mocks/browser.ts",
-    "./mocks/server": "./src/mocks/server.ts"
+    "./mocks/server": "./src/mocks/server.ts",
+    "./mocks/helpers": "./src/mocks/helpers.ts"
   },
   "license": "MIT",
   "scripts": {

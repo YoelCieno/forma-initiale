@@ -1,0 +1,62 @@
+/* Design System tokens — Forma Initiale
+ * Overrides specific `--wa-*` CSS custom properties.
+ * Each theme file imports this to apply DS overrides on top of WA theme defaults.
+ */
+
+:where(:root) {
+  color-scheme: light dark;
+  /* #region Brand Colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  --brand-fill-quiet: #e0e7ff;
+  --brand-fill-normal: #4f46e5; /* indigo-600 */
+  --brand-fill-loud: #4338ca; /* indigo-700 */
+  --brand-border-quiet: #c7d2fe;
+  --brand-border-normal: #e3e5ef;
+  --brand-border-loud: #6366f1;
+  --brand-on-quiet: #3730a3;
+  --brand-on-normal: #fff;
+  --brand-on-loud: #e8f3ff;
+  --wa-color-brand-fill-quiet: var(--brand-fill-quiet);
+  --wa-color-brand-fill-normal: var(--brand-fill-normal);
+  --wa-color-brand-fill-loud: var(--brand-fill-loud);
+  --wa-color-neutral-fill-quiet: var(--brand-fill-quiet);
+  --wa-color-brand-border-quiet: var(--brand-border-quiet);
+  --wa-color-brand-border-normal: var(--brand-border-normal);
+  --wa-color-brand-border-loud: var(--brand-border-loud);
+  --wa-color-brand-on-quiet: var(--brand-on-quiet);
+  --wa-color-brand-on-normal: var(--brand-on-normal);
+  --wa-color-brand-on-loud: var(--brand-on-loud);
+  /* #endregion */
+
+  /* #region Semantic Colors ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  --color-text-body: #374151; /* gray-700 — softer than pure black */
+  --color-text-muted: #6b7280; /* gray-500 */
+  --color-text-heading: #111827; /* gray-900 — darkest for headings */
+  --color-border: #d1d5db; /* gray-300 */
+  --color-border-light: #e5e7eb; /* gray-200 */
+  --color-error: #dc2626; /* red-600 */
+  --wa-color-text-normal: var(--color-text-body);
+  --wa-color-text-quiet: var(--color-text-muted);
+  --wa-color-surface-default: var(--brand-on-normal);
+  /* #endregion */
+
+  /* #region Layout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  --min-width-layout: 250px;
+  --max-width-layout: 1200px;
+  /* #endregion */
+
+  /* #region Font Size Scale ~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  --fs-xs: 0.75rem; /* 12px */
+  --fs-s: 0.875rem; /* 14px */
+  --fs-m: 1rem; /* 16px */
+  --fs-l: 1.25rem; /* 20px */
+  --fs-xl: 1.5rem; /* 24px */
+  --wa-font-size-2xl: round(calc(var(--fs-l) * 1.125 * 1.125), 1px); /* 25px */
+  --wa-font-size-3xl: round(calc(var(--fs-xl) * 1.125 * 1.125), 1px); /* 36px */
+  /* #endregion */
+
+  /* #region Border Radius ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+  --wa-border-radius-s: 0.15rem; /* 2.4px */
+  --wa-border-radius-m: 0.3rem; /* 4.8px */
+  --wa-border-radius-l: 0.45rem; /* 7.2px */
+  /* #endregion */
+}

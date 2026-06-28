@@ -1,0 +1,7 @@
+{
+  "extends": "@repo/typescript-config/vite.json",
+  "include": ["src", "vitest.config.ts", "vite.config.ts", "vite.config.base.ts"],
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+}

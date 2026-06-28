@@ -1,12 +1,17 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "schedule": ["before 9am every 2 weeks on Monday"],
-  "dependencyDashboard": true,
+  "schedule": ["every monday 5am"],
+  "automerge": true,
+  "automergeType": "pr",
   "packageRules": [
     {
       "matchUpdateTypes": ["major"],
-      "dependencyDashboardApproval": true
+      "automerge": false
     }
-  ]
+  ],
+  "bun": {
+    "enabled": true
+  },
+  "fileMatch": ["^bun\\.lock$"],
+  "gitAuthor": "Yoel Cieno <frmonteira@gmail.com>"
 }

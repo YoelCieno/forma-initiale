@@ -20,7 +20,7 @@ Apps **never** use `wa-*` elements directly in templates. Every WA component is 
 Apps import `fe-*` components for side-effect (registers custom elements) and use `fe-*` tags in templates. Never reference `wa-*` in app code.
 
 ```typescript
-// apps/web-vue/src/pages/ProductsPage.vue
+// apps/white-label-vue/src/pages/ProductsPage.vue
 import "@repo/ui/fe-card"
 import "@repo/ui/fe-icon"
 import "@repo/ui/fe-rating"
@@ -170,7 +170,7 @@ Three theme choices (each a separate CSS import):
 
 | Theme | File | Target app |
 |---|---|---|
-| `default` | `styles/themes/default.ts` | `web-vue` (current) |
+| `default` | `styles/themes/default.ts` | `white-label-vue` (current) |
 | `awesome` | `styles/themes/awesome.ts` | `web-angular` (future) |
 | `shoelace` | `styles/themes/shoelace.ts` | `web-react` (future) |
 
@@ -181,7 +181,7 @@ Each theme file is a thin barrel re-exporting a WA CSS file. Without this import
 CSS custom property overrides that adjust the WA theme to the app's design system:
 
 ```css
-/* apps/web-vue/src/styles/tokens.css */
+/* apps/white-label-vue/src/styles/tokens.css */
 :where(:root) {
   --wa-color-brand-fill-normal: var(--brand-fill-normal);
   --wa-color-brand-border-quiet: var(--brand-border-quiet);
@@ -193,14 +193,14 @@ CSS custom property overrides that adjust the WA theme to the app's design syste
 
 - Never hardcode colors, spacing, or typography — always use `--wa-*` CSS custom properties
 - Tokens reference app-level semantic variables via `var(--brand-*)`
-- File imported via barrel: `apps/web-vue/src/styles/index.ts` → `import './tokens.css'` + `import './base.css'`
+- File imported via barrel: `apps/white-label-vue/src/styles/index.ts` → `import './tokens.css'` + `import './base.css'`
 
 ### Import Order (in app main.ts)
 
 Order matters — each layer builds on the previous:
 
 ```typescript
-// apps/web-vue/src/main.ts
+// apps/white-label-vue/src/main.ts
 import '@repo/ui/styles'                // Layer 1: native + utilities
 import '@repo/ui/styles/themes/default'  // Layer 2: WA component styling
 import './styles'                         // Layer 3: tokens + base CSS
@@ -216,7 +216,7 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 <html class="wa-theme-default" lang="en">
 ```
 
-**Current status:** `apps/web-vue/index.html` does not have this class yet. It must be added when WA is fully wired. Without it, WA components may not pick up theme-level CSS variable defaults.
+**Current status:** `apps/white-label-vue/index.html` has `class="fe-theme-default fe-palette-default fe-brand-blue"` on `<html>`. Theme classes activate WA component styling.
 
 ---
 

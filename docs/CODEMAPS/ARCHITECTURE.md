@@ -5,52 +5,59 @@
 ## System Layers
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                   Apps (framework)                   │
-│  ┌───────────────┐  ┌────────────────────────────┐   │
-│  │  web-vue      │  │  docs                      │   │
-│  │  (Vue 3, Vite)│  │  (Astro + Starlight)       │   │
-│  └───────┬───────┘  └────────────────────────────┘   │
-│          │                                           │
-├──────────┼───────────────────────────────────────────┤
-│          │        packages (framework-agnostic)      │
-│  ┌───────┴───────┐  ┌───────────┐  ┌──────────────┐  │
-│  │  @repo/ui     │  │@repo/infra│  │ @repo/domain │  │
-│  │  (WC wrappers)│  │(adapters) │  │ (pure models)│  │
-│  └───────┬───────┘  └─────┬─────┘  └─────┬────────┘  │
-│          │                │              │           │
-└──────────┼────────────────┼──────────────┼───────────┘
-           │                │              │
-           ▼                ▼             ▼
-     WebAwesome 3.7    fetch/HTTP API    (no deps)
+┌───────────────────────────────────────────────────────────────────────┐
+│                          Apps (framework)                         		│
+│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐		│
+│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │		│
+│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │		│
+│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘		│
+│          │                   │                                    		│
+├──────────┼───────────────────┼────────────────────────────────────────┤
+│          │    packages (framework-agnostic)                           │
+│  ┌───────┴───────┐  ┌───────────┐  ┌────────────────┐  ┌────────────┐ │
+│  │   @repo/ui    │  │@repo/infra│  │@repo/presenters│ │@repo/domain │ │
+│  │ (WC wrappers) │  │(adapters) │  │ (view models)  │ │(pure models)│ │
+│  └───────┬───────┘  └─────┬─────┘  └──────┬─────────┘  └─────┬──────┘ │
+│          │                │               │               │           │
+└──────────┼────────────────┼───────────────┼───────────────┼───────────┘
+           │                │               │               │
+           ▼                ▼               ▼               ▼
+     WebAwesome 3.7    fetch/HTTP API   (pure TS)       (no deps)
      (design system)
 ```
 
 ## Hexagonal Structure
 
 ```
-Domain (pure TS)          Infra (adapters)          UI (agnostic)
-┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-│  Product     │◄───────┤  getProducts  │         │  fe-button   │
-│  (interface) │  type   │  (fetch impl)│         │  (hybridJS)  │
-└──────────────┘         └──────────────┘         └──────┬───────┘
-                                                         │
-                    Apps (framework-specific)            │
-                    ┌────────────────────┐               │
-                    │  web-vue           │◄──────────────┘
-                    │  ├─ App.vue        │  <fe-button>  
-                    │  ├─ ProductsPage   │                
-                    │  ├─ ComponentsPage │                
-                    │  └─ useProducts    │                
-                    │     (composable)   │                
-                    └────────────────────┘                
-                                                         
-                    ┌────────────────────┐                
-                    │  docs              │                
-                    │  ├─ Architecture   │                
-                    │  ├─ Getting Started│                
-                    │  └─ Configuration  │                
-                    └────────────────────┘                
+Domain (pure TS)  →  Presenters (view models)  →  Infra (adapters)  →  UI (agnostic)
+┌──────────────┐     ┌────────────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Product     │─────│  product.presenter │─────┤  getProduct  │     │  fe-button   │
+│  (interface) │     │  toProductView()   │     │  (fetch impl)│     │  (hybridJS)  │
+└──────────────┘     └────────────────────┘     └──────────────┘     └──────────────┘
+                                                         │			          │
+                    Apps (framework-specific)            │			          │
+                     ┌────────────────────┐              │			          │
+                     │  white-label-vue   │◄─────────────┘────────────────┘
+                     │  ├─ App.vue        │  <fe-button>  			          │ 
+                     │  ├─ ProductsPage   │               			          │
+                     │  ├─ ComponentsPage │               			          │
+                     │  └─ useProducts    │               			          │
+                     │     (composable)   │               			          │
+                     └────────────────────┘               			          │
+                                                          			          │  
+                                                          			          │              
+                     ┌────────────────────┐               			          │
+                     │  fake-plants-vue   │ ◄─────────────────────────────┘             
+                     │  ├─ App.vue        │               
+                     │  ├─ ProductsPage   │                
+                     │  └─ AboutPage      │                
+                     └────────────────────┘                
+                     ┌────────────────────┐                
+                     │  docs              │                
+                     │  ├─ Architecture   │                
+                     │  ├─ Getting Started│                
+                     │  └─ Configuration  │                
+                     └────────────────────┘                
 ```
 
 ## Data Flow
@@ -72,7 +79,7 @@ Domain Model (Product interface)
     │
     ▼
 Presenter (product.presenter.ts)
-    │  Product → ProductView (enrich with framework name, logo, description)
+    │  Product → ProductView (enrich with metadata: title, description, image, imageFamily, formatted price)
     ▼
 Vue Reactive State (ref<ProductView[]>)
     │
@@ -93,8 +100,16 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
          │           │                     │
          └──────┬────┘                     │
                 ▼                          │
-           web-vue ◄───────────────────────┘
-           deps: domain, infra, ui, vue, vue-router
+      @repo/presenters										 │
+            │  deps: domain                │
+            │															 │
+            ▼															 │
+      white-label-vue ◄────────────────────┘
+            deps: domain, infra, presenters, ui, vue, vue-router
+                │													 │
+                ▼													 │
+      fake-plants-vue ◄────────────────────┘
+            deps: white-label-vue, domain, infra, presenters, ui
                 │
                 ▼
            docs
@@ -107,7 +122,7 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
 |----------|--------|-----------|
 | Monorepo tool | Turborepo 2.9 | Fast parallel builds, caching |
 | Package manager | bun 1.3.13 | Speed, workspace-aware installs |
-| Framework | Vue 3 (web) | Standalone components, Composition API |
+| Framework | Vue 3 (white-label-vue) | Standalone components, Composition API |
 | App framework | Astro + Starlight (docs) | MDX content, integration-friendly |
 | UI paradigm | HybridJS Web Components | Framework-agnostic, no runtime |
 | Design system | WebAwesome 3.7 | Accessible, themed, WA-compatible |
@@ -117,6 +132,7 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
 | Presenter | Pure TS transform layer (domain model → view model) | Decouples API shape from template, enriches with UI metadata |
 | Routing | vue-router (hash mode) | SPA hash-based routing |
 | Type checking | tsc (noEmit) | Type-check only, Vite for bundling |
+| Layer factory pattern | `createWhiteLabelApp()` + `defineWhiteLabelViteConfig()` | White-label-vue exports factories (app bootstrap, Vite config) for tenant apps to consume via workspace deps. Single source of truth for plugin setup, router, MSW bootstrap, auto-imports. |
 | Testing | Vitest + jsdom + @vue/test-utils | Vite-native, fast |
 | API mocking | MSW (Mock Service Worker) | Intercepts fetch in dev (SW) + test (Node). Single pattern for both environments |
 | Linting | ESLint 8 (CJS config) | Stable, widely supported |

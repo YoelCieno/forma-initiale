@@ -14,7 +14,7 @@ The monorepo follows a package-per-layer hexagonal architecture:
 | Domain | `@repo/domain` | Models, value objects, pure business rules | None |
 | Infrastructure | `@repo/infra` | Adapters, HTTP clients, DTOs | domain |
 | UI | `@repo/ui` | Framework-agnostic components | domain |
-| App | `apps/web-vue` | Framework-specific UI, DI wiring | domain, infra, ui |
+| App | `apps/white-label-vue` | Framework-specific UI, DI wiring (layer base) | domain, infra, presenters, ui |
 
 ### Rules
 

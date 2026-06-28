@@ -28,7 +28,7 @@ bun run dev
 Or run a specific app:
 
 ```bash
-cd apps/web-vue && bun run dev
+cd apps/white-label-vue && bun run dev
 ```
 
 ## Build

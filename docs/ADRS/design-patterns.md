@@ -7,7 +7,7 @@
 
 ## 1. Context
 
-As the forma-initiale monorepo grows across multiple packages (`domain`, `infra`, `ui`) and apps (`web-vue`, `docs`), consistent design decisions become harder to maintain without an explicit reference. This ADR formalises the principles already emerging in the codebase and establishes a shared vocabulary for:
+As the forma-initiale monorepo grows across multiple packages (`domain`, `infra`, `ui`, `presenters`) and apps (`white-label-vue`, `docs`), consistent design decisions become harder to maintain without an explicit reference. This ADR formalises the principles already emerging in the codebase and establishes a shared vocabulary for:
 
 - **Consistent decision-making** — contributors have a known framework to resolve design tradeoffs.
 - **Onboarding** — new contributors learn the project's design philosophy from a single document.

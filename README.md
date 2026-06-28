@@ -7,17 +7,19 @@ Build systems monorepo scaffold using hexagonal architecture with Turborepo + bu
 Hexagonal (Ports & Adapters):
 
 ```
-domain → infra → packages/ui (agnostic) → apps (framework-specific)
+domain → presenters → infra → packages/ui (agnostic) → apps (framework-specific)
 ```
 
 - **domain** — core business logic, pure TS, zero framework deps
+- **presenters** — presentation layer transforming domain models into view models
 - **infra** — adapters implementing domain contracts (API clients, storage, etc.)
 - **packages/ui** — shared components, framework-agnostic (vanilla TS)
 - **apps** — framework-specific application wrappers
 
 | App | Stack | Status |
 |-----|-------|--------|
-| `apps/web-vue` | Vue 3 + Vite 6 | Active |
+| `apps/white-label-vue` | Vue 3 + Vite 6 | Active (layer base) |
+| `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active |
 | `apps/docs` | Astro + Starlight | Active |
 | `apps/web-angular` | Angular | Future |
 | `apps/web-react` | React | Future |
@@ -27,10 +29,12 @@ domain → infra → packages/ui (agnostic) → apps (framework-specific)
 ```
 forma-initiale/
 ├── apps/
-│   ├── web-vue/          # Vue 3 app (Vite 6 via Vite+)
+│   ├── white-label-vue/    # Vue 3 app (Vite 6 via Vite+), layer base for tenants
+│   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
 │   └── docs/             # Documentation site
 ├── packages/
 │   ├── domain/           # Pure TS models, ports
+│   ├── presenters/       # Presentation layer (domain → view models)
 │   ├── infra/            # Adapters (domain contracts)
 │   ├── ui/               # Framework-agnostic shared components
 │   ├── eslint-config/    # Shared ESLint 8 config (CJS)
@@ -47,7 +51,7 @@ bun install
 bun run dev
 ```
 
-Starts all apps in dev mode (web-vue on localhost:5173, docs on localhost:4321).
+Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhost:4321).
 
 ## Commands
 
@@ -59,9 +63,29 @@ Starts all apps in dev mode (web-vue on localhost:5173, docs on localhost:4321).
 | `bun run test` | Run tests (Vitest) |
 | `bun run format` | Format code (Prettier) |
 
+## Dependency Automation
+
+This repo uses **Renovate** via GitHub Actions to automatically create and merge PRs for outdated dependencies.
+
+### Configuration
+
+- **Schedule:** Every Monday at 5:00 AM UTC
+- **Auto-merge:** Enabled for minor & patch updates (CI must pass)
+- **Manual trigger:** Go to GitHub → Actions → `Renovate Dependencies` → `Run workflow`
+- **Config:** `.github/workflows/renovate.yml` + `renovate.json`
+
+### Requirements
+
+- **GitHub Secret:** `RENOVATE_TOKEN` (PAT with `repo` scope) — required for PR creation & auto-merge
+- **Lockfile:** `bun.lock` (detected automatically via `renovate.json` `bun.enabled: true`)
+
+### Major Updates
+
+Major version bumps require **manual approval** (disabled auto-merge) to prevent breaking changes. Review PRs carefully before merging.
+
 ## Environment variables
 
-Copy `apps/web-vue/.env.example` to `apps/web-vue/.env` and adjust:
+Copy `apps/white-label-vue/.env.example` to `apps/white-label-vue/.env` and adjust:
 
 | Variable | Default | Description |
 |---|---|---|
@@ -110,11 +134,11 @@ When upgrading MSW, regenerate the worker script:
 
 ```bash
 # ✅ Use bun x (not npx — npm has override conflicts with this project)
-bun x msw init apps/web-vue/public/
+bun x msw init apps/white-label-vue/public/
 
 # Review changes and commit
-git diff apps/web-vue/public/mockServiceWorker.js
-git add apps/web-vue/public/mockServiceWorker.js
+git diff apps/white-label-vue/public/mockServiceWorker.js
+git add apps/white-label-vue/public/mockServiceWorker.js
 git commit -m "chore(web): update MSW worker"
 ```
 
@@ -145,7 +169,7 @@ import './styles/tokens.css'         // DS token overrides
 
 ## Tech stack
 
-- **Framework:** Vue 3 (`apps/web-vue`)
+- **Framework:** Vue 3 (`apps/white-label-vue`)
 - **Language:** TypeScript 5.5.4
 - **Build:** Vite 6 (via Vite+ `vp` CLI), Turborepo 2.9.14
 - **Package manager:** bun 1.3.13
