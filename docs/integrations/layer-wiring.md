@@ -9,14 +9,15 @@ How the 4 layers connect in forma-initiale, traced through the Product Listing f
 | Layer | Package | Deps on | Responsibility |
 |---|---|---|---|
 | Domain | `@repo/domain` | None | Pure types, business models |
+| Presenters | `@repo/presenters` | `@repo/domain` | Domain → ViewModel transforms |
 | Infra | `@repo/infra` | `@repo/domain` | API adapters, mocks |
 | UI | `@repo/ui` | WA (Web Awesome) | fe-* WC wrappers, styles |
-| App | `apps/white-label-vue` | All above + Vue 3 | Composition, presentation, rendering |
+| App | `apps/white-label-vue` | All above + Vue 3 | Composition, orchestration, rendering |
 
 Strict dep order — never circular:
 
 ```
-domain → infra → packages/ui → apps/*
+domain → presenters → infra → packages/ui → apps/*
 ```
 
 ---
@@ -76,7 +77,10 @@ export interface GetProductsResponse {
 
 export async function getProducts(): Promise<GetProductsResponse> {
   const baseUrl = import.meta.env.VITE_API_URL
-  const response = await fetch(`${baseUrl}/products`);
+  const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
+  const response = await fetch(`${baseUrl}/products`, {
+    headers: { 'x-tenant-id': tenantId },
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch products: HTTP ${response.status}`);
   }
@@ -227,6 +231,8 @@ export interface WhiteLabelAppOptions {
   routes: RouteRecordRaw[]
   /** Optional override for the root App.vue shell */
   appShell?: () => Promise<{ default: Component }>
+  /** Per-product metadata overrides keyed by product name */
+  metaMap?: Record<string, ProductMeta>
 }
 
 export interface WhiteLabelApp {
@@ -247,6 +253,11 @@ export async function createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<W
   const router = createRouter({ history: createWebHashHistory(), routes: opts.routes })
   const app = createApp(AppShell)
   app.use(router)
+
+  if (opts.metaMap) {
+    app.provide(META_MAP_INJECTION_KEY, opts.metaMap)
+  }
+
   return { app, router }
 }
 ```
@@ -258,8 +269,9 @@ import '@repo/ui/styles/themes/default'
 import './styles'
 import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
+import { frameworkMap } from '../metadata'
 
-createWhiteLabelApp({ routes }).then(({ app }) => app.mount('#app'))
+createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) => app.mount('#app'))
 ```
 
 **Routes** (`apps/white-label-vue/src/routes.ts`):
@@ -312,13 +324,18 @@ export default defineWhiteLabelViteConfig({
 ```typescript
 import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
+import 'white-label-vue/src/styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
+import { plantsMap } from '../metadata'
+import './styles'
 
 createWhiteLabelApp({
   routes: [
-    { path: '/', component: () => import('white-label-vue/src/pages/ProductsPage.vue') },
-    { path: '/about', component: () => import('./pages/AboutPage.vue') },
+    { path: '/', name: 'products', component: () => import('white-label-vue/src/pages/ProductsPage.vue') },
+    { path: '/about', name: 'about', component: () => import('./pages/AboutPage.vue') },
   ],
+  appShell: () => import('./App.vue'),
+  metaMap: plantsMap,
 }).then(({ app }) => app.mount('#app'))
 ```
 
@@ -343,19 +360,43 @@ export interface ProductView {
   name: string
   title: string
   description: string
-  logo: string
-  logoFamily: string
+  image: string
+  imageFamily: string
   previousPrice?: string
   price: string
   rate: number
 }
 
-export function toProductViewList(products: Product[]): ProductView[] {
-  return products.map(toProductView)
+export interface ProductMeta {
+  title: string
+  description: string
+  image: string
+  imageFamily: string
+}
+
+export function toProductView(product: Product, metaMap?: Record<string, ProductMeta>): ProductView {
+  const override = metaMap?.[product.name]
+  const fallback = { title: product.name, description: '', image: 'code', imageFamily: 'classic' }
+  const meta = override ?? fallback
+
+  return {
+    name: product.name,
+    title: meta.title,
+    description: meta.description,
+    image: meta.image,
+    imageFamily: meta.imageFamily,
+    previousPrice: product.previousPrice ? `$${product.previousPrice}` : undefined,
+    price: product.price ? `$${product.price}` : 'Free',
+    rate: product.rate,
+  }
+}
+
+export function toProductViewList(products: Product[], metaMap?: Record<string, ProductMeta>): ProductView[] {
+  return products.map(p => toProductView(p, metaMap))
 }
 ```
 
-Presenter adds UI fields (`title`, `description`, `logo`, `logoFamily`, formatted `price`/`previousPrice`). Pure functions, no Vue dependency.
+Presenter adds UI fields (`title`, `description`, `image`, `imageFamily`, formatted `price`/`previousPrice`). Pure functions, no Vue dependency.
 
 ### Composable Layer
 
@@ -366,16 +407,18 @@ Composables orchestrate data fetching → presenting → state management. Now i
 ```typescript
 import { getProducts } from "@repo/infra";
 import { toProductViewList } from "@repo/presenters";
-import type { ProductView } from "@repo/presenters";
+import type { ProductView, ProductMeta } from "@repo/presenters";
 import { useAsyncState } from "@vueuse/core";
+import { META_MAP_INJECTION_KEY } from "../app";
 
 export function useProducts() {
   const formattedError = ref<string | undefined>();
+  const metaMap = inject<Record<string, ProductMeta> | undefined>(META_MAP_INJECTION_KEY, undefined);
 
   const { state, isLoading, execute } = useAsyncState<ProductView[]>(
     async () => {
       const { data } = await getProducts();
-      return toProductViewList(data);
+      return toProductViewList(data, metaMap);
     },
     [],
     {
@@ -428,7 +471,7 @@ const { products, loading, error } = useProducts();
 
       <div class="products-page__grid">
         <fe-card v-for="product in products" :key="product.name">
-          <fe-icon slot="media" :name="product.logo" :family="product.logoFamily" />
+          <fe-icon slot="media" :name="product.image" :family="product.imageFamily" />
           <h2 slot="header">{{ product.title }}</h2>
           <p>{{ product.description }}</p>
           <div slot="footer">
@@ -458,7 +501,7 @@ Follow one complete bootstrap→request→render cycle through all layers:
 main.ts
   │
   │ imports WA styles & theme
-  │ calls createWhiteLabelApp({ routes })
+  │ calls createWhiteLabelApp({ routes, metaMap: frameworkMap })
   │
   ▼
 createWhiteLabelApp()
@@ -467,6 +510,7 @@ createWhiteLabelApp()
   │ imports App.vue shell
   │ creates hash router with provided routes
   │ creates Vue app, installs router
+  │ provides metaMap via app.provide(META_MAP_INJECTION_KEY)
   │ returns { app, router }
   │
   ▼
@@ -482,6 +526,7 @@ ProductsPage.vue
   ▼
 useProducts() composable (apps/white-label-vue/src/composables/useProducts.ts)
   │
+  │ injects metaMap via META_MAP_INJECTION_KEY
   │ initializes useAsyncState({ immediate: true }) → fires immediately
   │
   ▼
@@ -492,7 +537,7 @@ useAsyncState inner async function:
   ▼
 getProducts() (packages/infra/src/adapters/get-products.adapter.ts)
   │
-  │   fetch(`${VITE_API_URL}/products`)
+  │   fetch(`${VITE_API_URL}/products`, { headers: { 'x-tenant-id': tenantId } })
   │
   ▼
 HTTP GET /api/products
@@ -506,10 +551,11 @@ Response: { data: Product[], total: number }
   │ Returns to useAsyncState inner fn
   │
   ▼
-toProductViewList(data) (packages/presenters/src/product.presenter.ts)
+toProductViewList(data, metaMap) (packages/presenters/src/product.presenter.ts)
   │
   │   Product[] → ProductView[]
-  │   Each Product gets: title, description, logo, logoFamily, formatted price
+  │   Each Product gets: title, description, image, imageFamily, formatted price
+  │   metaMap enriches with tenant-specific metadata (plant names, framework logos)
   │
   ▼
 ProductView[] stored in useAsyncState.state ref
@@ -525,7 +571,7 @@ ProductsPage.vue template renders:
   │     · data ready → grid of <fe-card> elements
   │
   │   v-for product in products → <fe-card>
-  │     <fe-icon slot="media" :name :family />
+  │     <fe-icon slot="media" :name="product.image" :family="product.imageFamily" />
   │     <h2>{{ product.title }}</h2>
   │     <p>{{ product.description }}</p>
   │     <fe-rating :value="product.rate" readonly />
@@ -562,9 +608,9 @@ Browser paints shadow-DOM-styled fe-* components wrapping wa-* elements
 | `apps/white-label-vue` | `@repo/presenters` | Import view-model transformers | `import { toProductViewList } from "@repo/presenters"` |
 | `apps/white-label-vue` | `@repo/ui` | Side-effect import (CE registration) | `import "@repo/ui/fe-card"` |
 | `apps/white-label-vue` | `@vueuse/core` | Import composables | `import { useAsyncState } from "@vueuse/core"` |
-| `apps/*` (tenant) | `@repo/white-label-vue/app` | Import app factory | `import { createWhiteLabelApp } from 'white-label-vue/app'` |
-| `apps/*` (tenant) | `@repo/white-label-vue/vite.config.base` | Import shared Vite config | `import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'` |
-| `apps/*` (tenant) | `@repo/white-label-vue/src/*` | Import white-label pages/components | `() => import('white-label-vue/src/pages/ProductsPage.vue')` |
+| `apps/*` (tenant) | `white-label-vue/app` | Import app factory | `import { createWhiteLabelApp } from 'white-label-vue/app'` |
+| `apps/*` (tenant) | `white-label-vue/vite.config.base` | Import shared Vite config | `import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'` |
+| `apps/*` (tenant) | `white-label-vue/src/*` | Import white-label pages/components | `() => import('white-label-vue/src/pages/ProductsPage.vue')` |
 
 **Never:**
 - Import `@vueuse/core` or Vue in `packages/ui/` or `packages/infra/` or `packages/domain/`

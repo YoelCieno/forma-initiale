@@ -49,18 +49,5 @@ describe('ProductCard', () => {
     expect(wrapper.text()).toContain('Free')
   })
 
-  it('shows previousPrice when provided', () => {
-    const wrapper = mount(ProductCard, {
-      props: { ...baseProps, previousPrice: '$19.99' },
-    })
-    expect(wrapper.text()).toContain('$19.99')
-    const prevPrice = wrapper.find('.fp-product-card__price--previous')
-    expect(prevPrice.exists()).toBe(true)
-  })
 
-  it('does NOT show previousPrice when undefined', () => {
-    const wrapper = mount(ProductCard, { props: baseProps })
-    const prevPrice = wrapper.find('.fp-product-card__price--previous')
-    expect(prevPrice.exists()).toBe(false)
-  })
 })

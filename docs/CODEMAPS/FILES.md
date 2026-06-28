@@ -155,7 +155,7 @@ apps/white-label-vue/
 
 ### apps/fake-plants-vue
 
-Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory from @repo/white-label-vue.
+Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory from white-label-vue (workspace dep, no `@repo` scope).
 
 ```
 apps/fake-plants-vue/

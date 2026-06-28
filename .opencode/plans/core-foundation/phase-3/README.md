@@ -9,7 +9,7 @@
 | 3.3 | `fake-plants-vue` example tenant (manual) | [`3.3-fake-plants-vue.md`](./3.3-fake-plants-vue.md) | ✅ COMPLETED |
 | 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`3.4-generator.md`](./3.4-generator.md) | ❌ PENDING |
 | 3.5 | Turborepo pipeline update | [`3.5-turbo-pipeline.md`](./3.5-turbo-pipeline.md) | ✅ COMPLETED |
-| 3.6 | Documentation updates | [`3.6-documentation.md`](./3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS done, AGENTS.md/README.md synced) |
+| 3.6 | Documentation updates | [`3.6-documentation.md`](./3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS, AGENTS.md, README.md, layer-wiring.md synced; blocked on 3.4 for generator docs) |
 
 ## Cross-cutting
 

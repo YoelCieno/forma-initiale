@@ -41,7 +41,8 @@ import type { Product } from '@repo/domain'
 - `@repo/domain` (Product type)
 
 **Exports**:
-- `getProducts()` — `() => Promise<Product[]>` — Fetches products from `https://api.example.com/products`
+- `getProducts()` — `() => Promise<GetProductsResponse>` — Fetches products from `https://api.example.com/products`
+- `GetProductsResponse` (type) — `{ data: Product[], total: number }`
 
 **Usage**:
 ```typescript
@@ -293,15 +294,16 @@ module.exports = {
 - `@repo/domain` (Product type)
 
 **Exports**:
-- `ProductView` (type) — `{ name, title, description, logo, logoFamily, previousPrice?, price, rate }`
-- `toProductView(product: Product): ProductView`
-- `toProductViewList(products: Product[]): ProductView[]`
+- `ProductView` (type) — `{ name, title, description, image, imageFamily, previousPrice?, price, rate }`
+- `ProductMeta` (type) — `{ title, description, image, imageFamily }`
+- `toProductView(product: Product, metaMap?: Record<string, ProductMeta>): ProductView`
+- `toProductViewList(products: Product[], metaMap?: Record<string, ProductMeta>): ProductView[]`
 
 **Usage**:
 ```typescript
 import { toProductViewList } from '@repo/presenters'
-import type { ProductView } from '@repo/presenters'
-const views = toProductViewList(products)
+import type { ProductView, ProductMeta } from '@repo/presenters'
+const views = toProductViewList(products, metaMap)
 ```
 
 ---
@@ -345,8 +347,9 @@ const views = toProductViewList(products)
 **Build**: `vp dev` / `vp build` (Vite+ CLI)
 
 **Key Files**:
-- `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp({ routes })`.mount('#app')
-- `src/app.ts` — Factory: `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes` + optional `appShell` override
+- `metadata.ts` — Per-product metadata overrides keyed by product name (frameworkMap)
+- `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp({ routes, metaMap })`.mount('#app')
+- `src/app.ts` — Factory: `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes`, optional `appShell`, and `metaMap`
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
 - `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
 - `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`); h2 italic, card BEM classes
@@ -364,14 +367,14 @@ const views = toProductViewList(products)
 - `vitest.config.ts` — Test config (Components plugin with `dts: './src/components.d.ts'`)
 
 **Package exports** (for tenant apps):
-- `@repo/white-label-vue/app` → `./src/app.ts` — exports:
+- `white-label-vue/app` → `./src/app.ts` — exports:
   - `createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<WhiteLabelApp>` — bootstraps Vue app, hash router, MSW
-  - `WhiteLabelAppOptions` — `{ routes: RouteRecordRaw[], appShell?: () => Promise<...> }`
+  - `WhiteLabelAppOptions` — `{ routes: RouteRecordRaw[], appShell?: () => Promise<...>, metaMap?: Record<string, ProductMeta> }`
   - `WhiteLabelApp` — `{ app, router }`
-- `@repo/white-label-vue/vite.config.base` → `./vite.config.base.ts` — exports:
+- `white-label-vue/vite.config.base` → `./vite.config.base.ts` — exports:
   - `defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions): UserConfig` — pre-configured Vite config (Vue plugin, AutoImport, Components)
   - `WhiteLabelViteOptions` — `{ componentDirs?: string[], autoImportDirs?: string[] }`
-- `@repo/white-label-vue/src/*` → `./src/*` (components/pages for lazy import in tenant routes)
+- `white-label-vue/src/*` → `./src/*` (components/pages for lazy import in tenant routes)
 
 **Dependencies**:
 - `@repo/domain` — Product type
@@ -404,7 +407,7 @@ const views = toProductViewList(products)
 **Build**: `vp dev` / `vp build` (Vite+ CLI)
 
 **Key Files**:
-- `src/main.ts` — Entry: imports WA styles, calls `createWhiteLabelApp({ routes })`
+- `src/main.ts` — Entry: imports WA styles + white-label styles, calls `createWhiteLabelApp({ routes, appShell, metaMap })`
 - `src/App.vue` — Root SFC (nav: RouterLink / → ProductsPage, /about → AboutPage + RouterView)
 - `src/App.spec.ts` — Tests (RouterLink routes, RouterView)
 - `src/components/ProductCard.vue` — Product card with formatted pricing, logo, rating
@@ -418,7 +421,7 @@ const views = toProductViewList(products)
 **Test Count**: 13 tests across 3 files (App: 3, ProductCard: 7, AboutPage: 3)
 
 **Dependencies**:
-- `@repo/white-label-vue` — Factory (createWhiteLabelApp, defineWhiteLabelViteConfig)
+- `white-label-vue` — Factory (createWhiteLabelApp, defineWhiteLabelViteConfig)
 - `@repo/domain` — Product type
 - `@repo/infra` — getProducts adapter
 - `@repo/presenters` — toProductViewList, ProductView type

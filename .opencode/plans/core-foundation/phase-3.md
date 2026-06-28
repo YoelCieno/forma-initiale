@@ -13,7 +13,7 @@ See [`phase-3/README.md`](./phase-3/README.md) for full task breakdown with sub-
 | 3.3 | `fake-plants-vue` example tenant (manual) | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md) | ✅ COMPLETED |
 | 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`phase-3/3.4-generator.md`](./phase-3/3.4-generator.md) | ❌ PENDING |
 | 3.5 | Turborepo pipeline update | [`phase-3/3.5-turbo-pipeline.md`](./phase-3/3.5-turbo-pipeline.md) | ✅ COMPLETED |
-| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS done, AGENTS.md/README.md synced) |
+| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS, AGENTS.md, README.md, layer-wiring.md synced; blocked on 3.4 for generator docs) |
 
 ## Goal
 
@@ -59,7 +59,7 @@ apps/white-label-vue/
 
 ```
 apps/tenant-acme-vue/
-  package.json            ← deps: { "@repo/white-label-vue": "workspace:*" }
+  package.json            ← deps: { "white-label-vue": "workspace:*" } (no @repo scope)
   vite.config.ts          ← imports layer.config, configures component dirs, aliases
   index.html
   src/

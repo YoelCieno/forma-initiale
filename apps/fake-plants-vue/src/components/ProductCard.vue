@@ -4,7 +4,6 @@ import "@repo/ui/fe-rating"
 import type { ProductView } from "@repo/presenters";
 
 withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
-  previousPrice: undefined,
   price: 'Free',
 })
 </script>
@@ -17,7 +16,10 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
       :src="`https://loremflickr.com/700/450/plant/all?random=${Math.random()}`"
       :alt="title"
     >
-    <h2 slot="header" class="fp-product-card__title">{{ title }}</h2>
+    <header slot="header" class="fp-product-card__header">
+      <h2 class="fp-product-card__title">{{ title }}</h2>
+      <strong class="fp-product-card__price">{{ price }}</strong>
+    </header>
     <p class="fp-product-card__description">{{ description }}</p>
     <div slot="footer" class="fp-product-card__footer">
       <fe-rating
@@ -25,13 +27,6 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
         readonly
         class="fp-product-card__rating"
       />
-      <div class="fp-product-card__pricing">
-        <span
-          v-if="previousPrice"
-          class="fp-product-card__price--previous"
-        >{{ previousPrice }}</span>
-        <strong class="fp-product-card__price">{{ price }}</strong>
-      </div>
     </div>
   </fe-card>
 </template>
@@ -44,7 +39,15 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
 }
 .fp-product-card__title {
   margin: 0;
-  font-size: var(--fs-l);
+  font-size: var(--fs-xl);
+  line-height: 1.5rem;
+  word-spacing: 100vw;
+}
+.fp-product-card__header {
+	display: flex;
+	justify-content: space-between;
+	align-self: center;
+  min-height: 50px;
 }
 .fp-product-card__description {
   color: var(--color-text-muted);
@@ -54,21 +57,7 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
 }
 .fp-product-card__footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-.fp-product-card__pricing {
-  text-align: right;
-}
-.fp-product-card__price {
-  font-size: var(--fs-m);
-  font-weight: 600;
-}
-.fp-product-card__price--previous {
-  display: block;
-  text-decoration: line-through;
-  font-size: var(--fs-s);
-  color: var(--color-text-muted);
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 </style>

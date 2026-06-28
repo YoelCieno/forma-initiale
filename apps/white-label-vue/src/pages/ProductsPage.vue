@@ -26,7 +26,7 @@ const { products, loading, error } = useProducts();
 .products-page {
   max-width: 75rem;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1rem 1rem;
 }
 .products-page__title {
   font-size: var(--fs-xl);

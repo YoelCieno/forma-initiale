@@ -5,50 +5,50 @@
 ## System Layers
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                   Apps (framework)                   │
-│  ┌───────────────┐  ┌──────────────────────┐  ┌────────────────────────────┐
-│  │white-label-vue│  │  fake-plants-vue     │  │  docs                      │
-│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)      │  │  (Astro + Starlight)       │
-│  └───────┬───────┘  └──────────┬───────────┘  └────────────────────────────┘
-│          │                                           │
-├──────────┼───────────────────────────────────────────┤
-│          │        packages (framework-agnostic)      │
-│  ┌───────┴───────┐  ┌───────────┐  ┌──────────────┐  │
-│  │  @repo/ui     │  │@repo/infra│  │ @repo/domain │  │
-│  │  (WC wrappers)│  │(adapters) │  │ (pure models)│  │
-│  └───────┬───────┘  └─────┬─────┘  └─────┬────────┘  │
-│          │                │              │           │
-└──────────┼────────────────┼──────────────┼───────────┘
-           │                │              │
-           ▼                ▼             ▼
-     WebAwesome 3.7    fetch/HTTP API    (no deps)
+┌───────────────────────────────────────────────────────────────────────┐
+│                          Apps (framework)                         		│
+│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐		│
+│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │		│
+│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │		│
+│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘		│
+│          │                   │                                    		│
+├──────────┼───────────────────┼────────────────────────────────────────┤
+│          │    packages (framework-agnostic)                           │
+│  ┌───────┴───────┐  ┌───────────┐  ┌────────────────┐  ┌────────────┐ │
+│  │   @repo/ui    │  │@repo/infra│  │@repo/presenters│ │@repo/domain │ │
+│  │ (WC wrappers) │  │(adapters) │  │ (view models)  │ │(pure models)│ │
+│  └───────┬───────┘  └─────┬─────┘  └──────┬─────────┘  └─────┬──────┘ │
+│          │                │               │               │           │
+└──────────┼────────────────┼───────────────┼───────────────┼───────────┘
+           │                │               │               │
+           ▼                ▼               ▼               ▼
+     WebAwesome 3.7    fetch/HTTP API   (pure TS)       (no deps)
      (design system)
 ```
 
 ## Hexagonal Structure
 
 ```
-Domain (pure TS)          Infra (adapters)          UI (agnostic)
-┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-│  Product     │◄───────┤  getProducts  │         │  fe-button   │
-│  (interface) │  type   │  (fetch impl)│         │  (hybridJS)  │
-└──────────────┘         └──────────────┘         └──────┬───────┘
-                                                         │
-                    Apps (framework-specific)            │
-                     ┌────────────────────┐              │
-                     │  white-label-vue   │◄─────────────┘
-                     │  ├─ App.vue        │  <fe-button>  
-                     │  ├─ ProductsPage   │                
-                     │  ├─ ComponentsPage │                
-                     │  └─ useProducts    │                
-                     │     (composable)   │                
-                     └────────────────────┘                
-                                                         
-                                                     
-                     ┌────────────────────┐                
-                     │  fake-plants-vue   │                
-                     │  ├─ App.vue        │                
+Domain (pure TS)  →  Presenters (view models)  →  Infra (adapters)  →  UI (agnostic)
+┌──────────────┐     ┌────────────────────┐     ┌──────────────┐     ┌──────────────┐
+│  Product     │─────│  product.presenter │─────┤  getProduct  │     │  fe-button   │
+│  (interface) │     │  toProductView()   │     │  (fetch impl)│     │  (hybridJS)  │
+└──────────────┘     └────────────────────┘     └──────────────┘     └──────────────┘
+                                                         │			          │
+                    Apps (framework-specific)            │			          │
+                     ┌────────────────────┐              │			          │
+                     │  white-label-vue   │◄─────────────┘────────────────┘
+                     │  ├─ App.vue        │  <fe-button>  			          │ 
+                     │  ├─ ProductsPage   │               			          │
+                     │  ├─ ComponentsPage │               			          │
+                     │  └─ useProducts    │               			          │
+                     │     (composable)   │               			          │
+                     └────────────────────┘               			          │
+                                                          			          │  
+                                                          			          │              
+                     ┌────────────────────┐               			          │
+                     │  fake-plants-vue   │ ◄─────────────────────────────┘             
+                     │  ├─ App.vue        │               
                      │  ├─ ProductsPage   │                
                      │  └─ AboutPage      │                
                      └────────────────────┘                
@@ -79,7 +79,7 @@ Domain Model (Product interface)
     │
     ▼
 Presenter (product.presenter.ts)
-    │  Product → ProductView (enrich with framework name, logo, description)
+    │  Product → ProductView (enrich with metadata: title, description, image, imageFamily, formatted price)
     ▼
 Vue Reactive State (ref<ProductView[]>)
     │
