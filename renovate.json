@@ -1,6 +1,5 @@
 {
   "extends": ["config:recommended"],
-  "schedule": ["every monday 5am"],
   "automerge": true,
   "automergeType": "pr",
   "packageRules": [
@@ -10,8 +9,8 @@
     }
   ],
   "bun": {
-    "enabled": true
+    "enabled": true,
+    "fileMatch": ["^bun\\.lock$"]
   },
-  "fileMatch": ["^bun\\.lock$"],
   "gitAuthor": "Yoel Cieno <frmonteira@gmail.com>"
 }

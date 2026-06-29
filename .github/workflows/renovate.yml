@@ -36,3 +36,4 @@ jobs:
         run: renovate
         env:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          RENOVATE_REPOSITORIES: YoelCieno/forma-initiale
