@@ -18,30 +18,6 @@ const angularProduct: Product = {
   rate: 4.2,
 }
 
-const reactProduct: Product = {
-  id: '3',
-  name: 'react',
-  previousPrice: 90,
-  price: 70,
-  rate: 4.8,
-}
-
-const svelteProduct: Product = {
-  id: '4',
-  name: 'svelte',
-  previousPrice: 80,
-  price: 60,
-  rate: 4.6,
-}
-
-const solidProduct: Product = {
-  id: '5',
-  name: 'solid',
-  previousPrice: 70,
-  price: 50,
-  rate: 4.0,
-}
-
 const unknownProduct: Product = {
   id: '6',
   name: 'Unknown',
