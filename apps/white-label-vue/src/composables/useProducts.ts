@@ -1,33 +1,58 @@
+import type { ProductView, ProductMeta } from "@repo/presenters";
+import { useAsyncState, useMemoize } from "@vueuse/core";
+import { META_MAP_INJECTION_KEY } from "../app";
 import { getProducts } from "@repo/infra";
 import { toProductViewList } from "@repo/presenters";
-import type { ProductView, ProductMeta } from "@repo/presenters";
-import { useAsyncState } from "@vueuse/core";
-import { META_MAP_INJECTION_KEY } from "../app";
+
+type FetchOptions = { bypass?: boolean };
+
+const getCachedProducts = useMemoize(
+  async (metaMap: Record<string, ProductMeta> | undefined) => {
+    const { data } = await getProducts();
+    return toProductViewList(data, metaMap);
+  },
+  { getKey: () => "products" },
+);
 
 export function useProducts() {
-  const formattedError = ref<string | undefined>();
-  const metaMap = inject<Record<string, ProductMeta> | undefined>(META_MAP_INJECTION_KEY, undefined);
+  const metaMap = inject<Record<string, ProductMeta> | undefined>(
+    META_MAP_INJECTION_KEY,
+    undefined,
+  );
 
-  const { state, isLoading, execute } = useAsyncState<ProductView[]>(
-    async () => {
-			const { data } = await getProducts();
-      return toProductViewList(data, metaMap);
+  const {
+    state,
+    isLoading,
+    error: rawError,
+    execute,
+  } = useAsyncState<ProductView[], [FetchOptions?]>(
+    (opts) => {
+      const fn = opts?.bypass ? getCachedProducts.load : getCachedProducts;
+      return fn(metaMap);
     },
     [],
     {
       immediate: true,
-      onError(e: unknown) {
-				formattedError.value = e instanceof Error
-					? e.message
-					: "Failed to load products";
-      },
-    }
+      resetOnExecute: false,
+    },
   );
 
+  const error = computed(() => {
+    if (!rawError.value) return undefined;
+    return rawError.value instanceof Error
+      ? rawError.value.message
+      : "Failed to load products";
+  });
+
   return {
+    fetch: (opts?: FetchOptions) => execute(0, opts),
     products: state,
     loading: isLoading,
-    error: formattedError,
-    fetch: () => execute(),
+    error,
   };
+}
+
+// Test helper — clears module-scoped memoize cache between test runs
+export function clearProductsCache() {
+  getCachedProducts.clear();
 }

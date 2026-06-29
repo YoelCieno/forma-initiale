@@ -7,12 +7,14 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const clearProductsCache: typeof import('./composables/useProducts')['clearProductsCache']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
   const effectScope: typeof import('vue')['effectScope']
+  const getCachedProducts: typeof import('./composables/useProducts')['getCachedProducts']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const h: typeof import('vue')['h']

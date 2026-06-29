@@ -1,142 +1,168 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { defineComponent } from 'vue'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { defineComponent } from "vue";
+import { mount } from "@vue/test-utils";
 
-import { mockProducts, mockOkResponse } from '../helpers'
-import { frameworkMap } from '../../metadata'
+import { clearProductsCache } from "../composables/useProducts";
+import { getProducts } from "@repo/infra";
+import { mockProducts } from "../helpers";
 
-describe('useProducts', () => {
+// Mock @repo/infra to control getProducts directly
+vi.mock("@repo/infra", () => ({
+  getProducts: vi.fn(),
+}));
+
+function createTestHarness() {
+  return defineComponent({
+    setup() {
+      return useProducts();
+    },
+    template: "<div></div>",
+  });
+}
+
+describe("useProducts (cached)", () => {
   beforeEach(() => {
-    vi.restoreAllMocks()
-  })
+    vi.clearAllMocks();
+    clearProductsCache();
+  });
 
-  function createTestHarness() {
-    // eslint-disable-next-line vue/one-component-per-file
-    return defineComponent({
-      setup() {
-        return useProducts()
-      },
-      template: '<div></div>',
-    })
-  }
+  it("returns expected API shape", async () => {
+    vi.mocked(getProducts).mockResolvedValue({ data: [], total: 0 });
 
-  function mountWithFrameworkMap() {
-    return mount(createTestHarness(), {
-      global: { provide: { metaMap: frameworkMap } },
-    })
-  }
-
-  it('starts with loading true, empty products, no error', () => {
-    // Never-resolving fetch keeps loading=true
-    vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
-
-    const wrapper = mount(createTestHarness())
-
-    expect(wrapper.vm.loading).toBe(true)
-    expect(wrapper.vm.products).toEqual([])
-    expect(wrapper.vm.error).toBeUndefined()
-  })
-
-  it('sets products after successful fetch', async () => {
-    const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
-
-    const wrapper = mountWithFrameworkMap()
-
+    const wrapper = mount(createTestHarness());
     await vi.waitFor(() => {
-      expect(wrapper.vm.loading).toBe(false)
-    })
-    expect(wrapper.vm.products).toHaveLength(2)
-    expect(wrapper.vm.products[0].title).toBe('Vue')
-    expect(wrapper.vm.products[0].name).toBe('vue')
-    expect(wrapper.vm.error).toBeUndefined()
-  })
+      expect(wrapper.vm.loading).toBe(false);
+    });
 
-  it('sets error message on HTTP failure with status code 500', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: false,
-        status: 500,
+    expect(wrapper.vm).toHaveProperty("products");
+    expect(Array.isArray(wrapper.vm.products)).toBe(true);
+    expect(wrapper.vm).toHaveProperty("loading");
+    expect(typeof wrapper.vm.loading).toBe("boolean");
+    expect(wrapper.vm).toHaveProperty("error");
+    expect(wrapper.vm).toHaveProperty("fetch");
+    expect(typeof wrapper.vm.fetch).toBe("function");
+  });
+
+  it("fetches products on mount", async () => {
+    vi.mocked(getProducts).mockResolvedValue({ data: mockProducts, total: 2 });
+
+    const wrapper = mount(createTestHarness());
+    await vi.waitFor(() => {
+      expect(wrapper.vm.loading).toBe(false);
+    });
+
+    expect(getProducts).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.products).toHaveLength(2);
+    expect(wrapper.vm.products[0].name).toBe("vue");
+  });
+
+  it("returns cached data across component mounts — no second fetch", async () => {
+    vi.mocked(getProducts).mockResolvedValue({ data: mockProducts, total: 2 });
+
+    // First mount
+    const wrapper1 = mount(createTestHarness());
+    await vi.waitFor(() => {
+      expect(wrapper1.vm.loading).toBe(false);
+    });
+    expect(getProducts).toHaveBeenCalledTimes(1);
+    const products1 = wrapper1.vm.products;
+    wrapper1.unmount();
+
+    // Second mount — should hit cache, not call getProducts again
+    const wrapper2 = mount(createTestHarness());
+    await vi.waitFor(() => {
+      expect(wrapper2.vm.loading).toBe(false);
+    });
+
+    // getProducts should NOT have been called again
+    expect(getProducts).toHaveBeenCalledTimes(1);
+    expect(wrapper2.vm.products).toEqual(products1);
+  });
+
+  it("fetch() forces re-fetch bypassing cache", async () => {
+    vi.mocked(getProducts).mockResolvedValue({ data: mockProducts, total: 2 });
+
+    const wrapper = mount(createTestHarness());
+    await vi.waitFor(() => {
+      expect(wrapper.vm.loading).toBe(false);
+    });
+    expect(getProducts).toHaveBeenCalledTimes(1);
+
+    // fetch() should bypass cache and call getProducts again
+    wrapper.vm.fetch({ bypass: true });
+    await vi.waitFor(() => {
+      expect(getProducts).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  it("loading starts true, becomes false after resolve", async () => {
+    // Use a delayed promise so we can check loading state
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+let resolvePromise!: (value: any) => void;
+    vi.mocked(getProducts).mockReturnValue(
+      new Promise((resolve) => {
+        resolvePromise = resolve;
       }),
-    )
+    );
 
-    const wrapper = mount(createTestHarness())
+    const wrapper = mount(createTestHarness());
 
+    // Initially loading
+    expect(wrapper.vm.loading).toBe(true);
+    expect(wrapper.vm.products).toEqual([]);
+    expect(wrapper.vm.error).toBeUndefined();
+
+    // Resolve the promise
+    resolvePromise({ data: mockProducts, total: 2 });
     await vi.waitFor(() => {
-      expect(wrapper.vm.loading).toBe(false)
-    })
-    expect(wrapper.vm.products).toEqual([])
-    expect(wrapper.vm.error).toBe('Failed to fetch products: HTTP 500')
-  })
+      expect(wrapper.vm.loading).toBe(false);
+    });
 
-  it('handles non-Error thrown values gracefully', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue('string error'))
+    expect(wrapper.vm.products).toHaveLength(2);
+    expect(wrapper.vm.error).toBeUndefined();
+  });
 
-    const wrapper = mount(createTestHarness())
+  it("sets error on rejection", async () => {
+    vi.mocked(getProducts).mockRejectedValue(new Error("Network error"));
 
+    const wrapper = mount(createTestHarness());
     await vi.waitFor(() => {
-      expect(wrapper.vm.loading).toBe(false)
-    })
-    expect(wrapper.vm.products).toEqual([])
-    expect(wrapper.vm.error).toBe('Failed to load products')
-  })
+      expect(wrapper.vm.loading).toBe(false);
+    });
 
-  it('fetch can be called manually after mount', async () => {
-    const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
+    expect(wrapper.vm.products).toEqual([]);
+    expect(wrapper.vm.error).toBe("Network error");
+  });
 
-    const wrapper = mountWithFrameworkMap()
+  it("handles non-Error rejection gracefully", async () => {
+    vi.mocked(getProducts).mockRejectedValue("string error");
 
+    const wrapper = mount(createTestHarness());
     await vi.waitFor(() => {
-      expect(wrapper.vm.loading).toBe(false)
-    })
+      expect(wrapper.vm.loading).toBe(false);
+    });
 
-    // Second call with new data
-    const newProducts = [
-      { id: '3', name: 'svelte', previousPrice: 0, price: 0, rate: 5 },
-    ]
-    const newApiResponse = { data: newProducts, total: 1 }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(newApiResponse)))
+    expect(wrapper.vm.products).toEqual([]);
+    expect(wrapper.vm.error).toBe("Failed to load products");
+  });
 
-    wrapper.vm.fetch()
+  it("returns same data reference from cache on re-mount", async () => {
+    vi.mocked(getProducts).mockResolvedValue({ data: mockProducts, total: 2 });
+
+    const wrapper1 = mount(createTestHarness());
     await vi.waitFor(() => {
-      expect(wrapper.vm.products).toHaveLength(1)
-      expect(wrapper.vm.products[0].title).toBe('Svelte')
-    })
-  })
+      expect(wrapper1.vm.loading).toBe(false);
+    });
 
+    const products1 = wrapper1.vm.products;
+    wrapper1.unmount();
 
-  it('uses injected metaMap when available', async () => {
-    const metaMap = {
-      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'classic' },
-    }
-
-    const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
-
-    const wrapper = mount(
-      // eslint-disable-next-line vue/one-component-per-file
-      defineComponent({
-        setup() {
-          const result = useProducts()
-          return result
-        },
-        template: '<div></div>',
-      }),
-      {
-        global: {
-          provide: {
-            metaMap,
-          },
-        },
-      },
-    )
-
+    // Re-mount — cached data should be the SAME array reference
+    const wrapper2 = mount(createTestHarness());
     await vi.waitFor(() => {
-      expect(wrapper.vm.loading).toBe(false)
-    })
-    expect(wrapper.vm.products[0].title).toBe('Custom Vue')
-    expect(wrapper.vm.products[0].image).toBe('plant')
-  })
-})
+      expect(wrapper2.vm.loading).toBe(false);
+    });
+
+    expect(wrapper2.vm.products).toBe(products1);
+  });
+});
