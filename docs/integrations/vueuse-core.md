@@ -19,8 +19,8 @@ VueUse composables handle Vue-reactivity concerns. They do not replace infra-lay
 
 ## 2. Currently Used Composables
 
-| Composable | Where | Purpose | Options used |
-|---|---|---|---|
+| Composable      | Where            | Purpose                                      | Options used                   |
+| --------------- | ---------------- | -------------------------------------------- | ------------------------------ |
 | `useAsyncState` | `useProducts.ts` | Async data fetching with loading/error state | `{ immediate: true, onError }` |
 
 Only one VueUse composable is used today. This document will grow as new composables are added.
@@ -32,45 +32,44 @@ Only one VueUse composable is used today. This document will grow as new composa
 The core async data-fetching pattern. Source: `apps/white-label-vue/src/composables/useProducts.ts`.
 
 ```typescript
-import { useAsyncState } from "@vueuse/core";
+import { useAsyncState } from '@vueuse/core'
 
 export function useProducts() {
-  const formattedError = ref<string | undefined>();
+  const formattedError = ref<string | undefined>()
 
   const { state, isLoading, execute } = useAsyncState<ProductView[]>(
     async () => {
-      formattedError.value = undefined;
-      const { data } = await getProducts();
-      return toProductViewList(data);
+      formattedError.value = undefined
+      const { data } = await getProducts()
+      return toProductViewList(data)
     },
     [],
     {
       immediate: true,
       onError(e: unknown) {
-        formattedError.value = e instanceof Error
-          ? e.message
-          : "Failed to load products";
+        formattedError.value =
+          e instanceof Error ? e.message : 'Failed to load products'
       },
-    }
-  );
+    },
+  )
 
   return {
     products: state,
     loading: isLoading,
     error: formattedError,
     fetch: () => execute(),
-  };
+  }
 }
 ```
 
 ### Contract
 
-| `useAsyncState` return | Composable export | Type | Description |
-|---|---|---|---|
-| `state` | `products` | `Ref<ProductView[]>` | Last successful result (typed via generic) |
-| `isLoading` | `loading` | `Ref<boolean>` | `true` during fetch (starts `true` with `immediate: true`) |
-| `execute` | `fetch` | `() => Promise<ProductView[]>` | Re-fetches on demand (retry / refresh / pagination) |
-| (unused) | `error` | `Ref<string \| undefined>` | Normalized error message (see §4) |
+| `useAsyncState` return | Composable export | Type                           | Description                                                |
+| ---------------------- | ----------------- | ------------------------------ | ---------------------------------------------------------- |
+| `state`                | `products`        | `Ref<ProductView[]>`           | Last successful result (typed via generic)                 |
+| `isLoading`            | `loading`         | `Ref<boolean>`                 | `true` during fetch (starts `true` with `immediate: true`) |
+| `execute`              | `fetch`           | `() => Promise<ProductView[]>` | Re-fetches on demand (retry / refresh / pagination)        |
+| (unused)               | `error`           | `Ref<string \| undefined>`     | Normalized error message (see §4)                          |
 
 ### Key details
 
@@ -86,27 +85,26 @@ export function useProducts() {
 The standard pattern across all async composables:
 
 ```typescript
-const formattedError = ref<string | undefined>();
+const formattedError = ref<string | undefined>()
 
 const { state, isLoading } = useAsyncState(
   async () => {
-    formattedError.value = undefined;  // clear before each fetch
-    const { data } = await getProducts();
-    return data;
+    formattedError.value = undefined // clear before each fetch
+    const { data } = await getProducts()
+    return data
   },
   [],
   {
     immediate: true,
     onError(e: unknown) {
       // Normalize to string — infra may throw various error types
-      formattedError.value = e instanceof Error
-        ? e.message
-        : "Failed to load products";
+      formattedError.value =
+        e instanceof Error ? e.message : 'Failed to load products'
     },
-  }
-);
+  },
+)
 
-return { products: state, loading: isLoading, error: formattedError };
+return { products: state, loading: isLoading, error: formattedError }
 ```
 
 ### Why this pattern
@@ -120,20 +118,20 @@ return { products: state, loading: isLoading, error: formattedError };
 
 ```typescript
 // ❌ AVOID: try/catch inside the async function when onError is available
-async () => {
+;async () => {
   try {
-    const { data } = await getProducts();
-    return data;
+    const { data } = await getProducts()
+    return data
   } catch (e) {
-    formattedError.value = "Something went wrong";
-    return [];  // return value ignored by useAsyncState on error
+    formattedError.value = 'Something went wrong'
+    return [] // return value ignored by useAsyncState on error
   }
 }
 
 // ✅ DO: let the promise reject, handle in onError
-async () => {
-  const { data } = await getProducts();
-  return data;
+;async () => {
+  const { data } = await getProducts()
+  return data
 }
 ```
 
@@ -156,11 +154,11 @@ Composable return values map directly to `fe-async-content` props:
 </template>
 ```
 
-| Composable export | `fe-async-content` prop | Type |
-|---|---|---|
-| `loading` | `:loading` | `boolean` |
-| `error` | `:error` | `string \| undefined` |
-| `products` | default slot iteration | `T[]` |
+| Composable export | `fe-async-content` prop | Type                  |
+| ----------------- | ----------------------- | --------------------- |
+| `loading`         | `:loading`              | `boolean`             |
+| `error`           | `:error`                | `string \| undefined` |
+| `products`        | default slot iteration  | `T[]`                 |
 
 Reference: `docs/integrations/layer-wiring.md` §5 (App Layer → Page Layer) for the full component template.
 
@@ -175,14 +173,14 @@ Reference: `docs/integrations/layer-wiring.md` §5 (App Layer → Page Layer) fo
 3. **Import VueUse composable** from `@vueuse/core`
 4. **Follow the pattern:**
 
-   | Use case | VueUse composable | Notes |
-   |---|---|---|
-   | Async fetch | `useAsyncState` | Always with `immediate: true` and `onError` |
-   | Polling / interval | `useIntervalFn` | Wrap `execute` for periodic refresh |
-   | Debounced input | `useDebounceFn` | For search-as-you-type |
-   | Window events | `useEventListener` | Cleanup on unmount automatically |
-   | Local reactive storage | `useStorage` | Use only for UI preferences (see §7) |
-   | Timers | `useTimeoutFn` | For delayed actions |
+   | Use case               | VueUse composable  | Notes                                       |
+   | ---------------------- | ------------------ | ------------------------------------------- |
+   | Async fetch            | `useAsyncState`    | Always with `immediate: true` and `onError` |
+   | Polling / interval     | `useIntervalFn`    | Wrap `execute` for periodic refresh         |
+   | Debounced input        | `useDebounceFn`    | For search-as-you-type                      |
+   | Window events          | `useEventListener` | Cleanup on unmount automatically            |
+   | Local reactive storage | `useStorage`       | Use only for UI preferences (see §7)        |
+   | Timers                 | `useTimeoutFn`     | For delayed actions                         |
 
 5. **Return shape:** always `{ data, loading, error }` for async, or `{ value }` for sync. Keep it predictable
 6. **Test** — create `apps/white-label-vue/src/composables/use<Feature>.spec.ts`
@@ -192,10 +190,10 @@ Reference: `docs/integrations/layer-wiring.md` §5 (App Layer → Page Layer) fo
 ```typescript
 // Async composables
 return {
-  items: state,     // the data (plural for arrays, singular for single items)
+  items: state, // the data (plural for arrays, singular for single items)
   loading: isLoading,
   error: formattedError,
-  fetch: () => execute(),  // manual re-fetch
+  fetch: () => execute(), // manual re-fetch
 }
 
 // Sync composables
@@ -210,10 +208,10 @@ return {
 
 VueUse composables that would break the hexagonal architecture:
 
-| Composables | Reason |
-|---|---|
-| `useFetch` / `useAxios` | HTTP I/O must stay in `@repo/infra`. Infra adapters own fetch logic, not app composables |
-| `useLocalStorage` / `useStorage` | Couples composable to browser storage. If persistence is needed, define a domain port and implement it as an infra adapter |
+| Composables                                                  | Reason                                                                                                                                       |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useFetch` / `useAxios`                                      | HTTP I/O must stay in `@repo/infra`. Infra adapters own fetch logic, not app composables                                                     |
+| `useLocalStorage` / `useStorage`                             | Couples composable to browser storage. If persistence is needed, define a domain port and implement it as an infra adapter                   |
 | `useGeolocation` / `useMediaControls` / browser API wrappers | These are fine in apps but must be wrapped in a composable that isolates the platform dependency. Never use them directly in page components |
 
 **The rule:** VueUse composables that interact with Vue reactivity system are fine in `apps/white-label-vue`. VueUse composables that handle I/O (fetch, storage, etc.) must not duplicate infra-layer adapters. If a VueUse composable wraps a browser API not yet abstracted in infra, wrap it in a thin app-level composable that could later be swapped.

@@ -1,5 +1,9 @@
 import { describe, expect, it, beforeEach } from 'vitest'
-import { buildProduct, buildProductList, resetProductCounter } from './product.js'
+import {
+  buildProduct,
+  buildProductList,
+  resetProductCounter,
+} from './product.js'
 
 describe('product factory', () => {
   beforeEach(() => {

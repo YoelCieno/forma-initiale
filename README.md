@@ -16,13 +16,13 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 - **packages/ui** — shared components, framework-agnostic (vanilla TS)
 - **apps** — framework-specific application wrappers
 
-| App | Stack | Status |
-|-----|-------|--------|
-| `apps/white-label-vue` | Vue 3 + Vite 6 | Active (layer base) |
-| `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active |
-| `apps/docs` | Astro + Starlight | Active |
-| `apps/web-angular` | Angular | Future |
-| `apps/web-react` | React | Future |
+| App                    | Stack                            | Status              |
+| ---------------------- | -------------------------------- | ------------------- |
+| `apps/white-label-vue` | Vue 3 + Vite 6                   | Active (layer base) |
+| `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active              |
+| `apps/docs`            | Astro + Starlight                | Active              |
+| `apps/web-angular`     | Angular                          | Future              |
+| `apps/web-react`       | React                            | Future              |
 
 ## Project structure
 
@@ -55,13 +55,13 @@ Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhos
 
 ## Commands
 
-| Command | Action |
-|---------|--------|
-| `bun run dev` | Start all apps (dev mode, persistent) |
-| `bun run build` | Build all apps |
-| `bun run lint` | Lint all packages |
-| `bun run test` | Run tests (Vitest) |
-| `bun run format` | Format code (Prettier) |
+| Command          | Action                                |
+| ---------------- | ------------------------------------- |
+| `bun run dev`    | Start all apps (dev mode, persistent) |
+| `bun run build`  | Build all apps                        |
+| `bun run lint`   | Lint all packages                     |
+| `bun run test`   | Run tests (Vitest)                    |
+| `bun run format` | Format code (Prettier)                |
 
 ## Dependency Automation
 
@@ -87,10 +87,10 @@ Major version bumps require **manual approval** (disabled auto-merge) to prevent
 
 Copy `apps/white-label-vue/.env.example` to `apps/white-label-vue/.env` and adjust:
 
-| Variable | Default | Description |
-|---|---|---|
-| `VITE_API_URL` | `https://api.example.com/api` | API base URL (no trailing slash) |
-| `VITE_ENABLE_MOCKS` | `true` | Enable mock service worker in dev |
+| Variable            | Default                       | Description                       |
+| ------------------- | ----------------------------- | --------------------------------- |
+| `VITE_API_URL`      | `https://api.example.com/api` | API base URL (no trailing slash)  |
+| `VITE_ENABLE_MOCKS` | `true`                        | Enable mock service worker in dev |
 
 Vite requires the `VITE_` prefix for client-exposed variables. All `.env` files are gitignored; commit only `.env.example`.
 
@@ -120,7 +120,7 @@ Import MSW server directly in spec files:
 
 ```ts
 import { setupServer } from 'msw/node'
-import { handlers } from '@repo/infra/mocks/server'  // adjust import path
+import { handlers } from '@repo/infra/mocks/server' // adjust import path
 
 const server = setupServer(...handlers)
 beforeAll(() => server.listen())
@@ -160,9 +160,9 @@ The project uses WebAwesome 3.7 as its design system. Styles are split into thre
 All apps load them via `main.ts`:
 
 ```typescript
-import '@repo/ui/styles'           // WA base (no theme)
-import '@repo/ui/styles/themes/default'  // WA default theme
-import './styles/tokens.css'         // DS token overrides
+import '@repo/ui/styles' // WA base (no theme)
+import '@repo/ui/styles/themes/default' // WA default theme
+import './styles/tokens.css' // DS token overrides
 ```
 
 **Rule**: Never hardcode colors/spacing/typography — always use `var(--wa-*)` CSS custom properties.

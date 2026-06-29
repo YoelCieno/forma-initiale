@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/button-group
 
-
 `<wa-button-group>` Stable Since 2.0
 
 Button groups combine related buttons into a single visual unit. Use them for toolbars, segmented controls, or any set of actions that belong together.
@@ -25,7 +24,9 @@ Set the `orientation` attribute to `vertical` to make a vertical button group.
 <wa-button-group orientation="vertical" label="Options">
   <wa-button appearance="filled">Button</wa-button>
   <wa-dropdown>
-    <wa-button appearance="filled" slot="trigger" with-caret>Dropdown</wa-button>
+    <wa-button appearance="filled" slot="trigger" with-caret
+      >Dropdown</wa-button
+    >
     <wa-dropdown-item>Item 1</wa-dropdown-item>
     <wa-dropdown-item>Item 2</wa-dropdown-item>
     <wa-dropdown-item>Item 3</wa-dropdown-item>
@@ -86,7 +87,9 @@ Dropdowns can be placed into button groups.
 <wa-button-group label="Example Button Group">
   <wa-button appearance="filled">Button</wa-button>
   <wa-dropdown>
-    <wa-button appearance="filled" slot="trigger" with-caret>Dropdown</wa-button>
+    <wa-button appearance="filled" slot="trigger" with-caret
+      >Dropdown</wa-button
+    >
     <wa-dropdown-item>Item 1</wa-dropdown-item>
     <wa-dropdown-item>Item 2</wa-dropdown-item>
     <wa-dropdown-item>Item 3</wa-dropdown-item>
@@ -136,14 +139,24 @@ Create interactive toolbars with button groups.
 ```html
 <div class="button-group-toolbar">
   <wa-button-group label="History">
-    <wa-button appearance="filled" id="undo-button"><wa-icon name="undo" variant="solid" label="Undo"></wa-icon></wa-button>
-    <wa-button appearance="filled" id="redo-button"><wa-icon name="redo" variant="solid" label="Redo"></wa-icon></wa-button>
+    <wa-button appearance="filled" id="undo-button"
+      ><wa-icon name="undo" variant="solid" label="Undo"></wa-icon
+    ></wa-button>
+    <wa-button appearance="filled" id="redo-button"
+      ><wa-icon name="redo" variant="solid" label="Redo"></wa-icon
+    ></wa-button>
   </wa-button-group>
 
   <wa-button-group label="Formatting">
-    <wa-button appearance="filled" id="button-bold"><wa-icon name="bold" variant="solid" label="Bold"></wa-icon></wa-button>
-    <wa-button appearance="filled" id="button-italic"><wa-icon name="italic" variant="solid" label="Italic"></wa-icon></wa-button>
-    <wa-button appearance="filled" id="button-underline"><wa-icon name="underline" variant="solid" label="Underline"></wa-icon></wa-button>
+    <wa-button appearance="filled" id="button-bold"
+      ><wa-icon name="bold" variant="solid" label="Bold"></wa-icon
+    ></wa-button>
+    <wa-button appearance="filled" id="button-italic"
+      ><wa-icon name="italic" variant="solid" label="Italic"></wa-icon
+    ></wa-button>
+    <wa-button appearance="filled" id="button-underline"
+      ><wa-icon name="underline" variant="solid" label="Underline"></wa-icon
+    ></wa-button>
   </wa-button-group>
 
   <wa-button-group label="Alignment">
@@ -151,7 +164,11 @@ Create interactive toolbars with button groups.
       <wa-icon name="align-left" variant="solid" label="Align Left"></wa-icon>
     </wa-button>
     <wa-button appearance="filled" id="button-align-center">
-      <wa-icon name="align-center" variant="solid" label="Align Center"></wa-icon>
+      <wa-icon
+        name="align-center"
+        variant="solid"
+        label="Align Center"
+      ></wa-icon>
     </wa-button>
     <wa-button appearance="filled" id="button-align-right">
       <wa-icon name="align-right" variant="solid" label="Align Right"></wa-icon>
@@ -185,7 +202,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button-group/button-group.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button-group/button-group.js'
 ```
 
 \*\*npm\*\*
@@ -193,7 +210,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button-group/but
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/button-group/button-group.js';
+import '@awesome.me/webawesome/dist/components/button-group/button-group.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -201,7 +218,7 @@ import '@awesome.me/webawesome/dist/components/button-group/button-group.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/button-group/button-group.js';
+import './webawesome/dist/components/button-group/button-group.js'
 ```
 
 \*\*React\*\*
@@ -209,33 +226,33 @@ import './webawesome/dist/components/button-group/button-group.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaButtonGroup from '@awesome.me/webawesome/dist/react/button-group/index.js';
+import WaButtonGroup from '@awesome.me/webawesome/dist/react/button-group/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
+| Name      | Description                                               |
+| --------- | --------------------------------------------------------- |
 | (default) | \`\` One or more elements to display in the button group. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles\] | | |
-| \`label\` label | \`string\` A label to use for the button group. This won't be displayed on the screen, but it will be announced by assistive devices when interacting with the control and is strongly recommended. Type Default '' | | |
-| \`orientation\` orientation | \`'horizontal' \\| 'vertical'\` The button group's orientation. Type Default 'horizontal' | | |
+| Name                        | Description                                                                                                                                                                                                         | Reflects                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                     | \`CSSResultGroup \\                                                                                                                                                                                                 | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles\] |     |     |
+| \`label\` label             | \`string\` A label to use for the button group. This won't be displayed on the screen, but it will be announced by assistive devices when interacting with the control and is strongly recommended. Type Default '' |                                                                                                                                                    |     |
+| \`orientation\` orientation | \`'horizontal' \\                                                                                                                                                                                                   | 'vertical'\` The button group's orientation. Type Default 'horizontal'                                                                             |     |     |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name     | Description                   | CSS selector     |
+| -------- | ----------------------------- | ---------------- |
 | \`base\` | The component's base wrapper. | \`::part(base)\` |
 
 **Need a hand?** Report a bug Ask for help

@@ -13,10 +13,12 @@
 ### 4.1. Declare app layer order
 
 Add `@layer` declaration in `@repo/ui/styles` or white-label-vue:
+
 ```css
 @layer app, tenant;
 ```
-This must precede all other CSS. Position it after WA's layers.css import so the full layer stack is: wa-*, app, tenant.
+
+This must precede all other CSS. Position it after WA's layers.css import so the full layer stack is: wa-\*, app, tenant.
 
 ### 4.2. Wrap white-label styles in `@layer app`
 
@@ -42,7 +44,7 @@ This must precede all other CSS. Position it after WA's layers.css import so the
 
 ## ✅ Manual Confirmation
 
-- [ ] WA layers.css declares wa-* layers before app/tenant
+- [ ] WA layers.css declares wa-\* layers before app/tenant
 - [ ] `@layer app` wraps WL styles, `@layer tenant` wraps tenant overrides
 - [ ] Builds pass for all apps
 - [ ] Visual regression: components render identically to pre-@layer state

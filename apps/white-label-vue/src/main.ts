@@ -5,4 +5,6 @@ import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
 import { frameworkMap } from '../metadata'
 
-createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) => app.mount('#app'))
+createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) =>
+  app.mount('#app'),
+)

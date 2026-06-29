@@ -2,8 +2,8 @@
 
 Index of plans in this monorepo.
 
-| Plan | Description | Status |
-|------|-------------|--------|
+| Plan                                           | Description                                                                                                     | Status         |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------- |
 | [core-foundation](./core-foundation/README.md) | Build platform foundation: hexagonal skeleton → docs solution → Web Awesome UI layer → white-label extend layer | 🔧 IN PROGRESS |
 
 ## Conventions

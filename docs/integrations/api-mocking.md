@@ -56,7 +56,11 @@ Source: `packages/infra/src/mocks/handlers/products.ts`
 ```typescript
 import { http, HttpResponse } from 'msw'
 import type { Product } from '@repo/domain'
-import { buildProduct, buildProductList, resetProductCounter } from '../factories/product.js'
+import {
+  buildProduct,
+  buildProductList,
+  resetProductCounter,
+} from '../factories/product.js'
 
 resetProductCounter()
 let products = buildProductList(5)
@@ -80,7 +84,10 @@ export const productHandlers = [
   http.post('*/api/products', async ({ request }) => {
     const body: Partial<Product> = await request.json()
     const newProduct = buildProduct({
-      name: body.name, previousPrice: body.previousPrice, price: body.price, rate: body.rate,
+      name: body.name,
+      previousPrice: body.previousPrice,
+      price: body.price,
+      rate: body.rate,
     })
     products = [...products, newProduct]
 
@@ -91,14 +98,14 @@ export const productHandlers = [
 
 Pattern notes:
 
-| Aspect | Convention |
-|---|---|
-| URL matching | Wildcard `*/api/products` — works across environments regardless of base URL domain |
-| Response envelope | `{ data: T \| T[], total?: number }` — matches real API contract |
-| MSW v2 API | `http.get()` / `http.post()` / `HttpResponse.json()` — NOT `ctx` or `req` from v1 |
-| Mutable state | Module-level `let products` array updated by POST; `resetProductCounter()` on init |
-| Factory imports | `buildProduct()`, `buildProductList()` from `../factories/product.js` |
-| File extension | `.js` import in source (TS ESM convention with `type: module`) |
+| Aspect            | Convention                                                                          |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| URL matching      | Wildcard `*/api/products` — works across environments regardless of base URL domain |
+| Response envelope | `{ data: T \| T[], total?: number }` — matches real API contract                    |
+| MSW v2 API        | `http.get()` / `http.post()` / `HttpResponse.json()` — NOT `ctx` or `req` from v1   |
+| Mutable state     | Module-level `let products` array updated by POST; `resetProductCounter()` on init  |
+| Factory imports   | `buildProduct()`, `buildProductList()` from `../factories/product.js`               |
+| File extension    | `.js` import in source (TS ESM convention with `type: module`)                      |
 
 ### Handler index — `handlers/index.ts`
 
@@ -213,7 +220,12 @@ describe('products API handlers', () => {
   })
 
   it('POST /api/products creates and returns a new product', async () => {
-    const newProduct = { name: 'Test Product', previousPrice: 49.99, price: 0, rate: 4 }
+    const newProduct = {
+      name: 'Test Product',
+      previousPrice: 49.99,
+      price: 0,
+      rate: 4,
+    }
     const res = await fetch(`${BASE_URL}/api/products`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -229,13 +241,13 @@ describe('products API handlers', () => {
 
 Key setup decisions:
 
-| Setting | Purpose |
-|---|---|
-| `server.listen()` in `beforeAll` | Start MSW before first test |
-| `server.resetHandlers()` in `afterEach` | Remove any per-test `server.use()` overrides — keeps tests isolated |
-| `server.close()` in `afterAll` | Clean teardown after suite |
-| `onUnhandledRequest` not set (defaults to `'warn'` in Node) | Warns about unmocked requests — helps catch missing handlers |
-| `BASE_URL = 'http://localhost'` | Wildcard patterns (`*/api/products`) match regardless of base |
+| Setting                                                     | Purpose                                                             |
+| ----------------------------------------------------------- | ------------------------------------------------------------------- |
+| `server.listen()` in `beforeAll`                            | Start MSW before first test                                         |
+| `server.resetHandlers()` in `afterEach`                     | Remove any per-test `server.use()` overrides — keeps tests isolated |
+| `server.close()` in `afterAll`                              | Clean teardown after suite                                          |
+| `onUnhandledRequest` not set (defaults to `'warn'` in Node) | Warns about unmocked requests — helps catch missing handlers        |
+| `BASE_URL = 'http://localhost'`                             | Wildcard patterns (`*/api/products`) match regardless of base       |
 
 ### Integration test setup (white-label-vue)
 
@@ -393,7 +405,7 @@ it('handles server error', async () => {
   server.use(
     http.get('*/api/products', () => {
       return new HttpResponse(null, { status: 500 })
-    })
+    }),
   )
 
   await expect(getProducts()).rejects.toThrow('Failed to fetch products')
@@ -438,14 +450,17 @@ describe('getProducts', () => {
   it('returns products on success', async () => {
     const result = await getProducts()
     expect(result.data).toHaveLength(5)
-    expect(result.data[0]).toMatchObject({ id: expect.any(String), name: expect.any(String) })
+    expect(result.data[0]).toMatchObject({
+      id: expect.any(String),
+      name: expect.any(String),
+    })
   })
 
   it('throws on server error', async () => {
     server.use(
       http.get('*/api/products', () => {
         return new HttpResponse(null, { status: 500 })
-      })
+      }),
     )
 
     await expect(getProducts()).rejects.toThrow('Failed to fetch products')
@@ -471,13 +486,13 @@ From `@repo/infra` package.json:
 
 Import paths:
 
-| Import | Target |
-|---|---|
-| `import { getProducts } from '@repo/infra'` | Adapters |
-| `import { server } from '@repo/infra/mocks/server'` | Node MSW server (tests) |
+| Import                                               | Target                   |
+| ---------------------------------------------------- | ------------------------ |
+| `import { getProducts } from '@repo/infra'`          | Adapters                 |
+| `import { server } from '@repo/infra/mocks/server'`  | Node MSW server (tests)  |
 | `import { worker } from '@repo/infra/mocks/browser'` | Browser MSW worker (dev) |
-| `import { buildProduct } from '@repo/infra/mocks'` | Test data factory |
-| `import { handlers } from '@repo/infra/mocks'` | Raw handler array |
+| `import { buildProduct } from '@repo/infra/mocks'`   | Test data factory        |
+| `import { handlers } from '@repo/infra/mocks'`       | Raw handler array        |
 
 ---
 
@@ -495,6 +510,7 @@ Checklist for adding a new feature handler (e.g., `packages/infra/src/mocks/hand
    - Export `buildCategory(overrides?)`, `buildCategoryList(count?)`, `resetCategoryCounter()`
 
 3. **Register in barrel** — `packages/infra/src/mocks/handlers/index.ts`
+
    ```typescript
    import { categoryHandlers } from './categories.js'
    export const handlers = [...productHandlers, ...categoryHandlers]

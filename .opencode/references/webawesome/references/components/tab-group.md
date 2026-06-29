@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/tab-group
 
-
 `<wa-tab-group>` Stable Since 2.0
 
 Tab groups organize related content into a single container that displays one panel at a time, with tabs for switching between them.
@@ -126,25 +125,25 @@ You can make a tab closable by adding a close button next to the tab and inside 
 </style>
 
 <script>
-  const tabGroup = document.querySelector('.tabs-closable');
-  const generalTab = tabGroup.querySelectorAll('wa-tab')[0];
-  const closableTab = tabGroup.querySelectorAll('wa-tab')[1];
-  const closeButton = tabGroup.querySelector('wa-button');
-  const restoreButton = tabGroup.nextElementSibling.nextElementSibling;
+  const tabGroup = document.querySelector('.tabs-closable')
+  const generalTab = tabGroup.querySelectorAll('wa-tab')[0]
+  const closableTab = tabGroup.querySelectorAll('wa-tab')[1]
+  const closeButton = tabGroup.querySelector('wa-button')
+  const restoreButton = tabGroup.nextElementSibling.nextElementSibling
 
   // Remove the tab when the close button is clicked
   closeButton.addEventListener('click', () => {
-    closableTab.remove();
-    closeButton.remove();
-    restoreButton.disabled = false;
-  });
+    closableTab.remove()
+    closeButton.remove()
+    restoreButton.disabled = false
+  })
 
   // Restore the tab
   restoreButton.addEventListener('click', () => {
-    restoreButton.disabled = true;
-    generalTab.insertAdjacentElement('afterend', closeButton);
-    generalTab.insertAdjacentElement('afterend', closableTab);
-  });
+    restoreButton.disabled = true
+    generalTab.insertAdjacentElement('afterend', closeButton)
+    generalTab.insertAdjacentElement('afterend', closableTab)
+  })
 </script>
 ```
 
@@ -225,7 +224,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tab-group/tab-group.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tab-group/tab-group.js'
 ```
 
 \*\*npm\*\*
@@ -233,7 +232,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tab-group/tab-gr
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/tab-group/tab-group.js';
+import '@awesome.me/webawesome/dist/components/tab-group/tab-group.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -241,7 +240,7 @@ import '@awesome.me/webawesome/dist/components/tab-group/tab-group.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/tab-group/tab-group.js';
+import './webawesome/dist/components/tab-group/tab-group.js'
 ```
 
 \*\*React\*\*
@@ -249,73 +248,73 @@ import './webawesome/dist/components/tab-group/tab-group.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaTabGroup from '@awesome.me/webawesome/dist/react/tab-group/index.js';
+import WaTabGroup from '@awesome.me/webawesome/dist/react/tab-group/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | \`\` Used for grouping tab panels in the tab group. Must be elements. |
-| \`nav\` | \`\` Used for grouping tabs in the tab group. Must be elements. Note that will set this slot on itself automatically. |
+| Name      | Description                                                                                                           |
+| --------- | --------------------------------------------------------------------------------------------------------------------- |
+| (default) | \`\` Used for grouping tab panels in the tab group. Must be elements.                                                 |
+| \`nav\`   | \`\` Used for grouping tabs in the tab group. Must be elements. Note that will set this slot on itself automatically. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`activation\` activation | \`'auto' \\| 'manual'\` When set to auto, navigating tabs with the arrow keys will instantly show the corresponding tab panel. When set to manual, the tab will receive focus but will not show until the user presses spacebar or enter. Type Default 'auto' | | |
-| \`active\` active | \`string\` Sets the active tab. Type Default '' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`defaultSlot\` | \`\` Default slot for children (inside the body part container). Type HTMLSlotElement | | |
-| \`placement\` placement | \`'top' \\| 'bottom' \\| 'start' \\| 'end'\` The placement of the tabs. Type Default 'top' | | |
-| \`withoutScrollControls\` without-scroll-controls | \`boolean\` Disables the scroll arrows that appear when tabs overflow. Type Default false | | |
+| Name                                              | Description                                                                               | Reflects                                                                                                                                                                                                                                         |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ----------------------------------------------------- | --- | --- |
+| \`activation\` activation                         | \`'auto' \\                                                                               | 'manual'\` When set to auto, navigating tabs with the arrow keys will instantly show the corresponding tab panel. When set to manual, the tab will receive focus but will not show until the user presses spacebar or enter. Type Default 'auto' |            |                                                       |
+| \`active\` active                                 | \`string\` Sets the active tab. Type Default ''                                           |                                                                                                                                                                                                                                                  |            |
+| \`css\`                                           | \`CSSResultGroup \\                                                                       | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles                                                                                                   |            |                                                       |
+| \`defaultSlot\`                                   | \`\` Default slot for children (inside the body part container). Type HTMLSlotElement     |                                                                                                                                                                                                                                                  |            |
+| \`placement\` placement                           | \`'top' \\                                                                                | 'bottom' \\                                                                                                                                                                                                                                      | 'start' \\ | 'end'\` The placement of the tabs. Type Default 'top' |     |     |
+| \`withoutScrollControls\` without-scroll-controls | \`boolean\` Disables the scroll arrows that appear when tabs overflow. Type Default false |                                                                                                                                                                                                                                                  |            |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
+| Name            | Description                   |
+| --------------- | ----------------------------- |
 | \`wa-tab-hide\` | Emitted when a tab is hidden. |
-| \`wa-tab-show\` | Emitted when a tab is shown. |
+| \`wa-tab-show\` | Emitted when a tab is shown.  |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--indicator-color\` | The color of the active tab indicator. |
-| \`--track-color\` | The color of the indicator's track (the line that separates tabs from panels). |
-| \`--track-width\` | The width of the indicator's track (the line that separates tabs from panels). |
+| Name                  | Description                                                                    |
+| --------------------- | ------------------------------------------------------------------------------ |
+| \`--indicator-color\` | The color of the active tab indicator.                                         |
+| \`--track-color\`     | The color of the indicator's track (the line that separates tabs from panels). |
+| \`--track-width\`     | The width of the indicator's track (the line that separates tabs from panels). |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
-| \`body\` | The tab group's body where tab panels are slotted in. | \`::part(body)\` |
-| \`nav\` | The tab group's navigation container where tabs are slotted in. | \`::part(nav)\` |
-| \`scroll-button\` | \`\` The previous/next scroll buttons that show when tabs are scrollable, a . | \`::part(scroll-button)\` |
-| \`scroll-button\_\_base\` | \`base\` The scroll button's exported part. | \`::part(scroll-button\_\_base)\` |
-| \`scroll-button-end\` | The ending scroll button. | \`::part(scroll-button-end)\` |
-| \`scroll-button-start\` | The starting scroll button. | \`::part(scroll-button-start)\` |
-| \`tabs\` | The container that wraps the tabs. | \`::part(tabs)\` |
+| Name                      | Description                                                                   | CSS selector                      |
+| ------------------------- | ----------------------------------------------------------------------------- | --------------------------------- |
+| \`base\`                  | The component's base wrapper.                                                 | \`::part(base)\`                  |
+| \`body\`                  | The tab group's body where tab panels are slotted in.                         | \`::part(body)\`                  |
+| \`nav\`                   | The tab group's navigation container where tabs are slotted in.               | \`::part(nav)\`                   |
+| \`scroll-button\`         | \`\` The previous/next scroll buttons that show when tabs are scrollable, a . | \`::part(scroll-button)\`         |
+| \`scroll-button\_\_base\` | \`base\` The scroll button's exported part.                                   | \`::part(scroll-button\_\_base)\` |
+| \`scroll-button-end\`     | The ending scroll button.                                                     | \`::part(scroll-button-end)\`     |
+| \`scroll-button-start\`   | The starting scroll button.                                                   | \`::part(scroll-button-start)\`   |
+| \`tabs\`                  | The container that wraps the tabs.                                            | \`::part(tabs)\`                  |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-button>`](https://webawesome.com/docs/components/button)
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
--   [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
--   [`<wa-tab>`](https://webawesome.com/docs/components/tab)
--   [`<wa-tab-panel>`](https://webawesome.com/docs/components/tab-panel)
+- [`<wa-button>`](https://webawesome.com/docs/components/button)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
+- [`<wa-tab>`](https://webawesome.com/docs/components/tab)
+- [`<wa-tab-panel>`](https://webawesome.com/docs/components/tab-panel)
 
 **Need a hand?** Report a bug Ask for help

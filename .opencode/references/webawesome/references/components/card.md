@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/card
 
-
 `<wa-card>` Stable Since 2.0
 
 Cards group related content and actions inside a bordered container. Use them to present products, articles, user profiles, or any self-contained unit of information.
@@ -38,7 +37,8 @@ Basic cards aren't very exciting, but they can display any content you want them
 
 ```html
 <wa-card class="card-basic">
-  This is just a basic card. No media, no header, and no footer. Just your content.
+  This is just a basic card. No media, no header, and no footer. Just your
+  content.
 </wa-card>
 
 <style>
@@ -105,7 +105,7 @@ Card media is displayed atop the card and will stretch to fit. If using SSR, you
         alt="A kitten walks towards camera on top of pallet."
       />
     </div>
-    This card has an image of a kitten walking along a pallet. 
+    This card has an image of a kitten walking along a pallet.
   </wa-card>
   <wa-card class="card-media">
     <video slot="media" controls>
@@ -143,22 +143,22 @@ Use the `appearance` attribute to change the card's visual appearance.
       src="https://images.unsplash.com/photo-1559209172-0ff8f6d49ff7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
       alt="A kitten sits patiently between a terracotta pot and decorative grasses."
     />
-    Filled-outlined
-  </wa-card><wa-card appearance="plain">
+    Filled-outlined </wa-card
+  ><wa-card appearance="plain">
     <img
       slot="media"
       src="https://images.unsplash.com/photo-1559209172-0ff8f6d49ff7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
       alt="A kitten sits patiently between a terracotta pot and decorative grasses."
     />
-    Plain
-  </wa-card><wa-card appearance="filled">
+    Plain </wa-card
+  ><wa-card appearance="filled">
     <img
       slot="media"
       src="https://images.unsplash.com/photo-1559209172-0ff8f6d49ff7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
       alt="A kitten sits patiently between a terracotta pot and decorative grasses."
     />
-    Filled
-  </wa-card><wa-card appearance="accent">
+    Filled </wa-card
+  ><wa-card appearance="accent">
     <img
       slot="media"
       src="https://images.unsplash.com/photo-1559209172-0ff8f6d49ff7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
@@ -183,7 +183,8 @@ The `actions` slot is only available for the horizontal orientation
       src="https://images.unsplash.com/photo-1559209172-0ff8f6d49ff7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
       alt="A kitten sits patiently between a terracotta pot and decorative grasses."
     />
-    This card has a horizontal orientation with media, body, and actions arranged side-by-side.
+    This card has a horizontal orientation with media, body, and actions
+    arranged side-by-side.
     <wa-button slot="actions" variant="neutral" appearance="plain"
       ><wa-icon name="ellipsis" label="actions"></wa-icon
     ></wa-button>
@@ -208,7 +209,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/card/card.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/card/card.js'
 ```
 
 \*\*npm\*\*
@@ -216,7 +217,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/card/card.js';
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/card/card.js';
+import '@awesome.me/webawesome/dist/components/card/card.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -224,7 +225,7 @@ import '@awesome.me/webawesome/dist/components/card/card.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/card/card.js';
+import './webawesome/dist/components/card/card.js'
 ```
 
 \*\*React\*\*
@@ -232,53 +233,53 @@ import './webawesome/dist/components/card/card.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaCard from '@awesome.me/webawesome/dist/react/card/index.js';
+import WaCard from '@awesome.me/webawesome/dist/react/card/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The card's main content. |
-| \`actions\` | An optional actions section to render at the end for the horizontal card. |
-| \`footer\` | An optional footer for the card. |
+| Name               | Description                                                               |
+| ------------------ | ------------------------------------------------------------------------- |
+| (default)          | The card's main content.                                                  |
+| \`actions\`        | An optional actions section to render at the end for the horizontal card. |
+| \`footer\`         | An optional footer for the card.                                          |
 | \`footer-actions\` | An optional actions section to render in the footer of the vertical card. |
-| \`header\` | An optional header for the card. |
+| \`header\`         | An optional header for the card.                                          |
 | \`header-actions\` | An optional actions section to render in the header of the vertical card. |
-| \`media\` | An optional media section to render at the start of the card. |
+| \`media\`          | An optional media section to render at the start of the card.             |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'accent' \\| 'filled' \\| 'outlined' \\| 'filled-outlined' \\| 'plain'\` The card's visual appearance. Type Default 'outlined' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[sizeStyles, styles\] | | |
-| \`orientation\` orientation | \`'horizontal' \\| 'vertical'\` Renders the card's orientation \* Type Default 'vertical' | | |
-| \`withFooter\` with-footer | \`true\` Only required for SSR. Set to if you're slotting in a footer element so the server-rendered markup includes the footer before the component hydrates on the client. Type boolean Default false | | |
-| \`withHeader\` with-header | \`true\` Only required for SSR. Set to if you're slotting in a header element so the server-rendered markup includes the header before the component hydrates on the client. Type boolean Default false | | |
-| \`withMedia\` with-media | \`true\` Only required for SSR. Set to if you're slotting in a media element so the server-rendered markup includes the media before the component hydrates on the client. Type boolean Default false | | |
+| Name                        | Description                                                                                                                                                                                             | Reflects                                                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------- | --------------------------------------------------------------- | --- | --- |
+| \`appearance\` appearance   | \`'accent' \\                                                                                                                                                                                           | 'filled' \\                                                                                                                                                    | 'outlined' \\ | 'filled-outlined' \\ | 'plain'\` The card's visual appearance. Type Default 'outlined' |     |     |
+| \`css\`                     | \`CSSResultGroup \\                                                                                                                                                                                     | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[sizeStyles, styles\] |               |                      |
+| \`orientation\` orientation | \`'horizontal' \\                                                                                                                                                                                       | 'vertical'\` Renders the card's orientation \* Type Default 'vertical'                                                                                         |               |                      |
+| \`withFooter\` with-footer  | \`true\` Only required for SSR. Set to if you're slotting in a footer element so the server-rendered markup includes the footer before the component hydrates on the client. Type boolean Default false |                                                                                                                                                                |               |
+| \`withHeader\` with-header  | \`true\` Only required for SSR. Set to if you're slotting in a header element so the server-rendered markup includes the header before the component hydrates on the client. Type boolean Default false |                                                                                                                                                                |               |
+| \`withMedia\` with-media    | \`true\` Only required for SSR. Set to if you're slotting in a media element so the server-rendered markup includes the media before the component hydrates on the client. Type boolean Default false   |                                                                                                                                                                |               |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
+| Name          | Description                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
 | \`--spacing\` | \`var(--wa-space-l)\` The amount of space around and between sections of the card. Expects a single value. Default |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`body\` | The container that wraps the card's main content. | \`::part(body)\` |
-| \`footer\` | The container that wraps the card's footer. | \`::part(footer)\` |
-| \`header\` | The container that wraps the card's header. | \`::part(header)\` |
-| \`media\` | The container that wraps the card's media. | \`::part(media)\` |
+| Name       | Description                                       | CSS selector       |
+| ---------- | ------------------------------------------------- | ------------------ |
+| \`body\`   | The container that wraps the card's main content. | \`::part(body)\`   |
+| \`footer\` | The container that wraps the card's footer.       | \`::part(footer)\` |
+| \`header\` | The container that wraps the card's header.       | \`::part(header)\` |
+| \`media\`  | The container that wraps the card's media.        | \`::part(media)\`  |
 
 **Need a hand?** Report a bug Ask for help

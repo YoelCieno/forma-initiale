@@ -19,14 +19,14 @@ Native styles use design tokens to spruce up native HTML elements so that they m
 To use all Web Awesome styles (including [utilities](https://webawesome.com/docs/utilities/)), import the following stylesheet in your project:
 
 ```js
-import '@awesome.me/webawesome/dist/styles/webawesome.css';
+import '@awesome.me/webawesome/dist/styles/webawesome.css'
 ```
 
 Or, if you only want styles for native elements, import a theme and native styles individually:
 
 ```js
-import '@awesome.me/webawesome/dist/styles/themes/default.css';
-import '@awesome.me/webawesome/dist/styles/native.css';
+import '@awesome.me/webawesome/dist/styles/themes/default.css'
+import '@awesome.me/webawesome/dist/styles/native.css'
 ```
 
 \*\*Self-Hosted\*\*
@@ -69,7 +69,8 @@ Use `all: revert` on the exact element you want to opt out of native styles. Re-
 To opt out for an entire section, apply the same reset within a wrapper and target only the native elements in that area.
 
 ```css
-.native-reset-zone :where(button, input, select, textarea, table, details, dialog, progress) {
+.native-reset-zone
+  :where(button, input, select, textarea, table, details, dialog, progress) {
   all: revert;
   font: inherit;
 }
@@ -84,16 +85,18 @@ Native styles set default space between many block-level HTML elements using the
 ```html
 <h3>Content flows naturally</h3>
 <p>
-  Native styles set consistent spacing between block-level elements using your theme's design tokens. This means
-  headings, paragraphs, lists, and other elements look great together without extra effort.
+  Native styles set consistent spacing between block-level elements using your
+  theme's design tokens. This means headings, paragraphs, lists, and other
+  elements look great together without extra effort.
 </p>
 <blockquote>
   The Road goes ever on and on<br />
   Out from the door where it began.
 </blockquote>
 <p>
-  Spacing is controlled by the <code>--wa-content-spacing</code> token, so you can easily adjust it to match your
-  design. Set it to zero if you prefer to handle spacing yourself.
+  Spacing is controlled by the <code>--wa-content-spacing</code> token, so you
+  can easily adjust it to match your design. Set it to zero if you prefer to
+  handle spacing yourself.
 </p>
 <hr />
 <ul>
@@ -128,13 +131,16 @@ Create paragraphs with `<p>`. Paragraphs inherit the default text styles set on 
 
 ```html
 <p>
-  Paragraphs inherit the default text styles set on the body element, including font family, size, weight, and line
-  height. They also use <code>text-wrap: pretty</code> to prevent orphaned lines in supported browsers.
+  Paragraphs inherit the default text styles set on the body element, including
+  font family, size, weight, and line height. They also use
+  <code>text-wrap: pretty</code> to prevent orphaned lines in supported
+  browsers.
 </p>
 
 <p>
-  You can have as many paragraphs as you need and they'll maintain consistent spacing between them. Native styles ensure
-  everything stays readable and well-proportioned, no matter how much content you throw at it.
+  You can have as many paragraphs as you need and they'll maintain consistent
+  spacing between them. Native styles ensure everything stays readable and
+  well-proportioned, no matter how much content you throw at it.
 </p>
 ```
 
@@ -144,8 +150,9 @@ Emphasize longer quotations with `<blockquote>`. Block quotes use your theme's s
 
 ```html
 <blockquote>
-  What is a Web year now, about three months? And when people can browse around, discover new things, and download them
-  fast, when we all have agents - then Web years could slip by before human beings can notice.<br /><br />
+  What is a Web year now, about three months? And when people can browse around,
+  discover new things, and download them fast, when we all have agents - then
+  Web years could slip by before human beings can notice.<br /><br />
   — Tim Berners-Lee
 </blockquote>
 ```
@@ -188,18 +195,21 @@ Use `<dl>` to create lists of terms (`<dt>`) and definitions (`<dd>`).
 <dl>
   <dt>Web Components</dt>
   <dd>
-    A set of web platform APIs that let you create custom, reusable HTML elements. They work across frameworks and
-    browsers, making them ideal for building design systems and component libraries.
+    A set of web platform APIs that let you create custom, reusable HTML
+    elements. They work across frameworks and browsers, making them ideal for
+    building design systems and component libraries.
   </dd>
   <dt>Shadow DOM</dt>
   <dd>
-    A browser feature that lets you attach a hidden DOM tree to an element. This keeps your component's styles and
-    markup encapsulated, so they won't accidentally interfere with the rest of the page.
+    A browser feature that lets you attach a hidden DOM tree to an element. This
+    keeps your component's styles and markup encapsulated, so they won't
+    accidentally interfere with the rest of the page.
   </dd>
   <dt>Custom Elements</dt>
   <dd>
-    A JavaScript API that lets you define new HTML tags with their own behavior. Once registered, you can use them
-    anywhere in your markup just like built-in elements.
+    A JavaScript API that lets you define new HTML tags with their own behavior.
+    Once registered, you can use them anywhere in your markup just like built-in
+    elements.
   </dd>
 </dl>
 ```
@@ -354,8 +364,10 @@ Create disclosure widgets with `<details>` and `<summary>`. Details closely matc
 <details>
   <summary>Summary</summary>
   <p>
-    Click the summary to expand and reveal this content. Native details elements are styled to closely match the
-    appearance of the <code>&lt;wa-details&gt;</code> component, so they fit right in with the rest of your UI.
+    Click the summary to expand and reveal this content. Native details elements
+    are styled to closely match the appearance of the
+    <code>&lt;wa-details&gt;</code> component, so they fit right in with the
+    rest of your UI.
   </p>
 </details>
 ```
@@ -373,12 +385,12 @@ Create modal and non-modal dialog boxes with `<dialog>`. Dialogs closely match t
 <button>Open Dialog</button>
 
 <script>
-  const dialog = document.querySelector('#dialog-example');
-  const openButton = dialog.nextElementSibling;
-  const closeButton = dialog.querySelector('button');
+  const dialog = document.querySelector('#dialog-example')
+  const openButton = dialog.nextElementSibling
+  const closeButton = dialog.querySelector('button')
 
-  openButton.addEventListener('click', () => dialog.showModal());
-  closeButton.addEventListener('click', () => dialog.close());
+  openButton.addEventListener('click', () => dialog.showModal())
+  closeButton.addEventListener('click', () => dialog.close())
 </script>
 ```
 
@@ -490,14 +502,21 @@ Create a variety of form controls with `<input type="">`, `<select>`, and `<text
     <label><input type="checkbox" /> Unchecked</label>
   </div>
   <div class="wa-cluster">
-    <label><input type="radio" name="radio-group" value="1" checked /> First radio</label>
-    <label><input type="radio" name="radio-group" value="2" /> Second radio</label>
-    <label><input type="radio" name="radio-group" value="3" /> Third radio</label>
+    <label
+      ><input type="radio" name="radio-group" value="1" checked /> First
+      radio</label
+    >
+    <label
+      ><input type="radio" name="radio-group" value="2" /> Second radio</label
+    >
+    <label
+      ><input type="radio" name="radio-group" value="3" /> Third radio</label
+    >
   </div>
 </div>
 
 <script>
-  document.querySelector('.indeterminate').indeterminate = true;
+  document.querySelector('.indeterminate').indeterminate = true
 </script>
 ```
 
@@ -507,28 +526,53 @@ Add a `wa-size-*` class to any form control or its parent `<label>` to specify i
 <div class="wa-stack">
   <input type="text" placeholder="Extra small input" class="wa-size-xs" />
   <div class="wa-cluster">
-    <label class="wa-size-xs"><input type="checkbox" checked /> Extra small checkbox</label>
-    <label class="wa-size-xs"><input type="radio" name="radio-xs" value="1" checked /> Extra small radio</label>
+    <label class="wa-size-xs"
+      ><input type="checkbox" checked /> Extra small checkbox</label
+    >
+    <label class="wa-size-xs"
+      ><input type="radio" name="radio-xs" value="1" checked /> Extra small
+      radio</label
+    >
   </div>
   <input type="text" placeholder="Small input" class="wa-size-s" />
   <div class="wa-cluster">
-    <label class="wa-size-s"><input type="checkbox" checked /> Small checkbox</label>
-    <label class="wa-size-s"><input type="radio" name="radio-small" value="1" checked /> Small radio</label>
+    <label class="wa-size-s"
+      ><input type="checkbox" checked /> Small checkbox</label
+    >
+    <label class="wa-size-s"
+      ><input type="radio" name="radio-small" value="1" checked /> Small
+      radio</label
+    >
   </div>
   <input type="text" placeholder="Medium input" class="wa-size-m" />
   <div class="wa-cluster">
-    <label class="wa-size-m"><input type="checkbox" checked /> Medium checkbox</label>
-    <label class="wa-size-m"><input type="radio" name="radio-medium" value="1" checked /> Medium radio</label>
+    <label class="wa-size-m"
+      ><input type="checkbox" checked /> Medium checkbox</label
+    >
+    <label class="wa-size-m"
+      ><input type="radio" name="radio-medium" value="1" checked /> Medium
+      radio</label
+    >
   </div>
   <input type="text" placeholder="Large input" class="wa-size-l" />
   <div class="wa-cluster">
-    <label class="wa-size-l"><input type="checkbox" checked /> Large checkbox</label>
-    <label class="wa-size-l"><input type="radio" name="radio-large" value="1" checked /> Large radio</label>
+    <label class="wa-size-l"
+      ><input type="checkbox" checked /> Large checkbox</label
+    >
+    <label class="wa-size-l"
+      ><input type="radio" name="radio-large" value="1" checked /> Large
+      radio</label
+    >
   </div>
   <input type="text" placeholder="Extra large input" class="wa-size-xl" />
   <div class="wa-cluster">
-    <label class="wa-size-xl"><input type="checkbox" checked /> Extra large checkbox</label>
-    <label class="wa-size-xl"><input type="radio" name="radio-xl" value="1" checked /> Extra large radio</label>
+    <label class="wa-size-xl"
+      ><input type="checkbox" checked /> Extra large checkbox</label
+    >
+    <label class="wa-size-xl"
+      ><input type="radio" name="radio-xl" value="1" checked /> Extra large
+      radio</label
+    >
   </div>
 </div>
 ```
@@ -569,7 +613,9 @@ Group form controls together with `<fieldset>` and `<legend>`.
 ```html
 <fieldset class="wa-stack wa-align-items-start">
   <legend>Legend</legend>
-  <label><input type="radio" name="legends" value="1" checked /> King Arthur</label>
+  <label
+    ><input type="radio" name="legends" value="1" checked /> King Arthur</label
+  >
   <label><input type="radio" name="legends" value="2" /> Robin Hood</label>
   <label><input type="radio" name="legends" value="3" /> Odysseus</label>
 </fieldset>

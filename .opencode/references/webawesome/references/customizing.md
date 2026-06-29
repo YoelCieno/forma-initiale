@@ -37,7 +37,12 @@ Parts allow you to style _any_ standard CSS property, not just those exposed thr
 
 <style>
   .gradient-button::part(base) {
-    background: linear-gradient(217deg, var(--wa-color-indigo-50), var(--wa-color-purple-50), var(--wa-color-red-50));
+    background: linear-gradient(
+      217deg,
+      var(--wa-color-indigo-50),
+      var(--wa-color-purple-50),
+      var(--wa-color-red-50)
+    );
     border: solid 1px var(--wa-color-purple-50);
     transition:
       transform 100ms,
@@ -63,12 +68,9 @@ Parts allow you to style _any_ standard CSS property, not just those exposed thr
 
 CSS parts have a few important advantages:
 
--   Customizations can be made to components with explicit selectors, such as `::part(icon)`, rather than implicit selectors, such as `.button > div > span + .icon`, that are much more fragile.
-    
--   The internal structure of a component will likely change as it evolves. By exposing CSS parts through an API, the internals can be reworked without fear of breaking customizations as long as its parts remain intact.
-    
--   It encourages us to think more about how components are designed and how customizations should be allowed before users can take advantage of them. Once we opt a part into the component's API, it's guaranteed to be supported and can't be removed until a major version of the library is released.
-    
+- Customizations can be made to components with explicit selectors, such as `::part(icon)`, rather than implicit selectors, such as `.button > div > span + .icon`, that are much more fragile.
+- The internal structure of a component will likely change as it evolves. By exposing CSS parts through an API, the internals can be reworked without fear of breaking customizations as long as its parts remain intact.
+- It encourages us to think more about how components are designed and how customizations should be allowed before users can take advantage of them. Once we opt a part into the component's API, it's guaranteed to be supported and can't be removed until a major version of the library is released.
 
 Most (but not all) components expose parts. You can find them in each component's API documentation under the "CSS Parts" section.
 

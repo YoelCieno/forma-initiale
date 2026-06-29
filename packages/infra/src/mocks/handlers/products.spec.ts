@@ -1,5 +1,13 @@
 import { setupServer } from 'msw/node'
-import { afterAll, afterEach, beforeAll, describe, expect, it, beforeEach } from 'vitest'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  beforeEach,
+} from 'vitest'
 import type { Product } from '@repo/domain'
 import { handlers } from './index.js'
 import { resetProductCounter } from '../factories/product.js'
@@ -57,7 +65,12 @@ describe('products API handlers', () => {
   })
 
   it('POST /api/products creates and returns a new product', async () => {
-    const newProduct = { name: 'Test Product', previousPrice: 49.99, price: 0, rate: 4 }
+    const newProduct = {
+      name: 'Test Product',
+      previousPrice: 49.99,
+      price: 0,
+      rate: 4,
+    }
 
     const res = await fetch(`${BASE_URL}/api/products`, {
       method: 'POST',
@@ -139,7 +152,12 @@ describe('products API handlers', () => {
     })
 
     it('POST respects x-tenant-id header', async () => {
-      const newProduct = { name: 'FP Item', previousPrice: 0, price: 39.99, rate: 3 }
+      const newProduct = {
+        name: 'FP Item',
+        previousPrice: 0,
+        price: 39.99,
+        rate: 3,
+      }
 
       const res = await fetch(`${BASE_URL}/api/products`, {
         method: 'POST',

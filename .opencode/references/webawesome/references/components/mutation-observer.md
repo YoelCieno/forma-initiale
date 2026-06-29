@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/mutation-observer
 
-
 `<wa-mutation-observer>` Stable Since 2.0
 
 Mutation observers watch for changes to an element's DOM tree and emit an event when they occur. Provides a thin, declarative interface to the browser's MutationObserver API.
@@ -19,22 +18,22 @@ The mutation observer will report changes to the content it wraps through the `w
   👆 Click the button and watch the console
 
   <script>
-    const container = document.querySelector('.mutation-overview');
-    const mutationObserver = container.querySelector('wa-mutation-observer');
-    const button = container.querySelector('wa-button');
-    const variants = ['brand', 'success', 'neutral', 'warning', 'danger'];
-    let clicks = 0;
+    const container = document.querySelector('.mutation-overview')
+    const mutationObserver = container.querySelector('wa-mutation-observer')
+    const button = container.querySelector('wa-button')
+    const variants = ['brand', 'success', 'neutral', 'warning', 'danger']
+    let clicks = 0
 
     // Change the button's variant attribute
     button.addEventListener('click', () => {
-      clicks++;
-      button.setAttribute('variant', variants[clicks % variants.length]);
-    });
+      clicks++
+      button.setAttribute('variant', variants[clicks % variants.length])
+    })
 
     // Log mutations
-    mutationObserver.addEventListener('wa-mutation', event => {
-      console.log(event.detail);
-    });
+    mutationObserver.addEventListener('wa-mutation', (event) => {
+      console.log(event.detail)
+    })
   </script>
 
   <style>
@@ -64,33 +63,33 @@ Use the `child-list` attribute to watch for new child elements that are added or
   👆 Add and remove buttons and watch the console
 
   <script>
-    const container = document.querySelector('.mutation-child-list');
-    const mutationObserver = container.querySelector('wa-mutation-observer');
-    const buttons = container.querySelector('.buttons');
-    const button = container.querySelector('wa-button[variant="brand"]');
-    let i = 0;
+    const container = document.querySelector('.mutation-child-list')
+    const mutationObserver = container.querySelector('wa-mutation-observer')
+    const buttons = container.querySelector('.buttons')
+    const button = container.querySelector('wa-button[variant="brand"]')
+    let i = 0
 
     // Add a button
     button.addEventListener('click', () => {
-      const button = document.createElement('wa-button');
-      button.textContent = ++i;
-      buttons.append(button);
-    });
+      const button = document.createElement('wa-button')
+      button.textContent = ++i
+      buttons.append(button)
+    })
 
     // Remove a button
-    buttons.addEventListener('click', event => {
-      const target = event.target.closest('wa-button:not([variant="brand"])');
-      event.stopPropagation();
+    buttons.addEventListener('click', (event) => {
+      const target = event.target.closest('wa-button:not([variant="brand"])')
+      event.stopPropagation()
 
       if (target) {
-        target.remove();
+        target.remove()
       }
-    });
+    })
 
     // Log mutations
-    mutationObserver.addEventListener('wa-mutation', event => {
-      console.log(event.detail);
-    });
+    mutationObserver.addEventListener('wa-mutation', (event) => {
+      console.log(event.detail)
+    })
   </script>
 
   <style>
@@ -113,7 +112,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/mutation-observer/mutation-observer.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/mutation-observer/mutation-observer.js'
 ```
 
 \*\*npm\*\*
@@ -121,7 +120,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/mutation-observe
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/mutation-observer/mutation-observer.js';
+import '@awesome.me/webawesome/dist/components/mutation-observer/mutation-observer.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -129,7 +128,7 @@ import '@awesome.me/webawesome/dist/components/mutation-observer/mutation-observ
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/mutation-observer/mutation-observer.js';
+import './webawesome/dist/components/mutation-observer/mutation-observer.js'
 ```
 
 \*\*React\*\*
@@ -137,37 +136,37 @@ import './webawesome/dist/components/mutation-observer/mutation-observer.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaMutationObserver from '@awesome.me/webawesome/dist/react/mutation-observer/index.js';
+import WaMutationObserver from '@awesome.me/webawesome/dist/react/mutation-observer/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
+| Name      | Description                         |
+| --------- | ----------------------------------- |
 | (default) | The content to watch for mutations. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`attr\` attr | \`attr="class id title"\` Watches for changes to attributes. To watch only specific attributes, separate them by a space, e.g. . To watch all attributes, use \*. Type string | | |
-| \`attrOldValue\` attr-old-value | \`boolean\` Indicates whether or not the attribute's previous value should be recorded when monitoring changes. Type Default false | | |
-| \`charData\` char-data | \`boolean\` Watches for changes to the character data contained within the node. Type Default false | | |
-| \`charDataOldValue\` char-data-old-value | \`boolean\` Indicates whether or not the previous value of the node's text should be recorded. Type Default false | | |
-| \`childList\` child-list | \`boolean\` Watches for the addition or removal of new child nodes. Type Default false | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`disabled\` disabled | \`boolean\` Disables the observer. Type Default false | | |
+| Name                                     | Description                                                                                                                                                                   | Reflects                                                                                                                                       |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`attr\` attr                            | \`attr="class id title"\` Watches for changes to attributes. To watch only specific attributes, separate them by a space, e.g. . To watch all attributes, use \*. Type string |                                                                                                                                                |     |
+| \`attrOldValue\` attr-old-value          | \`boolean\` Indicates whether or not the attribute's previous value should be recorded when monitoring changes. Type Default false                                            |                                                                                                                                                |     |
+| \`charData\` char-data                   | \`boolean\` Watches for changes to the character data contained within the node. Type Default false                                                                           |                                                                                                                                                |     |
+| \`charDataOldValue\` char-data-old-value | \`boolean\` Indicates whether or not the previous value of the node's text should be recorded. Type Default false                                                             |                                                                                                                                                |     |
+| \`childList\` child-list                 | \`boolean\` Watches for the addition or removal of new child nodes. Type Default false                                                                                        |                                                                                                                                                |     |
+| \`css\`                                  | \`CSSResultGroup \\                                                                                                                                                           | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`disabled\` disabled                    | \`boolean\` Disables the observer. Type Default false                                                                                                                         |                                                                                                                                                |     |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
+| Name            | Description                     |
+| --------------- | ------------------------------- |
 | \`wa-mutation\` | Emitted when a mutation occurs. |
 
 **Need a hand?** Report a bug Ask for help

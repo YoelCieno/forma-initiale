@@ -1,6 +1,6 @@
 # Phase 6 — React Implementation
 
-**Goal:** Create a React app (`apps/web-react/`) that consumes `@repo/ui` fe-* web components and follows the same hexagonal architecture as white-label-vue and web-angular.
+**Goal:** Create a React app (`apps/web-react/`) that consumes `@repo/ui` fe-\* web components and follows the same hexagonal architecture as white-label-vue and web-angular.
 
 ## Background
 
@@ -52,7 +52,7 @@
 ## ✅ Manual Confirmation
 
 - [ ] React app builds and renders in browser
-- [ ] All fe-* components work in React (native CE support in JSX)
+- [ ] All fe-\* components work in React (native CE support in JSX)
 - [ ] Routing works (hash-based)
 - [ ] Presenters wired and producing correct view models
 - [ ] Tenant override mechanism functional

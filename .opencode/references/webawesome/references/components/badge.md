@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/badge
 
-
 `<wa-badge>` Stable Since 2.0
 
 Badges draw attention to adjacent content by displaying a status, count, or label. Use them to highlight notifications, categorize items, or flag new activity.
@@ -32,31 +31,41 @@ Use the `appearance` attribute to change the badge's visual appearance.
 ```html
 <div style="margin-block-end: 1rem;">
   <wa-badge appearance="accent" variant="neutral">Accent</wa-badge>
-  <wa-badge appearance="filled-outlined" variant="neutral">Filled-Outlined</wa-badge>
+  <wa-badge appearance="filled-outlined" variant="neutral"
+    >Filled-Outlined</wa-badge
+  >
   <wa-badge appearance="filled" variant="neutral">Filled</wa-badge>
   <wa-badge appearance="outlined" variant="neutral">Outlined</wa-badge>
 </div>
 <div style="margin-block-end: 1rem;">
   <wa-badge appearance="accent" variant="brand">Accent</wa-badge>
-  <wa-badge appearance="filled-outlined" variant="brand">Filled-Outlined</wa-badge>
+  <wa-badge appearance="filled-outlined" variant="brand"
+    >Filled-Outlined</wa-badge
+  >
   <wa-badge appearance="filled" variant="brand">Filled</wa-badge>
   <wa-badge appearance="outlined" variant="brand">Outlined</wa-badge>
 </div>
 <div style="margin-block-end: 1rem;">
   <wa-badge appearance="accent" variant="success">Accent</wa-badge>
-  <wa-badge appearance="filled-outlined" variant="success">Filled-Outlined</wa-badge>
+  <wa-badge appearance="filled-outlined" variant="success"
+    >Filled-Outlined</wa-badge
+  >
   <wa-badge appearance="filled" variant="success">Filled</wa-badge>
   <wa-badge appearance="outlined" variant="success">Outlined</wa-badge>
 </div>
 <div style="margin-block-end: 1rem;">
   <wa-badge appearance="accent" variant="warning">Accent</wa-badge>
-  <wa-badge appearance="filled-outlined" variant="warning">Filled-Outlined</wa-badge>
+  <wa-badge appearance="filled-outlined" variant="warning"
+    >Filled-Outlined</wa-badge
+  >
   <wa-badge appearance="filled" variant="warning">Filled</wa-badge>
   <wa-badge appearance="outlined" variant="warning">Outlined</wa-badge>
 </div>
 <div>
   <wa-badge appearance="accent" variant="danger">Accent</wa-badge>
-  <wa-badge appearance="filled-outlined" variant="danger">Filled-Outlined</wa-badge>
+  <wa-badge appearance="filled-outlined" variant="danger"
+    >Filled-Outlined</wa-badge
+  >
   <wa-badge appearance="filled" variant="danger">Filled</wa-badge>
   <wa-badge appearance="outlined" variant="danger">Outlined</wa-badge>
 </div>
@@ -67,11 +76,21 @@ Use the `appearance` attribute to change the badge's visual appearance.
 Badges are sized relative to the current font size. You can set `font-size` on any badge (or an ancestor element) to change it.
 
 ```html
-<wa-badge variant="brand" style="font-size: var(--wa-font-size-xs);">Brand</wa-badge>
-<wa-badge variant="brand" style="font-size: var(--wa-font-size-s);">Brand</wa-badge>
-<wa-badge variant="brand" style="font-size: var(--wa-font-size-m);">Brand</wa-badge>
-<wa-badge variant="brand" style="font-size: var(--wa-font-size-l);">Brand</wa-badge>
-<wa-badge variant="brand" style="font-size: var(--wa-font-size-xl);">Brand</wa-badge>
+<wa-badge variant="brand" style="font-size: var(--wa-font-size-xs);"
+  >Brand</wa-badge
+>
+<wa-badge variant="brand" style="font-size: var(--wa-font-size-s);"
+  >Brand</wa-badge
+>
+<wa-badge variant="brand" style="font-size: var(--wa-font-size-m);"
+  >Brand</wa-badge
+>
+<wa-badge variant="brand" style="font-size: var(--wa-font-size-l);"
+  >Brand</wa-badge
+>
+<wa-badge variant="brand" style="font-size: var(--wa-font-size-xl);"
+  >Brand</wa-badge
+>
 ```
 
 ### Pill Badges
@@ -168,7 +187,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/badge/badge.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/badge/badge.js'
 ```
 
 \*\*npm\*\*
@@ -176,7 +195,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/badge/badge.js';
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/badge/badge.js';
+import '@awesome.me/webawesome/dist/components/badge/badge.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -184,7 +203,7 @@ import '@awesome.me/webawesome/dist/components/badge/badge.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/badge/badge.js';
+import './webawesome/dist/components/badge/badge.js'
 ```
 
 \*\*React\*\*
@@ -192,46 +211,46 @@ import './webawesome/dist/components/badge/badge.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaBadge from '@awesome.me/webawesome/dist/react/badge/index.js';
+import WaBadge from '@awesome.me/webawesome/dist/react/badge/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The badge's content. |
-| \`end\` | \`\` An element, such as , placed before the label. |
+| Name      | Description                                         |
+| --------- | --------------------------------------------------- |
+| (default) | The badge's content.                                |
+| \`end\`   | \`\` An element, such as , placed before the label. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'accent' \\| 'filled' \\| 'outlined' \\| 'filled-outlined'\` The badge's visual appearance. Type Default 'accent' | | |
-| \`attention\` attention | \`'none' \\| 'pulse' \\| 'bounce'\` Adds an animation to draw attention to the badge. Type Default 'none' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[variantStyles, styles\] | | |
-| \`pill\` pill | \`boolean\` Draws a pill-style badge with rounded edges. Type Default false | | |
-| \`variant\` variant | \`brand\` The badge's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\| 'neutral' \\| 'success' \\| 'warning' \\| 'danger' Default 'brand' | | |
+| Name                      | Description                                                                                                    | Reflects                                                                                                                                                          |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------ | --- | --- |
+| \`appearance\` appearance | \`'accent' \\                                                                                                  | 'filled' \\                                                                                                                                                       | 'outlined' \\                                                                    | 'filled-outlined'\` The badge's visual appearance. Type Default 'accent' |                          |     |
+| \`attention\` attention   | \`'none' \\                                                                                                    | 'pulse' \\                                                                                                                                                        | 'bounce'\` Adds an animation to draw attention to the badge. Type Default 'none' |                                                                          |                          |
+| \`css\`                   | \`CSSResultGroup \\                                                                                            | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[variantStyles, styles\] |                                                                                  |                                                                          |
+| \`pill\` pill             | \`boolean\` Draws a pill-style badge with rounded edges. Type Default false                                    |                                                                                                                                                                   |                                                                                  |
+| \`variant\` variant       | \`brand\` The badge's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\ | 'neutral' \\                                                                                                                                                      | 'success' \\                                                                     | 'warning' \\                                                             | 'danger' Default 'brand' |     |     |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
+| Name              | Description                                                              |
+| ----------------- | ------------------------------------------------------------------------ |
 | \`--pulse-color\` | \`attention="pulse"\` The color of the badge's pulse effect when using . |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
-| \`end\` | \`end\` The container that wraps the slot. | \`::part(end)\` |
+| Name      | Description                                  | CSS selector      |
+| --------- | -------------------------------------------- | ----------------- |
+| \`base\`  | The component's base wrapper.                | \`::part(base)\`  |
+| \`end\`   | \`end\` The container that wraps the slot.   | \`::part(end)\`   |
 | \`start\` | \`start\` The container that wraps the slot. | \`::part(start)\` |
 
 **Need a hand?** Report a bug Ask for help

@@ -15,7 +15,10 @@ describe('getProducts', () => {
 
   it('returns products on successful fetch', async () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(mockOkResponse(apiResponse)),
+    )
 
     const result = await getProducts()
 
@@ -64,7 +67,10 @@ describe('getProducts', () => {
 
   it('returns empty result when API returns empty', async () => {
     const apiResponse = { data: [], total: 0 }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(mockOkResponse(apiResponse)),
+    )
 
     const result = await getProducts()
 
@@ -73,10 +79,13 @@ describe('getProducts', () => {
 
   it('sends x-tenant-id header from VITE_TENANT_ID env var', async () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(mockOkResponse(apiResponse)),
+    )
 
     // Simulate a non-default tenant ID
-    (import.meta.env as { VITE_TENANT_ID: string }).VITE_TENANT_ID = 'fp'
+    ;(import.meta.env as { VITE_TENANT_ID: string }).VITE_TENANT_ID = 'fp'
     const result = await getProducts()
 
     expect(result).toEqual(apiResponse)

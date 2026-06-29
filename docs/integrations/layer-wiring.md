@@ -6,13 +6,13 @@ How the 4 layers connect in forma-initiale, traced through the Product Listing f
 
 ## 1. Layer Overview
 
-| Layer | Package | Deps on | Responsibility |
-|---|---|---|---|
-| Domain | `@repo/domain` | None | Pure types, business models |
-| Presenters | `@repo/presenters` | `@repo/domain` | Domain → ViewModel transforms |
-| Infra | `@repo/infra` | `@repo/domain` | API adapters, mocks |
-| UI | `@repo/ui` | WA (Web Awesome) | fe-* WC wrappers, styles |
-| App | `apps/white-label-vue` | All above + Vue 3 | Composition, orchestration, rendering |
+| Layer      | Package                | Deps on           | Responsibility                        |
+| ---------- | ---------------------- | ----------------- | ------------------------------------- |
+| Domain     | `@repo/domain`         | None              | Pure types, business models           |
+| Presenters | `@repo/presenters`     | `@repo/domain`    | Domain → ViewModel transforms         |
+| Infra      | `@repo/infra`          | `@repo/domain`    | API adapters, mocks                   |
+| UI         | `@repo/ui`             | WA (Web Awesome)  | fe-\* WC wrappers, styles             |
+| App        | `apps/white-label-vue` | All above + Vue 3 | Composition, orchestration, rendering |
 
 Strict dep order — never circular:
 
@@ -47,6 +47,7 @@ export interface Product {
 ```
 
 Rules:
+
 - Only `type` and `interface` exports — no classes, no runtime logic
 - No `import` from outside `@repo/domain` (zero deps)
 - Used for type safety across all downstream layers
@@ -68,7 +69,7 @@ export { getProducts } from './adapters/get-products.adapter'
 **Adapter:** `packages/infra/src/adapters/get-products.adapter.ts`
 
 ```typescript
-import type { Product } from "@repo/domain";
+import type { Product } from '@repo/domain'
 
 export interface GetProductsResponse {
   data: Product[]
@@ -80,15 +81,16 @@ export async function getProducts(): Promise<GetProductsResponse> {
   const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
   const response = await fetch(`${baseUrl}/products`, {
     headers: { 'x-tenant-id': tenantId },
-  });
+  })
   if (!response.ok) {
-    throw new Error(`Failed to fetch products: HTTP ${response.status}`);
+    throw new Error(`Failed to fetch products: HTTP ${response.status}`)
   }
-  return response.json();
+  return response.json()
 }
 ```
 
 Key patterns:
+
 - Returns domain types (`Product[]` from `@repo/domain`)
 - Uses `import.meta.env.VITE_API_URL` for base URL (Vite env var)
 - Throws descriptive errors on HTTP failure
@@ -116,7 +118,7 @@ Mocks use `@repo/domain` types and factories from `mocks/factories/product.ts`.
 
 ---
 
-## 4. UI Layer (fe-* Components)
+## 4. UI Layer (fe-\* Components)
 
 **Package:** [`packages/ui/`](../../packages/ui/)
 
@@ -170,19 +172,19 @@ export const FeButton = define<FeButtonElement>({
 
 **Current components** (each in `packages/ui/components/fe-*.ts`):
 
-| Component | Wraps | Purpose |
-|---|---|---|
-| `fe-button` | `wa-button` | Button with variants, loading, icon |
-| `fe-card` | `wa-card` | Card layout container |
-| `fe-icon` | `wa-icon` | Icon renderer (brands/classic) |
-| `fe-rating` | `wa-rating` | Star rating display |
-| `fe-async-content` | (custom) | Loading/error/data slot switcher |
+| Component          | Wraps       | Purpose                             |
+| ------------------ | ----------- | ----------------------------------- |
+| `fe-button`        | `wa-button` | Button with variants, loading, icon |
+| `fe-card`          | `wa-card`   | Card layout container               |
+| `fe-icon`          | `wa-icon`   | Icon renderer (brands/classic)      |
+| `fe-rating`        | `wa-rating` | Star rating display                 |
+| `fe-async-content` | (custom)    | Loading/error/data slot switcher    |
 
 **Styles** split into 2 imports:
 
 ```typescript
-import '@repo/ui/styles'                    // base: native.css + utilities.css
-import '@repo/ui/styles/themes/default'      // theme: WA component styling
+import '@repo/ui/styles' // base: native.css + utilities.css
+import '@repo/ui/styles/themes/default' // theme: WA component styling
 ```
 
 Package exports from `packages/ui/package.json`:
@@ -214,6 +216,7 @@ Vue 3 with composition API, `unplugin-auto-import` (`vue`, `vue-router` auto-imp
 The app uses a factory pattern for layer reuse. The white-label-vue package exports two factories consumed by both itself and tenant apps.
 
 **Package exports** (from `apps/white-label-vue/package.json`):
+
 ```json
 {
   "exports": {
@@ -225,6 +228,7 @@ The app uses a factory pattern for layer reuse. The white-label-vue package expo
 ```
 
 **App factory** (`apps/white-label-vue/src/app.ts`):
+
 ```typescript
 export interface WhiteLabelAppOptions {
   /** Route definitions (tenant + white-label merged) */
@@ -240,7 +244,9 @@ export interface WhiteLabelApp {
   router: ReturnType<typeof createRouter>
 }
 
-export async function createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<WhiteLabelApp> {
+export async function createWhiteLabelApp(
+  opts: WhiteLabelAppOptions,
+): Promise<WhiteLabelApp> {
   if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS === 'true') {
     const { worker } = await import('@repo/infra/mocks/browser')
     await worker.start({ onUnhandledRequest: 'bypass' })
@@ -250,7 +256,10 @@ export async function createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<W
     ? (await opts.appShell()).default
     : (await import('./App.vue')).default
 
-  const router = createRouter({ history: createWebHashHistory(), routes: opts.routes })
+  const router = createRouter({
+    history: createWebHashHistory(),
+    routes: opts.routes,
+  })
   const app = createApp(AppShell)
   app.use(router)
 
@@ -263,6 +272,7 @@ export async function createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<W
 ```
 
 **Entry** (`apps/white-label-vue/src/main.ts`):
+
 ```typescript
 import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
@@ -271,18 +281,26 @@ import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
 import { frameworkMap } from '../metadata'
 
-createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) => app.mount('#app'))
+createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) =>
+  app.mount('#app'),
+)
 ```
 
 **Routes** (`apps/white-label-vue/src/routes.ts`):
+
 ```typescript
 export const routes: RouteRecordRaw[] = [
   { path: '/', name: 'products', component: ProductsPage },
-  { path: '/components', name: 'components', component: () => import('./pages/ComponentsPage.vue') },
+  {
+    path: '/components',
+    name: 'components',
+    component: () => import('./pages/ComponentsPage.vue'),
+  },
 ]
 ```
 
 **Shared Vite config** (`apps/white-label-vue/vite.config.base.ts`):
+
 ```typescript
 export interface WhiteLabelViteOptions {
   /** Tenant component directories — scanned BEFORE white-label defaults, so they win on name clash */
@@ -291,18 +309,37 @@ export interface WhiteLabelViteOptions {
   autoImportDirs?: string[]
 }
 
-export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): UserConfig {
+export function defineWhiteLabelViteConfig(
+  opts: WhiteLabelViteOptions = {},
+): UserConfig {
   return defineConfig({
     plugins: [
-      vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith('fe-') } } }),
-      AutoImport({ imports: ['vue', 'vue-router'], dirs: [...(opts.autoImportDirs ?? []), resolve(layerSrc, 'composables')] }),
-      Components({ dirs: [...(opts.componentDirs ?? []), resolve(layerSrc, 'components'), resolve(layerSrc, 'pages')] }),
+      vue({
+        template: {
+          compilerOptions: { isCustomElement: (tag) => tag.startsWith('fe-') },
+        },
+      }),
+      AutoImport({
+        imports: ['vue', 'vue-router'],
+        dirs: [
+          ...(opts.autoImportDirs ?? []),
+          resolve(layerSrc, 'composables'),
+        ],
+      }),
+      Components({
+        dirs: [
+          ...(opts.componentDirs ?? []),
+          resolve(layerSrc, 'components'),
+          resolve(layerSrc, 'pages'),
+        ],
+      }),
     ],
   })
 }
 ```
 
 **Vite config entry** (`apps/white-label-vue/vite.config.ts`):
+
 ```typescript
 import { defineWhiteLabelViteConfig } from './vite.config.base'
 export default defineWhiteLabelViteConfig()
@@ -313,6 +350,7 @@ export default defineWhiteLabelViteConfig()
 Tenant apps consume the white-label layer as a workspace dependency, importing both factories:
 
 **Tenant Vite config** (`apps/fake-plants-vue/vite.config.ts`):
+
 ```typescript
 import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'
 export default defineWhiteLabelViteConfig({
@@ -321,6 +359,7 @@ export default defineWhiteLabelViteConfig({
 ```
 
 **Tenant entry** (`apps/fake-plants-vue/src/main.ts`):
+
 ```typescript
 import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
@@ -331,8 +370,16 @@ import './styles'
 
 createWhiteLabelApp({
   routes: [
-    { path: '/', name: 'products', component: () => import('white-label-vue/src/pages/ProductsPage.vue') },
-    { path: '/about', name: 'about', component: () => import('./pages/AboutPage.vue') },
+    {
+      path: '/',
+      name: 'products',
+      component: () => import('white-label-vue/src/pages/ProductsPage.vue'),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('./pages/AboutPage.vue'),
+    },
   ],
   appShell: () => import('./App.vue'),
   metaMap: plantsMap,
@@ -340,6 +387,7 @@ createWhiteLabelApp({
 ```
 
 Key points:
+
 - Tenant provides its own `routes` array (can reuse white-label pages via `white-label-vue/src/*` imports, or override with local components)
 - `componentDirs` in Vite config: tenant dirs listed BEFORE white-label dirs → tenant components win on name clash
 - Optional `appShell` in `createWhiteLabelApp`: if omitted, white-label `App.vue` (nav + RouterView) is used
@@ -374,9 +422,17 @@ export interface ProductMeta {
   imageFamily: string
 }
 
-export function toProductView(product: Product, metaMap?: Record<string, ProductMeta>): ProductView {
+export function toProductView(
+  product: Product,
+  metaMap?: Record<string, ProductMeta>,
+): ProductView {
   const override = metaMap?.[product.name]
-  const fallback = { title: product.name, description: '', image: 'code', imageFamily: 'classic' }
+  const fallback = {
+    title: product.name,
+    description: '',
+    image: 'code',
+    imageFamily: 'classic',
+  }
   const meta = override ?? fallback
 
   return {
@@ -385,14 +441,19 @@ export function toProductView(product: Product, metaMap?: Record<string, Product
     description: meta.description,
     image: meta.image,
     imageFamily: meta.imageFamily,
-    previousPrice: product.previousPrice ? `$${product.previousPrice}` : undefined,
+    previousPrice: product.previousPrice
+      ? `$${product.previousPrice}`
+      : undefined,
     price: product.price ? `$${product.price}` : 'Free',
     rate: product.rate,
   }
 }
 
-export function toProductViewList(products: Product[], metaMap?: Record<string, ProductMeta>): ProductView[] {
-  return products.map(p => toProductView(p, metaMap))
+export function toProductViewList(
+  products: Product[],
+  metaMap?: Record<string, ProductMeta>,
+): ProductView[] {
+  return products.map((p) => toProductView(p, metaMap))
 }
 ```
 
@@ -405,60 +466,63 @@ Composables orchestrate data fetching → presenting → state management. Now i
 **File:** `apps/white-label-vue/src/composables/useProducts.ts`
 
 ```typescript
-import { getProducts } from "@repo/infra";
-import { toProductViewList } from "@repo/presenters";
-import type { ProductView, ProductMeta } from "@repo/presenters";
-import { useAsyncState } from "@vueuse/core";
-import { META_MAP_INJECTION_KEY } from "../app";
+import { getProducts } from '@repo/infra'
+import { toProductViewList } from '@repo/presenters'
+import type { ProductView, ProductMeta } from '@repo/presenters'
+import { useAsyncState } from '@vueuse/core'
+import { META_MAP_INJECTION_KEY } from '../app'
 
 export function useProducts() {
-  const formattedError = ref<string | undefined>();
-  const metaMap = inject<Record<string, ProductMeta> | undefined>(META_MAP_INJECTION_KEY, undefined);
+  const formattedError = ref<string | undefined>()
+  const metaMap = inject<Record<string, ProductMeta> | undefined>(
+    META_MAP_INJECTION_KEY,
+    undefined,
+  )
 
   const { state, isLoading, execute } = useAsyncState<ProductView[]>(
     async () => {
-      const { data } = await getProducts();
-      return toProductViewList(data, metaMap);
+      const { data } = await getProducts()
+      return toProductViewList(data, metaMap)
     },
     [],
     {
       immediate: true,
       onError(e: unknown) {
-        formattedError.value = e instanceof Error
-          ? e.message
-          : "Failed to load products";
+        formattedError.value =
+          e instanceof Error ? e.message : 'Failed to load products'
       },
-    }
-  );
+    },
+  )
 
   return {
     products: state,
     loading: isLoading,
     error: formattedError,
     fetch: () => execute(),
-  };
+  }
 }
 ```
 
 Pattern:
+
 1. `useAsyncState` from `@vueuse/core` manages async lifecycle
 2. Inside the async fn: call infra adapter → pipe through presenter (`@repo/presenters`)
 3. Return raw refs: `state` (data), `isLoading` (boolean), `error` (string ref from `onError`)
 
 ### Page Layer
 
-Pages compose fe-* components with data from composables.
+Pages compose fe-\* components with data from composables.
 
 **File:** `apps/white-label-vue/src/pages/ProductsPage.vue`
 
 ```vue
 <script setup lang="ts">
-import "@repo/ui/fe-icon";
-import "@repo/ui/fe-rating";
-import "@repo/ui/fe-card";
-import "@repo/ui/fe-async-content";
+import '@repo/ui/fe-icon'
+import '@repo/ui/fe-rating'
+import '@repo/ui/fe-card'
+import '@repo/ui/fe-async-content'
 
-const { products, loading, error } = useProducts();
+const { products, loading, error } = useProducts()
 </script>
 
 <template>
@@ -471,7 +535,11 @@ const { products, loading, error } = useProducts();
 
       <div class="products-page__grid">
         <fe-card v-for="product in products" :key="product.name">
-          <fe-icon slot="media" :name="product.image" :family="product.imageFamily" />
+          <fe-icon
+            slot="media"
+            :name="product.image"
+            :family="product.imageFamily"
+          />
           <h2 slot="header">{{ product.title }}</h2>
           <p>{{ product.description }}</p>
           <div slot="footer">
@@ -486,6 +554,7 @@ const { products, loading, error } = useProducts();
 ```
 
 Key rules:
+
 - `fe-*` components imported for side-effect (registers custom elements)
 - No direct `wa-*` usage in templates — all WA access goes through `fe-*` wrappers
 - Composable return values destructured directly
@@ -583,36 +652,37 @@ Browser paints shadow-DOM-styled fe-* components wrapping wa-* elements
 
 **Layer responsibilities in this trace:**
 
-| Step | Layer | File | What happens |
-|---|---|---|---|
-| 1 | App (Page) | `ProductsPage.vue` (white-label-vue) | Calls composable, binds refs to template |
-| 2 | App (Composable) | `useProducts.ts` (white-label-vue) | Orchestrates async data flow |
-| 3 | Infra | `get-products.adapter.ts` (infra) | HTTP fetch, error handling |
-| 4 | Domain | `Product.ts` (domain) | Type contract for response shape |
-| 5 | Presenters | `product.presenter.ts` (presenters) | Transforms domain → view model |
-| 6 | App (Composable) | `useProducts.ts` (white-label-vue) | Stores result in reactive state |
-| 7 | App (Page) | `ProductsPage.vue` (white-label-vue) | Renders fe-* components with view data |
-| 8 | UI | `fe-*.ts` (ui) | Wraps WA elements, shadow DOM render |
+| Step | Layer            | File                                 | What happens                             |
+| ---- | ---------------- | ------------------------------------ | ---------------------------------------- |
+| 1    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Calls composable, binds refs to template |
+| 2    | App (Composable) | `useProducts.ts` (white-label-vue)   | Orchestrates async data flow             |
+| 3    | Infra            | `get-products.adapter.ts` (infra)    | HTTP fetch, error handling               |
+| 4    | Domain           | `Product.ts` (domain)                | Type contract for response shape         |
+| 5    | Presenters       | `product.presenter.ts` (presenters)  | Transforms domain → view model           |
+| 6    | App (Composable) | `useProducts.ts` (white-label-vue)   | Stores result in reactive state          |
+| 7    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Renders fe-\* components with view data  |
+| 8    | UI               | `fe-*.ts` (ui)                       | Wraps WA elements, shadow DOM render     |
 
 ---
 
 ## 7. Import Convention Reference
 
-| Source | Target | How | Example |
-|---|---|---|---|---|
-| `@repo/presenters` | `@repo/domain` | Import types directly | `import type { Product } from "@repo/domain"` |
-| `@repo/infra` | `@repo/domain` | Import types directly | `import type { Product } from "@repo/domain"` |
-| `@repo/ui` | WA | npm dep (not in monorepo) | `import '@awesome.me/webawesome/dist/components/button/button.js'` |
-| `apps/white-label-vue` | `@repo/domain` | Import types for type safety | `import type { Product } from '@repo/domain'` |
-| `apps/white-label-vue` | `@repo/infra` | Import data adapters | `import { getProducts } from "@repo/infra"` |
-| `apps/white-label-vue` | `@repo/presenters` | Import view-model transformers | `import { toProductViewList } from "@repo/presenters"` |
-| `apps/white-label-vue` | `@repo/ui` | Side-effect import (CE registration) | `import "@repo/ui/fe-card"` |
-| `apps/white-label-vue` | `@vueuse/core` | Import composables | `import { useAsyncState } from "@vueuse/core"` |
-| `apps/*` (tenant) | `white-label-vue/app` | Import app factory | `import { createWhiteLabelApp } from 'white-label-vue/app'` |
-| `apps/*` (tenant) | `white-label-vue/vite.config.base` | Import shared Vite config | `import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'` |
-| `apps/*` (tenant) | `white-label-vue/src/*` | Import white-label pages/components | `() => import('white-label-vue/src/pages/ProductsPage.vue')` |
+| Source                 | Target                             | How                                  | Example                                                                         |
+| ---------------------- | ---------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------- |
+| `@repo/presenters`     | `@repo/domain`                     | Import types directly                | `import type { Product } from "@repo/domain"`                                   |
+| `@repo/infra`          | `@repo/domain`                     | Import types directly                | `import type { Product } from "@repo/domain"`                                   |
+| `@repo/ui`             | WA                                 | npm dep (not in monorepo)            | `import '@awesome.me/webawesome/dist/components/button/button.js'`              |
+| `apps/white-label-vue` | `@repo/domain`                     | Import types for type safety         | `import type { Product } from '@repo/domain'`                                   |
+| `apps/white-label-vue` | `@repo/infra`                      | Import data adapters                 | `import { getProducts } from "@repo/infra"`                                     |
+| `apps/white-label-vue` | `@repo/presenters`                 | Import view-model transformers       | `import { toProductViewList } from "@repo/presenters"`                          |
+| `apps/white-label-vue` | `@repo/ui`                         | Side-effect import (CE registration) | `import "@repo/ui/fe-card"`                                                     |
+| `apps/white-label-vue` | `@vueuse/core`                     | Import composables                   | `import { useAsyncState } from "@vueuse/core"`                                  |
+| `apps/*` (tenant)      | `white-label-vue/app`              | Import app factory                   | `import { createWhiteLabelApp } from 'white-label-vue/app'`                     |
+| `apps/*` (tenant)      | `white-label-vue/vite.config.base` | Import shared Vite config            | `import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'` |
+| `apps/*` (tenant)      | `white-label-vue/src/*`            | Import white-label pages/components  | `() => import('white-label-vue/src/pages/ProductsPage.vue')`                    |
 
 **Never:**
+
 - Import `@vueuse/core` or Vue in `packages/ui/` or `packages/infra/` or `packages/domain/`
 - Import `wa-*` directly in app templates — always go through `fe-*`
 - Import `@repo/ui` from `@repo/infra` or `@repo/domain`

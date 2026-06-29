@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 // jsdom doesn't support ElementInternals.setFormValue which wa-rating uses
-if (typeof ElementInternals !== 'undefined' && !ElementInternals.prototype.setFormValue) {
+if (
+  typeof ElementInternals !== 'undefined' &&
+  !ElementInternals.prototype.setFormValue
+) {
   ElementInternals.prototype.setFormValue = vi.fn()
 }
 

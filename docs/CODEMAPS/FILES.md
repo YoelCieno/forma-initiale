@@ -276,13 +276,13 @@ docs/
 
 ## Config Files Summary
 
-| File | Purpose |
-|------|---------|
-| `turbo.json` | Pipeline: build (^build), test, lint, dev |
-| `package.json` | Root workspace, scripts, hoisted devDeps |
-| `bun.lock` | Deterministic dependency resolution |
-| `.mise.toml` | Tool versioning (bun) |
-| `.eslintrc.js` | Root ESLint (extends @repo/eslint-config) |
-| `renovate.json` | Automated dep update schedule |
-| `.gitignore` | dist, .turbo, node_modules, .env |
-| `.npmrc` | npm settings |
+| File            | Purpose                                   |
+| --------------- | ----------------------------------------- |
+| `turbo.json`    | Pipeline: build (^build), test, lint, dev |
+| `package.json`  | Root workspace, scripts, hoisted devDeps  |
+| `bun.lock`      | Deterministic dependency resolution       |
+| `.mise.toml`    | Tool versioning (bun)                     |
+| `.eslintrc.js`  | Root ESLint (extends @repo/eslint-config) |
+| `renovate.json` | Automated dep update schedule             |
+| `.gitignore`    | dist, .turbo, node_modules, .env          |
+| `.npmrc`        | npm settings                              |

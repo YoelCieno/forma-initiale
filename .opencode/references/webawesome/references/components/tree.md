@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/tree
 
-
 `<wa-tree>` Stable Since 2.0
 
 Trees allow you to display a hierarchical list of selectable tree items. Items with children can be expanded and collapsed as desired by the user.
@@ -51,9 +50,9 @@ Trees allow you to display a hierarchical list of selectable tree items. Items w
 
 The `selection` attribute lets you change the selection behavior of the tree.
 
--   Use `single` to allow the selection of a single item (default).
--   Use `multiple` to allow the selection of multiple items.
--   Use `leaf` to only allow leaf nodes to be selected.
+- Use `single` to allow the selection of a single item (default).
+- Use `multiple` to allow the selection of multiple items.
+- Use `leaf` to only allow leaf nodes to be selected.
 
 ```html
 <wa-select id="selection-mode" value="single" label="Selection">
@@ -89,13 +88,15 @@ The `selection` attribute lets you change the selection behavior of the tree.
 </wa-tree>
 
 <script>
-  const selectionMode = document.querySelector('#selection-mode');
-  const tree = document.querySelector('.tree-selectable');
+  const selectionMode = document.querySelector('#selection-mode')
+  const tree = document.querySelector('.tree-selectable')
 
   selectionMode.addEventListener('change', () => {
-    tree.querySelectorAll('wa-tree-item').forEach(item => (item.selected = false));
-    tree.selection = selectionMode.value;
-  });
+    tree
+      .querySelectorAll('wa-tree-item')
+      .forEach((item) => (item.selected = false))
+    tree.selection = selectionMode.value
+  })
 </script>
 ```
 
@@ -201,23 +202,28 @@ If you want to disable this behavior after the first load, simply remove the `la
 </wa-tree>
 
 <script type="module">
-  const lazyItem = document.querySelector('wa-tree-item[lazy]');
+  const lazyItem = document.querySelector('wa-tree-item[lazy]')
 
   lazyItem.addEventListener('wa-lazy-load', () => {
     // Simulate fetching data from a server
     setTimeout(() => {
-      const repos = ['design-system', 'marketing-site', 'mobile-app', 'api-gateway'];
+      const repos = [
+        'design-system',
+        'marketing-site',
+        'mobile-app',
+        'api-gateway',
+      ]
 
       for (const repo of repos) {
-        const treeItem = document.createElement('wa-tree-item');
-        treeItem.innerText = repo;
-        lazyItem.append(treeItem);
+        const treeItem = document.createElement('wa-tree-item')
+        treeItem.innerText = repo
+        lazyItem.append(treeItem)
       }
 
       // Disable lazy mode once the content has been loaded
-      lazyItem.lazy = false;
-    }, 1000);
-  });
+      lazyItem.lazy = false
+    }, 1000)
+  })
 </script>
 ```
 
@@ -349,7 +355,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tree/tree.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tree/tree.js'
 ```
 
 \*\*npm\*\*
@@ -357,7 +363,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tree/tree.js';
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/tree/tree.js';
+import '@awesome.me/webawesome/dist/components/tree/tree.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -365,7 +371,7 @@ import '@awesome.me/webawesome/dist/components/tree/tree.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/tree/tree.js';
+import './webawesome/dist/components/tree/tree.js'
 ```
 
 \*\*React\*\*
@@ -373,62 +379,62 @@ import './webawesome/dist/components/tree/tree.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaTree from '@awesome.me/webawesome/dist/react/tree/index.js';
+import WaTree from '@awesome.me/webawesome/dist/react/tree/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The default slot. |
+| Name              | Description                                                             |
+| ----------------- | ----------------------------------------------------------------------- |
+| (default)         | The default slot.                                                       |
 | \`collapse-icon\` | \`\` The icon to show when the tree item is expanded. Works best with . |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`selection\` selection | \`'single' \\| 'multiple' \\| 'leaf'\` The selection behavior of the tree. Single selection allows only one node to be selected at a time. Multiple displays checkboxes and allows more than one node to be selected. Leaf allows only leaf nodes to be selected. Type Default 'single' | | |
+| Name                    | Description         | Reflects                                                                                                                                       |
+| ----------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                 | \`CSSResultGroup \\ | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |                                                                                                                                                                                                                                                           |     |
+| \`selection\` selection | \`'single' \\       | 'multiple' \\                                                                                                                                  | 'leaf'\` The selection behavior of the tree. Single selection allows only one node to be selected at a time. Multiple displays checkboxes and allows more than one node to be selected. Leaf allows only leaf nodes to be selected. Type Default 'single' |     |     |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
+| Name                    | Description                                         |
+| ----------------------- | --------------------------------------------------- |
 | \`wa-selection-change\` | Emitted when a tree item is selected or deselected. |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--indent-guide-color\` | \`var(--wa-color-surface-border)\` The color of the indentation line. Default |
+| Name                      | Description                                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| \`--indent-guide-color\`  | \`var(--wa-color-surface-border)\` The color of the indentation line. Default                                                 |
 | \`--indent-guide-offset\` | \`0\` The amount of vertical spacing to leave between the top and bottom of the indentation line's starting position. Default |
-| \`--indent-guide-style\` | \`solid\` The style of the indentation line, e.g. , dotted, dashed. Default solid |
-| \`--indent-guide-width\` | \`0\` The width of the indentation line. Default |
-| \`--indent-size\` | \`var(--wa-space-m)\` The size of the indentation for nested items. Default |
+| \`--indent-guide-style\`  | \`solid\` The style of the indentation line, e.g. , dotted, dashed. Default solid                                             |
+| \`--indent-guide-width\`  | \`0\` The width of the indentation line. Default                                                                              |
+| \`--indent-size\`         | \`var(--wa-space-m)\` The size of the indentation for nested items. Default                                                   |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name     | Description                   | CSS selector     |
+| -------- | ----------------------------- | ---------------- |
 | \`base\` | The component's base wrapper. | \`::part(base)\` |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-checkbox>`](https://webawesome.com/docs/components/checkbox)
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
--   [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
--   [`<wa-tree-item>`](https://webawesome.com/docs/components/tree-item)
+- [`<wa-checkbox>`](https://webawesome.com/docs/components/checkbox)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
+- [`<wa-tree-item>`](https://webawesome.com/docs/components/tree-item)
 
 **Need a hand?** Report a bug Ask for help

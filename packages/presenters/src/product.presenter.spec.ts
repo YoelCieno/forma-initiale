@@ -49,16 +49,31 @@ describe('toProductView', () => {
     ['react', 'react'],
     ['svelte', 'svelte'],
     ['solid', 'solid'],
-  ])('uses product name %s as fallback title without metaMap', (name, expected) => {
-    const result = toProductView({ id: '1', name, previousPrice: 100, price: 80, rate: 4 })
+  ])(
+    'uses product name %s as fallback title without metaMap',
+    (name, expected) => {
+      const result = toProductView({
+        id: '1',
+        name,
+        previousPrice: 100,
+        price: 80,
+        rate: 4,
+      })
 
-    expect(result.title).toBe(expected)
-    expect(result.description).toBe('')
-    expect(result.image).toBe('code')
-  })
+      expect(result.title).toBe(expected)
+      expect(result.description).toBe('')
+      expect(result.image).toBe('code')
+    },
+  )
 
   it('handles kebab-case product names', () => {
-    const result = toProductView({ id: '9', name: 'crimson-veil', previousPrice: 15, price: 12, rate: 3.5 })
+    const result = toProductView({
+      id: '9',
+      name: 'crimson-veil',
+      previousPrice: 15,
+      price: 12,
+      rate: 3.5,
+    })
 
     expect(result.title).toBe('crimson-veil')
     expect(result.image).toBe('code')
@@ -140,10 +155,14 @@ describe('toProductViewList', () => {
     })
   })
 
-
   it('passes metaMap through to each product via toProductViewList', () => {
     const metaMap = {
-      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'classic' },
+      vue: {
+        title: 'Custom Vue',
+        description: 'Custom desc',
+        image: 'plant',
+        imageFamily: 'classic',
+      },
     }
     const products = [vueProduct, angularProduct]
     const results = toProductViewList(products, metaMap)
@@ -159,7 +178,12 @@ describe('toProductViewList', () => {
 describe('toProductView with metaMap', () => {
   it('uses metaMap to override default fallback values', () => {
     const metaMap = {
-      vue: { title: 'Custom Vue', description: 'Custom desc', image: 'plant', imageFamily: 'awesome' },
+      vue: {
+        title: 'Custom Vue',
+        description: 'Custom desc',
+        image: 'plant',
+        imageFamily: 'awesome',
+      },
     }
     const result = toProductView(vueProduct, metaMap)
 
@@ -175,7 +199,12 @@ describe('toProductView with metaMap', () => {
 
   it('falls back to generic defaults when name not in metaMap', () => {
     const metaMap = {
-      'non-existent': { title: 'Nope', description: 'Nope', image: 'nope', imageFamily: 'nope' },
+      'non-existent': {
+        title: 'Nope',
+        description: 'Nope',
+        image: 'nope',
+        imageFamily: 'nope',
+      },
     }
     const result = toProductView(vueProduct, metaMap)
 

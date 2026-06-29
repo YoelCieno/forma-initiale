@@ -25,12 +25,20 @@ export const FeCard = define<FeCardElement>({
           appearance="${host.appearance}"
           orientation="${host.orientation}"
           inert="${host.disabled}"
-          style="${host.disabled ? { opacity: 0.5, pointerEvents: 'none' } : {}}"
+          style="${host.disabled
+            ? { opacity: 0.5, pointerEvents: 'none' }
+            : {}}"
         >
-          ${hasMedia ? html`<slot slot="media" name="media"></slot>` : undefined}
-          ${hasHeader ? html`<slot slot="header" name="header"></slot>` : undefined}
+          ${hasMedia
+            ? html`<slot slot="media" name="media"></slot>`
+            : undefined}
+          ${hasHeader
+            ? html`<slot slot="header" name="header"></slot>`
+            : undefined}
           <slot></slot>
-          ${hasFooter ? html`<slot slot="footer" name="footer"></slot>` : undefined}
+          ${hasFooter
+            ? html`<slot slot="footer" name="footer"></slot>`
+            : undefined}
           <slot slot="actions" name="actions"></slot>
         </wa-card>
       `

@@ -14,12 +14,15 @@ Integrate Web Awesome (WC library, works Vue 3 + Angular + React) as base UI lay
 ## Research Required
 
 ### WC framework for custom wrappers
+
 Evaluate Lit, Stencil, Atomico, Hybrids, Haunted, Elemento, Uhtml + raw CE → **hybridJS selected** (v9.1.22, 0 deps, plain objects + pure fns, auto attr reflection).
 
 ### Web Awesome evaluation
+
 Chosen as best pragmatic option — mature, well-typed, framework-agnostic WC library.
 
 ### API mocking strategy
+
 MSW selected — single tool for dev + test, realistic `fetch` interception, type-safe handlers. Handlers in `packages/infra/mocks/`.
 
 See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision.md) for full evaluation.
@@ -50,22 +53,22 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 
 ## Decisions
 
-| # | Decision | Choice | Rationale |
-|---|----------|--------|-----------|
-| 1 | WC library for custom wrappers | hybridJS v9.1.22 | Plain objects + pure fns, 0 deps, 3.2k ⭐, auto attr reflection, framework-agnostic |
-| 2 | Framework-specific wrappers in apps | Do not create | Defeats single-source-of-truth purpose of packages/ui |
-| 3 | `v-model` on WA form controls in Vue | Use `:value + @input` pattern | WC `v-model` support inconsistent across components |
-| 4 | Future custom components | Build with hybridJS | Already in use, fits project philosophy better than Lit |
-| 5 | Component registration | Side-effect import per wrapper | Tree-shakable, avoids global bundle |
-| 6 | Token directory location | `packages/ui/styles/tokens/` | Co-located with styles barrel, separate from components |
-| 7 | Testing thin wrappers | No unit tests | Pure type re-exports, no logic to cover |
-| 8 | API mocking | MSW | Single tool for dev + test, realistic fetch interception |
-| 9 | Mock handler location | `packages/infra/mocks/` | Co-located with infra adapters |
-| 10 | Data generation | Factories + fixtures | Sequential counter + sensible defaults, test isolation |
-| 11 | fe-card implementation | hybridJS `define()` | WaCard shadow DOM is isolated; hybridJS rewrite using `define()` + `html` + `shadow: true` with `<wa-card>` inside template |
-| 12 | fe-rating implementation | hybridJS `define()` | wa-rating not registered by default, hybridJS is the standard approach |
-| 13 | WA attr reflection in tests | Use `Reflect.get()` | WA components don't reflect boolean/string props to attrs |
-| 14 | fe-async-content (new) | hybridJS `define()` | Pure view-state component: loading/error/default. No data-fetching logic, no framework coupling. |
+| #   | Decision                             | Choice                         | Rationale                                                                                                                   |
+| --- | ------------------------------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| 1   | WC library for custom wrappers       | hybridJS v9.1.22               | Plain objects + pure fns, 0 deps, 3.2k ⭐, auto attr reflection, framework-agnostic                                         |
+| 2   | Framework-specific wrappers in apps  | Do not create                  | Defeats single-source-of-truth purpose of packages/ui                                                                       |
+| 3   | `v-model` on WA form controls in Vue | Use `:value + @input` pattern  | WC `v-model` support inconsistent across components                                                                         |
+| 4   | Future custom components             | Build with hybridJS            | Already in use, fits project philosophy better than Lit                                                                     |
+| 5   | Component registration               | Side-effect import per wrapper | Tree-shakable, avoids global bundle                                                                                         |
+| 6   | Token directory location             | `packages/ui/styles/tokens/`   | Co-located with styles barrel, separate from components                                                                     |
+| 7   | Testing thin wrappers                | No unit tests                  | Pure type re-exports, no logic to cover                                                                                     |
+| 8   | API mocking                          | MSW                            | Single tool for dev + test, realistic fetch interception                                                                    |
+| 9   | Mock handler location                | `packages/infra/mocks/`        | Co-located with infra adapters                                                                                              |
+| 10  | Data generation                      | Factories + fixtures           | Sequential counter + sensible defaults, test isolation                                                                      |
+| 11  | fe-card implementation               | hybridJS `define()`            | WaCard shadow DOM is isolated; hybridJS rewrite using `define()` + `html` + `shadow: true` with `<wa-card>` inside template |
+| 12  | fe-rating implementation             | hybridJS `define()`            | wa-rating not registered by default, hybridJS is the standard approach                                                      |
+| 13  | WA attr reflection in tests          | Use `Reflect.get()`            | WA components don't reflect boolean/string props to attrs                                                                   |
+| 14  | fe-async-content (new)               | hybridJS `define()`            | Pure view-state component: loading/error/default. No data-fetching logic, no framework coupling.                            |
 
 ## Notes
 
@@ -75,12 +78,12 @@ See [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision
 
 ## Reference Docs
 
-| Document | Content |
-|----------|---------|
-| [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision.md) | hybridJS selection rationale, Native CE vs hybridJS comparison, fe-* wrapper rule, when to use hybridJS vs thin re-export |
-| [`phase-2/2.2-package-structure.md`](./phase-2/2.2-package-structure.md) | packages/ui directory layout, export convention, component onboarding 7-step process, sideEffects guidance |
-| [`phase-2/2.3-theming.md`](./phase-2/2.3-theming.md) | Design token strategy, CSS custom property overrides, per-component and app-level theming |
-| [`phase-2/2.4-app-integration.md`](./phase-2/2.4-app-integration.md) | Vue 3, Angular (future), React (future) integration patterns, code examples |
-| [`phase-2/2.5-testing-strategy.md`](./phase-2/2.5-testing-strategy.md) | packages/ui testing approach, app integration tests, current coverage table, targets |
-| [`phase-2/2.6-demo-page-expansion.md`](./phase-2/2.6-demo-page-expansion.md) | Demo page: fe-icon + fe-card showcases, CSS UX polish |
-| [`phase-2/2.7-product-integration.md`](./phase-2/2.7-product-integration.md) | Domain model update, presenter layer, fe-card wrapper, products grid, tests |
+| Document                                                                         | Content                                                                                                                    |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [`phase-2/2.1-architecture-decision.md`](./phase-2/2.1-architecture-decision.md) | hybridJS selection rationale, Native CE vs hybridJS comparison, fe-\* wrapper rule, when to use hybridJS vs thin re-export |
+| [`phase-2/2.2-package-structure.md`](./phase-2/2.2-package-structure.md)         | packages/ui directory layout, export convention, component onboarding 7-step process, sideEffects guidance                 |
+| [`phase-2/2.3-theming.md`](./phase-2/2.3-theming.md)                             | Design token strategy, CSS custom property overrides, per-component and app-level theming                                  |
+| [`phase-2/2.4-app-integration.md`](./phase-2/2.4-app-integration.md)             | Vue 3, Angular (future), React (future) integration patterns, code examples                                                |
+| [`phase-2/2.5-testing-strategy.md`](./phase-2/2.5-testing-strategy.md)           | packages/ui testing approach, app integration tests, current coverage table, targets                                       |
+| [`phase-2/2.6-demo-page-expansion.md`](./phase-2/2.6-demo-page-expansion.md)     | Demo page: fe-icon + fe-card showcases, CSS UX polish                                                                      |
+| [`phase-2/2.7-product-integration.md`](./phase-2/2.7-product-integration.md)     | Domain model update, presenter layer, fe-card wrapper, products grid, tests                                                |

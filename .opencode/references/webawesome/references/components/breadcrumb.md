@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/breadcrumb
 
-
 `<wa-breadcrumb>` Stable Since 2.0
 
 Breadcrumbs display a trail of links that show users where they are in a site's hierarchy. They help users understand the current location and navigate back to parent pages.
@@ -28,13 +27,22 @@ For websites, you'll probably want to use links instead. You can make any breadc
 
 ```html
 <wa-breadcrumb>
-  <wa-breadcrumb-item href="https://example.com/home">Homepage</wa-breadcrumb-item>
+  <wa-breadcrumb-item href="https://example.com/home"
+    >Homepage</wa-breadcrumb-item
+  >
 
-  <wa-breadcrumb-item href="https://example.com/home/services">Our Services</wa-breadcrumb-item>
+  <wa-breadcrumb-item href="https://example.com/home/services"
+    >Our Services</wa-breadcrumb-item
+  >
 
-  <wa-breadcrumb-item href="https://example.com/home/services/digital">Digital Media</wa-breadcrumb-item>
+  <wa-breadcrumb-item href="https://example.com/home/services/digital"
+    >Digital Media</wa-breadcrumb-item
+  >
 
-  <wa-breadcrumb-item href="https://example.com/home/services/digital/web-design">Web Design</wa-breadcrumb-item>
+  <wa-breadcrumb-item
+    href="https://example.com/home/services/digital/web-design"
+    >Web Design</wa-breadcrumb-item
+  >
 </wa-breadcrumb>
 ```
 
@@ -169,7 +177,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/breadcrumb/breadcrumb.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/breadcrumb/breadcrumb.js'
 ```
 
 \*\*npm\*\*
@@ -177,7 +185,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/breadcrumb/bread
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/breadcrumb/breadcrumb.js';
+import '@awesome.me/webawesome/dist/components/breadcrumb/breadcrumb.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -185,7 +193,7 @@ import '@awesome.me/webawesome/dist/components/breadcrumb/breadcrumb.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/breadcrumb/breadcrumb.js';
+import './webawesome/dist/components/breadcrumb/breadcrumb.js'
 ```
 
 \*\*React\*\*
@@ -193,39 +201,39 @@ import './webawesome/dist/components/breadcrumb/breadcrumb.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaBreadcrumb from '@awesome.me/webawesome/dist/react/breadcrumb/index.js';
+import WaBreadcrumb from '@awesome.me/webawesome/dist/react/breadcrumb/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | One or more breadcrumb items to display. |
-| \`separator\` | \`
+| Name          | Description                              |
+| ------------- | ---------------------------------------- |
+| (default)     | One or more breadcrumb items to display. |
+| \`separator\` | \`                                       |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`label\` label | \`string\` The label to use for the breadcrumb control. This will not be shown on the screen, but it will be announced by screen readers and other assistive devices to provide more context for users. Type Default '' | | |
+| Name            | Description                                                                                                                                                                                                             | Reflects                                                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`         | \`CSSResultGroup \\                                                                                                                                                                                                     | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`label\` label | \`string\` The label to use for the breadcrumb control. This will not be shown on the screen, but it will be announced by screen readers and other assistive devices to provide more context for users. Type Default '' |                                                                                                                                                |     |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name     | Description                   | CSS selector     |
+| -------- | ----------------------------- | ---------------- |
 | \`base\` | The component's base wrapper. | \`::part(base)\` |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
 
 **Need a hand?** Report a bug Ask for help

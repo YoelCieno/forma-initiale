@@ -3,6 +3,7 @@
 **Status:** ✅ COMPLETED (commit `95436f8`)
 
 ## Goal
+
 Scaffold minimal hexagonal monorepo with Turborepo + bun + Vue 3 + Vite 5.
 
 ## Tasks
@@ -17,14 +18,12 @@ Scaffold minimal hexagonal monorepo with Turborepo + bun + Vue 3 + Vite 5.
 - [x] Create AGENTS.md
 - [x] Verify: `bun run build` ✅, `bun run lint` ✅
 
-
-
 ## Decisions
 
-| Decision | Choice |
-|----------|--------|
-| Package manager | bun 1.3.13 |
-| Build system | Turborepo 2.9.14 + Vite 5 |
-| Architecture | Package-per-layer hexagonal |
-| Framework | Vue 3 (not Nuxt) |
-| Auto-import | UI layer only (composables + components dirs) |
+| Decision        | Choice                                        |
+| --------------- | --------------------------------------------- |
+| Package manager | bun 1.3.13                                    |
+| Build system    | Turborepo 2.9.14 + Vite 5                     |
+| Architecture    | Package-per-layer hexagonal                   |
+| Framework       | Vue 3 (not Nuxt)                              |
+| Auto-import     | UI layer only (composables + components dirs) |

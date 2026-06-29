@@ -1,6 +1,6 @@
 # Phase 5 — Angular Implementation
 
-**Goal:** Create an Angular app (`apps/web-angular/`) that consumes `@repo/ui` fe-* web components and follows the same hexagonal architecture as white-label-vue.
+**Goal:** Create an Angular app (`apps/web-angular/`) that consumes `@repo/ui` fe-\* web components and follows the same hexagonal architecture as white-label-vue.
 
 ## Background
 
@@ -22,7 +22,7 @@
 
 - Angular equivalent of white-label-vue's factory pattern
 - Bootstrap Angular app with WA styles (@repo/ui/styles + theme)
-- Register `CUSTOM_ELEMENTS_SCHEMA` for fe-* tags
+- Register `CUSTOM_ELEMENTS_SCHEMA` for fe-\* tags
 - Set up routing (standalone API)
 
 ### 5.3. Create Angular base components
@@ -53,7 +53,7 @@
 ## ✅ Manual Confirmation
 
 - [ ] Angular app builds and renders in browser
-- [ ] All fe-* components work in Angular templates
+- [ ] All fe-\* components work in Angular templates
 - [ ] Routing works (hash-based)
 - [ ] Presenters wired and producing correct view models
 - [ ] Tenant override mechanism functional

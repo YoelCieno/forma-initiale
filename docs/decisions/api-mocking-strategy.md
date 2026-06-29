@@ -8,12 +8,12 @@
 
 ## Candidates Evaluated
 
-| Solution | Type | Verdict |
-|----------|------|---------|
-| **MSW (Mock Service Worker)** | Network interception (SW + Node) | ✅ **Adopt** |
-| mocki.io | External static JSON hosting | ❌ Skip (external dep, breaks offline, no test integration) |
-| faux-api.com | External rich mock API | ❌ Skip (same cons as mocki.io) |
-| Own Fastify mock service | Custom Node.js server | ⏳ Future stretch goal |
+| Solution                      | Type                             | Verdict                                                     |
+| ----------------------------- | -------------------------------- | ----------------------------------------------------------- |
+| **MSW (Mock Service Worker)** | Network interception (SW + Node) | ✅ **Adopt**                                                |
+| mocki.io                      | External static JSON hosting     | ❌ Skip (external dep, breaks offline, no test integration) |
+| faux-api.com                  | External rich mock API           | ❌ Skip (same cons as mocki.io)                             |
+| Own Fastify mock service      | Custom Node.js server            | ⏳ Future stretch goal                                      |
 
 ---
 
@@ -41,18 +41,18 @@ If fullstack BE experience is desired later, build a Fastify `apps/mock-api/` se
 
 ## Key Decisions
 
-| # | Decision | Choice | Rationale |
-|---|----------|--------|-----------|
-| 1 | API mocking strategy | MSW | Single tool for dev + test, realistic `fetch` interception, type-safe handlers, no external dep, works offline |
-| 2 | Fastify mock server | Postpone | Future stretch goal if fullstack BE exp desired. MSW covers current needs |
+| #   | Decision             | Choice   | Rationale                                                                                                      |
+| --- | -------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| 1   | API mocking strategy | MSW      | Single tool for dev + test, realistic `fetch` interception, type-safe handlers, no external dep, works offline |
+| 2   | Fastify mock server  | Postpone | Future stretch goal if fullstack BE exp desired. MSW covers current needs                                      |
 
 ## Resolved Questions
 
-| Question | Decision |
-|----------|----------|
-| Where do MSW handlers live? | `packages/infra/mocks/` |
-| Static fixtures vs factory functions? | Factories (no faker, sequential counter + sensible defaults). Static fixtures for edge-case scenarios. Hybrid approach. |
-| Type sharing? | Handlers import domain types directly (`@repo/domain`). Handler response shape matches real API envelope. KISSME-SINE — no extra abstraction layer until needed. |
+| Question                              | Decision                                                                                                                                                         |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Where do MSW handlers live?           | `packages/infra/mocks/`                                                                                                                                          |
+| Static fixtures vs factory functions? | Factories (no faker, sequential counter + sensible defaults). Static fixtures for edge-case scenarios. Hybrid approach.                                          |
+| Type sharing?                         | Handlers import domain types directly (`@repo/domain`). Handler response shape matches real API envelope. KISSME-SINE — no extra abstraction layer until needed. |
 
 ## References
 
@@ -60,4 +60,4 @@ If fullstack BE experience is desired later, build a Fastify `apps/mock-api/` se
 - [MSW docs](https://mswjs.io)
 - [Mocking APIs with MSW (dev.to)](https://dev.to/kevin-uehara/mocking-your-apis-calls-using-mocking-service-worker-msw-7k6)
 
-*Decision recorded 2026-05-27.*
+_Decision recorded 2026-05-27._

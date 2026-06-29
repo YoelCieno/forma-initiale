@@ -29,14 +29,14 @@ If you switch host, drop `renovate.json` and use `taze` above. The `check-update
 
 ## Workspaces & key deps
 
-| Workspace | Key deps |
-|-----------|----------|
-| apps/docs | astro, @astrojs/starlight, sharp |
-| apps/white-label-vue | vue, vite, @vitejs/plugin-vue, unplugin-* |
-| packages/domain | (pure TS) |
-| packages/infra | @repo/domain |
-| packages/ui | hybrids, @awesome.me/webawesome |
-| root (dev) | eslint, typescript, turbo, vitest, prettier |
+| Workspace            | Key deps                                    |
+| -------------------- | ------------------------------------------- |
+| apps/docs            | astro, @astrojs/starlight, sharp            |
+| apps/white-label-vue | vue, vite, @vitejs/plugin-vue, unplugin-\*  |
+| packages/domain      | (pure TS)                                   |
+| packages/infra       | @repo/domain                                |
+| packages/ui          | hybrids, @awesome.me/webawesome             |
+| root (dev)           | eslint, typescript, turbo, vitest, prettier |
 
 ## Upgrade policy
 
@@ -77,9 +77,9 @@ Create `.zed/settings.json` at project root (or Cmd+Shift+P → "Open Project Se
 
 ### Other editors
 
-| Editor | Config |
-|--------|--------|
-| VSCode | `"editor.codeActionsOnSave": { "source.fixAll.eslint": true }` |
+| Editor    | Config                                                                  |
+| --------- | ----------------------------------------------------------------------- |
+| VSCode    | `"editor.codeActionsOnSave": { "source.fixAll.eslint": true }`          |
 | JetBrains | Settings → Languages & Frameworks → ESLint → "Run eslint --fix on save" |
-| Neovim | `conform.nvim` with `format_on_save` |
-| Vim | `ALE` with `let g:ale_fix_on_save = 1` |
+| Neovim    | `conform.nvim` with `format_on_save`                                    |
+| Vim       | `ALE` with `let g:ale_fix_on_save = 1`                                  |

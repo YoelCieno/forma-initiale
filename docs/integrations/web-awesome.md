@@ -21,9 +21,9 @@ Apps import `fe-*` components for side-effect (registers custom elements) and us
 
 ```typescript
 // apps/white-label-vue/src/pages/ProductsPage.vue
-import "@repo/ui/fe-card"
-import "@repo/ui/fe-icon"
-import "@repo/ui/fe-rating"
+import '@repo/ui/fe-card'
+import '@repo/ui/fe-icon'
+import '@repo/ui/fe-rating'
 ```
 
 ```html
@@ -83,15 +83,15 @@ export const FeButton = define<FeButtonElement>({
 
 Key mechanics:
 
-| Element | Description |
-|---|---|
-| `tag: 'fe-*'` | Registers the custom element name (must contain `-`) |
-| Property descriptors | Booleans default `false`, strings with explicit defaults. hybridJS auto-creates getter/setter + attribute reflection |
-| `render: { value: (host) => …, shadow: true }` | Render function receives `host` (the element instance). `shadow: true` enables shadow DOM |
-| `${host.property}` | HybridJS binds property values to attributes. WA internals parse `"true"`/`"false"` strings |
-| `<slot></slot>` | Passes light DOM children through to the internal WA element |
-| `<slot name="...">` | Named slots for structured content (header, footer, media, actions) |
-| `FeButtonElement` interface | Exported for type-safe property access in TypeScript |
+| Element                                        | Description                                                                                                          |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `tag: 'fe-*'`                                  | Registers the custom element name (must contain `-`)                                                                 |
+| Property descriptors                           | Booleans default `false`, strings with explicit defaults. hybridJS auto-creates getter/setter + attribute reflection |
+| `render: { value: (host) => …, shadow: true }` | Render function receives `host` (the element instance). `shadow: true` enables shadow DOM                            |
+| `${host.property}`                             | HybridJS binds property values to attributes. WA internals parse `"true"`/`"false"` strings                          |
+| `<slot></slot>`                                | Passes light DOM children through to the internal WA element                                                         |
+| `<slot name="...">`                            | Named slots for structured content (header, footer, media, actions)                                                  |
+| `FeButtonElement` interface                    | Exported for type-safe property access in TypeScript                                                                 |
 
 Note: hybridJS does not use Lit's `?` boolean prefix. All attribute bindings are `${host.property}`. WA components handle boolean string coercion internally.
 
@@ -127,13 +127,13 @@ When a slot with a matching `name` attribute exists in light DOM, hybridJS slott
 
 ## 2. Component Catalog
 
-| fe-* component | WA element | File | Key props |
-|---|---|---|---|
-| `fe-button` | `wa-button` | `components/fe-button.ts` | `variant`, `size`, `appearance`, `icon`, `disabled`, `loading`, `pill` |
-| `fe-card` | `wa-card` | `components/fe-card.ts` | `appearance`, `orientation`, `disabled`; detects `header`/`footer`/`media` slots |
-| `fe-icon` | `wa-icon` | `components/fe-icon.ts` | `name`, `library`, `family`, `variant`, `label`, `autoWidth`, `flip`, `rotate`, `animation`, `src`, `swapOpacity` |
-| `fe-rating` | `wa-rating` | `components/fe-rating.ts` | `value`, `max`, `precision`, `size`, `label`, `disabled`, `readonly`, `required`, `name` |
-| `fe-async-content` | (custom — uses `wa-spinner`) | `components/fe-async-content.ts` | `loading: boolean`, `error: string \| undefined` |
+| fe-\* component    | WA element                   | File                             | Key props                                                                                                         |
+| ------------------ | ---------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `fe-button`        | `wa-button`                  | `components/fe-button.ts`        | `variant`, `size`, `appearance`, `icon`, `disabled`, `loading`, `pill`                                            |
+| `fe-card`          | `wa-card`                    | `components/fe-card.ts`          | `appearance`, `orientation`, `disabled`; detects `header`/`footer`/`media` slots                                  |
+| `fe-icon`          | `wa-icon`                    | `components/fe-icon.ts`          | `name`, `library`, `family`, `variant`, `label`, `autoWidth`, `flip`, `rotate`, `animation`, `src`, `swapOpacity` |
+| `fe-rating`        | `wa-rating`                  | `components/fe-rating.ts`        | `value`, `max`, `precision`, `size`, `label`, `disabled`, `readonly`, `required`, `name`                          |
+| `fe-async-content` | (custom — uses `wa-spinner`) | `components/fe-async-content.ts` | `loading: boolean`, `error: string \| undefined`                                                                  |
 
 `fe-async-content` has no direct WA counterpart. It is a custom wrapper that renders:
 
@@ -168,11 +168,11 @@ import '@awesome.me/webawesome/dist/styles/themes/default.css'
 
 Three theme choices (each a separate CSS import):
 
-| Theme | File | Target app |
-|---|---|---|
-| `default` | `styles/themes/default.ts` | `white-label-vue` (current) |
-| `awesome` | `styles/themes/awesome.ts` | `web-angular` (future) |
-| `shoelace` | `styles/themes/shoelace.ts` | `web-react` (future) |
+| Theme      | File                        | Target app                  |
+| ---------- | --------------------------- | --------------------------- |
+| `default`  | `styles/themes/default.ts`  | `white-label-vue` (current) |
+| `awesome`  | `styles/themes/awesome.ts`  | `web-angular` (future)      |
+| `shoelace` | `styles/themes/shoelace.ts` | `web-react` (future)        |
 
 Each theme file is a thin barrel re-exporting a WA CSS file. Without this import, WA components have no visual styling.
 
@@ -201,9 +201,9 @@ Order matters — each layer builds on the previous:
 
 ```typescript
 // apps/white-label-vue/src/main.ts
-import '@repo/ui/styles'                // Layer 1: native + utilities
-import '@repo/ui/styles/themes/default'  // Layer 2: WA component styling
-import './styles'                         // Layer 3: tokens + base CSS
+import '@repo/ui/styles' // Layer 1: native + utilities
+import '@repo/ui/styles/themes/default' // Layer 2: WA component styling
+import './styles' // Layer 3: tokens + base CSS
 ```
 
 Layer 3 (`./styles`) is a barrel that imports `tokens.css` then `base.css`.
@@ -213,7 +213,7 @@ Layer 3 (`./styles`) is a barrel that imports `tokens.css` then `base.css`.
 WA themes activate via a class name on the `<html>` element. The pattern is `wa-theme-<name>`:
 
 ```html
-<html class="wa-theme-default" lang="en">
+<html class="wa-theme-default" lang="en"></html>
 ```
 
 **Current status:** `apps/white-label-vue/index.html` has `class="fe-theme-default fe-palette-default fe-brand-blue"` on `<html>`. Theme classes activate WA component styling.
@@ -240,17 +240,17 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 }
 ```
 
-| Import path | Source file | Provides |
-|---|---|---|
-| `@repo/ui/fe-button` | `./components/fe-button.ts` | `fe-button` CE + `FeButtonElement` type |
-| `@repo/ui/fe-async-content` | `./components/fe-async-content.ts` | `fe-async-content` CE + `FeAsyncContentElement` type |
-| `@repo/ui/fe-card` | `./components/fe-card.ts` | `fe-card` CE + `FeCardElement` type |
-| `@repo/ui/fe-icon` | `./components/fe-icon.ts` | `fe-icon` CE + `FeIconElement` type |
-| `@repo/ui/fe-rating` | `./components/fe-rating.ts` | `fe-rating` CE + `FeRatingElement` type |
-| `@repo/ui/styles` | `./styles/webawesome.ts` | WA base (native.css + utilities.css) |
-| `@repo/ui/styles/themes/default` | `./styles/themes/default.ts` | WA default theme |
-| `@repo/ui/styles/themes/awesome` | `./styles/themes/awesome.ts` | WA awesome theme |
-| `@repo/ui/styles/themes/shoelace` | `./styles/themes/shoelace.ts` | WA shoelace theme |
+| Import path                       | Source file                        | Provides                                             |
+| --------------------------------- | ---------------------------------- | ---------------------------------------------------- |
+| `@repo/ui/fe-button`              | `./components/fe-button.ts`        | `fe-button` CE + `FeButtonElement` type              |
+| `@repo/ui/fe-async-content`       | `./components/fe-async-content.ts` | `fe-async-content` CE + `FeAsyncContentElement` type |
+| `@repo/ui/fe-card`                | `./components/fe-card.ts`          | `fe-card` CE + `FeCardElement` type                  |
+| `@repo/ui/fe-icon`                | `./components/fe-icon.ts`          | `fe-icon` CE + `FeIconElement` type                  |
+| `@repo/ui/fe-rating`              | `./components/fe-rating.ts`        | `fe-rating` CE + `FeRatingElement` type              |
+| `@repo/ui/styles`                 | `./styles/webawesome.ts`           | WA base (native.css + utilities.css)                 |
+| `@repo/ui/styles/themes/default`  | `./styles/themes/default.ts`       | WA default theme                                     |
+| `@repo/ui/styles/themes/awesome`  | `./styles/themes/awesome.ts`       | WA awesome theme                                     |
+| `@repo/ui/styles/themes/shoelace` | `./styles/themes/shoelace.ts`      | WA shoelace theme                                    |
 
 Dependencies: `@awesome.me/webawesome@3.7.0` and `hybrids@^9`.
 
@@ -372,16 +372,16 @@ render: (host) => html`
 
 ## 7. Reference
 
-| Doc | Location |
-|---|---|
-| WA Agent Skill — overview, quick start | `.opencode/references/webawesome/SKILL.md` |
-| Per-component API docs (props, events, CSS parts, slots) | `.opencode/references/webawesome/references/components/` |
-| Design tokens (color, typography, spacing, shadows) | `.opencode/references/webawesome/references/tokens/` |
-| Theme + palette usage | `.opencode/references/webawesome/references/themes.md` |
-| Form controls guide | `.opencode/references/webawesome/references/form-controls.md` |
-| Fix `fe-*` in layer stack | `docs/integrations/layer-wiring.md` |
-| Architecture principles (POLA for slot names, etc.) | `docs/ADRS/design-patterns.md` |
-| Monorepo commands, gotchas, config | `AGENTS.md` |
+| Doc                                                      | Location                                                      |
+| -------------------------------------------------------- | ------------------------------------------------------------- |
+| WA Agent Skill — overview, quick start                   | `.opencode/references/webawesome/SKILL.md`                    |
+| Per-component API docs (props, events, CSS parts, slots) | `.opencode/references/webawesome/references/components/`      |
+| Design tokens (color, typography, spacing, shadows)      | `.opencode/references/webawesome/references/tokens/`          |
+| Theme + palette usage                                    | `.opencode/references/webawesome/references/themes.md`        |
+| Form controls guide                                      | `.opencode/references/webawesome/references/form-controls.md` |
+| Fix `fe-*` in layer stack                                | `docs/integrations/layer-wiring.md`                           |
+| Architecture principles (POLA for slot names, etc.)      | `docs/ADRS/design-patterns.md`                                |
+| Monorepo commands, gotchas, config                       | `AGENTS.md`                                                   |
 
 ---
 

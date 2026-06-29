@@ -7,8 +7,16 @@ import './styles'
 
 createWhiteLabelApp({
   routes: [
-    { path: '/', name: 'products', component: () => import('white-label-vue/src/pages/ProductsPage.vue') },
-    { path: '/about', name: 'about', component: () => import('./pages/AboutPage.vue') },
+    {
+      path: '/',
+      name: 'products',
+      component: () => import('white-label-vue/src/pages/ProductsPage.vue'),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('./pages/AboutPage.vue'),
+    },
   ],
   appShell: () => import('./App.vue'),
   metaMap: plantsMap,

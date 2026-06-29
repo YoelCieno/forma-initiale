@@ -1,4 +1,10 @@
-export const FRAMEWORK_NAMES = ['react', 'angular', 'vue', 'svelte', 'solid'] as const
+export const FRAMEWORK_NAMES = [
+  'react',
+  'angular',
+  'vue',
+  'svelte',
+  'solid',
+] as const
 
 export const FAKE_PLANTS_NAMES = [
   'light-bearer',
@@ -19,18 +25,19 @@ export type TenantConfig = {
   readonly rateType: 'cyclic' | 'random'
 }
 
-export const PRODUCT_TENANT_CONFIGS: Record<string, TenantConfig> = Object.freeze({
-  wl: Object.freeze({
-    names: FRAMEWORK_NAMES,
-    previousPrice: { base: 29.99, increment: 10 },
-    rateType: 'cyclic',
-  }),
-  fp: Object.freeze({
-    names: FAKE_PLANTS_NAMES,
-    price: { base: 9.99, increment: 10 },
-    rateType: 'random',
-  }),
-})
+export const PRODUCT_TENANT_CONFIGS: Record<string, TenantConfig> =
+  Object.freeze({
+    wl: Object.freeze({
+      names: FRAMEWORK_NAMES,
+      previousPrice: { base: 29.99, increment: 10 },
+      rateType: 'cyclic',
+    }),
+    fp: Object.freeze({
+      names: FAKE_PLANTS_NAMES,
+      price: { base: 9.99, increment: 10 },
+      rateType: 'random',
+    }),
+  })
 
 export const RATE_VALUE = Object.freeze({
   cyclic: (counter: number) => (counter % 5) + 1,

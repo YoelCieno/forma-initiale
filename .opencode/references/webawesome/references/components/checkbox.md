@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/checkbox
 
-
 `<wa-checkbox>` Stable Since 2.0
 
 Checkboxes let users toggle an option on or off, or select multiple items from a list. They also support an indeterminate state for partial selections in groups.
@@ -62,7 +61,9 @@ Use the `size` attribute to change a checkbox's size.
 Add descriptive hint to a switch with the `hint` attribute. For hints that contain HTML, use the `hint` slot instead.
 
 ```html
-<wa-checkbox hint="What should the user know about the checkbox?">Label</wa-checkbox>
+<wa-checkbox hint="What should the user know about the checkbox?"
+  >Label</wa-checkbox
+>
 ```
 
 ### Custom Validity
@@ -73,31 +74,37 @@ Use the `setCustomValidity()` method to set a custom validation message. This wi
 <form class="custom-validity">
   <wa-checkbox>Check me</wa-checkbox>
   <br />
-  <wa-button appearance="filled" type="submit" variant="neutral" style="margin-top: 1rem;">Submit</wa-button>
+  <wa-button
+    appearance="filled"
+    type="submit"
+    variant="neutral"
+    style="margin-top: 1rem;"
+    >Submit</wa-button
+  >
 </form>
 <script>
-  const form = document.querySelector('.custom-validity');
-  const checkbox = form.querySelector('wa-checkbox');
-  const errorMessage = `Don't forget to check me!`;
+  const form = document.querySelector('.custom-validity')
+  const checkbox = form.querySelector('wa-checkbox')
+  const errorMessage = `Don't forget to check me!`
 
   // Set initial validity as soon as the element is defined
   customElements.whenDefined('wa-checkbox').then(async () => {
-    await checkbox.updateComplete;
-    checkbox.setCustomValidity(errorMessage);
-  });
+    await checkbox.updateComplete
+    checkbox.setCustomValidity(errorMessage)
+  })
 
   // Update validity on change
   checkbox.addEventListener('change', () => {
-    checkbox.setCustomValidity(checkbox.checked ? '' : errorMessage);
-  });
+    checkbox.setCustomValidity(checkbox.checked ? '' : errorMessage)
+  })
 
   // Handle submit
   customElements.whenDefined('wa-checkbox').then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -110,7 +117,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/checkbox/checkbox.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/checkbox/checkbox.js'
 ```
 
 \*\*npm\*\*
@@ -118,7 +125,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/checkbox/checkbo
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/checkbox/checkbox.js';
+import '@awesome.me/webawesome/dist/components/checkbox/checkbox.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -126,7 +133,7 @@ import '@awesome.me/webawesome/dist/components/checkbox/checkbox.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/checkbox/checkbox.js';
+import './webawesome/dist/components/checkbox/checkbox.js'
 ```
 
 \*\*React\*\*
@@ -134,29 +141,29 @@ import './webawesome/dist/components/checkbox/checkbox.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaCheckbox from '@awesome.me/webawesome/dist/react/checkbox/index.js';
+import WaCheckbox from '@awesome.me/webawesome/dist/react/checkbox/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The checkbox's label. |
-| \`hint\` | \`hint\` Text that describes how to use the checkbox. Alternatively, you can use the attribute. |
+| Name      | Description                                                                                     |
+| --------- | ----------------------------------------------------------------------------------------------- |
+| (default) | The checkbox's label.                                                                           |
+| \`hint\`  | \`hint\` Text that describes how to use the checkbox. Alternatively, you can use the attribute. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`checked\` | Draws the checkbox in a checked state. | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[formControlStyles, sizeStyles, styles\] | | |
-| \`defaultChecked\` checked | \`boolean\` The default value of the form control. Primarily used for resetting the form control. Type | | |
-| \`disabled\` disabled | \`boolean\` Disables the checkbox. Type Default false | | |
-| \`form\` | \`
+| Name                       | Description                                                                                            | Reflects                                                                                                                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`checked\`                | Draws the checkbox in a checked state.                                                                 |                                                                                                                                                                                   |     |
+| \`css\`                    | \`CSSResultGroup \\                                                                                    | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[formControlStyles, sizeStyles, styles\] |     |     |
+| \`defaultChecked\` checked | \`boolean\` The default value of the form control. Primarily used for resetting the form control. Type |                                                                                                                                                                                   |     |
+| \`disabled\` disabled      | \`boolean\` Disables the checkbox. Type Default false                                                  |                                                                                                                                                                                   |     |
+| \`form\`                   | \`                                                                                                     |
 
 \` By default, form controls are associated with the nearest containing element. This attribute allows you to place the form control outside of a form and associate it with the form that has this id. The form must be in the same document or shadow root for this to work. Type HTMLFormElement \\| null | | |
 | \`hint\` hint | \`hint\` The checkbox's . If you need to display HTML, use the hint slot instead. Type string Default '' | | |
@@ -172,60 +179,60 @@ Learn more about [attributes and properties](https://webawesome.com/docs/usage/#
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`blur()\` | Removes focus from the checkbox. | |
-| \`click()\` | Simulates a click on the checkbox. | |
-| \`focus()\` | Sets focus on the checkbox. | \`options: FocusOptions\` |
-| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\| File \\| FormData \\| null, reason: 'autocomplete' \\| 'restore'\` |
-| \`resetValidity()\` | Reset validity is a way of removing manual custom errors and native validation. | |
-| \`setCustomValidity()\` | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators. | \`message: string\` |
+| Name                           | Description                                                                                                                                                                                                                                                                                                                                       | Arguments                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | ----------- | ------------------------------- | ----------- |
+| \`blur()\`                     | Removes focus from the checkbox.                                                                                                                                                                                                                                                                                                                  |                           |
+| \`click()\`                    | Simulates a click on the checkbox.                                                                                                                                                                                                                                                                                                                |                           |
+| \`focus()\`                    | Sets focus on the checkbox.                                                                                                                                                                                                                                                                                                                       | \`options: FocusOptions\` |
+| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\        | File \\ | FormData \\ | null, reason: 'autocomplete' \\ | 'restore'\` |
+| \`resetValidity()\`            | Reset validity is a way of removing manual custom errors and native validation.                                                                                                                                                                                                                                                                   |                           |
+| \`setCustomValidity()\`        | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators.                                                                                                                                                          | \`message: string\`       |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
-| \`blur\` | Emitted when the checkbox loses focus. |
-| \`change\` | Emitted when the checked state changes. |
-| \`focus\` | Emitted when the checkbox gains focus. |
-| \`input\` | Emitted when the checkbox receives input. |
+| Name           | Description                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| \`blur\`       | Emitted when the checkbox loses focus.                                                            |
+| \`change\`     | Emitted when the checked state changes.                                                           |
+| \`focus\`      | Emitted when the checkbox gains focus.                                                            |
+| \`input\`      | Emitted when the checkbox receives input.                                                         |
 | \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied. |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--checked-icon-color\` | The color of the checked and indeterminate icons. |
+| Name                     | Description                                                               |
+| ------------------------ | ------------------------------------------------------------------------- |
+| \`--checked-icon-color\` | The color of the checked and indeterminate icons.                         |
 | \`--checked-icon-scale\` | The size of the checked and indeterminate icons relative to the checkbox. |
 
 ## Custom States
 
 Learn more about [custom states](https://webawesome.com/docs/usage/#custom-states).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`checked\` | Applied when the checkbox is checked. | \`:state(checked)\` |
-| \`disabled\` | Applied when the checkbox is disabled. | \`:state(disabled)\` |
+| Name              | Description                                             | CSS selector              |
+| ----------------- | ------------------------------------------------------- | ------------------------- |
+| \`checked\`       | Applied when the checkbox is checked.                   | \`:state(checked)\`       |
+| \`disabled\`      | Applied when the checkbox is disabled.                  | \`:state(disabled)\`      |
 | \`indeterminate\` | Applied when the checkbox is in an indeterminate state. | \`:state(indeterminate)\` |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's label . | \`::part(base)\` |
-| \`checked-icon\` | \`\` The indeterminate icon, a element. | \`::part(indeterminate-icon)\` |
-| \`label\` | The container that wraps the checkbox's label. | \`::part(label)\` |
+| Name             | Description                                    | CSS selector                   |
+| ---------------- | ---------------------------------------------- | ------------------------------ |
+| \`base\`         | The component's label .                        | \`::part(base)\`               |
+| \`checked-icon\` | \`\` The indeterminate icon, a element.        | \`::part(indeterminate-icon)\` |
+| \`label\`        | The container that wraps the checkbox's label. | \`::part(label)\`              |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
 
 **Need a hand?** Report a bug Ask for help

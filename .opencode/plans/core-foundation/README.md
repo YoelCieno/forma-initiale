@@ -4,15 +4,15 @@ Monorepo plan overview.
 
 ## Phase Table
 
-| Phase | Focus | Location | Status |
-|-------|-------|----------|--------|
-| 0 | Hexagonal skeleton: domain + infra pkgs, web-vue app, auto-import | `phase-0.md` | ✅ COMPLETED |
-| 1 | Docs solution research + implementation, UI components conversion | `phase-1.md` | ✅ COMPLETED |
-| 2 | Web Awesome UI layer (WA + hybridJS wrappers) | `phase-2.md` | ✅ COMPLETED |
-| 3 | White-label extend layer (inherit app, override components/styles) | `phase-3.md` | ❌ PENDING |
-| 4 | CSS `@layer` cascade strategy | `phase-4.md` | ❌ PENDING |
-| 5 | Angular implementation | `phase-5.md` | ❌ PENDING |
-| 6 | React implementation | `phase-6.md` | ❌ PENDING |
+| Phase | Focus                                                              | Location     | Status       |
+| ----- | ------------------------------------------------------------------ | ------------ | ------------ |
+| 0     | Hexagonal skeleton: domain + infra pkgs, web-vue app, auto-import  | `phase-0.md` | ✅ COMPLETED |
+| 1     | Docs solution research + implementation, UI components conversion  | `phase-1.md` | ✅ COMPLETED |
+| 2     | Web Awesome UI layer (WA + hybridJS wrappers)                      | `phase-2.md` | ✅ COMPLETED |
+| 3     | White-label extend layer (inherit app, override components/styles) | `phase-3.md` | ❌ PENDING   |
+| 4     | CSS `@layer` cascade strategy                                      | `phase-4.md` | ❌ PENDING   |
+| 5     | Angular implementation                                             | `phase-5.md` | ❌ PENDING   |
+| 6     | React implementation                                               | `phase-6.md` | ❌ PENDING   |
 
 ## Conventions
 

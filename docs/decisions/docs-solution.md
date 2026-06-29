@@ -8,46 +8,46 @@
 
 ## Candidates Evaluated
 
-| Solution | Base | Framework Dep | Verdict |
-|----------|------|---------------|---------|
-| **Astro + Starlight** | Vite, UI-agnostic | None | ✅ **Adopt** |
-| VitePress | Vite + Vue | needs `vue` | ❌ Skip (Vue-locked) |
-| Docusaurus | Webpack + React | needs `react` + `react-dom` | ❌ Skip (heavy, React-locked) |
-| Rspress v2 | Rsbuild/Rspack + React | needs `react` + `react-dom` | ❌ Skip (React-bound) |
-| Docsify | Client-side SPA, no build | None (CDN) | ❌ Skip (no SEO, no Turbo cache) |
-| DocMD (@docmd/core) | Hybrid SSG (esbuild) | None (vanilla output) | ❌ Skip (too young, high risk) |
-| Docute | Client-side SPA (Vue) | Vue | ❌ **Dead** (archived Mar 2025) |
+| Solution              | Base                      | Framework Dep               | Verdict                          |
+| --------------------- | ------------------------- | --------------------------- | -------------------------------- |
+| **Astro + Starlight** | Vite, UI-agnostic         | None                        | ✅ **Adopt**                     |
+| VitePress             | Vite + Vue                | needs `vue`                 | ❌ Skip (Vue-locked)             |
+| Docusaurus            | Webpack + React           | needs `react` + `react-dom` | ❌ Skip (heavy, React-locked)    |
+| Rspress v2            | Rsbuild/Rspack + React    | needs `react` + `react-dom` | ❌ Skip (React-bound)            |
+| Docsify               | Client-side SPA, no build | None (CDN)                  | ❌ Skip (no SEO, no Turbo cache) |
+| DocMD (@docmd/core)   | Hybrid SSG (esbuild)      | None (vanilla output)       | ❌ Skip (too young, high risk)   |
+| Docute                | Client-side SPA (Vue)     | Vue                         | ❌ **Dead** (archived Mar 2025)  |
 
 ---
 
 ## Comparison Table
 
-| Criterion | Weight | Astro/Starlight | VitePress | Docusaurus | Rspress | Docsify | DocMD |
-|-----------|--------|-----------------|-----------|------------|---------|---------|-------|
-| Framework-agnostic | HIGH (×5) | **5** ⭐ | 1 | 1 | 2 | 5 | 5 |
-| Setup effort | HIGH (×5) | 4 | 4 | 3 | 4 | **5** | **5** |
-| Search built-in | MED (×3) | **5** ⭐ | 4 | 3 | 4 | 3 | 4 |
-| Theming/custom | MED (×3) | **5** ⭐ | 4 | 4 | 4 | 3 | 3 |
-| Turborepo compat | MED (×3) | **5** | **5** | 3 | 4 | 1 | 5 |
-| SEO | MED (×3) | **5** ⭐ | 4 | 4 | 4 | 1 | 4 |
-| Performance (build) | LOW (×1) | **5** | 4 | 3 | **5** | N/A (no build) | 4 |
-| Plugin ecosystem | LOW (×1) | 4 | 3 | **5** | 3 | 3 | 2 |
-| Payload | LOW (×1) | 4 | 4 | 3 | 4 | 5 | 5 |
-| Project stability | MED (×3) | **5** (Astro 60K⭐) | 5 (Vue team) | 5 (Meta) | 3 (younger) | 5 (31K⭐, 9yr) | 2 (1yr, 1.5K⭐) |
-| i18n built-in | MED (×3) | **5** | 3 | 3 | 3 | 2 | 5 |
-| Versioning | LOW (×1) | 3 (plugin) | 2 | 2 | 2 | 1 | **5** |
+| Criterion           | Weight    | Astro/Starlight     | VitePress    | Docusaurus | Rspress     | Docsify        | DocMD           |
+| ------------------- | --------- | ------------------- | ------------ | ---------- | ----------- | -------------- | --------------- |
+| Framework-agnostic  | HIGH (×5) | **5** ⭐            | 1            | 1          | 2           | 5              | 5               |
+| Setup effort        | HIGH (×5) | 4                   | 4            | 3          | 4           | **5**          | **5**           |
+| Search built-in     | MED (×3)  | **5** ⭐            | 4            | 3          | 4           | 3              | 4               |
+| Theming/custom      | MED (×3)  | **5** ⭐            | 4            | 4          | 4           | 3              | 3               |
+| Turborepo compat    | MED (×3)  | **5**               | **5**        | 3          | 4           | 1              | 5               |
+| SEO                 | MED (×3)  | **5** ⭐            | 4            | 4          | 4           | 1              | 4               |
+| Performance (build) | LOW (×1)  | **5**               | 4            | 3          | **5**       | N/A (no build) | 4               |
+| Plugin ecosystem    | LOW (×1)  | 4                   | 3            | **5**      | 3           | 3              | 2               |
+| Payload             | LOW (×1)  | 4                   | 4            | 3          | 4           | 5              | 5               |
+| Project stability   | MED (×3)  | **5** (Astro 60K⭐) | 5 (Vue team) | 5 (Meta)   | 3 (younger) | 5 (31K⭐, 9yr) | 2 (1yr, 1.5K⭐) |
+| i18n built-in       | MED (×3)  | **5**               | 3            | 3          | 3           | 2              | 5               |
+| Versioning          | LOW (×1)  | 3 (plugin)          | 2            | 2          | 2           | 1              | **5**           |
 
 ### Scoring Summary
 
-| Candidate | Weighted Score | Rank |
-|-----------|---------------|------|
-| **Astro + Starlight** | **114** | 🥇 |
-| VitePress | 71 | 🥈 |
-| Rspress v2 | 74 | 🥈 |
-| Docusaurus | 58 | 4th |
-| DocMD | 66 | — |
-| Docsify | 47 | — |
-| Docute | — | dead |
+| Candidate             | Weighted Score | Rank |
+| --------------------- | -------------- | ---- |
+| **Astro + Starlight** | **114**        | 🥇   |
+| VitePress             | 71             | 🥈   |
+| Rspress v2            | 74             | 🥈   |
+| Docusaurus            | 58             | 4th  |
+| DocMD                 | 66             | —    |
+| Docsify               | 47             | —    |
+| Docute                | —              | dead |
 
 ---
 
@@ -147,4 +147,4 @@ See `apps/docs/` for current implementation.
 
 ---
 
-*Decision recorded 2026-05-19. All candidates evaluated against framework-agnostic requirement.*
+_Decision recorded 2026-05-19. All candidates evaluated against framework-agnostic requirement._

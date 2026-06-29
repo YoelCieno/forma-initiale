@@ -13,17 +13,17 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 
 ## Commands (exact, verified)
 
-| cmd | what |
-|---|---|
-| `bun run dev` | turbo dev — all apps, persistent |
-| `bun run build` | turbo build — (white-label-vue: `vp build`, docs: `astro build`) |
-| `bun run lint` | turbo lint — eslint all packages |
-| `bun run format` | prettier on `*.{ts,tsx,md}` |
-| `bun run test` | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
-| `cd apps/white-label-vue && bun run dev` | white-label-vue only |
-| `cd apps/docs && bun run dev` | docs only |
-| `bun add <pkg>` | add dep (bun workspace-aware) |
-| `bun add -d <pkg>` | dev dep |
+| cmd                                      | what                                                                                    |
+| ---------------------------------------- | --------------------------------------------------------------------------------------- |
+| `bun run dev`                            | turbo dev — all apps, persistent                                                        |
+| `bun run build`                          | turbo build — (white-label-vue: `vp build`, docs: `astro build`)                        |
+| `bun run lint`                           | turbo lint — eslint all packages                                                        |
+| `bun run format`                         | prettier on `*.{ts,tsx,md}`                                                             |
+| `bun run test`                           | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
+| `cd apps/white-label-vue && bun run dev` | white-label-vue only                                                                    |
+| `cd apps/docs && bun run dev`            | docs only                                                                               |
+| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
+| `bun add -d <pkg>`                       | dev dep                                                                                 |
 
 ## Package layout
 
@@ -89,12 +89,13 @@ Hexagonal + Vue 3 — all 5 layers active:
 ```
 
 Import from apps:
+
 ```typescript
 import '@repo/ui/fe-button'
 import type { FeButtonElement } from '@repo/ui/fe-button'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-async-content'
-import '@repo/ui/styles'              // WA base (native+utilities, no theme)
+import '@repo/ui/styles' // WA base (native+utilities, no theme)
 import '@repo/ui/styles/themes/default' // WA theme
 ```
 
@@ -127,6 +128,7 @@ Web Awesome publishes an Agent Skill (`@awesome.me/webawesome@3.7.0`) with full 
 ### When to load
 
 When implementing or modifying `fe-*` wrapper components in `packages/ui/`, consult the relevant WA component docs in `.opencode/references/webawesome/references/components/<component>.md` for:
+
 - Component API (props, events, methods, slots)
 - CSS custom properties for styling
 - CSS parts for internal element targeting

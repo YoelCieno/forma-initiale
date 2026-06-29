@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 
 import ProductsPage from './ProductsPage.vue'
 
-import { clearProductsCache } from "../composables/useProducts";
+import { clearProductsCache } from '../composables/useProducts'
 import { mockProducts, mockOkResponse } from '../helpers'
 import { frameworkMap } from '../../metadata'
 
@@ -35,7 +35,10 @@ describe('ProductsPage', () => {
 
   it('renders product card grid after successful fetch', async () => {
     const apiResponse = { data: mockProducts, total: mockProducts.length }
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(mockOkResponse(apiResponse)))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(mockOkResponse(apiResponse)),
+    )
 
     const wrapper = mount(ProductsPage, {
       global: { provide: { metaMap: frameworkMap } },
@@ -76,7 +79,9 @@ describe('ProductsPage', () => {
     // Wait for error TEXT to appear (not just element — element is always present
     // in light DOM, but text updates after fetch resolves)
     await vi.waitFor(() => {
-      expect(wrapper.find('.products-page__error').text()).toContain('Failed to fetch')
+      expect(wrapper.find('.products-page__error').text()).toContain(
+        'Failed to fetch',
+      )
     })
     expect(wrapper.text()).toContain('Failed to fetch products: HTTP 500')
     // Grid element exists in light DOM but has no product cards

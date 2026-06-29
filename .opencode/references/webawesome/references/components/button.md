@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/button
 
-
 `<wa-button>` Stable Since 2.0
 
 Buttons represent actions the user can take, such as submitting a form, opening a dialog, or navigating to another page.
@@ -35,35 +34,45 @@ Use the `appearance` attribute to change the button's visual appearance.
 <div class="wa-stack">
   <div class="wa-cluster wa-gap-2xs">
     <wa-button appearance="accent" variant="neutral">Accent</wa-button>
-    <wa-button appearance="filled-outlined" variant="neutral">Filled-Outlined</wa-button>
+    <wa-button appearance="filled-outlined" variant="neutral"
+      >Filled-Outlined</wa-button
+    >
     <wa-button appearance="filled" variant="neutral">Filled</wa-button>
     <wa-button appearance="outlined" variant="neutral">Outlined</wa-button>
     <wa-button appearance="plain" variant="neutral">Plain</wa-button>
   </div>
   <div class="wa-cluster wa-gap-2xs">
     <wa-button appearance="accent" variant="brand">Accent</wa-button>
-    <wa-button appearance="filled-outlined" variant="brand">Filled-Outlined</wa-button>
+    <wa-button appearance="filled-outlined" variant="brand"
+      >Filled-Outlined</wa-button
+    >
     <wa-button appearance="filled" variant="brand">Filled</wa-button>
     <wa-button appearance="outlined" variant="brand">Outlined</wa-button>
     <wa-button appearance="plain" variant="brand">Plain</wa-button>
   </div>
   <div class="wa-cluster wa-gap-2xs">
     <wa-button appearance="accent" variant="success">Accent</wa-button>
-    <wa-button appearance="filled-outlined" variant="success">Filled-Outlined</wa-button>
+    <wa-button appearance="filled-outlined" variant="success"
+      >Filled-Outlined</wa-button
+    >
     <wa-button appearance="filled" variant="success">Filled</wa-button>
     <wa-button appearance="outlined" variant="success">Outlined</wa-button>
     <wa-button appearance="plain" variant="success">Plain</wa-button>
   </div>
   <div class="wa-cluster wa-gap-2xs">
     <wa-button appearance="accent" variant="warning">Accent</wa-button>
-    <wa-button appearance="filled-outlined" variant="warning">Filled-Outlined</wa-button>
+    <wa-button appearance="filled-outlined" variant="warning"
+      >Filled-Outlined</wa-button
+    >
     <wa-button appearance="filled" variant="warning">Filled</wa-button>
     <wa-button appearance="outlined" variant="warning">Outlined</wa-button>
     <wa-button appearance="plain" variant="warning">Plain</wa-button>
   </div>
   <div class="wa-cluster wa-gap-2xs">
     <wa-button appearance="accent" variant="danger">Accent</wa-button>
-    <wa-button appearance="filled-outlined" variant="danger">Filled-Outlined</wa-button>
+    <wa-button appearance="filled-outlined" variant="danger"
+      >Filled-Outlined</wa-button
+    >
     <wa-button appearance="filled" variant="danger">Filled</wa-button>
     <wa-button appearance="outlined" variant="danger">Outlined</wa-button>
     <wa-button appearance="plain" variant="danger">Plain</wa-button>
@@ -107,7 +116,9 @@ It's often helpful to have a button that works like a link. This is possible by 
 <div class="wa-cluster wa-gap-2xs">
   <wa-button href="https://example.com/">Link</wa-button>
   <wa-button href="https://example.com/" target="_blank">New Window</wa-button>
-  <wa-button href="/assets/images/logo.svg" download="shoelace.svg">Download</wa-button>
+  <wa-button href="/assets/images/logo.svg" download="shoelace.svg"
+    >Download</wa-button
+  >
 </div>
 ```
 
@@ -117,10 +128,18 @@ When only an [icon](https://webawesome.com/docs/components/icon) is slotted into
 
 ```html
 <div class="wa-cluster wa-gap-2xs">
-  <wa-button variant="neutral" appearance="accent"><wa-icon name="house" label="Home"></wa-icon></wa-button>
-  <wa-button variant="neutral" appearance="outlined"><wa-icon name="house" label="Home"></wa-icon></wa-button>
-  <wa-button variant="neutral" appearance="filled"><wa-icon name="house" label="Home"></wa-icon></wa-button>
-  <wa-button variant="neutral" appearance="plain"><wa-icon name="house" label="Home"></wa-icon></wa-button>
+  <wa-button variant="neutral" appearance="accent"
+    ><wa-icon name="house" label="Home"></wa-icon
+  ></wa-button>
+  <wa-button variant="neutral" appearance="outlined"
+    ><wa-icon name="house" label="Home"></wa-icon
+  ></wa-button>
+  <wa-button variant="neutral" appearance="filled"
+    ><wa-icon name="house" label="Home"></wa-icon
+  ></wa-button>
+  <wa-button variant="neutral" appearance="plain"
+    ><wa-icon name="house" label="Home"></wa-icon
+  ></wa-button>
 </div>
 ```
 
@@ -242,8 +261,12 @@ Use the `disabled` attribute to disable a button.
 <br /><br />
 
 <wa-button href="https://example.com/" disabled>Link</wa-button>
-<wa-button href="https://example.com/" target="_blank" disabled>New Window</wa-button>
-<wa-button href="/assets/images/logo.svg" download="shoelace.svg" disabled>Download</wa-button>
+<wa-button href="https://example.com/" target="_blank" disabled
+  >New Window</wa-button
+>
+<wa-button href="/assets/images/logo.svg" download="shoelace.svg" disabled
+  >Download</wa-button
+>
 ```
 
 ### Styling Buttons
@@ -296,7 +319,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button/button.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button/button.js'
 ```
 
 \*\*npm\*\*
@@ -304,7 +327,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/button/button.js
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/button/button.js';
+import '@awesome.me/webawesome/dist/components/button/button.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -312,7 +335,7 @@ import '@awesome.me/webawesome/dist/components/button/button.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/button/button.js';
+import './webawesome/dist/components/button/button.js'
 ```
 
 \*\*React\*\*
@@ -320,29 +343,29 @@ import './webawesome/dist/components/button/button.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaButton from '@awesome.me/webawesome/dist/react/button/index.js';
+import WaButton from '@awesome.me/webawesome/dist/react/button/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The button's label. |
-| \`end\` | \`\` An element, such as , placed before the label. |
+| Name      | Description                                         |
+| --------- | --------------------------------------------------- |
+| (default) | The button's label.                                 |
+| \`end\`   | \`\` An element, such as , placed before the label. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'accent' \\| 'filled' \\| 'outlined' \\| 'filled-outlined' \\| 'plain'\` The button's visual appearance. Type Default 'accent' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] | | |
-| \`disabled\` disabled | \`boolean\` Disables the button. Type Default false | | |
-| \`download\` download | \`href\` Tells the browser to download the linked file as this filename. Only used when is present. Type string \\| undefined | | |
-| \`form\` | \`
+| Name                      | Description                                                                                                        | Reflects                                                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------------------- | --------------------------------------------------------------- | --- | --- |
+| \`appearance\` appearance | \`'accent' \\                                                                                                      | 'filled' \\                                                                                                                                                                   | 'outlined' \\ | 'filled-outlined' \\ | 'plain'\` The button's visual appearance. Type Default 'accent' |     |     |
+| \`css\`                   | \`CSSResultGroup \\                                                                                                | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] |               |                      |
+| \`disabled\` disabled     | \`boolean\` Disables the button. Type Default false                                                                |                                                                                                                                                                               |               |
+| \`download\` download     | \`href\` Tells the browser to download the linked file as this filename. Only used when is present. Type string \\ | undefined                                                                                                                                                                     |               |                      |
+| \`form\`                  | \`                                                                                                                 |
 
 \` By default, form controls are associated with the nearest containing element. This attribute allows you to place the form control outside of a form and associate it with the form that has this id. The form must be in the same document or shadow root for this to work. Type HTMLFormElement \\| null | | |
 | \`formAction\` formaction | \`action\` Used to override the form owner's attribute. Type string | | |
@@ -370,48 +393,48 @@ Learn more about [attributes and properties](https://webawesome.com/docs/usage/#
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`blur()\` | Removes focus from the button. | |
-| \`click()\` | Simulates a click on the button. | |
-| \`focus()\` | Sets focus on the button. | \`options: FocusOptions\` |
-| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\| File \\| FormData \\| null, reason: 'autocomplete' \\| 'restore'\` |
-| \`resetValidity()\` | Reset validity is a way of removing manual custom errors and native validation. | |
-| \`setCustomValidity()\` | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators. | \`message: string\` |
+| Name                           | Description                                                                                                                                                                                                                                                                                                                                       | Arguments                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | ----------- | ------------------------------- | ----------- |
+| \`blur()\`                     | Removes focus from the button.                                                                                                                                                                                                                                                                                                                    |                           |
+| \`click()\`                    | Simulates a click on the button.                                                                                                                                                                                                                                                                                                                  |                           |
+| \`focus()\`                    | Sets focus on the button.                                                                                                                                                                                                                                                                                                                         | \`options: FocusOptions\` |
+| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\        | File \\ | FormData \\ | null, reason: 'autocomplete' \\ | 'restore'\` |
+| \`resetValidity()\`            | Reset validity is a way of removing manual custom errors and native validation.                                                                                                                                                                                                                                                                   |                           |
+| \`setCustomValidity()\`        | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators.                                                                                                                                                          | \`message: string\`       |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
-| \`blur\` | Emitted when the button loses focus. |
-| \`focus\` | Emitted when the button gains focus. |
+| Name           | Description                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| \`blur\`       | Emitted when the button loses focus.                                                              |
+| \`focus\`      | Emitted when the button gains focus.                                                              |
 | \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied. |
 
 ## Custom States
 
 Learn more about [custom states](https://webawesome.com/docs/usage/#custom-states).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`disabled\` | Applied when the button is disabled. | \`:state(disabled)\` |
-| \`icon-button\` | \`
+| Name            | Description                          | CSS selector         |
+| --------------- | ------------------------------------ | -------------------- |
+| \`disabled\`    | Applied when the button is disabled. | \`:state(disabled)\` |
+| \`icon-button\` | \`                                   |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
-| \`caret\` | \`
+| Name      | Description                   | CSS selector     |
+| --------- | ----------------------------- | ---------------- |
+| \`base\`  | The component's base wrapper. | \`::part(base)\` |
+| \`caret\` | \`                            |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
--   [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
 
 **Need a hand?** Report a bug Ask for help

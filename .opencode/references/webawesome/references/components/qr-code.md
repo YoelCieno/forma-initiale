@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/qr-code
 
-
 `<wa-qr-code>` Stable Since 2.0
 
 QR codes encode a URL or other short text into a scannable image, rendered client-side using the Canvas API. Use them to share links, contact info, or Wi-Fi credentials that visitors can scan with a phone.
@@ -11,7 +10,10 @@ QR codes are useful for providing small pieces of information to users who can q
 
 ```html
 <div class="qr-overview">
-  <wa-qr-code value="https://shoelace.style/" label="Scan this code to visit Web Awesome on the web!"></wa-qr-code>
+  <wa-qr-code
+    value="https://shoelace.style/"
+    label="Scan this code to visit Web Awesome on the web!"
+  ></wa-qr-code>
   <br />
 
   <wa-input maxlength="255" with-clear label="Value">
@@ -20,14 +22,14 @@ QR codes are useful for providing small pieces of information to users who can q
 </div>
 
 <script>
-  const container = document.querySelector('.qr-overview');
-  const qrCode = container.querySelector('wa-qr-code');
-  const input = container.querySelector('wa-input');
+  const container = document.querySelector('.qr-overview')
+  const qrCode = container.querySelector('wa-qr-code')
+  const input = container.querySelector('wa-input')
 
   customElements.whenDefined('wa-qr-code').then(() => {
-    input.value = qrCode.value;
-    input.addEventListener('input', () => (qrCode.value = input.value));
-  });
+    input.value = qrCode.value
+    input.addEventListener('input', () => (qrCode.value = input.value))
+  })
 </script>
 
 <style>
@@ -109,7 +111,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/qr-code/qr-code.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/qr-code/qr-code.js'
 ```
 
 \*\*npm\*\*
@@ -117,7 +119,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/qr-code/qr-code.
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/qr-code/qr-code.js';
+import '@awesome.me/webawesome/dist/components/qr-code/qr-code.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -125,7 +127,7 @@ import '@awesome.me/webawesome/dist/components/qr-code/qr-code.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/qr-code/qr-code.js';
+import './webawesome/dist/components/qr-code/qr-code.js'
 ```
 
 \*\*React\*\*
@@ -133,30 +135,30 @@ import './webawesome/dist/components/qr-code/qr-code.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaQrCode from '@awesome.me/webawesome/dist/react/qr-code/index.js';
+import WaQrCode from '@awesome.me/webawesome/dist/react/qr-code/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`background\` background | \`transparent\` The background color. This can be any valid CSS color or . It cannot be a CSS custom property. Type string Default '' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`errorCorrection\` error-correction | \`'L' \\| 'M' \\| 'Q' \\| 'H'\` The level of error correction to use. Learn more Type Default 'H' | | |
-| \`fill\` fill | \`string\` The fill color. This can be any valid CSS color, but not a CSS custom property. Type Default '' | | |
-| \`label\` label | \`string\` The label for assistive devices to announce. If unspecified, the value will be used instead. Type Default '' | | |
-| \`radius\` radius | \`number\` The edge radius of each module. Must be between 0 and 0.5. Type Default 0 | | |
-| \`size\` size | \`number\` The size of the QR code, in pixels. Type Default 128 | | |
-| \`value\` value | \`string\` The QR code's value. Type Default '' | | |
+| Name                                 | Description                                                                                                                           | Reflects                                                                                                                                       |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------- | --- | --- |
+| \`background\` background            | \`transparent\` The background color. This can be any valid CSS color or . It cannot be a CSS custom property. Type string Default '' |                                                                                                                                                |        |
+| \`css\`                              | \`CSSResultGroup \\                                                                                                                   | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |        |                                                                         |
+| \`errorCorrection\` error-correction | \`'L' \\                                                                                                                              | 'M' \\                                                                                                                                         | 'Q' \\ | 'H'\` The level of error correction to use. Learn more Type Default 'H' |     |     |
+| \`fill\` fill                        | \`string\` The fill color. This can be any valid CSS color, but not a CSS custom property. Type Default ''                            |                                                                                                                                                |        |
+| \`label\` label                      | \`string\` The label for assistive devices to announce. If unspecified, the value will be used instead. Type Default ''               |                                                                                                                                                |        |
+| \`radius\` radius                    | \`number\` The edge radius of each module. Must be between 0 and 0.5. Type Default 0                                                  |                                                                                                                                                |        |
+| \`size\` size                        | \`number\` The size of the QR code, in pixels. Type Default 128                                                                       |                                                                                                                                                |        |
+| \`value\` value                      | \`string\` The QR code's value. Type Default ''                                                                                       |                                                                                                                                                |        |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name     | Description                   | CSS selector     |
+| -------- | ----------------------------- | ---------------- |
 | \`base\` | The component's base wrapper. | \`::part(base)\` |
 
 **Need a hand?** Report a bug Ask for help

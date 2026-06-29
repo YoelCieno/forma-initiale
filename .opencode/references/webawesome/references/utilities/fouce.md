@@ -27,7 +27,7 @@ If you're using [Turbo](https://turbo.hotwired.dev/) to serve a multi-page appli
 The following function acts as a middleware to ensure components are registered _before_ the page shows, eliminating FOUCE for page-to-page navigation with Turbo.
 
 ```js
-import { preventTurboFouce } from '/dist/webawesome.js';
+import { preventTurboFouce } from '/dist/webawesome.js'
 
-preventTurboFouce();
+preventTurboFouce()
 ```

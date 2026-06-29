@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/rating
 
-
 `<wa-rating>` Stable Since 2.0
 
 Ratings display a numeric score as a row of selectable symbols, typically stars. Use them to capture quick feedback or show an average rating for a product or piece of content.
@@ -86,18 +85,18 @@ The event has a payload with `phase` and `value` properties. The `phase` propert
 </div>
 
 <script>
-  const rating = document.querySelector('.detect-hover > wa-rating');
-  const span = rating.nextElementSibling;
-  const terms = ['No rating', 'Terrible', 'Bad', 'OK', 'Good', 'Excellent'];
+  const rating = document.querySelector('.detect-hover > wa-rating')
+  const span = rating.nextElementSibling
+  const terms = ['No rating', 'Terrible', 'Bad', 'OK', 'Good', 'Excellent']
 
-  rating.addEventListener('wa-hover', event => {
-    span.textContent = terms[event.detail.value];
+  rating.addEventListener('wa-hover', (event) => {
+    span.textContent = terms[event.detail.value]
 
     // Clear feedback when hovering stops
     if (event.detail.phase === 'end') {
-      span.textContent = '';
+      span.textContent = ''
     }
-  });
+  })
 </script>
 
 <style>
@@ -123,15 +122,19 @@ The event has a payload with `phase` and `value` properties. The `phase` propert
 You can provide custom icons by passing a function to the `getSymbol` property.
 
 ```html
-<wa-rating label="Rating" class="rating-hearts" style="--symbol-color-active: #ff4136;"></wa-rating>
+<wa-rating
+  label="Rating"
+  class="rating-hearts"
+  style="--symbol-color-active: #ff4136;"
+></wa-rating>
 
 <script type="module">
-  const rating = document.querySelector('.rating-hearts');
+  const rating = document.querySelector('.rating-hearts')
 
-  await customElements.whenDefined('wa-rating');
-  await rating.updateComplete;
+  await customElements.whenDefined('wa-rating')
+  await rating.updateComplete
 
-  rating.getSymbol = () => '<wa-icon name="heart" variant="solid"></wa-icon>';
+  rating.getSymbol = () => '<wa-icon name="heart" variant="solid"></wa-icon>'
 </script>
 ```
 
@@ -143,15 +146,21 @@ You can also use the `getSymbol` property to render different icons based on val
 <wa-rating label="Rating" class="rating-emojis"></wa-rating>
 
 <script type="module">
-  const rating = document.querySelector('.rating-emojis');
+  const rating = document.querySelector('.rating-emojis')
 
-  await customElements.whenDefined('wa-rating');
-  await rating.updateComplete;
+  await customElements.whenDefined('wa-rating')
+  await rating.updateComplete
 
   rating.getSymbol = (value, isSelected) => {
-    const icons = ['face-angry', 'face-frown', 'face-meh', 'face-smile', 'face-laugh'];
-    return `<wa-icon name="${icons[value - 1]}"></wa-icon>`;
-  };
+    const icons = [
+      'face-angry',
+      'face-frown',
+      'face-meh',
+      'face-smile',
+      'face-laugh',
+    ]
+    return `<wa-icon name="${icons[value - 1]}"></wa-icon>`
+  }
 </script>
 ```
 
@@ -167,17 +176,17 @@ Use the `required` attribute to make the rating mandatory. The form will not sub
 </form>
 
 <script type="module">
-  const form = document.querySelector('.rating-required');
+  const form = document.querySelector('.rating-required')
 
   await Promise.all([
     customElements.whenDefined('wa-button'),
     customElements.whenDefined('wa-rating'),
   ]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -193,28 +202,28 @@ Use the `setCustomValidity()` method to set a custom validation message. This wi
 </form>
 
 <script type="module">
-  const form = document.querySelector('.rating-custom-validity');
-  const rating = form.querySelector('wa-rating');
-  const errorMessage = 'Please rate at least 3 stars!';
+  const form = document.querySelector('.rating-custom-validity')
+  const rating = form.querySelector('wa-rating')
+  const errorMessage = 'Please rate at least 3 stars!'
 
   customElements.whenDefined('wa-rating').then(async () => {
-    await rating.updateComplete;
-    rating.setCustomValidity(errorMessage);
-  });
+    await rating.updateComplete
+    rating.setCustomValidity(errorMessage)
+  })
 
   rating.addEventListener('change', () => {
-    rating.setCustomValidity(rating.value >= 3 ? '' : errorMessage);
-  });
+    rating.setCustomValidity(rating.value >= 3 ? '' : errorMessage)
+  })
 
   await Promise.all([
     customElements.whenDefined('wa-button'),
     customElements.whenDefined('wa-rating'),
   ]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -223,12 +232,21 @@ Use the `setCustomValidity()` method to set a custom validation message. This wi
 Ratings can be used in forms just like native form controls. The rating's `name` and `value` will be included in the form data when submitted.
 
 ```html
-<form class="rating-form-submission" action="about:blank" method="get" target="_blank">
-  <label style="display: block; margin-bottom: 0.5rem;">How would you rate your experience?</label>
+<form
+  class="rating-form-submission"
+  action="about:blank"
+  method="get"
+  target="_blank"
+>
+  <label style="display: block; margin-bottom: 0.5rem;"
+    >How would you rate your experience?</label
+  >
   <wa-rating name="rating" label="Rating" required></wa-rating>
   <br /><br />
   <wa-button type="submit">Submit</wa-button>
-  <wa-button appearance="filled" type="reset" variant="neutral">Reset</wa-button>
+  <wa-button appearance="filled" type="reset" variant="neutral"
+    >Reset</wa-button
+  >
 </form>
 ```
 
@@ -241,7 +259,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/rating/rating.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/rating/rating.js'
 ```
 
 \*\*npm\*\*
@@ -249,7 +267,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/rating/rating.js
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/rating/rating.js';
+import '@awesome.me/webawesome/dist/components/rating/rating.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -257,7 +275,7 @@ import '@awesome.me/webawesome/dist/components/rating/rating.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/rating/rating.js';
+import './webawesome/dist/components/rating/rating.js'
 ```
 
 \*\*React\*\*
@@ -265,19 +283,19 @@ import './webawesome/dist/components/rating/rating.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaRating from '@awesome.me/webawesome/dist/react/rating/index.js';
+import WaRating from '@awesome.me/webawesome/dist/react/rating/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[sizeStyles, styles\] | | |
-| \`defaultValue\` default-value | \`number\` The default value of the form control. Used to reset the rating to its initial value. Type Default 0 | | |
-| \`disabled\` disabled | \`boolean\` Disables the rating. Type Default false | | |
-| \`form\` | \`
+| Name                           | Description                                                                                                     | Reflects                                                                                                                                                       |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                        | \`CSSResultGroup \\                                                                                             | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[sizeStyles, styles\] |     |     |
+| \`defaultValue\` default-value | \`number\` The default value of the form control. Used to reset the rating to its initial value. Type Default 0 |                                                                                                                                                                |     |
+| \`disabled\` disabled          | \`boolean\` Disables the rating. Type Default false                                                             |                                                                                                                                                                |     |
+| \`form\`                       | \`                                                                                                              |
 
 \` By default, form controls are associated with the nearest containing element. This attribute allows you to place the form control outside of a form and associate it with the form that has this id. The form must be in the same document or shadow root for this to work. Type HTMLFormElement \\| null | | |
 | \`getSymbol\` getSymbol | \`\` A function that customizes the symbol to be rendered. The first and only argument is the rating's current value. The function should return a string containing trusted HTML of the symbol to render at the specified value. Works well with elements. Type (value: number, isSelected: boolean) => string | | |
@@ -296,44 +314,44 @@ Learn more about [attributes and properties](https://webawesome.com/docs/usage/#
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\| File \\| FormData \\| null, reason: 'autocomplete' \\| 'restore'\` |
-| \`resetValidity()\` | Reset validity is a way of removing manual custom errors and native validation. | |
-| \`setCustomValidity()\` | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators. | \`message: string\` |
+| Name                           | Description                                                                                                                                                                                                                                                                                                                                       | Arguments           |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------- | ----------- | ------------------------------- | ----------- |
+| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\  | File \\ | FormData \\ | null, reason: 'autocomplete' \\ | 'restore'\` |
+| \`resetValidity()\`            | Reset validity is a way of removing manual custom errors and native validation.                                                                                                                                                                                                                                                                   |                     |
+| \`setCustomValidity()\`        | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators.                                                                                                                                                          | \`message: string\` |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
-| \`change\` | Emitted when the rating's value changes. |
-| \`wa-hover\` | \`phase\` Emitted when the user hovers over a value. The property indicates when hovering starts, moves to a new value, or ends. The value property tells what the rating's value would be if the user were to commit to the hovered value. |
-| \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied. |
+| Name           | Description                                                                                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \`change\`     | Emitted when the rating's value changes.                                                                                                                                                                                                    |
+| \`wa-hover\`   | \`phase\` Emitted when the user hovers over a value. The property indicates when hovering starts, moves to a new value, or ends. The value property tells what the rating's value would be if the user were to commit to the hovered value. |
+| \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied.                                                                                                                                           |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--symbol-color\` | The inactive color for symbols. |
-| \`--symbol-color-active\` | The active color for symbols. |
-| \`--symbol-spacing\` | The spacing to use around symbols. |
+| Name                      | Description                        |
+| ------------------------- | ---------------------------------- |
+| \`--symbol-color\`        | The inactive color for symbols.    |
+| \`--symbol-color-active\` | The active color for symbols.      |
+| \`--symbol-spacing\`      | The spacing to use around symbols. |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name     | Description                   | CSS selector     |
+| -------- | ----------------------------- | ---------------- |
 | \`base\` | The component's base wrapper. | \`::part(base)\` |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
 
 **Need a hand?** Report a bug Ask for help

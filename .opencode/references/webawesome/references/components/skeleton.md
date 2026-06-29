@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/skeleton
 
-
 `<wa-skeleton>` Stable Since 2.0
 
 Skeletons show placeholder shapes where content will appear once it finishes loading, reducing perceived wait time and preventing layout shift.
@@ -200,7 +199,15 @@ Set a `border-radius` on the `indicator` part to make circles, squares, and rect
 
   .skeleton-shapes .comment::part(indicator) {
     border-radius: 0;
-    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    clip-path: polygon(
+      0% 0%,
+      100% 0%,
+      100% 75%,
+      75% 75%,
+      75% 100%,
+      50% 75%,
+      0% 75%
+    );
   }
 
   .skeleton-shapes wa-skeleton:not(:last-child) {
@@ -214,7 +221,10 @@ Set a `border-radius` on the `indicator` part to make circles, squares, and rect
 Set the `--color` and `--sheen-color` custom properties to adjust the skeleton's color.
 
 ```html
-<wa-skeleton effect="sheen" style="--color: tomato; --sheen-color: #ffb094;"></wa-skeleton>
+<wa-skeleton
+  effect="sheen"
+  style="--color: tomato; --sheen-color: #ffb094;"
+></wa-skeleton>
 ```
 
 ## Importing
@@ -226,7 +236,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/skeleton/skeleton.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/skeleton/skeleton.js'
 ```
 
 \*\*npm\*\*
@@ -234,7 +244,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/skeleton/skeleto
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/skeleton/skeleton.js';
+import '@awesome.me/webawesome/dist/components/skeleton/skeleton.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -242,7 +252,7 @@ import '@awesome.me/webawesome/dist/components/skeleton/skeleton.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/skeleton/skeleton.js';
+import './webawesome/dist/components/skeleton/skeleton.js'
 ```
 
 \*\*React\*\*
@@ -250,33 +260,33 @@ import './webawesome/dist/components/skeleton/skeleton.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaSkeleton from '@awesome.me/webawesome/dist/react/skeleton/index.js';
+import WaSkeleton from '@awesome.me/webawesome/dist/react/skeleton/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`effect\` effect | \`'pulse' \\| 'sheen' \\| 'none'\` Determines which effect the skeleton will use. Type Default 'none' | | |
+| Name              | Description         | Reflects                                                                                                                                       |
+| ----------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --- | --- |
+| \`css\`           | \`CSSResultGroup \\ | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |                                                                             |     |
+| \`effect\` effect | \`'pulse' \\        | 'sheen' \\                                                                                                                                     | 'none'\` Determines which effect the skeleton will use. Type Default 'none' |     |     |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--color\` | The color of the skeleton. |
+| Name              | Description                                                |
+| ----------------- | ---------------------------------------------------------- |
+| \`--color\`       | The color of the skeleton.                                 |
 | \`--sheen-color\` | The sheen color when the skeleton is in its loading state. |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name          | Description                                                                | CSS selector          |
+| ------------- | -------------------------------------------------------------------------- | --------------------- |
 | \`indicator\` | The skeleton's indicator which is responsible for its color and animation. | \`::part(indicator)\` |
 
 **Need a hand?** Report a bug Ask for help

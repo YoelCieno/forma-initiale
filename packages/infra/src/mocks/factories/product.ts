@@ -16,7 +16,7 @@ function calculatePrice(counter: number, config?: PriceConfig): number {
 }
 
 function getPriceRecord(counter: number, tenantId: TenantId): Product {
-	const config = PRODUCT_TENANT_CONFIGS[tenantId]
+  const config = PRODUCT_TENANT_CONFIGS[tenantId]
   return {
     id: `prod-${counter}`,
     name: config.names[(counter - 1) % config.names.length],
@@ -26,20 +26,23 @@ function getPriceRecord(counter: number, tenantId: TenantId): Product {
   }
 }
 
-export function buildProduct(tenantId: TenantId = 'wl', overrides?: Partial<Product>): Product {
+export function buildProduct(
+  tenantId: TenantId = 'wl',
+  overrides?: Partial<Product>,
+): Product {
   if (!isValidTenant(tenantId)) {
     throw new Error(`Unknown tenant: ${tenantId}`)
   }
 
   counter++
-	return {
-		...getPriceRecord(counter, tenantId),
+  return {
+    ...getPriceRecord(counter, tenantId),
     ...overrides,
-	}
+  }
 }
 
 export function buildProductList(tenantId: TenantId): Product[] {
-	const count = PRODUCT_TENANT_CONFIGS[tenantId].names.length
+  const count = PRODUCT_TENANT_CONFIGS[tenantId].names.length
   return Array.from({ length: count }, () => buildProduct(tenantId))
 }
 

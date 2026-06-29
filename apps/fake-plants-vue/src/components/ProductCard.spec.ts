@@ -48,6 +48,4 @@ describe('ProductCard', () => {
     })
     expect(wrapper.text()).toContain('Free')
   })
-
-
 })

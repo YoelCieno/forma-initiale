@@ -1,11 +1,21 @@
 import { describe, expect, it } from 'vitest'
-import { FRAMEWORK_NAMES, FAKE_PLANTS_NAMES, PRODUCT_TENANT_CONFIGS } from './mocked-data.js'
+import {
+  FRAMEWORK_NAMES,
+  FAKE_PLANTS_NAMES,
+  PRODUCT_TENANT_CONFIGS,
+} from './mocked-data.js'
 import type { PriceConfig } from './mocked-data.js'
 
 describe('mocked-data', () => {
   describe('FRAMEWORK_NAMES', () => {
     it('exports the expected framework names', () => {
-      expect(FRAMEWORK_NAMES).toEqual(['react', 'angular', 'vue', 'svelte', 'solid'])
+      expect(FRAMEWORK_NAMES).toEqual([
+        'react',
+        'angular',
+        'vue',
+        'svelte',
+        'solid',
+      ])
     })
 
     it('is a readonly tuple', () => {
@@ -39,7 +49,10 @@ describe('mocked-data', () => {
       expect(wl).toBeDefined()
       expect(wl.names).toBe(FRAMEWORK_NAMES)
       expect(wl.price).toBeUndefined()
-      expect(wl.previousPrice).toEqual({ base: 29.99, increment: 10 } satisfies PriceConfig)
+      expect(wl.previousPrice).toEqual({
+        base: 29.99,
+        increment: 10,
+      } satisfies PriceConfig)
       expect(wl.rateType).toBe('cyclic')
     })
 
@@ -47,7 +60,10 @@ describe('mocked-data', () => {
       const fp = PRODUCT_TENANT_CONFIGS.fp
       expect(fp).toBeDefined()
       expect(fp.names).toBe(FAKE_PLANTS_NAMES)
-      expect(fp.price).toEqual({ base: 9.99, increment: 10 } satisfies PriceConfig)
+      expect(fp.price).toEqual({
+        base: 9.99,
+        increment: 10,
+      } satisfies PriceConfig)
       expect(fp.previousPrice).toBeUndefined()
       expect(fp.rateType).toBe('random')
     })

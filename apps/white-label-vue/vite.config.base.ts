@@ -19,7 +19,9 @@ export interface WhiteLabelViteOptions {
  * Creates a Vite UserConfig pre-configured with Vue plugin, AutoImport, and Components.
  * Tenant apps call this instead of duplicating the plugin setup.
  */
-export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): UserConfig {
+export function defineWhiteLabelViteConfig(
+  opts: WhiteLabelViteOptions = {},
+): UserConfig {
   return defineConfig({
     plugins: [
       vue({
@@ -31,7 +33,10 @@ export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): Us
       }),
       AutoImport({
         imports: ['vue', 'vue-router'],
-        dirs: [...(opts.autoImportDirs ?? []), resolve(layerSrc, 'composables')],
+        dirs: [
+          ...(opts.autoImportDirs ?? []),
+          resolve(layerSrc, 'composables'),
+        ],
         dts: './src/auto-imports.d.ts',
       }),
       Components({

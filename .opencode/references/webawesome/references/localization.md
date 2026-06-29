@@ -7,7 +7,10 @@ Components can be localized by importing the appropriate translation file and se
 ```html
 <html lang="es">
   <head>
-    <script type="module" src="/path/to/shoelace/dist/translations/es.js"></script>
+    <script
+      type="module"
+      src="/path/to/shoelace/dist/translations/es.js"
+    ></script>
   </head>
 
   <body>
@@ -25,17 +28,17 @@ Web Awesome ships with [a number of translations](https://github.com/shoelace-st
 You can import translations using the following syntax, where `<code>` is replaced with any language code shown above.
 
 ```js
-import '/dist/translations/<code>.js';
+import '/dist/translations/<code>.js'
 ```
 
 You do not need to load translations up front. You can import them dynamically even after updating the `lang` attribute. Once a translation is registered, localized components will update automatically.
 
 ```js
 // Same as setting <html lang="de">
-document.documentElement.lang = 'de';
+document.documentElement.lang = 'de'
 
 // Import the translation
-import('/translations/<code>.js');
+import('/translations/<code>.js')
 ```
 
 ### Translation Resolution

@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/markdown
 
-
 `<wa-markdown>` Experimental Since 3.4
 
 Markdown elements render markdown content as HTML directly in the browser, making it easy to display user-generated content or documentation without a server-side build step.
@@ -14,7 +13,7 @@ The markdown component turns raw markdown into rendered HTML using the [Marked](
   <script type="text/markdown">
     ## Getting Started
 
-    Here's a quick overview with **bold**, *italic*, and `inline code`.
+    Here's a quick overview with **bold**, _italic_, and `inline code`.
 
     - Install the package
     - Import the component
@@ -57,13 +56,13 @@ This means you can write markdown at any indentation level and it will render co
 ```html
 <wa-markdown>
   <script type="text/markdown">
-            ## Deeply Indented
+    ## Deeply Indented
 
-            Even though this content is heavily indented in the source,
-            the shared whitespace is stripped before parsing.
+    Even though this content is heavily indented in the source,
+    the shared whitespace is stripped before parsing.
 
-                Lines with extra indentation beyond the common
-                prefix are preserved, like this code block.
+        Lines with extra indentation beyond the common
+        prefix are preserved, like this code block.
   </script>
 </wa-markdown>
 ```
@@ -114,21 +113,21 @@ All `<wa-markdown>` instances share a single [Marked](https://marked.js.org/usin
 </wa-markdown>
 
 <script type="module">
-  await customElements.whenDefined('wa-markdown');
-  const md = document.getElementById('markdown__config');
+  await customElements.whenDefined('wa-markdown')
+  const md = document.getElementById('markdown__config')
 
-  await new Promise(requestAnimationFrame);
+  await new Promise(requestAnimationFrame)
 
   // Customize the link renderer to open links in a new tab
   const renderer = {
     link(href, title, text) {
-      const titleAttr = title ? ` title="${title}"` : '';
-      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener">${text}</a>`;
-    }
-  };
+      const titleAttr = title ? ` title="${title}"` : ''
+      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener">${text}</a>`
+    },
+  }
 
-  md.marked.use({ renderer });
-  md.renderMarkdown();
+  md.marked.use({ renderer })
+  md.renderMarkdown()
 </script>
 ```
 
@@ -146,32 +145,36 @@ Custom [Marked extensions](https://marked.js.org/using_advanced#extensions) can 
 </wa-markdown>
 
 <script type="module">
-  await customElements.whenDefined('wa-markdown');
-  const md = document.getElementById('markdown__plugin');
+  await customElements.whenDefined('wa-markdown')
+  const md = document.getElementById('markdown__plugin')
 
   const highlight = {
-    extensions: [{
-      name: 'highlight',
-      level: 'inline',
-      start(src) { return src.indexOf('=='); },
-      tokenizer(src) {
-        const match = src.match(/^==([^=]+)==/);
-        if (match) {
-          return {
-            type: 'highlight',
-            raw: match[0],
-            text: match[1]
-          };
-        }
+    extensions: [
+      {
+        name: 'highlight',
+        level: 'inline',
+        start(src) {
+          return src.indexOf('==')
+        },
+        tokenizer(src) {
+          const match = src.match(/^==([^=]+)==/)
+          if (match) {
+            return {
+              type: 'highlight',
+              raw: match[0],
+              text: match[1],
+            }
+          }
+        },
+        renderer(token) {
+          return `<mark>${token.text}</mark>`
+        },
       },
-      renderer(token) {
-        return `<mark>${token.text}</mark>`;
-      }
-    }]
-  };
+    ],
+  }
 
-  md.marked.use(highlight);
-  md.renderMarkdown();
+  md.marked.use(highlight)
+  md.renderMarkdown()
 </script>
 ```
 
@@ -186,20 +189,21 @@ The component parses and renders automatically when the script element is first 
       Click the button to swap this content out.
     </script>
   </wa-markdown>
-  <br>
+  <br />
   <wa-button>Update content</wa-button>
 </div>
 
 <script type="module">
-  await customElements.whenDefined('wa-markdown');
-  const md = document.getElementById('markdown__dynamic-md');
-  const button = document.querySelector('#markdown__dynamic wa-button');
-  const script = md.querySelector('script[type="text/markdown"]');
+  await customElements.whenDefined('wa-markdown')
+  const md = document.getElementById('markdown__dynamic-md')
+  const button = document.querySelector('#markdown__dynamic wa-button')
+  const script = md.querySelector('script[type="text/markdown"]')
 
   button.addEventListener('click', () => {
-    script.textContent = '## Fresh Content\n\nThis was **swapped in** by calling `renderMarkdown()`.';
-    md.renderMarkdown();
-  });
+    script.textContent =
+      '## Fresh Content\n\nThis was **swapped in** by calling `renderMarkdown()`.'
+    md.renderMarkdown()
+  })
 </script>
 ```
 
@@ -212,7 +216,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/markdown/markdown.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/markdown/markdown.js'
 ```
 
 \*\*npm\*\*
@@ -220,7 +224,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/markdown/markdow
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/markdown/markdown.js';
+import '@awesome.me/webawesome/dist/components/markdown/markdown.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -228,7 +232,7 @@ import '@awesome.me/webawesome/dist/components/markdown/markdown.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/markdown/markdown.js';
+import './webawesome/dist/components/markdown/markdown.js'
 ```
 
 \*\*React\*\*
@@ -236,27 +240,27 @@ import './webawesome/dist/components/markdown/markdown.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaMarkdown from '@awesome.me/webawesome/dist/react/markdown/index.js';
+import WaMarkdown from '@awesome.me/webawesome/dist/react/markdown/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`marked\` | \`WaMarkdown.getMarked()\` A reference to the shared Marked instance for convenience. Equivalent to . Type Marked | | |
-| \`tabSize\` tab-size | \`number\` The tab stop width used when converting leading tabs to spaces during whitespace normalization. Type Default 4 | | |
+| Name                 | Description                                                                                                               | Reflects                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`              | \`CSSResultGroup \\                                                                                                       | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`marked\`           | \`WaMarkdown.getMarked()\` A reference to the shared Marked instance for convenience. Equivalent to . Type Marked         |                                                                                                                                                |     |
+| \`tabSize\` tab-size | \`number\` The tab stop width used when converting leading tabs to spaces during whitespace normalization. Type Default 4 |                                                                                                                                                |     |
 
 ## Methods
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`getMarked()\` | \`\` Returns the shared Marked instance used by all components. | |
-| \`renderMarkdown()\` | Reads the script content, normalizes whitespace, parses markdown, and injects the result. | |
-| \`updateAll()\` | \`\` Re-renders all connected instances. Call this after changing the Marked configuration. | |
+| Name                 | Description                                                                                 | Arguments |
+| -------------------- | ------------------------------------------------------------------------------------------- | --------- |
+| \`getMarked()\`      | \`\` Returns the shared Marked instance used by all components.                             |           |
+| \`renderMarkdown()\` | Reads the script content, normalizes whitespace, parses markdown, and injects the result.   |           |
+| \`updateAll()\`      | \`\` Re-renders all connected instances. Call this after changing the Marked configuration. |           |
 
 **Need a hand?** Report a bug Ask for help

@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/format-date
 
-
 `<wa-format-date>` Stable Since 2.0
 
 Formats a date or time for display using the specified locale and options. Powered by the Intl.DateTimeFormat API for consistent, localized output.
@@ -26,7 +25,8 @@ Formatting options are based on those found in the [`Intl.DateTimeFormat` API](h
 
 ```html
 <!-- Human-readable date -->
-<wa-format-date month="long" day="numeric" year="numeric"></wa-format-date><br />
+<wa-format-date month="long" day="numeric" year="numeric"></wa-format-date
+><br />
 
 <!-- Time -->
 <wa-format-date hour="numeric" minute="numeric"></wa-format-date><br />
@@ -49,8 +49,17 @@ Formatting options are based on those found in the [`Intl.DateTimeFormat` API](h
 By default, the browser will determine whether to use 12-hour or 24-hour time. To force one or the other, set the `hour-format` attribute to `12` or `24`.
 
 ```html
-<wa-format-date hour="numeric" minute="numeric" hour-format="12"></wa-format-date><br />
-<wa-format-date hour="numeric" minute="numeric" hour-format="24"></wa-format-date>
+<wa-format-date
+  hour="numeric"
+  minute="numeric"
+  hour-format="12"
+></wa-format-date
+><br />
+<wa-format-date
+  hour="numeric"
+  minute="numeric"
+  hour-format="24"
+></wa-format-date>
 ```
 
 ### Localization
@@ -72,7 +81,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-date/format-date.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-date/format-date.js'
 ```
 
 \*\*npm\*\*
@@ -80,7 +89,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-date/form
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/format-date/format-date.js';
+import '@awesome.me/webawesome/dist/components/format-date/format-date.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -88,7 +97,7 @@ import '@awesome.me/webawesome/dist/components/format-date/format-date.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/format-date/format-date.js';
+import './webawesome/dist/components/format-date/format-date.js'
 ```
 
 \*\*React\*\*
@@ -96,27 +105,27 @@ import './webawesome/dist/components/format-date/format-date.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaFormatDate from '@awesome.me/webawesome/dist/react/format-date/index.js';
+import WaFormatDate from '@awesome.me/webawesome/dist/react/format-date/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type | | |
-| \`date\` date | \`date.toISOString()\` The date/time to format. If not set, the current date and time will be used. When passing a string, it's strongly recommended to use the ISO 8601 format to ensure timezones are handled correctly. To convert a date to this format in JavaScript, use . Type Date \\| string Default new Date() | | |
-| \`day\` day | \`'numeric' \\| '2-digit'\` The format for displaying the day. Type | | |
-| \`era\` era | \`'narrow' \\| 'short' \\| 'long'\` The format for displaying the era. Type | | |
-| \`hour\` hour | \`'numeric' \\| '2-digit'\` The format for displaying the hour. Type | | |
-| \`hourFormat\` hour-format | \`'auto' \\| '12' \\| '24'\` The format for displaying the hour. Type Default 'auto' | | |
-| \`minute\` minute | \`'numeric' \\| '2-digit'\` The format for displaying the minute. Type | | |
-| \`month\` month | \`'numeric' \\| '2-digit' \\| 'narrow' \\| 'short' \\| 'long'\` The format for displaying the month. Type | | |
-| \`second\` second | \`'numeric' \\| '2-digit'\` The format for displaying the second. Type | | |
-| \`timeZone\` time-zone | \`string\` The time zone to express the time in. Type | | |
-| \`timeZoneName\` time-zone-name | \`'short' \\| 'long'\` The format for displaying the time. Type | | |
-| \`weekday\` weekday | \`'narrow' \\| 'short' \\| 'long'\` The format for displaying the weekday. Type | | |
-| \`year\` year | \`'numeric' \\| '2-digit'\` The format for displaying the year. Type | | |
+| Name                            | Description                                                                                                                                                                                                                                                                                   | Reflects                                                                                                                        |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------- | -------------------------------------------------- | --- | --- |
+| \`css\`                         | \`CSSResultGroup \\                                                                                                                                                                                                                                                                           | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type |                                                                |            |
+| \`date\` date                   | \`date.toISOString()\` The date/time to format. If not set, the current date and time will be used. When passing a string, it's strongly recommended to use the ISO 8601 format to ensure timezones are handled correctly. To convert a date to this format in JavaScript, use . Type Date \\ | string Default new Date()                                                                                                       |                                                                |            |
+| \`day\` day                     | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit'\` The format for displaying the day. Type                                                                             |                                                                |            |
+| \`era\` era                     | \`'narrow' \\                                                                                                                                                                                                                                                                                 | 'short' \\                                                                                                                      | 'long'\` The format for displaying the era. Type               |            |                                                    |
+| \`hour\` hour                   | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit'\` The format for displaying the hour. Type                                                                            |                                                                |            |
+| \`hourFormat\` hour-format      | \`'auto' \\                                                                                                                                                                                                                                                                                   | '12' \\                                                                                                                         | '24'\` The format for displaying the hour. Type Default 'auto' |            |                                                    |
+| \`minute\` minute               | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit'\` The format for displaying the minute. Type                                                                          |                                                                |            |
+| \`month\` month                 | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit' \\                                                                                                                    | 'narrow' \\                                                    | 'short' \\ | 'long'\` The format for displaying the month. Type |     |     |
+| \`second\` second               | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit'\` The format for displaying the second. Type                                                                          |                                                                |            |
+| \`timeZone\` time-zone          | \`string\` The time zone to express the time in. Type                                                                                                                                                                                                                                         |                                                                                                                                 |                                                                |
+| \`timeZoneName\` time-zone-name | \`'short' \\                                                                                                                                                                                                                                                                                  | 'long'\` The format for displaying the time. Type                                                                               |                                                                |            |
+| \`weekday\` weekday             | \`'narrow' \\                                                                                                                                                                                                                                                                                 | 'short' \\                                                                                                                      | 'long'\` The format for displaying the weekday. Type           |            |                                                    |
+| \`year\` year                   | \`'numeric' \\                                                                                                                                                                                                                                                                                | '2-digit'\` The format for displaying the year. Type                                                                            |                                                                |            |
 
 **Need a hand?** Report a bug Ask for help

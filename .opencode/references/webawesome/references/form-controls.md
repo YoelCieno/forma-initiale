@@ -33,11 +33,13 @@ To make a field required, use the `required` attribute. Required fields will aut
   <br />
   <wa-checkbox required>Check me before submitting</wa-checkbox>
   <br /><br />
-  <wa-button appearance="filled" type="submit" variant="neutral">Submit</wa-button>
+  <wa-button appearance="filled" type="submit" variant="neutral"
+    >Submit</wa-button
+  >
 </form>
 
 <script type="module">
-  const form = document.querySelector('.input-validation-required');
+  const form = document.querySelector('.input-validation-required')
 
   // Wait for controls to be defined before attaching form listeners
   await Promise.all([
@@ -48,11 +50,11 @@ To make a field required, use the `required` attribute. Required fields will aut
     customElements.whenDefined('wa-select'),
     customElements.whenDefined('wa-textarea'),
   ]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -62,22 +64,34 @@ To restrict a value to a specific [pattern](https://developer.mozilla.org/en-US/
 
 ```html
 <form class="input-validation-pattern">
-  <wa-input name="letters" required label="Letters" pattern="[A-Za-z]+"></wa-input>
+  <wa-input
+    name="letters"
+    required
+    label="Letters"
+    pattern="[A-Za-z]+"
+  ></wa-input>
   <br />
-  <wa-button appearance="filled" type="submit" variant="neutral">Submit</wa-button>
-  <wa-button appearance="filled" type="reset" variant="neutral">Reset</wa-button>
+  <wa-button appearance="filled" type="submit" variant="neutral"
+    >Submit</wa-button
+  >
+  <wa-button appearance="filled" type="reset" variant="neutral"
+    >Reset</wa-button
+  >
 </form>
 
 <script type="module">
-  const form = document.querySelector('.input-validation-pattern');
+  const form = document.querySelector('.input-validation-pattern')
 
   // Wait for controls to be defined before attaching form listeners
-  await Promise.all([customElements.whenDefined('wa-button'), customElements.whenDefined('wa-input')]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+  await Promise.all([
+    customElements.whenDefined('wa-button'),
+    customElements.whenDefined('wa-input'),
+  ]).then(() => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -87,24 +101,41 @@ Some input types will automatically trigger constraints, such as `email` and `ur
 
 ```html
 <form class="input-validation-type">
-  <wa-input type="email" label="Email" placeholder="you@example.com" required></wa-input>
+  <wa-input
+    type="email"
+    label="Email"
+    placeholder="you@example.com"
+    required
+  ></wa-input>
   <br />
-  <wa-input type="url" label="URL" placeholder="https://example.com/" required></wa-input>
+  <wa-input
+    type="url"
+    label="URL"
+    placeholder="https://example.com/"
+    required
+  ></wa-input>
   <br />
-  <wa-button appearance="filled" type="submit" variant="neutral">Submit</wa-button>
-  <wa-button appearance="filled" type="reset" variant="neutral">Reset</wa-button>
+  <wa-button appearance="filled" type="submit" variant="neutral"
+    >Submit</wa-button
+  >
+  <wa-button appearance="filled" type="reset" variant="neutral"
+    >Reset</wa-button
+  >
 </form>
 
 <script type="module">
-  const form = document.querySelector('.input-validation-type');
+  const form = document.querySelector('.input-validation-type')
 
   // Wait for controls to be defined before attaching form listeners
-  await Promise.all([customElements.whenDefined('wa-button'), customElements.whenDefined('wa-input')]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
-  });
+  await Promise.all([
+    customElements.whenDefined('wa-button'),
+    customElements.whenDefined('wa-input'),
+  ]).then(() => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
+  })
 </script>
 ```
 
@@ -116,29 +147,38 @@ To create a custom validation error, pass a non-empty string to the `setCustomVa
 <form class="input-validation-custom">
   <wa-input label="Type webawesome" required></wa-input>
   <br />
-  <wa-button appearance="filled" type="submit" variant="neutral">Submit</wa-button>
-  <wa-button appearance="filled" type="reset" variant="neutral">Reset</wa-button>
+  <wa-button appearance="filled" type="submit" variant="neutral"
+    >Submit</wa-button
+  >
+  <wa-button appearance="filled" type="reset" variant="neutral"
+    >Reset</wa-button
+  >
 </form>
 
 <script type="module">
-  const form = document.querySelector('.input-validation-custom');
-  const input = form.querySelector('wa-input');
+  const form = document.querySelector('.input-validation-custom')
+  const input = form.querySelector('wa-input')
 
   // Wait for controls to be defined before attaching form listeners
-  await Promise.all([customElements.whenDefined('wa-button'), customElements.whenDefined('wa-input')]).then(() => {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      alert('All fields are valid!');
-    });
+  await Promise.all([
+    customElements.whenDefined('wa-button'),
+    customElements.whenDefined('wa-input'),
+  ]).then(() => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault()
+      alert('All fields are valid!')
+    })
 
     input.addEventListener('input', () => {
       if (input.value === 'webawesome') {
-        input.setCustomValidity('');
+        input.setCustomValidity('')
       } else {
-        input.setCustomValidity("Hey, you're supposed to type 'webawesome' before submitting this!");
+        input.setCustomValidity(
+          "Hey, you're supposed to type 'webawesome' before submitting this!",
+        )
       }
-    });
-  });
+    })
+  })
 </script>
 ```
 
@@ -150,11 +190,11 @@ Due to the many ways form controls are used, Web Awesome doesn't provide out of 
 
 Instead, the following [custom states](https://developer.mozilla.org/en-US/docs/Web/API/ElementInternals/states) will be applied to reflect a control's validity as users interact with it. You can use them to create custom styles for any of the validation states you're interested in.
 
--   `:state(required)` - the form control is required
--   `:state(optional)` - the form control is optional
--   `:state(invalid)` - the form control is invalid
--   `:state(valid)` - the form control is valid
--   `:state(user-invalid)` - the form control is invalid and the user has interacted with it
--   `:state(user-valid)` - the form control is valid and the user has interacted with it
+- `:state(required)` - the form control is required
+- `:state(optional)` - the form control is optional
+- `:state(invalid)` - the form control is invalid
+- `:state(valid)` - the form control is valid
+- `:state(user-invalid)` - the form control is invalid and the user has interacted with it
+- `:state(user-valid)` - the form control is valid and the user has interacted with it
 
 These custom states work alongside the browser's built-in pseudo classes for validation: [`:required`](https://developer.mozilla.org/en-US/docs/Web/CSS/:required), [`:optional`](https://developer.mozilla.org/en-US/docs/Web/CSS/:optional), [`:invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:invalid), [`:valid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:valid), [`:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid), and [`:user-valid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-valid).

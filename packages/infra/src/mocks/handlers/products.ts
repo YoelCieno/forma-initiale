@@ -1,6 +1,10 @@
 import { http, HttpResponse } from 'msw'
 import type { Product } from '@repo/domain'
-import { buildProduct, buildProductList, resetProductCounter } from '../factories/product.js'
+import {
+  buildProduct,
+  buildProductList,
+  resetProductCounter,
+} from '../factories/product.js'
 
 export const productHandlers = [
   http.get('*/api/products', ({ request }) => {
@@ -26,8 +30,13 @@ export const productHandlers = [
 
   http.post('*/api/products', async ({ request }) => {
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
-    const body = await request.json() as Partial<Product>
-    const newProduct = buildProduct(tenantId, { name: body.name, previousPrice: body.previousPrice, price: body.price, rate: body.rate })
+    const body = (await request.json()) as Partial<Product>
+    const newProduct = buildProduct(tenantId, {
+      name: body.name,
+      previousPrice: body.previousPrice,
+      price: body.price,
+      rate: body.rate,
+    })
 
     return HttpResponse.json({ data: newProduct }, { status: 201 })
   }),

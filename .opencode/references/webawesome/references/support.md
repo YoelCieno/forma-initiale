@@ -19,6 +19,7 @@ Join the community for real-time help and discussion with other developers.
 ### Email
 
 For sensitive or account-specific issues:
+
 - Account access & login issues
 - Billing or subscription questions
 - Private matters
