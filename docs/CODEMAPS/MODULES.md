@@ -312,7 +312,7 @@ module.exports = {
 **Key Files**:
 
 - `index.ts` — Barrel exports
-- `product.presenter.ts` — ProductView mapping: Product → ProductView with framework name/description/logo
+- `product.presenter.ts` — ProductView mapping: Product → ProductView with framework name/description/image/imageFamily
 - `product.presenter.spec.ts` — Presenter tests (6 framework maps, edge cases, list mapping)
 
 **Dependencies**:
@@ -390,7 +390,7 @@ const views = toProductViewList(products, metaMap)
 - `src/components/CardContainer.vue` — Card demos (appearances, slots, header/footer, orientation)
 - `src/components/IconContainer.vue` — Icon demos (basic icons, animated, size variants) wrapped in fe-card
 - `src/components/RatingContainer.vue` — Rating demos (value, readonly, disabled, precision, sizes) wrapped in fe-card
-- `src/composables/useProducts.ts` — Product data composable (uses `@repo/presenters`, `@vueuse/core useAsyncState`)
+- `src/composables/useProducts.ts` — Product data composable (uses `@repo/presenters`, `@vueuse/core useAsyncState` + `useMemoize` caching)
 - `src/pages/ProductsPage.vue` — Product grid with fe-async-content (loading/error/content states)
 - `src/pages/ComponentsPage.vue` — Component showcase hub (uses ButtonContainer, CardContainer, IconContainer, RatingContainer)
 - `vite.config.ts` — Thin: calls `defineWhiteLabelViteConfig()` from base
@@ -414,7 +414,7 @@ const views = toProductViewList(products, metaMap)
 - `@repo/infra` — getProducts adapter
 - `@repo/presenters` — toProductViewList, ProductView type
 - `@repo/ui` — fe-button, fe-async-content, fe-card, fe-icon, fe-rating, WA styles
-- `@vueuse/core` (^14.3.0) — useAsyncState for composable async state management
+- `@vueuse/core` (^14.3.0) — useAsyncState + useMemoize for composable async state & caching
 - `vue` (^3.5.0)
 - `vue-router` (^4)
 
@@ -454,7 +454,7 @@ const views = toProductViewList(products, metaMap)
 - `vitest.config.ts` — Test config (vue plugin, jsdom)
 - `vitest.setup.ts` — Custom element config for fe-\* components
 
-**Test Count**: 13 tests across 3 files (App: 3, ProductCard: 7, AboutPage: 3)
+**Test Count**: 11 tests across 3 files (App: 3, ProductCard: 5, AboutPage: 3)
 
 **Dependencies**:
 

@@ -108,6 +108,7 @@ packages/ui/
 ```
 apps/white-label-vue/
 ├── package.json             # white-label-vue — Vue 3, vite, vue-router, exports ./app, ./vite.config.base
+├── metadata.ts              # Product metadata overrides (frameworkMap with title, description, image)
 ├── tsconfig.json            # extends vite.json, strictNullChecks: true
 ├── vite.config.ts           # Thin: calls defineWhiteLabelViteConfig() from base
 ├── vite.config.base.ts      # Shared Vite config factory: Vue, AutoImport, Components — used by tenants
@@ -144,7 +145,7 @@ apps/white-label-vue/
     │   └── RatingContainer.spec.ts  # Tests for RatingContainer
     │
     ├── composables/
-    │   ├── useProducts.ts        # Product data composable (uses @repo/presenters, @vueuse/core)
+    │   ├── useProducts.ts        # Product data composable (uses @repo/presenters, @vueuse/core useAsyncState + useMemoize)
     │   └── useProducts.spec.ts   # Composable tests (loading, success, HTTP failure, manual fetch)
     │
     └── pages/
@@ -160,6 +161,7 @@ Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory fro
 ```
 apps/fake-plants-vue/
 ├── package.json             # fake-plants-vue — depends on white-label-vue, domain, ui
+├── metadata.ts              # Plant metadata mapping (plantsMap with 7 entries)
 ├── tsconfig.json            # extends vite.json
 ├── vite.config.ts           # Uses defineWhiteLabelViteConfig() from white-label-vue base
 ├── vitest.config.ts         # Vitest: jsdom, vue plugin, auto-import, components

@@ -466,48 +466,73 @@ Composables orchestrate data fetching → presenting → state management. Now i
 **File:** `apps/white-label-vue/src/composables/useProducts.ts`
 
 ```typescript
+import type { ProductView, ProductMeta } from '@repo/presenters'
+import { useAsyncState, useMemoize } from '@vueuse/core'
+import { META_MAP_INJECTION_KEY } from '../app'
 import { getProducts } from '@repo/infra'
 import { toProductViewList } from '@repo/presenters'
-import type { ProductView, ProductMeta } from '@repo/presenters'
-import { useAsyncState } from '@vueuse/core'
-import { META_MAP_INJECTION_KEY } from '../app'
+
+type FetchOptions = { bypass?: boolean }
+
+const getCachedProducts = useMemoize(
+  async (metaMap: Record<string, ProductMeta> | undefined) => {
+    const { data } = await getProducts()
+    return toProductViewList(data, metaMap)
+  },
+  { getKey: () => 'products' },
+)
 
 export function useProducts() {
-  const formattedError = ref<string | undefined>()
   const metaMap = inject<Record<string, ProductMeta> | undefined>(
     META_MAP_INJECTION_KEY,
     undefined,
   )
 
-  const { state, isLoading, execute } = useAsyncState<ProductView[]>(
-    async () => {
-      const { data } = await getProducts()
-      return toProductViewList(data, metaMap)
+  const {
+    state,
+    isLoading,
+    error: rawError,
+    execute,
+  } = useAsyncState<ProductView[], [FetchOptions?]>(
+    (opts) => {
+      const fn = opts?.bypass ? getCachedProducts.load : getCachedProducts
+      return fn(metaMap)
     },
     [],
     {
       immediate: true,
-      onError(e: unknown) {
-        formattedError.value =
-          e instanceof Error ? e.message : 'Failed to load products'
-      },
+      resetOnExecute: false,
     },
   )
 
+  const error = computed(() => {
+    if (!rawError.value) return undefined
+    return rawError.value instanceof Error
+      ? rawError.value.message
+      : 'Failed to load products'
+  })
+
   return {
+    fetch: (opts?: FetchOptions) => execute(0, opts),
     products: state,
     loading: isLoading,
-    error: formattedError,
-    fetch: () => execute(),
+    error,
   }
+}
+
+// Test helper — clears module-scoped memoize cache between test runs
+export function clearProductsCache() {
+  getCachedProducts.clear()
 }
 ```
 
 Pattern:
 
-1. `useAsyncState` from `@vueuse/core` manages async lifecycle
-2. Inside the async fn: call infra adapter → pipe through presenter (`@repo/presenters`)
-3. Return raw refs: `state` (data), `isLoading` (boolean), `error` (string ref from `onError`)
+1. `useMemoize` caches fetch results keyed by unique key (`'products'`), deduplicates concurrent calls
+2. `useAsyncState` from `@vueuse/core` manages async lifecycle — calls memoized fn on each execution
+3. `bypass: true` option skips cache (calls `.load()` instead), used for manual refresh
+4. `clearProductsCache()` exported test helper clears memoize cache between test runs
+5. Error derived via `computed` from raw error ref
 
 ### Page Layer
 
@@ -596,7 +621,8 @@ ProductsPage.vue
 useProducts() composable (apps/white-label-vue/src/composables/useProducts.ts)
   │
   │ injects metaMap via META_MAP_INJECTION_KEY
-  │ initializes useAsyncState({ immediate: true }) → fires immediately
+  │ initializes useAsyncState({ immediate: true }) → fires getCachedProducts (useMemoize)
+  │   useMemoize caches result keyed by 'products', dedupes concurrent calls
   │
   ▼
 useAsyncState inner async function:
@@ -655,11 +681,11 @@ Browser paints shadow-DOM-styled fe-* components wrapping wa-* elements
 | Step | Layer            | File                                 | What happens                             |
 | ---- | ---------------- | ------------------------------------ | ---------------------------------------- |
 | 1    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Calls composable, binds refs to template |
-| 2    | App (Composable) | `useProducts.ts` (white-label-vue)   | Orchestrates async data flow             |
+| 2    | App (Composable) | `useProducts.ts` (white-label-vue)   | Orchestrates async data flow, useMemoize caching |
 | 3    | Infra            | `get-products.adapter.ts` (infra)    | HTTP fetch, error handling               |
 | 4    | Domain           | `Product.ts` (domain)                | Type contract for response shape         |
 | 5    | Presenters       | `product.presenter.ts` (presenters)  | Transforms domain → view model           |
-| 6    | App (Composable) | `useProducts.ts` (white-label-vue)   | Stores result in reactive state          |
+| 6    | App (Composable) | `useProducts.ts` (white-label-vue)   | Stores result in reactive state, derives error via computed |
 | 7    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Renders fe-\* components with view data  |
 | 8    | UI               | `fe-*.ts` (ui)                       | Wraps WA elements, shadow DOM render     |
 
