@@ -1,7 +1,6 @@
 /* eslint-disable vue/one-component-per-file */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { defineComponent } from 'vue'
-import type { AppContext } from 'vue'
+import { defineComponent, inject, h } from 'vue'
 import { createWhiteLabelApp, META_MAP_INJECTION_KEY } from './app'
 import type { ProductMeta } from '@repo/presenters'
 
@@ -70,18 +69,44 @@ describe('createWhiteLabelApp — route merging', () => {
       image: 'test',
       imageFamily: 'classic',
     }
+
+    let injectedValue: unknown
+    const MetaReader = defineComponent({
+      setup() {
+        injectedValue = inject(META_MAP_INJECTION_KEY)
+        return () => h('div', 'meta-reader')
+      },
+    })
+
     const { app } = await createWhiteLabelApp({
+      appShell: () => Promise.resolve({ default: MetaReader }),
       extendRoutes: [],
       metaMap: { test: testMeta },
     })
-    const provides = (app as unknown as { _context: AppContext })._context.provides
-    expect(provides[META_MAP_INJECTION_KEY]).toEqual({ test: testMeta })
+
+    const el = document.createElement('div')
+    app.mount(el)
+    expect(injectedValue).toEqual({ test: testMeta })
+    app.unmount()
   })
 
   it('metaMap not provided when not set', async () => {
-    const { app } = await createWhiteLabelApp({})
-    const provides = (app as unknown as { _context: AppContext })._context.provides
-    expect(provides[META_MAP_INJECTION_KEY]).toBeUndefined()
+    let injectedValue: unknown
+    const MetaReader = defineComponent({
+      setup() {
+        injectedValue = inject(META_MAP_INJECTION_KEY)
+        return () => h('div', 'meta-reader')
+      },
+    })
+
+    const { app } = await createWhiteLabelApp({
+      appShell: () => Promise.resolve({ default: MetaReader }),
+    })
+
+    const el = document.createElement('div')
+    app.mount(el)
+    expect(injectedValue).toBeUndefined()
+    app.unmount()
   })
 
   it('appShell override works with extendRoutes', async () => {
@@ -139,7 +164,7 @@ describe('createWhiteLabelApp — omitRoutePaths', () => {
     const { router } = await createWhiteLabelApp({
       omitRoutePaths: ['/components'],
       extendRoutes: [
-        { path: undefined as unknown as string, name: 'nopath', component: defineComponent({}) },
+        { path: '/nopath', name: 'nopath', component: defineComponent({}) },
       ],
     })
     const names = router.getRoutes().map((r) => r.name).filter(Boolean)

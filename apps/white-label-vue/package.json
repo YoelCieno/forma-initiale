@@ -2,7 +2,7 @@
   "name": "white-label-vue",
   "private": true,
   "exports": {
-    "./app": "./src/app.ts",
+    "./app": "./src/bootstrap/app.ts",
     "./vite.config.base": "./vite.config.base.ts",
     "./src/*": "./src/*"
   },

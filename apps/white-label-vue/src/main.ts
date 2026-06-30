@@ -1,7 +1,7 @@
 import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
 import './styles'
-import { createWhiteLabelApp } from './app'
+import { createWhiteLabelApp } from './bootstrap/app'
 import { routes } from './routes'
 import { frameworkMap } from '../metadata'
 

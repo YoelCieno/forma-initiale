@@ -1,6 +1,6 @@
 import type { ProductView, ProductMeta } from '@repo/presenters'
 import { useAsyncState, useMemoize } from '@vueuse/core'
-import { META_MAP_INJECTION_KEY } from '../app'
+import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { getProducts } from '@repo/infra'
 import { toProductViewList } from '@repo/presenters'
 
