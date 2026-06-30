@@ -380,7 +380,7 @@ const views = toProductViewList(products, metaMap)
 
 - `metadata.ts` — Per-product metadata overrides keyed by product name (frameworkMap)
 - `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp({ routes, metaMap })`.mount('#app')
-- `src/app.ts` — Factory: `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes`, optional `appShell`, and `metaMap`
+- `src/bootstrap/` — Factory layer: `app.ts` + `init.ts` (options + merge logic). `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`
 - `src/styles/tokens.css` — Design system token overrides (`--wa-*` vars)
 - `src/styles/base.css` — Base element styles (body, `.h3`, `.subheading__h3`); h2 italic, card BEM classes
@@ -399,9 +399,9 @@ const views = toProductViewList(products, metaMap)
 
 **Package exports** (for tenant apps):
 
-- `white-label-vue/app` → `./src/app.ts` — exports:
+- `white-label-vue/app` → `./src/bootstrap/app.ts` — exports:
   - `createWhiteLabelApp(opts: WhiteLabelAppOptions): Promise<WhiteLabelApp>` — bootstraps Vue app, hash router, MSW
-  - `WhiteLabelAppOptions` — `{ routes: RouteRecordRaw[], appShell?: () => Promise<...>, metaMap?: Record<string, ProductMeta> }`
+  - `WhiteLabelAppOptions` — `{ routes?: RouteRecordRaw[], extendRoutes?: RouteRecordRaw[], omitRoutePaths?: string[], appShell?: () => Promise<...>, metaMap?: Record<string, ProductMeta> }`
   - `WhiteLabelApp` — `{ app, router }`
 - `white-label-vue/vite.config.base` → `./vite.config.base.ts` — exports:
   - `defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions): UserConfig` — pre-configured Vite config (Vue plugin, AutoImport, Components)

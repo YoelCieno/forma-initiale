@@ -31,10 +31,12 @@ export function useWhiteLabelApp() {
     }
   }
 
-  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Component> => {
+  const resolveAppShell = async (
+    opts: WhiteLabelAppOptions,
+  ): Promise<Component> => {
     if (opts.appShell) {
       return (await opts.appShell()).default
-		}
+    }
 
     return (await import('../App.vue')).default
   }
@@ -45,7 +47,7 @@ export function useWhiteLabelApp() {
   ): RouteRecordRaw[] => {
     if (opts.routes) {
       return opts.routes
-		}
+    }
 
     const routes = [...wlRoutes, ...(opts.extendRoutes ?? [])]
     return routes.filter(
@@ -58,19 +60,25 @@ export function useWhiteLabelApp() {
   ): Promise<ReturnType<typeof createRouter>> => {
     const { routes: wlRoutes } = await import('../routes')
     const mergedRoutes = mergeRoutes(wlRoutes, opts)
-    return createRouter({ history: createWebHashHistory(), routes: mergedRoutes })
+    return createRouter({
+      history: createWebHashHistory(),
+      routes: mergedRoutes,
+    })
   }
 
-  const injectMetaMap = (app: App<Element>, metaMap?: Record<string, ProductMeta>): void => {
+  const injectMetaMap = (
+    app: App<Element>,
+    metaMap?: Record<string, ProductMeta>,
+  ): void => {
     if (metaMap) {
       app.provide(META_MAP_INJECTION_KEY, metaMap)
     }
   }
 
   return {
-  setupMocks,
-  	resolveAppShell,
-  	mergeRoutes,
+    setupMocks,
+    resolveAppShell,
+    mergeRoutes,
     createWlRouter,
     injectMetaMap,
   }

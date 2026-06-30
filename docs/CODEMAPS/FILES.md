@@ -122,7 +122,7 @@ apps/white-label-vue/
 
 └── src/
     ├── main.ts              # Entry: imports WA styles, calls createWhiteLabelApp({ routes })
-    ├── app.ts               # Factory: createWhiteLabelApp() — bootstraps Vue app, router, MSW
+    ├── bootstrap/           # Factory split: app.ts + init.ts (options, merge logic)
     ├── App.vue              # Root SFC: nav + RouterView (uses --wa-* tokens)
     ├── styles/
     │   ├── index.ts         # Styles entry point, imports tokens.css + base.css

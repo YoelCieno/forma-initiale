@@ -14,6 +14,7 @@ export async function createWhiteLabelApp(
   await setupMocks()
   const AppShell = await resolveAppShell(opts)
   const router = await createWlRouter(opts)
+
   const app = createApp(AppShell)
   app.use(router)
   injectMetaMap(app, opts.metaMap)

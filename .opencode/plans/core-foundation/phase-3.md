@@ -49,7 +49,7 @@ Phase 3 uses white-label-vue's own exported config + factory. No separate `@repo
 apps/white-label-vue/
   layer.config.ts         ← exports component dirs, route config, Vite extensions
   src/
-    app.ts                ← exports createWhiteLabelApp() factory
+    bootstrap/            ← factory layer (app.ts + init.ts)
     main.ts               ← standalone entry (calls factory with defaults)
     components/           ← default components
     pages/                ← default pages

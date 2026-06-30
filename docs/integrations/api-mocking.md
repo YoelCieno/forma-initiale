@@ -571,5 +571,5 @@ If the file is missing, `worker.start()` fails silently or throws. Check browser
 - [`docs/decisions/api-mocking-strategy.md`](../decisions/api-mocking-strategy.md) — ADR explaining why MSW was chosen
 - [`docs/integrations/layer-wiring.md`](./layer-wiring.md) — how infra + mocking fit in the layer stack
 - [`packages/infra/src/mocks/`](../../packages/infra/src/mocks/) — source files
-- [`apps/white-label-vue/src/app.ts`](../../apps/white-label-vue/src/app.ts) — dev bootstrap loading MSW worker (inside factory)
+- [`apps/white-label-vue/src/bootstrap/app.ts`](../../apps/white-label-vue/src/bootstrap/app.ts) — dev bootstrap loading MSW worker (inside factory)
 - [`apps/white-label-vue/.env`](../../apps/white-label-vue/.env) — env flags for mocking

@@ -63,7 +63,7 @@ Hexagonal + Vue 3 — all 5 layers active:
 - **App dev:** `vite --clearScreen false` (suppresses vite startup banner)
 - **Vite 6.x (white-label-vue):** has `vite.config.ts` with `@vitejs/plugin-vue`, `unplugin-auto-import` (imports: ['vue', 'vue-router']), `unplugin-vue-components`. `isCustomElement` configured for `fe-` prefixed tags. Tenants use `vite.config.base.ts` factory `defineWhiteLabelViteConfig()`.
 - **Vite+ integrated:** `vp` CLI. Vite v6.x for white-label-vue via Vite+ core. `vitest: ^4.1.7` bundles Vite 6 types.
-- **App factory pattern:** `apps/white-label-vue/src/app.ts` exports `createWhiteLabelApp()` — bootstraps Vue + router + MSW. `main.ts` calls it. Tenants import from `white-label-vue/app` (workspace name, no `@repo` scope).
+- **App factory pattern:** `apps/white-label-vue/src/bootstrap/app.ts` exports `createWhiteLabelApp()` via `src/bootstrap/init.ts` (options + merge logic). Tenants import from `white-label-vue/app` (workspace name, no `@repo` scope). Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`.
 - **Routes extracted:** `apps/white-label-vue/src/routes.ts` exports route array. Tenants can merge with their own routes before passing to `createWhiteLabelApp()`.
 - **Presenters package:** Presenters moved from app to `packages/presenters/` (`@repo/presenters`). Composables import `toProductViewList` from `@repo/presenters`.
 - **Turbo `^build`:** deps build before consumers; vanilla TS packages w/o build script get skipped gracefully

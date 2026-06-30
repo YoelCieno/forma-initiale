@@ -11,8 +11,16 @@ import { useWhiteLabelApp, META_MAP_INJECTION_KEY } from './init'
 // Controlled routes for createWlRouter to consume via dynamic import
 vi.mock('../routes', () => ({
   routes: [
-    { path: '/', name: 'home', component: defineComponent({ template: '<div>Home</div>' }) },
-    { path: '/about', name: 'about', component: defineComponent({ template: '<div>About</div>' }) },
+    {
+      path: '/',
+      name: 'home',
+      component: defineComponent({ template: '<div>Home</div>' }),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: defineComponent({ template: '<div>About</div>' }),
+    },
   ],
 }))
 
@@ -33,22 +41,30 @@ vi.mock('@repo/infra/mocks/browser', () => ({
 describe('useWhiteLabelApp — mergeRoutes', () => {
   const wlRoutes: RouteRecordRaw[] = [
     { path: '/', name: 'home', component: defineComponent({ template: '' }) },
-    { path: '/products', name: 'products', component: defineComponent({ template: '' }) },
+    {
+      path: '/products',
+      name: 'products',
+      component: defineComponent({ template: '' }),
+    },
   ]
-  const extra = { path: '/extra', name: 'extra', component: defineComponent({ template: '' }) }
+  const extra = {
+    path: '/extra',
+    name: 'extra',
+    component: defineComponent({ template: '' }),
+  }
 
   it('merges wlRoutes with extendRoutes', () => {
     const { mergeRoutes } = useWhiteLabelApp()
     const result = mergeRoutes(wlRoutes, { extendRoutes: [extra] })
     expect(result).toHaveLength(3)
-    expect(result.map(r => r.name)).toEqual(['home', 'products', 'extra'])
+    expect(result.map((r) => r.name)).toEqual(['home', 'products', 'extra'])
   })
 
   it('uses wlRoutes only when no extendRoutes/routes provided', () => {
     const { mergeRoutes } = useWhiteLabelApp()
     const result = mergeRoutes(wlRoutes, {})
     expect(result).toHaveLength(2)
-    expect(result.map(r => r.name)).toEqual(['home', 'products'])
+    expect(result.map((r) => r.name)).toEqual(['home', 'products'])
   })
 
   it('routes replaces wlRoutes and extendRoutes', () => {
@@ -56,7 +72,11 @@ describe('useWhiteLabelApp — mergeRoutes', () => {
     const result = mergeRoutes(wlRoutes, {
       routes: [extra],
       extendRoutes: [
-        { path: '/ignored', name: 'ignored', component: defineComponent({ template: '' }) },
+        {
+          path: '/ignored',
+          name: 'ignored',
+          component: defineComponent({ template: '' }),
+        },
       ],
     })
     expect(result).toHaveLength(1)
@@ -83,7 +103,13 @@ describe('useWhiteLabelApp — mergeRoutes', () => {
   it('routes takes precedence — omitRoutePaths ignored when routes set', () => {
     const { mergeRoutes } = useWhiteLabelApp()
     const result = mergeRoutes(wlRoutes, {
-      routes: [{ path: '/override', name: 'override', component: defineComponent({ template: '' }) }],
+      routes: [
+        {
+          path: '/override',
+          name: 'override',
+          component: defineComponent({ template: '' }),
+        },
+      ],
       omitRoutePaths: ['/override'],
     })
     expect(result).toHaveLength(1)
@@ -94,12 +120,16 @@ describe('useWhiteLabelApp — mergeRoutes', () => {
     const { mergeRoutes } = useWhiteLabelApp()
     const result = mergeRoutes(wlRoutes, {
       extendRoutes: [
-        { path: '/nopath', name: 'nopath', component: defineComponent({ template: '' }) },
+        {
+          path: '/nopath',
+          name: 'nopath',
+          component: defineComponent({ template: '' }),
+        },
       ],
       omitRoutePaths: ['/products'],
     })
     expect(result).toHaveLength(2)
-    expect(result.map(r => r.name)).toContain('nopath')
+    expect(result.map((r) => r.name)).toContain('nopath')
   })
 })
 
@@ -148,7 +178,9 @@ describe('useWhiteLabelApp — setupMocks', () => {
       await setupMocks()
 
       expect(mockWorkerStart).toHaveBeenCalledTimes(1)
-      expect(mockWorkerStart).toHaveBeenCalledWith({ onUnhandledRequest: 'bypass' })
+      expect(mockWorkerStart).toHaveBeenCalledWith({
+        onUnhandledRequest: 'bypass',
+      })
     } finally {
       // @ts-expect-error VITE_ENABLE_MOCKS is readonly per Vite types
       import.meta.env.VITE_ENABLE_MOCKS = prevMocks
@@ -186,7 +218,12 @@ describe('useWhiteLabelApp — injectMetaMap', () => {
     const app = createApp(defineComponent({ template: '<div></div>' }))
     const provideSpy = vi.spyOn(app, 'provide')
     const meta = {
-      test: { title: 'T', description: 'D', image: 'I', imageFamily: 'classic' },
+      test: {
+        title: 'T',
+        description: 'D',
+        image: 'I',
+        imageFamily: 'classic',
+      },
     }
     const { injectMetaMap } = useWhiteLabelApp()
     injectMetaMap(app, meta)
@@ -210,10 +247,17 @@ describe('useWhiteLabelApp — createWlRouter', () => {
     const { createWlRouter } = useWhiteLabelApp()
     const router = await createWlRouter({
       extendRoutes: [
-        { path: '/custom', name: 'custom', component: defineComponent({ template: '' }) },
+        {
+          path: '/custom',
+          name: 'custom',
+          component: defineComponent({ template: '' }),
+        },
       ],
     })
-    const names = router.getRoutes().map(r => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toContain('home')
     expect(names).toContain('about')
     expect(names).toContain('custom')
@@ -222,16 +266,28 @@ describe('useWhiteLabelApp — createWlRouter', () => {
   it('routes option takes precedence in createWlRouter', async () => {
     const { createWlRouter } = useWhiteLabelApp()
     const router = await createWlRouter({
-      routes: [{ path: '/only', name: 'only', component: defineComponent({ template: '' }) }],
+      routes: [
+        {
+          path: '/only',
+          name: 'only',
+          component: defineComponent({ template: '' }),
+        },
+      ],
     })
-    const names = router.getRoutes().map(r => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toEqual(['only'])
   })
 
   it('omitRoutePaths is applied to merged result', async () => {
     const { createWlRouter } = useWhiteLabelApp()
     const router = await createWlRouter({ omitRoutePaths: ['/about'] })
-    const names = router.getRoutes().map(r => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toContain('home')
     expect(names).not.toContain('about')
   })

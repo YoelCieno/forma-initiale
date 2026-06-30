@@ -19,7 +19,10 @@ describe('createWhiteLabelApp — route merging', () => {
 
   it('uses WL default routes when no routes/extendRoutes provided', async () => {
     const { router } = await createWhiteLabelApp({})
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toContain('products')
     expect(names).toContain('components')
     expect(names).toHaveLength(2)
@@ -31,7 +34,10 @@ describe('createWhiteLabelApp — route merging', () => {
         { path: '/about', name: 'about', component: defineComponent({}) },
       ],
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toContain('products')
     expect(names).toContain('components')
     expect(names).toContain('about')
@@ -44,21 +50,25 @@ describe('createWhiteLabelApp — route merging', () => {
         { path: '/custom', name: 'custom', component: defineComponent({}) },
       ],
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toEqual(['custom'])
     expect(names).not.toContain('products')
   })
 
   it('routes takes precedence over extendRoutes when both provided', async () => {
     const { router } = await createWhiteLabelApp({
-      routes: [
-        { path: '/only', name: 'only', component: defineComponent({}) },
-      ],
+      routes: [{ path: '/only', name: 'only', component: defineComponent({}) }],
       extendRoutes: [
         { path: '/ignored', name: 'ignored', component: defineComponent({}) },
       ],
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
+    const names = router
+      .getRoutes()
+      .map((r) => r.name)
+      .filter(Boolean)
     expect(names).toEqual(['only'])
   })
 
@@ -112,7 +122,8 @@ describe('createWhiteLabelApp — route merging', () => {
   it('appShell override works with extendRoutes', async () => {
     const { app, router } = await createWhiteLabelApp({
       extendRoutes: [],
-      appShell: () => Promise.resolve({ default: { template: '<div>Custom Shell</div>' } }),
+      appShell: () =>
+        Promise.resolve({ default: { template: '<div>Custom Shell</div>' } }),
     })
     expect(app).toBeDefined()
     expect(router).toBeDefined()
@@ -123,52 +134,64 @@ describe('createWhiteLabelApp — route merging', () => {
     app.unmount()
   })
 
-describe('createWhiteLabelApp — omitRoutePaths', () => {
-  it('omitRoutePaths excludes matching routes from WL defaults', async () => {
-    const { router } = await createWhiteLabelApp({
-      omitRoutePaths: ['/components'],
+  describe('createWhiteLabelApp — omitRoutePaths', () => {
+    it('omitRoutePaths excludes matching routes from WL defaults', async () => {
+      const { router } = await createWhiteLabelApp({
+        omitRoutePaths: ['/components'],
+      })
+      const names = router
+        .getRoutes()
+        .map((r) => r.name)
+        .filter(Boolean)
+      expect(names).toContain('products')
+      expect(names).not.toContain('components')
+      expect(names).toHaveLength(1)
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
-    expect(names).toContain('products')
-    expect(names).not.toContain('components')
-    expect(names).toHaveLength(1)
-  })
 
-  it('omitRoutePaths works with extendRoutes', async () => {
-    const { router } = await createWhiteLabelApp({
-      extendRoutes: [
-        { path: '/about', name: 'about', component: defineComponent({}) },
-      ],
-      omitRoutePaths: ['/components'],
+    it('omitRoutePaths works with extendRoutes', async () => {
+      const { router } = await createWhiteLabelApp({
+        extendRoutes: [
+          { path: '/about', name: 'about', component: defineComponent({}) },
+        ],
+        omitRoutePaths: ['/components'],
+      })
+      const names = router
+        .getRoutes()
+        .map((r) => r.name)
+        .filter(Boolean)
+      expect(names).toContain('products')
+      expect(names).toContain('about')
+      expect(names).not.toContain('components')
+      expect(names).toHaveLength(2)
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
-    expect(names).toContain('products')
-    expect(names).toContain('about')
-    expect(names).not.toContain('components')
-    expect(names).toHaveLength(2)
-  })
 
-  it('routes takes precedence, omitRoutePaths ignored', async () => {
-    const { router } = await createWhiteLabelApp({
-      routes: [
-        { path: '/custom', name: 'custom', component: defineComponent({}) },
-      ],
-      omitRoutePaths: ['/components'],
+    it('routes takes precedence, omitRoutePaths ignored', async () => {
+      const { router } = await createWhiteLabelApp({
+        routes: [
+          { path: '/custom', name: 'custom', component: defineComponent({}) },
+        ],
+        omitRoutePaths: ['/components'],
+      })
+      const names = router
+        .getRoutes()
+        .map((r) => r.name)
+        .filter(Boolean)
+      expect(names).toEqual(['custom'])
+      expect(names).not.toContain('components')
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
-    expect(names).toEqual(['custom'])
-    expect(names).not.toContain('components')
-  })
 
-  it('route without path not accidentally filtered', async () => {
-    const { router } = await createWhiteLabelApp({
-      omitRoutePaths: ['/components'],
-      extendRoutes: [
-        { path: '/nopath', name: 'nopath', component: defineComponent({}) },
-      ],
+    it('route without path not accidentally filtered', async () => {
+      const { router } = await createWhiteLabelApp({
+        omitRoutePaths: ['/components'],
+        extendRoutes: [
+          { path: '/nopath', name: 'nopath', component: defineComponent({}) },
+        ],
+      })
+      const names = router
+        .getRoutes()
+        .map((r) => r.name)
+        .filter(Boolean)
+      expect(names).toContain('nopath')
     })
-    const names = router.getRoutes().map((r) => r.name).filter(Boolean)
-    expect(names).toContain('nopath')
   })
-})
 })

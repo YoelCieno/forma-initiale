@@ -220,19 +220,24 @@ The app uses a factory pattern for layer reuse. The white-label-vue package expo
 ```json
 {
   "exports": {
-    "./app": "./src/app.ts",
+    "./app": "./src/bootstrap/app.ts",
     "./vite.config.base": "./vite.config.base.ts",
     "./src/*": "./src/*"
   }
 }
 ```
 
-**App factory** (`apps/white-label-vue/src/app.ts`):
+**App factory** (`apps/white-label-vue/src/bootstrap/app.ts`):
 
 ```typescript
+// bootstrap/init.ts — options + merge logic
 export interface WhiteLabelAppOptions {
-  /** Route definitions (tenant + white-label merged) */
-  routes: RouteRecordRaw[]
+  /** FULL route override — replaces WL defaults entirely */
+  routes?: RouteRecordRaw[]
+  /** Additional routes MERGED with WL defaults. Simpler for most tenants */
+  extendRoutes?: RouteRecordRaw[]
+  /** Route path patterns to exclude from the final route list */
+  omitRoutePaths?: string[]
   /** Optional override for the root App.vue shell */
   appShell?: () => Promise<{ default: Component }>
   /** Per-product metadata overrides keyed by product name */
@@ -244,29 +249,33 @@ export interface WhiteLabelApp {
   router: ReturnType<typeof createRouter>
 }
 
+export function useWhiteLabelApp() {
+  const setupMocks = async (): Promise<void> => { /* ... */ }
+  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Component> => { /* ... */ }
+
+  const mergeRoutes = (
+    wlRoutes: RouteRecordRaw[],
+    opts: WhiteLabelAppOptions,
+  ): RouteRecordRaw[] => {
+    if (opts.routes) return opts.routes  // full override
+    const routes = [...wlRoutes, ...(opts.extendRoutes ?? [])]
+    return routes.filter((r) => !(opts.omitRoutePaths ?? []).includes(r.path ?? ''))
+  }
+  // ...
+}
+
+// bootstrap/app.ts — factory entry
 export async function createWhiteLabelApp(
   opts: WhiteLabelAppOptions,
 ): Promise<WhiteLabelApp> {
-  if (import.meta.env.DEV && import.meta.env.VITE_ENABLE_MOCKS === 'true') {
-    const { worker } = await import('@repo/infra/mocks/browser')
-    await worker.start({ onUnhandledRequest: 'bypass' })
-  }
-
-  const AppShell = opts.appShell
-    ? (await opts.appShell()).default
-    : (await import('./App.vue')).default
-
-  const router = createRouter({
-    history: createWebHashHistory(),
-    routes: opts.routes,
-  })
+  const { setupMocks, resolveAppShell, createWlRouter, injectMetaMap } =
+    useWhiteLabelApp()
+  await setupMocks()
+  const AppShell = await resolveAppShell(opts)
+  const router = await createWlRouter(opts)
   const app = createApp(AppShell)
   app.use(router)
-
-  if (opts.metaMap) {
-    app.provide(META_MAP_INJECTION_KEY, opts.metaMap)
-  }
-
+  injectMetaMap(app, opts.metaMap)
   return { app, router }
 }
 ```
@@ -678,16 +687,16 @@ Browser paints shadow-DOM-styled fe-* components wrapping wa-* elements
 
 **Layer responsibilities in this trace:**
 
-| Step | Layer            | File                                 | What happens                             |
-| ---- | ---------------- | ------------------------------------ | ---------------------------------------- |
-| 1    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Calls composable, binds refs to template |
-| 2    | App (Composable) | `useProducts.ts` (white-label-vue)   | Orchestrates async data flow, useMemoize caching |
-| 3    | Infra            | `get-products.adapter.ts` (infra)    | HTTP fetch, error handling               |
-| 4    | Domain           | `Product.ts` (domain)                | Type contract for response shape         |
-| 5    | Presenters       | `product.presenter.ts` (presenters)  | Transforms domain → view model           |
+| Step | Layer            | File                                 | What happens                                                |
+| ---- | ---------------- | ------------------------------------ | ----------------------------------------------------------- |
+| 1    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Calls composable, binds refs to template                    |
+| 2    | App (Composable) | `useProducts.ts` (white-label-vue)   | Orchestrates async data flow, useMemoize caching            |
+| 3    | Infra            | `get-products.adapter.ts` (infra)    | HTTP fetch, error handling                                  |
+| 4    | Domain           | `Product.ts` (domain)                | Type contract for response shape                            |
+| 5    | Presenters       | `product.presenter.ts` (presenters)  | Transforms domain → view model                              |
 | 6    | App (Composable) | `useProducts.ts` (white-label-vue)   | Stores result in reactive state, derives error via computed |
-| 7    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Renders fe-\* components with view data  |
-| 8    | UI               | `fe-*.ts` (ui)                       | Wraps WA elements, shadow DOM render     |
+| 7    | App (Page)       | `ProductsPage.vue` (white-label-vue) | Renders fe-\* components with view data                     |
+| 8    | UI               | `fe-*.ts` (ui)                       | Wraps WA elements, shadow DOM render                        |
 
 ---
 
@@ -759,6 +768,6 @@ Steps to add a data feature (e.g., User Detail):
 - [`docs/CODEMAPS/FILES.md`](../CODEMAPS/FILES.md) — file tree
 - [`AGENTS.md`](../../AGENTS.md) — monorepo agent guide, commands, gotchas
 - [`packages/presenters/`](../../packages/presenters/) — presenter package
-- [`apps/white-label-vue/src/app.ts`](../../apps/white-label-vue/src/app.ts) — app factory
+- [`apps/white-label-vue/src/bootstrap/app.ts`](../../apps/white-label-vue/src/bootstrap/app.ts) — app factory
 - [`apps/white-label-vue/vite.config.base.ts`](../../apps/white-label-vue/vite.config.base.ts) — shared Vite config
 - [`.opencode/references/webawesome/SKILL.md`](../../.opencode/references/webawesome/SKILL.md) — WA Agent Skill (component API docs)
