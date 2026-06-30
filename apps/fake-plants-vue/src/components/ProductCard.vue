@@ -44,9 +44,9 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
   word-spacing: 100vw;
 }
 .fp-product-card__header {
-	display: flex;
-	justify-content: space-between;
-	align-self: center;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
   min-height: 50px;
 }
 .fp-product-card__description {
