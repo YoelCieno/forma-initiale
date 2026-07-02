@@ -250,16 +250,24 @@ export interface WhiteLabelApp {
 }
 
 export function useWhiteLabelApp() {
-  const setupMocks = async (): Promise<void> => { /* ... */ }
-  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Component> => { /* ... */ }
+  const setupMocks = async (): Promise<void> => {
+    /* ... */
+  }
+  const resolveAppShell = async (
+    opts: WhiteLabelAppOptions,
+  ): Promise<Component> => {
+    /* ... */
+  }
 
   const mergeRoutes = (
     wlRoutes: RouteRecordRaw[],
     opts: WhiteLabelAppOptions,
   ): RouteRecordRaw[] => {
-    if (opts.routes) return opts.routes  // full override
+    if (opts.routes) return opts.routes // full override
     const routes = [...wlRoutes, ...(opts.extendRoutes ?? [])]
-    return routes.filter((r) => !(opts.omitRoutePaths ?? []).includes(r.path ?? ''))
+    return routes.filter(
+      (r) => !(opts.omitRoutePaths ?? []).includes(r.path ?? ''),
+    )
   }
   // ...
 }
