@@ -1,6 +1,6 @@
 import '@repo/ui/styles'
 import '@repo/ui/styles/themes/default'
-import 'white-label-vue/src/styles'
+import 'white-label-vue/styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 import { plantsMap } from '../metadata'
 import './styles'

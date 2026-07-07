@@ -7,7 +7,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 - Root package name: `forma-initiale`
 - Package manager: `bun@1.3.13` (declared in root `package.json`, bun reads lockfile format)
 - Workspaces: `apps/*` `packages/*`
-- Local packages: `@repo/*` scope (domain, presenters, infra, ui, eslint-config, typescript-config)
+- Local packages: `@repo/*` scope (domain, presenters, infra, ui, generator, eslint-config, typescript-config)
 - Build: Turborepo 2.9.14 (`turbo.json`)
 - Mise: `.mise.toml` at root with `bun = "latest"` — run `eval "$(mise activate bash)"` before bun commands if mise not sourcing automatically
 
@@ -23,6 +23,9 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 | `cd apps/white-label-vue && bun run dev` | white-label-vue only                                                                    |
 | `cd apps/docs && bun run dev`            | docs only                                                                               |
 | `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
+| `bun run generate:vue-tenant`            | interactive Pinion generator — scaffolds new Vue tenant app                            |
+| `bun run register-tenant`                | register MSW tenant config — `--prefix <key> --names-json '[...]'`                     |
+| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
 | `bun add -d <pkg>`                       | dev dep                                                                                 |
 
 ## Package layout
@@ -37,6 +40,7 @@ packages/
   presenters/ — presentation layer transforming domain models into view models (@repo/presenters)
   infra/      — adapters implementing domain contracts (@repo/infra)
   ui/         — hybridJS WC wrappers, framework-agnostic (@repo/ui)
+  generator/  — Pinion-based tenant code generator (@repo/generator)
   eslint-config/  — CJS ESLint 8 config
   typescript-config/  — base.json + vite.json tsconfigs
 ```

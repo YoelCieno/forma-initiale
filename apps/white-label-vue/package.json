@@ -3,6 +3,7 @@
   "private": true,
   "exports": {
     "./app": "./src/bootstrap/app.ts",
+    "./styles": "./src/styles/index.ts",
     "./vite.config.base": "./vite.config.base.ts",
     "./src/*": "./src/*"
   },

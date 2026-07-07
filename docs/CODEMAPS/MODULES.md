@@ -496,3 +496,68 @@ const views = toProductViewList(products, metaMap)
 - `@astrojs/starlight` (^0.32.0)
 - `astro` (^5.6.0)
 - `sharp` (^0.33.0) — Image processing
+
+---
+
+## @repo/generator
+
+**Purpose**: Pinion-based code generator for scaffolding new Vue tenant apps. Interactive prompts, case transforms, MSW registration integration.
+
+**Location**: `packages/generator/src/`
+
+**Key Files**:
+
+- `index.ts` — Barrel exports: `generate()`, `validateHex`, `getThemeClass`
+- `generators/vue-tenant.tpl.ts` — Main generator: `generate(ctx)`, sub-fns `renderSetup`, `renderSourceFiles`, `renderConditionalAssets`, `renderTestInfra`, `mswRegistration`
+- `generators/vue-tenant.tpl.spec.ts` — Orchestration tests
+- `helpers/cases.ts` — Kebab/Pascal/Camel case transforms + prefix derivation
+- `helpers/cases.spec.ts` — Case transform tests
+- `helpers/palette.ts` — Hex color validation + theme class helper
+- `helpers/palette.spec.ts` — Palette tests
+- `models/index.ts` — `VueTenantContext` + `Theme` type
+- `prompts/index.ts` — Interactive tenant prompts (name, description, theme, metadata, component override, MSW)
+- `prompts/index.spec.ts` — Prompt shape tests
+- `templates/index.ts` — All output templates (package.json, vite.config, main.ts, styles, tests, env)
+- `templates/index.spec.ts` — Template rendering tests
+- `msw/add-tenant.ts` — Pure fn: `addTenantConfig(configs, prefix, names)` — validates + appends tenant entry
+- `msw/add-tenant.spec.ts` — MSW config tests
+
+**Dependencies**:
+
+- `@featherscloud/pinion` (^0.5.7) — Code generator framework (renderTemplate, toFile, when, prompt)
+- `inquirer` (^9) — Interactive CLI prompts
+- `@repo/infra` (indirect: writes to `packages/infra/src/mocks/data/mocked-data.json`)
+
+**Exports**:
+
+- `generate(ctx: VueTenantContext)` — Main generator entry point (Pinion task chain)
+- `VueTenantContext` (type) — `{ name, Name, camelName, description, metadataMode, theme, brandHex?, overrideComponent, overrideComponentName?, registerMsw?, prefix }`
+- `Theme` (type) — `'default' | 'awesome' | 'shoelace' | 'custom'`
+- `validateHex(hex: string): boolean` — Validates hex color string
+- `getThemeClass(theme: Theme): string` — Returns WA theme class name
+
+**Usage**:
+
+```bash
+# Interactive
+bun run generate:vue-tenant
+```
+
+```typescript
+import { generate } from '@repo/generator'
+import type { VueTenantContext } from '@repo/generator'
+const ctx = await generate({ pinion: { force: true } })
+```
+
+**Generated output**: `apps/<name>-vue/` with:
+- `package.json` — deps: white-label-vue, vue, vue-router, @repo/ui, @repo/presenters
+- `vite.config.ts` — uses `defineWhiteLabelViteConfig()` from white-label-vue
+- `tsconfig.json` — extends vite.json, strictNullChecks: true
+- `index.html` — HTML entry
+- `src/main.ts` — imports WA styles, calls `createWhiteLabelApp({ extendRoutes, metaMap })`
+- `src/styles/tokens.css` — Brand overrides (custom theme or WA theme)
+- `src/styles/index.ts` — Style barrel
+- `metadata.ts` (fixture mode) — Placeholder product metadata entries
+- `vitest.setup.ts` — jsdom custom element config for fe-* components
+- `src/App.spec.ts` — Basic app creation test
+- `.env` / `.env.example` — Environment variables with VITE_TENANT_ID

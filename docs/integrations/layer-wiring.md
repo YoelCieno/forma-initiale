@@ -768,12 +768,24 @@ Steps to add a data feature (e.g., User Detail):
 
 ---
 
-## 9. References
+## 9. Tenant Generation
+
+Tenant apps can be scaffolded automatically using the Pinion-based generator at `packages/generator/`:
+
+```bash
+bun run generate:vue-tenant
+```
+
+Generator prompts for: tenant name, description, metadata mode, WA theme, optional component override, and MSW registration. Output goes to `apps/<name>-vue/`.
+
+Generated tenant uses `extendRoutes` (not `routes`) for simpler route merging — see `apps/fake-plants-vue` for a manually-created reference.
+
+## 10. References
 
 - [`docs/ADRS/design-patterns.md`](../ADRS/design-patterns.md) — principles applied in this wiring
 - [`docs/CODEMAPS/ARCHITECTURE.md`](../CODEMAPS/ARCHITECTURE.md) — high-level architecture
-- [`docs/CODEMAPS/MODULES.md`](../CODEMAPS/MODULES.md) — per-module API docs
-- [`docs/CODEMAPS/FILES.md`](../CODEMAPS/FILES.md) — file tree
+- [`docs/CODEMAPS/MODULES.md`](../CODEMAPS/MODULES.md) — per-module API docs (includes generator)
+- [`docs/CODEMAPS/FILES.md`](../CODEMAPS/FILES.md) — file tree (includes generator)
 - [`AGENTS.md`](../../AGENTS.md) — monorepo agent guide, commands, gotchas
 - [`packages/presenters/`](../../packages/presenters/) — presenter package
 - [`apps/white-label-vue/src/bootstrap/app.ts`](../../apps/white-label-vue/src/bootstrap/app.ts) — app factory

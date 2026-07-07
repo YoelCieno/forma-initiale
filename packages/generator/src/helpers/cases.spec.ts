@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { kebabToPascal, kebabToCamel, pascalToKebab, caseTransform } from './cases'
+import { kebabToPascal, kebabToCamel, pascalToKebab, caseTransform, derivePrefix } from './cases'
 import type { VueTenantContext } from '../models'
 
 describe('kebabToPascal', () => {
@@ -40,11 +40,26 @@ describe('pascalToKebab', () => {
   })
 })
 
+describe('derivePrefix', () => {
+  it('derives two-letter prefix from first two parts of kebab name', () => {
+    expect(derivePrefix('my-tenant')).toBe('mt')
+  })
+
+  it('handles three-part kebab name', () => {
+    expect(derivePrefix('my-long-tenant')).toBe('ml')
+  })
+
+  it('handles single-word name', () => {
+    expect(derivePrefix('hello')).toBe('he')
+  })
+})
+
 describe('caseTransform', () => {
-  it('adds Name (PascalCase) and camelName (camelCase) from name (kebab-case)', async () => {
+  it('adds Name, camelName, and prefix from name (kebab-case)', async () => {
     const ctx: Partial<VueTenantContext> = { name: 'my-tenant' }
     const result = await caseTransform()(ctx as VueTenantContext)
     expect(result.Name).toBe('MyTenant')
     expect(result.camelName).toBe('myTenant')
+    expect(result.prefix).toBe('mt')
   })
 })

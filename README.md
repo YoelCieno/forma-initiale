@@ -37,6 +37,7 @@ forma-initiale/
 │   ├── presenters/       # Presentation layer (domain → view models)
 │   ├── infra/            # Adapters (domain contracts)
 │   ├── ui/               # Framework-agnostic shared components
+│   ├── generator/        # Pinion-based tenant code generator
 │   ├── eslint-config/    # Shared ESLint 8 config (CJS)
 │   └── typescript-config/# Shared tsconfigs (base.json, vite.json)
 ├── package.json          # Root workspace config
@@ -62,6 +63,8 @@ Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhos
 | `bun run lint`   | Lint all packages                     |
 | `bun run test`   | Run tests (Vitest)                    |
 | `bun run format` | Format code (Prettier)                |
+| `bun run generate:vue-tenant` | Scaffold a new Vue tenant app (interactive) |
+| `bun run register-tenant`     | Register MSW tenant config (`--prefix <key> --names-json '[...]'`) |
 
 ## Dependency Automation
 
@@ -148,6 +151,33 @@ git commit -m "chore(web): update MSW worker"
 
 - `docs/dependency-management.md` — Dependency update strategies (taze + turbo, Renovate)
 - `docs/decisions/docs-solution.md` — Docs solution decision record
+
+## Tenant Generator
+
+Scaffold new Vue tenant apps with the Pinion-based generator:
+
+```bash
+bun run generate:vue-tenant
+```
+
+Interactive prompts:
+- **Tenant name** (kebab-case, e.g. `my-tenant`)
+- **Description** — short description
+- **Metadata mode** — Fixture (static product map) or None
+- **WA theme** — default / awesome / shoelace / custom
+- **Custom brand color** (hex) — when theme=custom
+- **Component override** — optionally scaffold a component stub
+- **MSW registration** — auto-register mocked product data
+
+Output: `apps/<name>-vue/` with full tenant app structure (main.ts, styles, tests, configs).
+
+### Manual MSW registration
+
+```bash
+bun run register-tenant --prefix tn --names-json '["item-a","item-b"]'
+```
+
+Adds a tenant config entry to `packages/infra/src/mocks/data/mocked-data.json`.
 
 ## Theming & Design Tokens
 

@@ -1,6 +1,6 @@
 import { PinionContext } from "@featherscloud/pinion"
 
-export type Theme = 'default' | 'awesome' | 'shoelace' | 'custom'
+export type Theme = 'default' | 'cyberpunk' | 'coffeecup' | 'silk' | 'custom'
 
 export interface VueTenantContext extends PinionContext {
   name: string
@@ -12,4 +12,6 @@ export interface VueTenantContext extends PinionContext {
   brandHex?: string
   overrideComponent: boolean
   overrideComponentName?: string
+  registerMsw?: boolean
+  prefix: string
 }

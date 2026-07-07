@@ -1,6 +1,6 @@
 import type { Product } from '@repo/domain'
-import { PRODUCT_TENANT_CONFIGS, RATE_VALUE } from '../mocked-data.js'
-import type { PriceConfig } from '../mocked-data.js'
+import { PRODUCT_TENANT_CONFIGS, RATE_VALUE } from '../constants'
+import type { PriceConfig } from '../constants'
 
 let counter = 0
 

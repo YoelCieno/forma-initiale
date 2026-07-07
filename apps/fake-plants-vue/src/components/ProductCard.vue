@@ -13,7 +13,7 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
     <img
       slot="media"
       class="fp-product-card__image"
-      :src="`https://loremflickr.com/700/450/plant/all?random=${Math.random()}`"
+      :src="`https://loremflickr.com/700/450/plants/all?random=${Math.random()}`"
       :alt="title"
     >
     <header slot="header" class="fp-product-card__header">

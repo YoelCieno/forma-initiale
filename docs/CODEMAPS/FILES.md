@@ -15,6 +15,8 @@ forma-initiale/
 ├── bun.lock               # Bun lockfile
 ├── package.json           # Root workspace config, scripts, devDeps
 ├── renovate.json          # Renovate bot config
+├── scripts/
+│   └── register-msw-tenant.ts  # MSW tenant registration CLI script
 ├── turbo.json             # Turborepo pipeline (build, test, lint, dev)
 │
 ├── apps/
@@ -26,6 +28,7 @@ forma-initiale/
 │   ├── domain/            # Pure TS business models (@repo/domain)
 │   ├── infra/             # Adapters implementing domain contracts (@repo/infra)
 │   ├── ui/                # Framework-agnostic WC wrappers (@repo/ui)
+│   ├── generator/         # Pinion-based tenant code generator (@repo/generator)
 │   ├── eslint-config/     # Shared ESLint 8 CJS config
 │   └── typescript-config/ # Shared TS base configs
 │
@@ -288,3 +291,44 @@ docs/
 | `renovate.json` | Automated dep update schedule             |
 | `.gitignore`    | dist, .turbo, node_modules, .env          |
 | `.npmrc`        | npm settings                              |
+
+---
+
+## packages/generator
+
+```
+packages/generator/
+├── package.json             # @repo/generator — pinion, inquirer deps
+├── tsconfig.json            # extends base.json
+├── vitest.config.ts         # Vitest config
+├── .eslintrc.cjs            # ESLint config
+│
+└── src/
+    ├── index.ts             # Barrel: exports generate, validateHex, getThemeClass, types
+    │
+    ├── generators/
+    │   ├── vue-tenant.tpl.ts      # Pinion generator: renderSetup, renderSourceFiles,
+    │   │                           # renderConditionalAssets, renderTestInfra, mswRegistration
+    │   └── vue-tenant.tpl.spec.ts # Orchestration tests
+    │
+    ├── helpers/
+    │   ├── cases.ts              # Kebab/Pascal/Camel case transforms + prefix derivation
+    │   ├── cases.spec.ts         # Case transform tests
+    │   ├── palette.ts            # Hex validation + theme class helper
+    │   └── palette.spec.ts       # Palette tests
+    │
+    ├── models/
+    │   └── index.ts              # VueTenantContext + Theme type definitions
+    │
+    ├── msw/
+    │   ├── add-tenant.ts         # addTenantConfig() — validates + appends MSW tenant entry
+    │   └── add-tenant.spec.ts    # MSW config tests
+    │
+    ├── prompts/
+    │   ├── index.ts              # Interactive prompts (name, description, theme, metadata, MSW)
+    │   └── index.spec.ts         # Prompt shape tests
+    │
+    └── templates/
+        ├── index.ts              # All output templates (package.json, vite.config, main.ts, etc.)
+        └── index.spec.ts         # Template rendering tests
+```

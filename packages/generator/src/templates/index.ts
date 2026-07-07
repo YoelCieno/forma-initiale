@@ -1,5 +1,6 @@
 import type { VueTenantContext } from '../models'
 import { pascalToKebab } from '../helpers/cases'
+import { formatThemeTokens, getThemeTokens } from '../helpers/palette'
 
 const packageJson = (ctx: VueTenantContext) => `{
   "name": "tenant-${ctx.name}-vue",
@@ -51,7 +52,7 @@ ${componentDir}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const tsconfigJson = (_ctx: VueTenantContext) => `{
   "extends": "@repo/typescript-config/vite.json",
-  "include": ["src", "vite.config.ts"],
+  "include": ["src", "vite.config.ts", "vitest.config.ts", "vitest.setup.ts"],
   "compilerOptions": {
     "strictNullChecks": true
   }
@@ -82,13 +83,10 @@ const mainTs = (ctx: VueTenantContext) => {
       ? `  metaMap: ${ctx.camelName}Map,`
       : '  // metaMap: myMap,'
 
-  const themeImport =
-    ctx.theme !== 'custom' ? `import '@repo/ui/styles/themes/${ctx.theme}'` : ''
-
   return `import '@repo/ui/styles'
-${themeImport}
-import { createWhiteLabelApp } from 'white-label-vue/app'
+import '@repo/ui/styles/themes/default'
 import './styles'
+import { createWhiteLabelApp } from 'white-label-vue/app'
 ${metaImport}
 createWhiteLabelApp({
   extendRoutes: [
@@ -99,6 +97,7 @@ createWhiteLabelApp({
     //   component: () => import('./pages/AboutPage.vue'),
     // },
   ],
+  // omitRoutePaths: ['/components'],
   // For full route override (advanced), use \`routes\` instead:
   // routes: [...],
 ${metaLine}
@@ -124,18 +123,31 @@ export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
 `
 
 const tokensCss = (ctx: VueTenantContext) => {
-  if (ctx.theme !== 'custom') {
-    return `/* ${ctx.Name} — using WA ${ctx.theme} theme, no brand override needed */
-`
-  }
-
-  return `/* ${ctx.Name} custom brand override */
+  // Custom gets inline brand override
+  if (ctx.theme === 'custom') {
+    return `/* ${ctx.Name} custom brand override */
 :where(:root) {
-  --wa-color-brand-fill-normal: ${ctx.brandHex ?? '#16a34a'};
+  --brand-fill-normal: ${ctx.brandHex ?? '#16a34a'};
 
   /* WA cascade derives all other brand tokens from this one variable */
 }
 `
+  }
+
+  // Preset themes get inline token blocks
+  const themeTokens = getThemeTokens(ctx.theme)
+  if (Object.keys(themeTokens).length > 0) {
+    return `/* ${ctx.Name} — ${ctx.theme} theme */
+:where(:root) {
+${formatThemeTokens(themeTokens)}
+}`
+  }
+
+  // Fallback
+  return `/* ${ctx.Name} — default theme */
+:where(:root) {
+  // --brand-fill-normal: #4f46e5;
+}`
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -169,7 +181,7 @@ describe('App', () => {
 `
 
 const env = (ctx: VueTenantContext) => `# Tenant id header
-VITE_TENANT_ID=${ctx.name}
+VITE_TENANT_ID=${ctx.prefix}
 # API base URL (no trailing slash) — MSW intercepts in dev
 VITE_API_URL=http://localhost:5174/api
 

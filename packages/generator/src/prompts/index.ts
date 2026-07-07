@@ -21,20 +21,21 @@ const tenantPrompts: QuestionCollection = [
     message: 'Metadata generation mode:',
     choices: [
       {
-        name: 'Fixture — static product map with placeholder entries',
+        name: 'Generate a random placeholder entries data in metadata.ts file',
         value: 'fixture',
       },
-      { name: 'None — skip metadata.ts', value: 'none' },
+      { name: 'None — skip placeholders in metadata.ts', value: 'none' },
     ],
   },
   {
     type: 'list',
     name: 'theme',
-    message: 'WebAwesome theme:',
+    message: 'Design theme:',
     choices: [
-      { name: 'Default — WA default theme', value: 'default' },
-      { name: 'Awesome — WA awesome theme', value: 'awesome' },
-      { name: 'Shoelace — WA shoelace theme', value: 'shoelace' },
+      { name: 'Default — clean, minimal base', value: 'default' },
+      { name: 'Cyberpunk — neon, futuristic', value: 'cyberpunk' },
+      { name: 'Coffeecup — warm, earthy tones', value: 'coffeecup' },
+      { name: 'Silk — soft, pastel elegance', value: 'silk' },
       { name: 'Custom — define your own brand color', value: 'custom' },
     ],
   },
@@ -62,6 +63,12 @@ const tenantPrompts: QuestionCollection = [
     validate: (input: string) =>
       (input && input.length > 0 && /^[A-Z]/.test(input)) ||
       'Enter PascalCase component name',
+  },
+  {
+    type: 'confirm',
+    name: 'registerMsw',
+    message: 'Register MSW mocked data for this tenant?',
+    default: true,
   },
 ]
 

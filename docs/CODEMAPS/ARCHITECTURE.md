@@ -93,10 +93,10 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
                      @repo/eslint-config
                      @repo/typescript-config
                             │
-         ┌──────────────────┼──────────────────┐
-         ▼                  ▼                 ▼
-   @repo/domain      @repo/infra           @repo/ui
-   (pure TS)         │  deps: domain       │  deps: hybrids, WA
+         ┌──────────────────┼──────────────────┬──────────────────┐
+         ▼                  ▼                  ▼                  ▼
+   @repo/domain      @repo/infra           @repo/ui       @repo/generator
+   (pure TS)         │  deps: domain       │  deps: hybrids, WA  │  deps: pinion, inquirer
          │           │                     │
          └──────┬────┘                     │
                 ▼                          │

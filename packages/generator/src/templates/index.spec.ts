@@ -27,6 +27,7 @@ function ctx(overrides: Partial<VueTenantContext> = {}): VueTenantContext {
     brandHex: undefined,
     overrideComponent: false,
     overrideComponentName: undefined,
+    prefix: 'te',
     cwd: '/tmp',
     argv: [],
     pinion: {} as VueTenantContext['pinion'],
@@ -83,21 +84,37 @@ describe('mainTs', () => {
   })
 
   it('does not import metadata when metadataMode is none', () => {
-    const result = mainTs(ctx({ metadataMode: 'none', theme: 'awesome' }))
+    const result = mainTs(ctx({ metadataMode: 'none', theme: 'default' }))
     expect(result).toContain("import '@repo/ui/styles'")
     expect(result).not.toContain("from '../metadata'")
   })
 })
 
 describe('tokensCss', () => {
-  it('does not contain brand var when theme is default', () => {
-    const result = tokensCss(ctx({ theme: 'default' }))
-    expect(result).not.toContain('wa-color-brand-fill-normal')
-  })
-
   it('contains brand hex when theme is custom', () => {
     const result = tokensCss(ctx({ theme: 'custom', brandHex: '#ff6600' }))
-    expect(result).toContain('--wa-color-brand-fill-normal: #ff6600')
+    expect(result).toContain('--brand-fill-normal: #ff6600')
+  })
+
+  it('contains theme tokens for cyberpunk theme', () => {
+    const result = tokensCss(ctx({ theme: 'cyberpunk' }))
+    expect(result).toContain('--brand-fill-normal')
+    expect(result).toContain('--color-text-body')
+    expect(result).toContain('--fs-xl')
+  })
+
+  it('contains theme tokens for coffeecup theme', () => {
+    const result = tokensCss(ctx({ theme: 'coffeecup' }))
+    expect(result).toContain('--brand-fill-normal')
+    expect(result).toContain('--color-text-body')
+    expect(result).toContain('--fs-xl')
+  })
+
+  it('contains theme tokens for silk theme', () => {
+    const result = tokensCss(ctx({ theme: 'silk' }))
+    expect(result).toContain('--brand-fill-normal')
+    expect(result).toContain('--color-text-body')
+    expect(result).toContain('--fs-xl')
   })
 })
 
@@ -152,8 +169,8 @@ describe('appSpec', () => {
 
 describe('env', () => {
   it('contains VITE_TENANT_ID from tenant name', () => {
-    const result = env(ctx({ name: 'my-tenant' }))
-    expect(result).toContain('VITE_TENANT_ID=my-tenant')
+    const result = env(ctx({ name: 'my-tenant', prefix: 'mt' }))
+    expect(result).toContain('VITE_TENANT_ID=mt')
   })
 
   it('contains VITE_API_URL and VITE_ENABLE_MOCKS', () => {

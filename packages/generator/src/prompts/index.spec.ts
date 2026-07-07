@@ -45,14 +45,15 @@ describe('tenantPrompts', () => {
     expect(p.choices![1].value).toBe('none')
   })
 
-  it('has theme list with default, awesome, shoelace, custom', () => {
+  it('has theme list with default, cyberpunk, coffeecup, silk, custom', () => {
     const p = findPrompt('theme')
     expect(p.type).toBe('list')
-    expect(p.choices).toHaveLength(4)
+    expect(p.choices).toHaveLength(5)
     expect(p.choices!.map((c) => c.value)).toEqual([
       'default',
-      'awesome',
-      'shoelace',
+      'cyberpunk',
+      'coffeecup',
+      'silk',
       'custom',
     ])
   })
