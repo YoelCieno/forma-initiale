@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync, copyFileSync } from 'node:fs'
+import { copyFileSync } from 'node:fs'
 import { join } from 'node:path'
 import {
   prompt,
@@ -25,6 +25,7 @@ import {
 import { VueTenantContext } from '../models'
 import { tenantPrompts } from '../prompts'
 import { addTenantConfig } from '../msw/add-tenant.js'
+import { readMockedData, writeMockedData, copyMswWorker } from '../msw/file-io'
 
 const outDir = (ctx: VueTenantContext) => `apps/${ctx.name}-vue`
 
@@ -77,24 +78,31 @@ function deriveMswNames(name: string): string[] {
 export const mswRegistration = (ctx: VueTenantContext): VueTenantContext => {
   if (!ctx.registerMsw) {
     ctx.pinion.logger.notice(`To register MSW data, run:
-  bun scripts/register-msw-tenant.ts --prefix ${ctx.prefix} --public-dir apps/${ctx.name}-vue/public`)
+  bun scripts/register-msw-tenant.ts --prefix ${ctx.prefix}
+
+Then copy mockServiceWorker.js (or use registerMsw: true during generation):
+  cp apps/white-label-vue/public/mockServiceWorker.js apps/${ctx.name}-vue/public/`)
     return ctx
   }
 
   const configPath = join(ctx.cwd, 'packages/infra/src/mocks/data/mocked-data.json')
-  const raw = JSON.parse(readFileSync(configPath, 'utf-8'))
+  const raw = readMockedData(configPath)
   const names = deriveMswNames(ctx.name)
   const updated = addTenantConfig(raw, ctx.prefix, names)
-  writeFileSync(configPath, JSON.stringify(updated, null, 2) + '\n')
+  writeMockedData(configPath, updated)
 
   // Copy MSW mockServiceWorker.js to the generated app
   const sourceWorker = join(ctx.cwd, 'apps/white-label-vue/public/mockServiceWorker.js')
-  const targetDir = join(ctx.cwd, `apps/${ctx.name}-vue/public`)
-  const targetWorker = join(targetDir, 'mockServiceWorker.js')
-  if (existsSync(sourceWorker) && sourceWorker !== targetWorker) {
-    if (!existsSync(targetDir)) mkdirSync(targetDir, { recursive: true })
-    copyFileSync(sourceWorker, targetWorker)
+  const targetWorker = join(ctx.cwd, `apps/${ctx.name}-vue/public/mockServiceWorker.js`)
+  try {
+    copyMswWorker(sourceWorker, targetWorker)
     ctx.pinion.logger.notice(`Copied mockServiceWorker.js to apps/${ctx.name}-vue/public/`)
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('not found')) {
+      ctx.pinion.logger.warn(`MSW worker not found: ${sourceWorker}`)
+    } else {
+      throw err
+    }
   }
 
   ctx.pinion.logger.notice(`Registered MSW config for prefix "${ctx.prefix}"`)

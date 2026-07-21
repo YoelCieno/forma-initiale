@@ -18,9 +18,9 @@ import {
 
 function ctx(overrides: Partial<VueTenantContext> = {}): VueTenantContext {
   return {
-    name: 'test',
+    name: 'test-tenant',
     Name: 'Test',
-    camelName: 'test',
+    camelName: 'testTenant',
     description: 'Test tenant',
     metadataMode: 'fixture',
     theme: 'default',
@@ -38,7 +38,7 @@ function ctx(overrides: Partial<VueTenantContext> = {}): VueTenantContext {
 describe('packageJson', () => {
   it('contains tenant name and scripts/deps', () => {
     const result = packageJson(ctx())
-    expect(result).toContain('"name": "tenant-test-vue"')
+    expect(result).toContain('"name": "test-tenant-vue"')
     expect(result).toContain('"dev": "vp dev"')
     expect(result).toContain('"build": "vp build"')
     expect(result).toContain('"test": "vp test"')

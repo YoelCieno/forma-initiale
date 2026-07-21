@@ -3,7 +3,7 @@ import { pascalToKebab } from '../helpers/cases'
 import { formatThemeTokens, getThemeTokens } from '../helpers/palette'
 
 const packageJson = (ctx: VueTenantContext) => `{
-  "name": "tenant-${ctx.name}-vue",
+  "name": "${ctx.name}-vue",
   "private": true,
   "version": "0.0.0",
   "type": "module",

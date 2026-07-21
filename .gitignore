@@ -24,3 +24,6 @@ coverage/
 
 # Qwen editor config
 .qwen/
+.aider*
+
+VP_VULKAN*.json

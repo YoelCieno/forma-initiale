@@ -1,6 +1,12 @@
 {
   "wl": {
-    "names": ["react", "angular", "vue", "svelte", "solid"],
+    "names": [
+      "react",
+      "angular",
+      "vue",
+      "svelte",
+      "solid"
+    ],
     "previousPrice": {
       "base": 29.99,
       "increment": 10
