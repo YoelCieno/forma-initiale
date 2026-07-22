@@ -1,4 +1,4 @@
-import { copyFileSync } from 'node:fs'
+import { copyFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import {
   prompt,
@@ -78,7 +78,7 @@ function deriveMswNames(name: string): string[] {
 export const mswRegistration = (ctx: VueTenantContext): VueTenantContext => {
   if (!ctx.registerMsw) {
     ctx.pinion.logger.notice(`To register MSW data, run:
-  bun scripts/register-msw-tenant.ts --prefix ${ctx.prefix}
+  bun packages/generator/src/msw/register-tenant.ts --prefix ${ctx.prefix}
 
 Then copy mockServiceWorker.js (or use registerMsw: true during generation):
   cp apps/white-label-vue/public/mockServiceWorker.js apps/${ctx.name}-vue/public/`)
@@ -99,13 +99,48 @@ Then copy mockServiceWorker.js (or use registerMsw: true during generation):
     ctx.pinion.logger.notice(`Copied mockServiceWorker.js to apps/${ctx.name}-vue/public/`)
   } catch (err) {
     if (err instanceof Error && err.message.includes('not found')) {
-      ctx.pinion.logger.warn(`MSW worker not found: ${sourceWorker}`)
-    } else {
-      throw err
+			ctx.pinion.logger.warn(`MSW worker not found: ${sourceWorker}`)
+			return ctx
     }
+    throw err
   }
 
   ctx.pinion.logger.notice(`Registered MSW config for prefix "${ctx.prefix}"`)
+  return ctx
+}
+
+export const installDeps = async (ctx: VueTenantContext): Promise<VueTenantContext> => {
+  const appDir = outDir(ctx)
+  ctx.pinion.logger.notice(`Installing dependencies for ${appDir}...`)
+  const exitCode = await ctx.pinion.exec('bun', ['install'], { cwd: join(ctx.cwd, appDir) })
+  if (exitCode !== 0) {
+    ctx.pinion.logger.warn(`bun install exited with code ${exitCode} — run manually later`)
+  }
+  return ctx
+}
+
+export const verifyScaffold = (ctx: VueTenantContext): VueTenantContext => {
+  const base = join(ctx.cwd, outDir(ctx))
+  const checks = [
+    join(base, 'package.json'),
+    join(base, 'vite.config.ts'),
+    join(base, 'src/main.ts'),
+    join(base, 'src/styles/tokens.css'),
+    join(base, 'src/pages/.gitkeep'),
+    join(base, 'vitest.setup.ts'),
+  ]
+  let missing = 0
+  for (const file of checks) {
+    if (!existsSync(file)) {
+      ctx.pinion.logger.warn(`Missing expected file: ${file}`)
+      missing++
+    }
+  }
+  if (missing === 0) {
+		ctx.pinion.logger.notice(`✅ Tenant "${ctx.name}-vue" created successfully`)
+		return ctx;
+  }
+  ctx.pinion.logger.warn(`⚠️  ${missing} file(s) missing — check generator output`)
   return ctx
 }
 
@@ -118,3 +153,5 @@ export const generate = (ctx: VueTenantContext) =>
     .then(renderConditionalAssets)
     .then(renderTestInfra)
     .then(mswRegistration)
+    .then(installDeps)
+    .then(verifyScaffold)

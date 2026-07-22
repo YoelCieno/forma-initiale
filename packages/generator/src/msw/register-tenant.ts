@@ -1,29 +1,23 @@
 #!/usr/bin/env bun
 /**
- * register-msw-tenant.ts — CLI to add a tenant config entry to MSW mock data.
+ * register-tenant.ts — CLI to add a tenant config entry to MSW mock data.
  *
  * Usage:
- *   bun scripts/register-msw-tenant.ts --prefix <key> --names-json '["name1","name2"]'
+ *   bun packages/generator/src/msw/register-tenant.ts --prefix <key> --names-json '["name1","name2"]'
  *
  * Reads data/mocked-data.json, calls addTenantConfig, writes back.
  * MSW mockServiceWorker.js is copied by the generator (vue-tenant.tpl.ts) — not this script.
  */
+import { resolve } from 'node:path'
+import { addTenantConfig, type TenantConfig } from './add-tenant.js'
+import { readMockedData, writeMockedData } from './file-io.js'
 
-import { fileURLToPath } from 'node:url'
-import { dirname, resolve } from 'node:path'
-import { addTenantConfig, type TenantConfig } from '@repo/generator/msw/add-tenant'
-import { readMockedData, writeMockedData } from '@repo/generator/msw/file-io'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
-const CONFIG_PATH = resolve(
-  __dirname,
-  '../packages/infra/src/mocks/data/mocked-data.json',
-)
+// Resolves from repo root (always invoked from repo root via package.json script)
+const CONFIG_PATH = resolve(process.cwd(), 'packages/infra/src/mocks/data/mocked-data.json')
 
 function printUsage(): never {
   console.error(
-    'Usage: bun scripts/register-msw-tenant.ts --prefix <key> --names-json \'["name1","name2"]\'',
+    'Usage: bun packages/generator/src/msw/register-tenant.ts --prefix <key> --names-json \'["name1","name2"]\'',
   )
   process.exit(1)
 }

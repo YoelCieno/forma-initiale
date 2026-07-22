@@ -16,7 +16,6 @@ forma-initiale/
 ├── package.json           # Root workspace config, scripts, devDeps
 ├── renovate.json          # Renovate bot config
 ├── scripts/
-│   └── register-msw-tenant.ts  # MSW tenant registration CLI script
 ├── turbo.json             # Turborepo pipeline (build, test, lint, dev)
 │
 ├── apps/
@@ -321,8 +320,11 @@ packages/generator/
     │   └── index.ts              # VueTenantContext + Theme type definitions
     │
     ├── msw/
-    │   ├── add-tenant.ts         # addTenantConfig() — validates + appends MSW tenant entry
-    │   └── add-tenant.spec.ts    # MSW config tests
+    │   ├── add-tenant.ts             # addTenantConfig() — validates + appends MSW tenant entry
+    │   ├── add-tenant.spec.ts        # MSW config tests
+    │   ├── file-io.ts                # readMockedData, writeMockedData, copyMswWorker utilities
+    │   ├── file-io.spec.ts           # File I/O tests
+    │   └── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
     │
     ├── prompts/
     │   ├── index.ts              # Interactive prompts (name, description, theme, metadata, MSW)
