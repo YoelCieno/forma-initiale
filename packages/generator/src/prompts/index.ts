@@ -1,5 +1,5 @@
 import type { QuestionCollection } from 'inquirer'
-import { validateHex } from '../helpers/palette.js'
+import { validateHex } from '../helpers/palette'
 
 const tenantPrompts: QuestionCollection = [
   {

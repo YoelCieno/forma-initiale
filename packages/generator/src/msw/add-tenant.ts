@@ -4,11 +4,11 @@ export interface TenantConfig {
   rateType: string
 }
 
-export function addTenantConfig(
+export const addTenantConfig = (
   configs: Record<string, TenantConfig>,
   prefix: string,
   names: string[],
-): Record<string, TenantConfig> {
+): Record<string, TenantConfig> => {
   if (prefix in configs) {
     throw new Error(`Tenant "${prefix}" already exists`)
   }

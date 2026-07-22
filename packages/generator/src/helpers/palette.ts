@@ -2,7 +2,7 @@
  * Validate a hex color string (#RRGGBB or #RGB format).
  * Accepts uppercase and lowercase hex digits.
  */
-export function validateHex(hex: string): boolean {
+export const validateHex = (hex: string): boolean => {
   return /^#[0-9a-fA-F]{6}$/.test(hex) || /^#[0-9a-fA-F]{3}$/.test(hex)
 }
 
@@ -10,7 +10,7 @@ export function validateHex(hex: string): boolean {
  * Map a WA theme name to its CSS class.
  * Returns empty string for custom/preset themes (inline token blocks, no WA class).
  */
-export function getThemeClass(theme: string): string {
+export const getThemeClass = (theme: string): string => {
   const map: Record<string, string> = {
     default: 'wa-theme-default',
     cyberpunk: '',
@@ -24,7 +24,7 @@ export function getThemeClass(theme: string): string {
 /**
  * Format theme tokens as CSS variable declarations.
  */
-export function formatThemeTokens(tokens: Record<string, string>): string {
+export const formatThemeTokens = (tokens: Record<string, string>): string => {
   return Object.entries(tokens)
     .map(([key, value]) => `  ${key}: ${value};`)
     .join('\n')
@@ -34,7 +34,7 @@ export function formatThemeTokens(tokens: Record<string, string>): string {
  * Get theme-specific color variables for CSS token customization.
  * These are used to override default design tokens for themed experiences.
  */
-export function getThemeTokens(theme: string): Record<string, string> {
+export const getThemeTokens = (theme: string): Record<string, string> => {
   const tokens: Record<string, Record<string, string>> = {
     default: {},
     cyberpunk: {

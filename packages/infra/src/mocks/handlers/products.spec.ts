@@ -9,8 +9,8 @@ import {
   beforeEach,
 } from 'vitest'
 import type { Product } from '@repo/domain'
-import { handlers } from './index.js'
-import { resetProductCounter } from '../factories/product.js'
+import { handlers } from './'
+import { resetProductCounter } from '../factories/product'
 
 const BASE_URL = 'http://localhost'
 const server = setupServer(...handlers)

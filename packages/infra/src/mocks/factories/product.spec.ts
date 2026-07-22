@@ -3,7 +3,7 @@ import {
   buildProduct,
   buildProductList,
   resetProductCounter,
-} from './product.js'
+} from './product'
 
 describe('product factory', () => {
   beforeEach(() => {

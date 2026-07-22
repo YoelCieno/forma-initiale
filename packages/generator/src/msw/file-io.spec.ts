@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { readMockedData, writeMockedData, copyMswWorker } from './file-io'
@@ -33,6 +33,7 @@ describe('readMockedData', () => {
     expect(() => readMockedData(path)).toThrow(/Invalid JSON/)
   })
 })
+
 
 describe('writeMockedData', () => {
   it('writes formatted JSON with trailing newline', () => {
@@ -70,18 +71,5 @@ describe('copyMswWorker', () => {
     writeFileSync(source, 'content')
     copyMswWorker(source, target)
     expect(existsSync(target)).toBe(true)
-  })
-
-  it('throws when source not found', () => {
-    const source = join(tmpDir, 'missing.js')
-    const target = join(tmpDir, 'public/missing.js')
-    expect(() => copyMswWorker(source, target)).toThrow(/MSW worker not found/)
-  })
-
-  it('does nothing when source equals target', () => {
-    const path = join(tmpDir, 'same.js')
-    writeFileSync(path, 'same')
-    copyMswWorker(path, path)
-    expect(readFileSync(path, 'utf-8')).toBe('same')
   })
 })

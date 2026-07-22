@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll } from 'vitest'
-import { mkdtempSync, rmSync, existsSync } from 'node:fs'
+import { mkdtempSync, rmSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import type { VueTenantContext } from '../models'
@@ -87,7 +87,6 @@ describe('renderSourceFiles', () => {
     const ctx: VueTenantContext = createMockContext()
     // Create source vite-env.d.ts for copy operation
     const sourceDir = join(ctx.cwd, 'apps/white-label-vue/src')
-    const { mkdirSync, writeFileSync } = await import('node:fs')
     mkdirSync(sourceDir, { recursive: true })
     writeFileSync(join(sourceDir, 'vite-env.d.ts'), '/// <reference types="vite/client" />')
 
@@ -175,7 +174,6 @@ describe('generate', () => {
     })
     // Create source vite-env.d.ts for copy operation
     const sourceDir = join(ctx.cwd, 'apps/white-label-vue/src')
-    const { mkdirSync, writeFileSync } = await import('node:fs')
     mkdirSync(sourceDir, { recursive: true })
     writeFileSync(join(sourceDir, 'vite-env.d.ts'), '/// <reference types="vite/client" />')
 

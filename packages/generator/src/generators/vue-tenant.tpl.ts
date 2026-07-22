@@ -6,7 +6,7 @@ import {
   toFile,
   when,
 } from '@featherscloud/pinion'
-import { caseTransform } from '../helpers/cases.js'
+import { caseTransform } from '../helpers/cases'
 import {
   packageJson,
   viteConfig,
@@ -24,8 +24,7 @@ import {
 } from '../templates'
 import { VueTenantContext } from '../models'
 import { tenantPrompts } from '../prompts'
-import { addTenantConfig } from '../msw/add-tenant.js'
-import { readMockedData, writeMockedData, copyMswWorker } from '../msw/file-io'
+import { copyServiceWorker } from '../msw/copy-service-worker'
 
 const outDir = (ctx: VueTenantContext) => `apps/${ctx.name}-vue`
 
@@ -71,43 +70,6 @@ export const renderTestInfra = (ctx: VueTenantContext) =>
     .then(renderTemplate(env, toFile(outDir, '.env')))
     .then(renderTemplate(envExample, toFile(outDir, '.env.example')))
 
-function deriveMswNames(name: string): string[] {
-  return [`${name}-alpha`, `${name}-beta`, `${name}-gamma`]
-}
-
-export const mswRegistration = (ctx: VueTenantContext): VueTenantContext => {
-  if (!ctx.registerMsw) {
-    ctx.pinion.logger.notice(`To register MSW data, run:
-  bun packages/generator/src/msw/register-tenant.ts --prefix ${ctx.prefix}
-
-Then copy mockServiceWorker.js (or use registerMsw: true during generation):
-  cp apps/white-label-vue/public/mockServiceWorker.js apps/${ctx.name}-vue/public/`)
-    return ctx
-  }
-
-  const configPath = join(ctx.cwd, 'packages/infra/src/mocks/data/mocked-data.json')
-  const raw = readMockedData(configPath)
-  const names = deriveMswNames(ctx.name)
-  const updated = addTenantConfig(raw, ctx.prefix, names)
-  writeMockedData(configPath, updated)
-
-  // Copy MSW mockServiceWorker.js to the generated app
-  const sourceWorker = join(ctx.cwd, 'apps/white-label-vue/public/mockServiceWorker.js')
-  const targetWorker = join(ctx.cwd, `apps/${ctx.name}-vue/public/mockServiceWorker.js`)
-  try {
-    copyMswWorker(sourceWorker, targetWorker)
-    ctx.pinion.logger.notice(`Copied mockServiceWorker.js to apps/${ctx.name}-vue/public/`)
-  } catch (err) {
-    if (err instanceof Error && err.message.includes('not found')) {
-			ctx.pinion.logger.warn(`MSW worker not found: ${sourceWorker}`)
-			return ctx
-    }
-    throw err
-  }
-
-  ctx.pinion.logger.notice(`Registered MSW config for prefix "${ctx.prefix}"`)
-  return ctx
-}
 
 export const installDeps = async (ctx: VueTenantContext): Promise<VueTenantContext> => {
   const appDir = outDir(ctx)
@@ -152,6 +114,6 @@ export const generate = (ctx: VueTenantContext) =>
     .then(renderSourceFiles)
     .then(renderConditionalAssets)
     .then(renderTestInfra)
-    .then(mswRegistration)
+    .then(copyServiceWorker)
     .then(installDeps)
     .then(verifyScaffold)

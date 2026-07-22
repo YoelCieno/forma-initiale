@@ -30,13 +30,18 @@ const derivePrefix = (name: string): string => {
   return name.slice(0, 2)
 }
 
-const caseTransform =
-  <C extends VueTenantContext>() =>
-  async (ctx: C): Promise<C> => {
-    ctx.Name = kebabToPascal(ctx.name)
-    ctx.camelName = kebabToCamel(ctx.name)
-    ctx.prefix = derivePrefix(ctx.name)
-    return ctx
-  }
+const caseTransform = <C extends VueTenantContext>() => async (ctx: C): Promise<C> => {
+  ctx.Name = kebabToPascal(ctx.name)
+  ctx.camelName = kebabToCamel(ctx.name)
+	ctx.prefix = derivePrefix(ctx.name)
 
-export { kebabToPascal, kebabToCamel, pascalToKebab, caseTransform, derivePrefix }
+  return ctx
+}
+
+export {
+	kebabToPascal,
+	kebabToCamel,
+	pascalToKebab,
+	caseTransform,
+	derivePrefix
+}

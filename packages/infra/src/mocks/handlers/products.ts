@@ -4,7 +4,7 @@ import {
   buildProduct,
   buildProductList,
   resetProductCounter,
-} from '../factories/product.js'
+} from '../factories/product'
 
 export const productHandlers = [
   http.get('*/api/products', ({ request }) => {
