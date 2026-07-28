@@ -11,6 +11,7 @@ import {
   packageJson,
   viteConfig,
   tsconfigJson,
+  eslintrc,
   indexHtml,
   mainTs,
   metadataTs,
@@ -19,10 +20,13 @@ import {
   componentVue,
   gitkeep,
   vitestSetup,
+  vitestConfig,
+  mainSpec,
   env,
   envExample,
 } from '../templates'
 import { VueTenantContext } from '../models'
+import { findNextDevPort } from '../helpers/port-allocator'
 import { tenantPrompts } from '../prompts'
 import { copyServiceWorker } from '../msw/copy-service-worker'
 
@@ -34,6 +38,7 @@ export const renderSetup = (ctx: VueTenantContext) =>
     .then(renderTemplate(viteConfig, toFile(outDir, 'vite.config.ts')))
     .then(renderTemplate(tsconfigJson, toFile(outDir, 'tsconfig.json')))
     .then(renderTemplate(indexHtml, toFile(outDir, 'index.html')))
+    .then(renderTemplate(eslintrc, toFile(outDir, '.eslintrc.cjs')))
 
 export const renderSourceFiles = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
@@ -67,6 +72,8 @@ export const renderTestInfra = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
     .then(renderTemplate(gitkeep, toFile(outDir, 'src', 'pages', '.gitkeep')))
     .then(renderTemplate(vitestSetup, toFile(outDir, 'vitest.setup.ts')))
+    .then(renderTemplate(vitestConfig, toFile(outDir, 'vitest.config.ts')))
+    .then(renderTemplate(mainSpec, toFile(outDir, 'src', 'main.spec.ts')))
     .then(renderTemplate(env, toFile(outDir, '.env')))
     .then(renderTemplate(envExample, toFile(outDir, '.env.example')))
 
@@ -106,10 +113,16 @@ export const verifyScaffold = (ctx: VueTenantContext): VueTenantContext => {
   return ctx
 }
 
+export const assignDevPort = (ctx: VueTenantContext): VueTenantContext => {
+  ctx.devPort = findNextDevPort(ctx.cwd)
+  return ctx
+}
+
 export const generate = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
     .then(prompt<VueTenantContext>(tenantPrompts))
     .then(caseTransform<VueTenantContext>())
+    .then(assignDevPort)
     .then(renderSetup)
     .then(renderSourceFiles)
     .then(renderConditionalAssets)

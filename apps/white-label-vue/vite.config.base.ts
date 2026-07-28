@@ -13,6 +13,8 @@ export interface WhiteLabelViteOptions {
   componentDirs?: string[]
   /** Tenant auto-import directories (e.g., ['./src/composables']) */
   autoImportDirs?: string[]
+  /** Dev server port. Defaults to Vite default (5173) if omitted. */
+  devPort?: number
 }
 
 /**
@@ -22,7 +24,7 @@ export interface WhiteLabelViteOptions {
 export function defineWhiteLabelViteConfig(
   opts: WhiteLabelViteOptions = {},
 ): UserConfig {
-  return defineConfig({
+  const config: UserConfig = {
     plugins: [
       vue({
         template: {
@@ -48,5 +50,11 @@ export function defineWhiteLabelViteConfig(
         dts: './src/components.d.ts',
       }),
     ],
-  })
+  }
+
+  if (opts.devPort !== undefined) {
+    config.server = { port: opts.devPort }
+  }
+
+  return defineConfig(config)
 }

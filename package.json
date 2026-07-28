@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky",
     "generate:vue-tenant": "pinion packages/generator/src/generators/vue-tenant.tpl.ts",
-    "register-tenant": "bun scripts/register-msw-tenant.ts"
+    "register-tenant": "bun packages/generator/src/msw/register-tenant.ts"
   },
   "devDependencies": {
     "@featherscloud/pinion": "^0.5.7",

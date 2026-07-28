@@ -64,12 +64,12 @@ function renderFiles(
 }
 
 describe('renderSetup', () => {
-  it('renders package.json, vite.config.ts, tsconfig.json, index.html', async () => {
+  it('renders package.json, vite.config.ts, tsconfig.json, index.html, .eslintrc.cjs', async () => {
     const ctx: VueTenantContext = createMockContext()
     const result = await renderSetup(ctx)
 
     const trace = result.pinion.trace
-    expect(trace).toHaveLength(4)
+    expect(trace).toHaveLength(5)
     expect(trace.every((t) => t.name === 'renderTemplate')).toBe(true)
 
     const files = trace.map(
@@ -79,6 +79,7 @@ describe('renderSetup', () => {
     expect(files.some((f) => f.endsWith('vite.config.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('index.html'))).toBe(true)
+    expect(files.some((f) => f.endsWith('.eslintrc.cjs'))).toBe(true)
   })
 })
 
@@ -148,12 +149,12 @@ describe('renderConditionalAssets', () => {
 })
 
 describe('renderTestInfra', () => {
-  it('renders vitest.setup.ts, .env, .env.example, and pages .gitkeep', async () => {
+  it('renders vitest.setup.ts, vitest.config.ts, main.spec.ts, .env, .env.example, and pages .gitkeep', async () => {
     const ctx: VueTenantContext = createMockContext()
     const result = await renderTestInfra(ctx)
 
     const trace = result.pinion.trace
-    expect(trace).toHaveLength(4)
+    expect(trace).toHaveLength(6)
     expect(trace.every((t) => t.name === 'renderTemplate')).toBe(true)
 
     const files = trace.map(
@@ -161,6 +162,8 @@ describe('renderTestInfra', () => {
     )
     expect(files.some((f) => f.endsWith('src/pages/.gitkeep'))).toBe(true)
     expect(files.some((f) => f.endsWith('vitest.setup.ts'))).toBe(true)
+    expect(files.some((f) => f.endsWith('vitest.config.ts'))).toBe(true)
+    expect(files.some((f) => f.endsWith('src/main.spec.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('.env'))).toBe(true)
     expect(files.some((f) => f.endsWith('.env.example'))).toBe(true)
   })
@@ -183,8 +186,8 @@ describe('generate', () => {
     const renderTraces = result.pinion.trace.filter(
       (t) => t.name === 'renderTemplate',
     )
-    // 4 (setup) + 3 (source) + 2 (conditional: metadata + gitkeep) + 4 (test infra) = 13
-    expect(renderTraces).toHaveLength(13)
+    // 5 (setup + eslintrc) + 3 (source) + 2 (conditional: metadata + gitkeep) + 6 (test infra: gitkeep, vitest.setup, vitest.config, main.spec, .env, .env.example) = 16
+    expect(renderTraces).toHaveLength(16)
 
     // Verify prompt was called
     const promptTraces = result.pinion.trace.filter((t) => t.name === 'prompt')
@@ -198,6 +201,7 @@ describe('generate', () => {
     expect(existsSync(join(base, 'vite.config.ts'))).toBe(true)
     expect(existsSync(join(base, 'tsconfig.json'))).toBe(true)
     expect(existsSync(join(base, 'index.html'))).toBe(true)
+    expect(existsSync(join(base, '.eslintrc.cjs'))).toBe(true)
 
     // renderSourceFiles
     expect(existsSync(join(base, 'src', 'main.ts'))).toBe(true)
@@ -212,6 +216,8 @@ describe('generate', () => {
     // renderTestInfra
     expect(existsSync(join(base, 'src', 'pages', '.gitkeep'))).toBe(true)
     expect(existsSync(join(base, 'vitest.setup.ts'))).toBe(true)
+    expect(existsSync(join(base, 'vitest.config.ts'))).toBe(true)
+    expect(existsSync(join(base, 'src', 'main.spec.ts'))).toBe(true)
     expect(existsSync(join(base, '.env'))).toBe(true)
     expect(existsSync(join(base, '.env.example'))).toBe(true)
   })

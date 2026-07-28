@@ -15,6 +15,7 @@ export interface VueTenantContext extends PinionContext {
   overrideComponentName?: string
   registerMsw?: boolean
   prefix: string
+  devPort: number
 }
 
 export interface MockedData {

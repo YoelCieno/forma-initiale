@@ -44,6 +44,7 @@ const viteConfig = (ctx: VueTenantContext) => {
   return `import { defineWhiteLabelViteConfig } from 'white-label-vue/vite.config.base'
 
 export default defineWhiteLabelViteConfig({
+  devPort: ${ctx.devPort},
 ${componentDir}
 })
 `
@@ -107,20 +108,35 @@ ${metaLine}
 `
 }
 
-const metadataTs = (
-  ctx: VueTenantContext,
-) => `import type { ProductMeta } from '@repo/presenters'
+const metadataTs = (ctx: VueTenantContext) => {
+  const parts = ctx.name.split('-')
+  const base = parts.slice(0, -1).join('-')
+  const prefix = base ? `${base}-` : ''
+
+  return `import type { ProductMeta } from '@repo/presenters'
 
 export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
-  // Placeholder entries — replace with actual products
-  'sample-product': {
-    title: 'Sample Product',
-    description: 'Replace with actual product description',
+  '${prefix}alpha': {
+    title: 'Alpha Primum',
+    description: 'The first of its kind, a pioneering specimen',
+    image: 'plant',
+    imageFamily: 'classic',
+  },
+  '${prefix}beta': {
+    title: 'Beta Secundus',
+    description: 'Follows the pattern with distinct characteristics',
+    image: 'plant',
+    imageFamily: 'classic',
+  },
+  '${prefix}gamma': {
+    title: 'Gamma Tertius',
+    description: 'Completes the triad with unique properties',
     image: 'plant',
     imageFamily: 'classic',
   },
 }
 `
+}
 
 const tokensCss = (ctx: VueTenantContext) => {
   // Custom gets inline brand override
@@ -154,6 +170,31 @@ ${formatThemeTokens(themeTokens)}
 const stylesIndex = (_ctx: VueTenantContext) => `import './tokens.css'
 `
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const eslintrc = (_ctx: VueTenantContext) => `/** @type {import("eslint").Linter.Config} */
+module.exports = {
+  root: true,
+  extends: ["@repo/eslint-config/vue.js"],
+  rules: {
+    // WA custom elements (fe-*) use native slot attr (not Vue virtual slots)
+    "vue/no-deprecated-slot-attribute": "off",
+    // fe-* elements are web components — explicit closing tags needed for Vite template compat
+    "vue/html-self-closing": ["warn", {
+      html: {
+        void: "never",
+        normal: "always",
+        component: "always",
+      },
+      svg: "always",
+      math: "always",
+    }],
+    // Allow inline attributes on custom elements
+    "vue/max-attributes-per-line": "off",
+    "vue/singleline-html-element-content-newline": "off",
+  },
+};
+`
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const gitkeep = (_ctx: VueTenantContext) => ''
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -163,13 +204,56 @@ import { config } from '@vue/test-utils'
 config.global.config.compilerOptions = {
   isCustomElement: (tag: string) => tag.startsWith('fe-'),
 }
+
+vi.mock('@repo/ui/fe-card', () => {
+  return {}
+})
+
+vi.mock('@repo/ui/fe-rating', () => {
+  return {}
+})
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const appSpec = (_ctx: VueTenantContext) => `import { describe, it, expect } from 'vitest'
+const vitestConfig = (_ctx: VueTenantContext) => `import { defineConfig } from 'vitest/config'
+import vue from '@vitejs/plugin-vue'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag: string) => tag.startsWith('fe-'),
+        },
+      },
+    }),
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      dts: './src/auto-imports.d.ts',
+    }),
+    Components({
+      dirs: ['./src/components', './src/pages'],
+      dts: './src/components.d.ts',
+    }),
+  ],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    include: ['src/**/*.spec.ts'],
+    env: {
+      VITE_ENABLE_MOCKS: '',
+    },
+  },
+})
+`
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const mainSpec = (_ctx: VueTenantContext) => `import { describe, it, expect } from 'vitest'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 
-describe('App', () => {
+describe('main', () => {
   it('creates app with createWhiteLabelApp', async () => {
     const { app } = await createWhiteLabelApp({
       extendRoutes: [],
@@ -225,6 +309,7 @@ export {
   packageJson,
   viteConfig,
   tsconfigJson,
+  eslintrc,
   gitkeep,
   indexHtml,
   mainTs,
@@ -233,7 +318,8 @@ export {
   tokensCss,
   metadataTs,
   vitestSetup,
-  appSpec,
+  vitestConfig,
+  mainSpec,
   env,
   envExample,
 }
