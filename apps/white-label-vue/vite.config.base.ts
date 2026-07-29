@@ -52,8 +52,14 @@ export function defineWhiteLabelViteConfig(
     ],
   }
 
+  config.server = {
+    watch: {
+      ignored: ['!**/node_modules/@repo/**'],
+    },
+  }
+
   if (opts.devPort !== undefined) {
-    config.server = { port: opts.devPort }
+    config.server.port = opts.devPort
   }
 
   return defineConfig(config)

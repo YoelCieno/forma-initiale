@@ -5,6 +5,7 @@
     "./fe-button": "./components/fe-button.ts",
     "./fe-async-content": "./components/fe-async-content.ts",
     "./fe-card": "./components/fe-card.ts",
+    "./fe-img": "./components/fe-img.ts",
     "./fe-icon": "./components/fe-icon.ts",
     "./fe-rating": "./components/fe-rating.ts",
     "./styles": "./styles/webawesome.ts",

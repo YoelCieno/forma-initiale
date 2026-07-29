@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "white-label-vue": "workspace:*",
+    "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
     "vue": "^3.5.34",

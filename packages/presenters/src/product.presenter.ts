@@ -1,6 +1,7 @@
 import type { Product } from '@repo/domain'
 
 export interface ProductView {
+  id: string
   name: string
   title: string
   description: string
@@ -32,6 +33,7 @@ export function toProductView(
   const meta = override ?? fallback
 
   return {
+		id: product.id,
     name: product.name,
     title: meta.title,
     description: meta.description,

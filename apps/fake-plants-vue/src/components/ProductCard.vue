@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import "@repo/ui/fe-card"
 import "@repo/ui/fe-rating"
+import "@repo/ui/fe-img"
 import type { ProductView } from "@repo/presenters";
+import { getProductImageUrl } from '@repo/infra'
 
 withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
-  price: 'Free',
+	price: 'Free',
 })
 </script>
 
 <template>
   <fe-card class="fp-product-card">
-    <img
+    <fe-img
       slot="media"
       class="fp-product-card__image"
-      :src="`https://loremflickr.com/700/450/plants/all?random=${Math.random()}`"
+      :src="getProductImageUrl(id)"
       :alt="title"
-    >
+      :cache-key="id"
+    />
     <header slot="header" class="fp-product-card__header">
       <h2 class="fp-product-card__title">{{ title }}</h2>
       <strong class="fp-product-card__price">{{ price }}</strong>

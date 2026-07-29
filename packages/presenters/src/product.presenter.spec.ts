@@ -79,6 +79,12 @@ describe('toProductView', () => {
     expect(result.image).toBe('code')
   })
 
+  it('maps id from product to view', () => {
+    const result = toProductView(vueProduct)
+
+    expect(result.id).toBe('1')
+  })
+
   it('maps unknown product to fallback defaults', () => {
     const result = toProductView(unknownProduct)
 
