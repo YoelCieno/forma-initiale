@@ -10,8 +10,8 @@ export const getProductImageUrl = (productId: string): string => {
   // djb2 hash — avoids collisions from simple charCode sum
   let hash = 0
   for (let i = 0; i < productId?.length; i++) {
-    hash = ((hash << 5) - hash) + productId.charCodeAt(i)
-    hash |= 0
-  }
-  return `https://loremflickr.com/700/450/plants/all?seed=${hash}`
+    hash = (hash << 5) + productId.charCodeAt(i)
+    hash >>>= 0
+	}
+  return `https://loremflickr.com/500/250/plant/all?seed=${hash}`
 }

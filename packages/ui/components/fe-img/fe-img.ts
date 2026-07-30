@@ -1,15 +1,12 @@
 import { define, html } from 'hybrids'
-
-const DEFAULT_FALLBACK =
-  'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%%25%27 height=%27100%%25%27%3E%3Crect fill=%27%23eee%27 width=%27100%%25%27 height=%27100%%25%27/%3E%3Ctext x=%2750%%25%27 y=%2750%%25%27 text-anchor=%27middle%27 fill=%27%23999%27 font-size=%2714%27 dy=%27.3em%27%3EImage not found%3C/text%3E%3C/svg%3E'
-
-const CACHE = new Map<string, string>()
+import { FALLBACK_SVG, CACHE } from './fe-img.constants.js'
 
 export interface FeImgElement extends HTMLElement {
   src: string | undefined
   cacheKey: string | undefined
   fallbackSrc: string | undefined
-  alt: string
+	alt: string
+  minHeight: string | undefined
   readonly currentSrc: string | undefined
   _handleImgError: () => void
 }
@@ -17,7 +14,8 @@ export interface FeImgElement extends HTMLElement {
 export const FeImg = define<FeImgElement>({
   tag: 'fe-img',
   src: undefined,
-  cacheKey: undefined,
+	cacheKey: undefined,
+	minHeight: '10rem',
   alt: '',
   fallbackSrc: undefined,
   // Hybrids computed property — factory fn tracks host.src + host.cacheKey deps
@@ -34,11 +32,20 @@ export const FeImg = define<FeImgElement>({
   },
   render: {
     value: (host) => html`
+      <style>
+        :host {
+          display: inline-block;
+          width: 100%;
+        }
+        img {
+          display: block;
+          width: 100%;
+          min-height: ${host.minHeight};
+        }
+      </style>
       <img
         src="${host.currentSrc}"
         alt="${host.alt}"
-        width="100%"
-        height="100%"
         onerror="${host._handleImgError}"
       />
     `,
@@ -46,9 +53,9 @@ export const FeImg = define<FeImgElement>({
   },
   _handleImgError: (host: FeImgElement) => () => {
     const img = host.shadowRoot?.querySelector('img')
-		if (!img) return
+    if (!img) return
 
-    const fallback = host.fallbackSrc || DEFAULT_FALLBACK
+    const fallback = host.fallbackSrc || FALLBACK_SVG
     if (img.getAttribute('src') !== fallback) {
       img.setAttribute('src', fallback)
     }

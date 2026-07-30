@@ -37,7 +37,6 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
 <style scoped>
 .fp-product-card__image {
   width: 100%;
-  height: 180px;
   object-fit: cover;
 }
 .fp-product-card__title {

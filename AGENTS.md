@@ -80,11 +80,12 @@ Hexagonal + Vue 3 — all 5 layers active:
 
 ```json
 {
-  "./fe-button": "./components/fe-button.ts",
-  "./fe-async-content": "./components/fe-async-content.ts",
-  "./fe-card": "./components/fe-card.ts",
-  "./fe-icon": "./components/fe-icon.ts",
-  "./fe-rating": "./components/fe-rating.ts",
+  "./fe-button": "./components/fe-button/fe-button.ts",
+  "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
+  "./fe-card": "./components/fe-card/fe-card.ts",
+  "./fe-icon": "./components/fe-icon/fe-icon.ts",
+  "./fe-img": "./components/fe-img/fe-img.ts",
+  "./fe-rating": "./components/fe-rating/fe-rating.ts",
   "./styles": "./styles/webawesome.ts",
   "./styles/themes/default": "./styles/themes/default.ts",
   "./styles/themes/awesome": "./styles/themes/awesome.ts",
@@ -152,6 +153,15 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
 9. **`apps/white-label-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
 10. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
 11. **WA Agent Skill available** — WA publishes an Agent Skill at `.opencode/references/webawesome/` with full component docs (API, events, CSS parts, tokens). When building `fe-*` wrappers, read the relevant `<component>.md` first for API contract.
+12. **hybrids styling — use `html.css`, not `<style>`** — When a `fe-*` component needs custom CSS, chain `.css\`...\`` on the hybrid template literal. `html.css` creates one shared `CSSStyleSheet` across all instances via adopted stylesheets — no per-instance `<style>` overhead.
+    ```ts
+    render: (host) => html\`
+      <img src="\${host.src}" />
+    \`.css\`
+      :host { display: inline-block; }
+    \`
+    ```
+    Exception: `fe-img` uses `<style>` in template currently. All NEW custom styles MUST use `html.css`.
 
 ## Agent rules
 
