@@ -102,4 +102,52 @@ describe('fe-img', () => {
     img.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }))
     expect(handler).toHaveBeenCalledTimes(1)
   })
+
+  // ── loading state ────────────────────────────────────────────
+
+  it('has loading property defaulting to true', () => {
+    expect(el.loading).toBe(true)
+  })
+
+  it('reflects loading attribute when loading is true', () => {
+    expect(el.hasAttribute('loading')).toBe(true)
+  })
+
+  it('sets loading to false after image load event', async () => {
+    const img = el.shadowRoot!.querySelector('img')!
+    img.dispatchEvent(new Event('load'))
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(el.loading).toBe(false)
+  })
+
+  it('removes loading attribute after image load event', async () => {
+    const img = el.shadowRoot!.querySelector('img')!
+    img.dispatchEvent(new Event('load'))
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(el.hasAttribute('loading')).toBe(false)
+  })
+
+  it('sets loading to false after image error event', async () => {
+    el.src = 'broken.jpg'
+    await Promise.resolve()
+    await Promise.resolve()
+    const img = el.shadowRoot!.querySelector('img')!
+    img.dispatchEvent(new Event('error'))
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(el.loading).toBe(false)
+  })
+
+  it('removes loading attribute after image error event', async () => {
+    el.src = 'broken.jpg'
+    await Promise.resolve()
+    await Promise.resolve()
+    const img = el.shadowRoot!.querySelector('img')!
+    img.dispatchEvent(new Event('error'))
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(el.hasAttribute('loading')).toBe(false)
+  })
 })

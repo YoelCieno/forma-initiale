@@ -7,8 +7,10 @@ export interface FeImgElement extends HTMLElement {
   fallbackSrc: string | undefined
 	alt: string
   minHeight: string | undefined
+  loading: boolean
   readonly currentSrc: string | undefined
   _handleImgError: () => void
+  _handleImgLoad: () => void
 }
 
 export const FeImg = define<FeImgElement>({
@@ -18,6 +20,11 @@ export const FeImg = define<FeImgElement>({
 	minHeight: '10rem',
   alt: '',
   fallbackSrc: undefined,
+  // Reflects to attribute for CSS targeting: fe-img[loading] { ... }
+  loading: {
+    value: true,
+    observe: (host, value) => host.toggleAttribute('loading', value),
+  },
   // Hybrids computed property — factory fn tracks host.src + host.cacheKey deps
   currentSrc: (host) => {
     // Guard: skip cache logic when no key
@@ -46,12 +53,17 @@ export const FeImg = define<FeImgElement>({
       <img
         src="${host.currentSrc}"
         alt="${host.alt}"
+        onload="${host._handleImgLoad}"
         onerror="${host._handleImgError}"
       />
     `,
     shadow: true,
   },
+  _handleImgLoad: (host: FeImgElement) => () => {
+    host.loading = false
+  },
   _handleImgError: (host: FeImgElement) => () => {
+    host.loading = false
     const img = host.shadowRoot?.querySelector('img')
     if (!img) return
 

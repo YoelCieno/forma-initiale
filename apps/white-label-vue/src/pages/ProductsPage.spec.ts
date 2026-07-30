@@ -24,9 +24,10 @@ describe('ProductsPage', () => {
     await Promise.resolve()
 
     await vi.waitFor(() => {
-      expect(wrapper.text()).toContain('Loading...')
+      // fe-loader is in shadow DOM, so wrapper.text() won't see it.
+      // Check for fe-loader element in the loading slot instead.
+      expect(wrapper.find('fe-loader').exists()).toBe(true)
     })
-    // With fe-async-content, slot elements are always in light DOM.
     // During loading, error text is empty (error=undefined → empty interpolation).
     expect(wrapper.find('.products-page__error').text()).toBe('')
     // Grid element exists but has no product cards yet

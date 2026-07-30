@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, delay } from 'msw'
 import type { Product } from '@repo/domain'
 import {
   buildProduct,
@@ -6,15 +6,20 @@ import {
   resetProductCounter,
 } from '../factories/product'
 
+
+const DEV_DELAY = 1000
+
 export const productHandlers = [
-  http.get('*/api/products', ({ request }) => {
+  http.get('*/api/products', async ({ request }) => {
+		await delay(DEV_DELAY)
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
     resetProductCounter()
     const products = buildProductList(tenantId)
     return HttpResponse.json({ data: products, total: products.length })
   }),
 
-  http.get('*/api/products/:id', ({ params, request }) => {
+  http.get('*/api/products/:id', async ({ params, request }) => {
+    await delay(DEV_DELAY)
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
     resetProductCounter()
     const products = buildProductList(tenantId)
@@ -29,6 +34,7 @@ export const productHandlers = [
   }),
 
   http.post('*/api/products', async ({ request }) => {
+    await delay(DEV_DELAY)
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
     const body = (await request.json()) as Partial<Product>
     const newProduct = buildProduct(tenantId, {
