@@ -9,8 +9,8 @@ const { products, loading, error } = useProducts();
   <div class="products-page">
     <h1 class="products-page__title">List of Products</h1>
 
-    <fe-async-content :loading="loading" :error="error">
-      <fe-loader slot="loading" size="md" type="bar" />
+    <fe-async-content :loading :error>
+      <fe-loader slot="loading" />
       <p slot="error" class="products-page__error">{{ error }}</p>
       <div class="products-page__grid">
         <ProductCard

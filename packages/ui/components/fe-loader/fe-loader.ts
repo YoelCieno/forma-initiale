@@ -5,16 +5,20 @@ export interface FeLoaderElement extends HTMLElement {
   label: string
 }
 
+const sizeMap: Record<FeLoaderElement['size'], string> = {
+  sm: '0.25rem',
+  md: '0.5rem',
+  lg: '0.75rem',
+}
+
 export const FeLoader = define<FeLoaderElement>({
   tag: 'fe-loader',
-  size: 'md',
+  size: 'sm',
   label: 'Loading',
   render: {
     value: (host) => html`
-      <div role="status" aria-label="${host.label}">
-        <div class="fe-loader__bar">
-          <div class="fe-loader__bar__indicator"></div>
-        </div>
+      <div class="fe-loader__bar" role="status" aria-label="${host.label}">
+        <div class="fe-loader__bar__indicator"></div>
       </div>
     `.css`
       :host {
@@ -24,7 +28,7 @@ export const FeLoader = define<FeLoaderElement>({
       .fe-loader__bar {
         position: relative;
         width: 100%;
-        height: 0.25rem;
+        height: ${sizeMap[host.size]};
         background-color: var(--wa-color-surface-lowered);
         border-radius: var(--wa-border-radius-pill);
         overflow: hidden;
@@ -42,6 +46,11 @@ export const FeLoader = define<FeLoaderElement>({
         0%   {background-position:-150% 0,-150% 0}
         66%  {background-position: 250% 0,-150% 0}
         100% {background-position: 250% 0, 250% 0}
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .fe-loader__bar__indicator {
+          animation: none;
+        }
       }
     `,
     shadow: true,

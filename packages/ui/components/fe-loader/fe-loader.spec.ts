@@ -30,8 +30,8 @@ describe('fe-loader', () => {
 
   // ── Defaults ─────────────────────────────────────────────────
 
-  it('defaults size to md', () => {
-    expect(el.size).toBe('md')
+  it('defaults size to sm', () => {
+    expect(el.size).toBe('sm')
   })
 
   it('defaults label to Loading', () => {
@@ -48,6 +48,15 @@ describe('fe-loader', () => {
   it('renders bar indicator inside bar', () => {
     const indicator = el.shadowRoot!.querySelector('.fe-loader__bar__indicator')
     expect(indicator).toBeDefined()
+  })
+
+  it('scales bar height with size', async () => {
+    const bar = el.shadowRoot!.querySelector('.fe-loader__bar') as HTMLElement
+    expect(getComputedStyle(bar).height).toBe('0.25rem')
+    el.size = 'lg'
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(getComputedStyle(bar).height).toBe('0.75rem')
   })
 
   // ── label ──────────────────────────────────────────────────

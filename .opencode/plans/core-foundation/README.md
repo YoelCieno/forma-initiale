@@ -46,3 +46,6 @@ Not scheduled — ideas recorded for future consideration:
 - **No slot system for injecting content into WL layout regions**: Tenants cannot inject nav items, toolbar actions, or sidebar content into WL layouts without forking the shell. Future: a slot/region registry API.
 - **CSS/token imports managed outside factory**: Tenants manually import `@repo/ui/styles`, theme, and tokens. Future: factory could auto-register theme dependency or accept a theme option.
 - **Any other factory API improvements** discovered during tenant development or generator use.
+
+### Loader components
+- **Create route navigation loader** component (shown during async route transitions / lazy page loads) fe-loader is candidate for it.
