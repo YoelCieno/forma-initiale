@@ -126,7 +126,7 @@ Framework-agnostic web components built with hybridJS. Each component wraps a `w
 
 **Pattern:** `define({ tag: "fe-*", render, shadow: true })`
 
-**Example:** `packages/ui/components/fe-button.ts`
+**Example:** `packages/ui/components/fe-button/fe-button.ts`
 
 ```typescript
 import '@awesome.me/webawesome/dist/components/button/button.js'
@@ -170,13 +170,15 @@ export const FeButton = define<FeButtonElement>({
 })
 ```
 
-**Current components** (each in `packages/ui/components/fe-*.ts`):
+**Current components** (each in `packages/ui/components/fe-*/fe-*.ts`):
 
 | Component          | Wraps       | Purpose                             |
 | ------------------ | ----------- | ----------------------------------- |
 | `fe-button`        | `wa-button` | Button with variants, loading, icon |
 | `fe-card`          | `wa-card`   | Card layout container               |
 | `fe-icon`          | `wa-icon`   | Icon renderer (brands/classic)      |
+| `fe-img`           | `<img>`     | Native image with cache + fallback  |
+| `fe-loader`        | (custom)    | Indeterminate loading bar           |
 | `fe-rating`        | `wa-rating` | Star rating display                 |
 | `fe-async-content` | (custom)    | Loading/error/data slot switcher    |
 
@@ -191,11 +193,13 @@ Package exports from `packages/ui/package.json`:
 
 ```json
 {
-  "./fe-button": "./components/fe-button.ts",
-  "./fe-async-content": "./components/fe-async-content.ts",
-  "./fe-card": "./components/fe-card.ts",
-  "./fe-icon": "./components/fe-icon.ts",
-  "./fe-rating": "./components/fe-rating.ts",
+  "./fe-button": "./components/fe-button/fe-button.ts",
+  "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
+  "./fe-card": "./components/fe-card/fe-card.ts",
+  "./fe-icon": "./components/fe-icon/fe-icon.ts",
+  "./fe-img": "./components/fe-img/fe-img.ts",
+  "./fe-loader": "./components/fe-loader/fe-loader.ts",
+  "./fe-rating": "./components/fe-rating/fe-rating.ts",
   "./styles": "./styles/webawesome.ts",
   "./styles/themes/default": "./styles/themes/default.ts",
   "./styles/themes/awesome": "./styles/themes/awesome.ts",

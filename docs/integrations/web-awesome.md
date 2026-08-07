@@ -38,7 +38,7 @@ import '@repo/ui/fe-rating'
 Each `fe-*` component follows the same structure:
 
 ```typescript
-// packages/ui/components/fe-button.ts
+// packages/ui/components/fe-button/fe-button.ts
 import '@awesome.me/webawesome/dist/components/button/button.js'
 
 import { define, html } from 'hybrids'
@@ -100,7 +100,7 @@ Note: hybridJS does not use Lit's `?` boolean prefix. All attribute bindings are
 Components like `fe-card` detect slot content at render time and conditionally render slot elements:
 
 ```typescript
-// packages/ui/components/fe-card.ts
+// packages/ui/components/fe-card/fe-card.ts
 render: {
   value: (host) => {
     const hasHeader = !!host.querySelector(':scope > [slot="header"]')
@@ -129,11 +129,13 @@ When a slot with a matching `name` attribute exists in light DOM, hybridJS slott
 
 | fe-\* component    | WA element                   | File                             | Key props                                                                                                         |
 | ------------------ | ---------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `fe-button`        | `wa-button`                  | `components/fe-button.ts`        | `variant`, `size`, `appearance`, `icon`, `disabled`, `loading`, `pill`                                            |
-| `fe-card`          | `wa-card`                    | `components/fe-card.ts`          | `appearance`, `orientation`, `disabled`; detects `header`/`footer`/`media` slots                                  |
-| `fe-icon`          | `wa-icon`                    | `components/fe-icon.ts`          | `name`, `library`, `family`, `variant`, `label`, `autoWidth`, `flip`, `rotate`, `animation`, `src`, `swapOpacity` |
-| `fe-rating`        | `wa-rating`                  | `components/fe-rating.ts`        | `value`, `max`, `precision`, `size`, `label`, `disabled`, `readonly`, `required`, `name`                          |
-| `fe-async-content` | (custom — uses `wa-spinner`) | `components/fe-async-content.ts` | `loading: boolean`, `error: string \| undefined`                                                                  |
+| `fe-button`        | `wa-button`                  | `components/fe-button/fe-button.ts`        | `variant`, `size`, `appearance`, `icon`, `disabled`, `loading`, `pill`                                            |
+| `fe-card`          | `wa-card`                    | `components/fe-card/fe-card.ts`          | `appearance`, `orientation`, `disabled`; detects `header`/`footer`/`media` slots                                  |
+| `fe-icon`          | `wa-icon`                    | `components/fe-icon/fe-icon.ts`          | `name`, `library`, `family`, `variant`, `label`, `autoWidth`, `flip`, `rotate`, `animation`, `src`, `swapOpacity` |
+| `fe-img`           | `<img>` (native)             | `components/fe-img/fe-img.ts`           | `src`, `cacheKey`, `fallbackSrc`, `alt`, `minHeight`, `loading` (readonly `currentSrc`)                           |
+| `fe-loader`        | (custom — indeterminate bar) | `components/fe-loader/fe-loader.ts`       | `size` (`sm`/`md`/`lg`), `label`; uses `--wa-*` tokens, respects `prefers-reduced-motion`                        |
+| `fe-rating`        | `wa-rating`                  | `components/fe-rating/fe-rating.ts`        | `value`, `max`, `precision`, `size`, `label`, `disabled`, `readonly`, `required`, `name`                          |
+| `fe-async-content` | (custom — uses `wa-spinner`) | `components/fe-async-content/fe-async-content.ts` | `loading: boolean`, `error: string \| undefined`                                                                  |
 
 `fe-async-content` has no direct WA counterpart. It is a custom wrapper that renders:
 
@@ -171,7 +173,7 @@ Three theme choices (each a separate CSS import):
 | Theme      | File                        | Target app                  |
 | ---------- | --------------------------- | --------------------------- |
 | `default`  | `styles/themes/default.ts`  | `white-label-vue` (current) |
-| `awesome`  | `styles/themes/awesome.ts`  | `web-angular` (future)      |
+| `awesome`  | `styles/themes/awesome.ts`  | `white-label-angular` (future)      |
 | `shoelace` | `styles/themes/shoelace.ts` | `web-react` (future)        |
 
 Each theme file is a thin barrel re-exporting a WA CSS file. Without this import, WA components have no visual styling.
@@ -227,11 +229,13 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 ```json
 {
   "exports": {
-    "./fe-button": "./components/fe-button.ts",
-    "./fe-async-content": "./components/fe-async-content.ts",
-    "./fe-card": "./components/fe-card.ts",
-    "./fe-icon": "./components/fe-icon.ts",
-    "./fe-rating": "./components/fe-rating.ts",
+    "./fe-button": "./components/fe-button/fe-button.ts",
+    "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
+    "./fe-card": "./components/fe-card/fe-card.ts",
+    "./fe-icon": "./components/fe-icon/fe-icon.ts",
+    "./fe-img": "./components/fe-img/fe-img.ts",
+    "./fe-loader": "./components/fe-loader/fe-loader.ts",
+    "./fe-rating": "./components/fe-rating/fe-rating.ts",
     "./styles": "./styles/webawesome.ts",
     "./styles/themes/default": "./styles/themes/default.ts",
     "./styles/themes/awesome": "./styles/themes/awesome.ts",
@@ -240,14 +244,16 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 }
 ```
 
-| Import path                       | Source file                        | Provides                                             |
-| --------------------------------- | ---------------------------------- | ---------------------------------------------------- |
-| `@repo/ui/fe-button`              | `./components/fe-button.ts`        | `fe-button` CE + `FeButtonElement` type              |
-| `@repo/ui/fe-async-content`       | `./components/fe-async-content.ts` | `fe-async-content` CE + `FeAsyncContentElement` type |
-| `@repo/ui/fe-card`                | `./components/fe-card.ts`          | `fe-card` CE + `FeCardElement` type                  |
-| `@repo/ui/fe-icon`                | `./components/fe-icon.ts`          | `fe-icon` CE + `FeIconElement` type                  |
-| `@repo/ui/fe-rating`              | `./components/fe-rating.ts`        | `fe-rating` CE + `FeRatingElement` type              |
-| `@repo/ui/styles`                 | `./styles/webawesome.ts`           | WA base (native.css + utilities.css)                 |
+| Import path                       | Source file                              | Provides                                             |
+| --------------------------------- | ---------------------------------------- | ---------------------------------------------------- |
+| `@repo/ui/fe-button`              | `./components/fe-button/fe-button.ts`    | `fe-button` CE + `FeButtonElement` type              |
+| `@repo/ui/fe-async-content`       | `./components/fe-async-content/fe-async-content.ts` | `fe-async-content` CE + `FeAsyncContentElement` type |
+| `@repo/ui/fe-card`                | `./components/fe-card/fe-card.ts`        | `fe-card` CE + `FeCardElement` type                  |
+| `@repo/ui/fe-icon`                | `./components/fe-icon/fe-icon.ts`        | `fe-icon` CE + `FeIconElement` type                  |
+| `@repo/ui/fe-img`                 | `./components/fe-img/fe-img.ts`          | `fe-img` CE + `FeImgElement` type                    |
+| `@repo/ui/fe-loader`              | `./components/fe-loader/fe-loader.ts`    | `fe-loader` CE + `FeLoaderElement` type              |
+| `@repo/ui/fe-rating`              | `./components/fe-rating/fe-rating.ts`    | `fe-rating` CE + `FeRatingElement` type              |
+| `@repo/ui/styles`                 | `./styles/webawesome.ts`                 | WA base (native.css + utilities.css)                 |
 | `@repo/ui/styles/themes/default`  | `./styles/themes/default.ts`       | WA default theme                                     |
 | `@repo/ui/styles/themes/awesome`  | `./styles/themes/awesome.ts`       | WA awesome theme                                     |
 | `@repo/ui/styles/themes/shoelace` | `./styles/themes/shoelace.ts`      | WA shoelace theme                                    |

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import "@repo/ui/fe-rating";
 import "@repo/ui/fe-card";
-
 </script>
 
 <template>

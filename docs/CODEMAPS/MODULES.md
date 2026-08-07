@@ -40,6 +40,9 @@ import type { Product } from '@repo/domain'
 - `index.ts` — Barrel exports
 - `adapters/get-products.adapter.ts` — Fetch-based product retrieval
 - `adapters/get-products.adapter.spec.ts` — Tests
+- `adapters/get-product-image.adapter.ts` — Deterministic product image URL helper
+- `adapters/get-product-image.adapter.spec.ts` — Tests
+- `mocks/` — MSW handlers, factories, server/worker, helpers, constants, models
 
 **Dependencies**:
 
@@ -49,12 +52,14 @@ import type { Product } from '@repo/domain'
 
 - `getProducts()` — `() => Promise<GetProductsResponse>` — Fetches products from `https://api.example.com/products`
 - `GetProductsResponse` (type) — `{ data: Product[], total: number }`
+- `getProductImageUrl(productId)` — `(string) => string` — Deterministic image URL for a product id
 
 **Usage**:
 
 ```typescript
-import { getProducts } from '@repo/infra'
+import { getProducts, getProductImageUrl } from '@repo/infra'
 const products = await getProducts()
+const img = getProductImageUrl(product.id)
 ```
 
 ---
@@ -67,31 +72,37 @@ const products = await getProducts()
 
 **Key Files**:
 
-- `index.ts` — Barrel exports (FeButton, FeButtonElement type)
-- `components/fe-async-content.ts` — `<fe-async-content>` hybridJS CE for loading/error/content states
-- `components/fe-async-content.spec.ts` — Tests (7 tests, 3 states, slot overrides, transitions)
-- `components/fe-button.ts` — `<fe-button>` custom element definition (hybridJS)
-- `components/fe-button.spec.ts` — Tests
-- `components/fe-card.ts` — `<fe-card>` hybridJS CE forwarding to `<wa-card>` (appearance, orientation, disabled, slot content detection)
-- `components/fe-card.spec.ts` — Tests (slot detection, appearance, orientation, header/footer/media forwarding)
-- `components/fe-icon.ts` — `<fe-icon>` hybridJS wrapper over `<wa-icon>`
-- `components/fe-icon.spec.ts` — Tests
-- `components/fe-rating.ts` — `<fe-rating>` hybridJS wrapper over `<wa-rating>`
-- `components/fe-rating.spec.ts` — Tests (23 tests, 9 props, events)
+- `components/fe-async-content/fe-async-content.ts` — `<fe-async-content>` hybridJS CE for loading/error/content states
+- `components/fe-async-content/fe-async-content.spec.ts` — Tests (7 tests, 3 states, slot overrides, transitions)
+- `components/fe-button/fe-button.ts` — `<fe-button>` custom element definition (hybridJS)
+- `components/fe-button/fe-button.spec.ts` — Tests
+- `components/fe-card/fe-card.ts` — `<fe-card>` hybridJS CE forwarding to `<wa-card>` (appearance, orientation, disabled, slot content detection)
+- `components/fe-card/fe-card.spec.ts` — Tests (slot detection, appearance, orientation, header/footer/media forwarding)
+- `components/fe-icon/fe-icon.ts` — `<fe-icon>` hybridJS wrapper over `<wa-icon>`
+- `components/fe-icon/fe-icon.spec.ts` — Tests
+- `components/fe-img/fe-img.ts` — `<fe-img>` wrapper over native `<img>` with cache-key dedup + error fallback
+- `components/fe-img/fe-img.constants.ts` — Fallback SVG + in-memory `CACHE` map
+- `components/fe-img/fe-img.spec.ts` — Tests (src loading state, error fallback, attribute reflection)
+- `components/fe-loader/fe-loader.ts` — `<fe-loader>` indeterminate loading bar (size sm/md/lg, reduced-motion aware)
+- `components/fe-loader/fe-loader.spec.ts` — Tests
+- `components/fe-rating/fe-rating.ts` — `<fe-rating>` hybridJS wrapper over `<wa-rating>`
+- `components/fe-rating/fe-rating.spec.ts` — Tests (23 tests, 9 props, events)
 - `styles/webawesome.ts` — WA base CSS (native.css + utilities.css, no theme)
 - `styles/themes/default.ts` — WA default theme (for white-label-vue)
-- `styles/themes/awesome.ts` — WA awesome theme (for future web-angular)
+- `styles/themes/awesome.ts` — WA awesome theme (for future white-label-angular)
 - `styles/themes/shoelace.ts` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
 - `vitest.setup.ts` — ElementInternals stub for jsdom
 
 **Package Exports**:
 
-- `@repo/ui/fe-async-content` → `./components/fe-async-content.ts`
-- `@repo/ui/fe-button` → `./components/fe-button.ts`
-- `@repo/ui/fe-card` → `./components/fe-card.ts`
-- `@repo/ui/fe-icon` → `./components/fe-icon.ts`
-- `@repo/ui/fe-rating` → `./components/fe-rating.ts`
+- `@repo/ui/fe-async-content` → `./components/fe-async-content/fe-async-content.ts`
+- `@repo/ui/fe-button` → `./components/fe-button/fe-button.ts`
+- `@repo/ui/fe-card` → `./components/fe-card/fe-card.ts`
+- `@repo/ui/fe-icon` → `./components/fe-icon/fe-icon.ts`
+- `@repo/ui/fe-img` → `./components/fe-img/fe-img.ts`
+- `@repo/ui/fe-loader` → `./components/fe-loader/fe-loader.ts`
+- `@repo/ui/fe-rating` → `./components/fe-rating/fe-rating.ts`
 - `@repo/ui/styles` → `./styles/webawesome.ts`
 - `@repo/ui/styles/themes/default` → `./styles/themes/default.ts`
 - `@repo/ui/styles/themes/awesome` → `./styles/themes/awesome.ts`
@@ -270,6 +281,65 @@ import type { FeRatingElement } from '@repo/ui/fe-rating'
 
 ---
 
+### `<fe-img>`
+
+**Interface**: `FeImgElement extends HTMLElement`
+
+| Property      | Type              | Default             | Description                                           |
+| ------------- | ----------------- | ------------------- | ----------------------------------------------------- |
+| `src`         | `string \| undefined` | `undefined`      | Image source                                          |
+| `cacheKey`    | `string \| undefined` | `undefined`      | Dedup key; first `src` per key cached in-memory        |
+| `fallbackSrc` | `string \| undefined` | `undefined`      | Error fallback URL; defaults to bundled `FALLBACK_SVG` |
+| `alt`         | `string`          | `''`                | Alt text                                              |
+| `minHeight`   | `string \| undefined` | `'10rem'`       | `min-height` on `<img>` (prevents layout shift)        |
+| `loading`     | `boolean`         | `true`            | Reflects to `loading` attribute for CSS targeting      |
+| `currentSrc`  | `string \| undefined` (readonly) | —          | Resolved src (cache-aware); computed property          |
+
+**Implementation**: hybridJS `define()` wrapping native `<img>`. Shadow DOM. Computed `currentSrc` tracks `src` + `cacheKey`; on `error` swaps to fallback.
+
+**Usage**:
+
+```html
+<fe-img src="/plants/rose.jpg" cache-key="rose" alt="Rose"></fe-img>
+```
+
+**Import**:
+
+```typescript
+import '@repo/ui/fe-img'
+import type { FeImgElement } from '@repo/ui/fe-img'
+```
+
+---
+
+### `<fe-loader>`
+
+**Interface**: `FeLoaderElement extends HTMLElement`
+
+| Property | Type                 | Default     | Description                          |
+| -------- | -------------------- | ----------- | ------------------------------------ |
+| `size`   | `'sm' \| 'md' \| 'lg'` | `'sm'`    | Bar thickness (0.25/0.5/0.75rem)     |
+| `label`  | `string`             | `'Loading'` | Accessible label (`role="status"`)   |
+
+**Implementation**: hybridJS `define()` rendering an indeterminate bar. Uses `--wa-*` tokens; `@media (prefers-reduced-motion: reduce)` disables animation. Typically placed in `fe-async-content` loading slot.
+
+**Usage**:
+
+```html
+<fe-async-content :loading :error>
+  <fe-loader slot="loading" size="md"></fe-loader>
+</fe-async-content>
+```
+
+**Import**:
+
+```typescript
+import '@repo/ui/fe-loader'
+import type { FeLoaderElement } from '@repo/ui/fe-loader'
+```
+
+---
+
 ## @repo/eslint-config
 
 **Purpose**: Shared ESLint 8 configuration (CJS format).
@@ -413,7 +483,7 @@ const views = toProductViewList(products, metaMap)
 - `@repo/domain` — Product type
 - `@repo/infra` — getProducts adapter
 - `@repo/presenters` — toProductViewList, ProductView type
-- `@repo/ui` — fe-button, fe-async-content, fe-card, fe-icon, fe-rating, WA styles
+- `@repo/ui` — fe-button, fe-async-content, fe-card, fe-icon, fe-img, fe-loader, fe-rating, WA styles
 - `@vueuse/core` (^14.3.0) — useAsyncState + useMemoize for composable async state & caching
 - `vue` (^3.5.0)
 - `vue-router` (^4)
@@ -428,7 +498,7 @@ const views = toProductViewList(products, metaMap)
 
 | Path          | Page           | Description                                                                                          |
 | ------------- | -------------- | ---------------------------------------------------------------------------------------------------- |
-| `/`           | ProductsPage   | Product grid with fe-async-content (loading/error/content), fe-card per product, fe-rating + pricing |
+| `/`           | ProductsPage   | Product grid with fe-async-content (fe-loader loading / error / content), fe-card per product, fe-rating + pricing |
 | `/components` | ComponentsPage | Component showcase hub (button, card, icon, rating) — lazy-loaded                                    |
 
 ---

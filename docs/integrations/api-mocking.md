@@ -39,14 +39,23 @@ MSW is an infra-layer tool. infra depends on domain (types). No other layer impo
 
 ```
 packages/infra/src/mocks/
-├── handlers/
-│   ├── products.ts        ← Product-specific handlers
-│   └── index.ts           ← Barrel that collects all handlers
+├── constants/
+│   └── index.ts        ← Tenant configs, name pools, RATE_VALUE, DEV_DELAY
+├── data/
+│   └── mocked-data.json ← Tenant name/config seed data
+├── models/
+│   └── index.ts        ← TenantConfig, PriceConfig types
 ├── factories/
-│   └── product.ts         ← Test data factories (sequential IDs, sensible defaults)
-├── server.ts              ← MSW Node server for Vitest
-├── browser.ts             ← MSW browser worker for Vite dev
-└── index.ts               ← Public barrel: exports server, worker, handlers, factories
+│   └── product.ts      ← Test data factories (tenant-aware, deterministic)
+├── handlers/
+│   ├── products.ts     ← Product-specific handlers
+│   ├── products.spec.ts← Handler tests
+│   ├── products.test-delay.spec.ts ← Dev-delay gate tests (vitest only)
+│   └── index.ts        ← Barrel that collects all handlers
+├── helpers.ts          ← mockOkResponse, delayDev (DEV_DELAY gated off in test mode)
+├── server.ts           ← MSW Node server for Vitest
+├── browser.ts          ← MSW browser worker for Vite dev
+└── index.ts            ← Public barrel: exports server, worker, handlers, factories
 ```
 
 ### Handler example — `products.ts`
@@ -60,17 +69,22 @@ import {
   buildProduct,
   buildProductList,
   resetProductCounter,
-} from '../factories/product.js'
-
-resetProductCounter()
-let products = buildProductList(5)
+} from '../factories/product'
+import { delayDev } from '../helpers'
 
 export const productHandlers = [
-  http.get('*/api/products', () => {
+  http.get('*/api/products', async ({ request }) => {
+    await delayDev()
+    const tenantId = request.headers.get('x-tenant-id') || 'wl'
+    resetProductCounter()
+    const products = buildProductList(tenantId)
     return HttpResponse.json({ data: products, total: products.length })
   }),
 
-  http.get('*/api/products/:id', ({ params }) => {
+  http.get('*/api/products/:id', async ({ params, request }) => {
+    await delayDev()
+    const tenantId = request.headers.get('x-tenant-id') || 'wl'
+    const products = buildProductList(tenantId)
     const { id } = params
     const product = products.find((p: Product) => p.id === id)
 
@@ -82,14 +96,15 @@ export const productHandlers = [
   }),
 
   http.post('*/api/products', async ({ request }) => {
-    const body: Partial<Product> = await request.json()
-    const newProduct = buildProduct({
+    await delayDev()
+    const tenantId = request.headers.get('x-tenant-id') || 'wl'
+    const body = (await request.json()) as Partial<Product>
+    const newProduct = buildProduct(tenantId, {
       name: body.name,
       previousPrice: body.previousPrice,
       price: body.price,
       rate: body.rate,
     })
-    products = [...products, newProduct]
 
     return HttpResponse.json({ data: newProduct }, { status: 201 })
   }),
@@ -103,9 +118,11 @@ Pattern notes:
 | URL matching      | Wildcard `*/api/products` — works across environments regardless of base URL domain |
 | Response envelope | `{ data: T \| T[], total?: number }` — matches real API contract                    |
 | MSW v2 API        | `http.get()` / `http.post()` / `HttpResponse.json()` — NOT `ctx` or `req` from v1   |
-| Mutable state     | Module-level `let products` array updated by POST; `resetProductCounter()` on init  |
-| Factory imports   | `buildProduct()`, `buildProductList()` from `../factories/product.js`               |
-| File extension    | `.js` import in source (TS ESM convention with `type: module`)                      |
+| Tenant scoping    | Each handler reads `x-tenant-id` header (default `'wl'`); data generated per tenant |
+| Dev delay         | `await delayDev()` gates `DEV_DELAY` (1000ms) off when `import.meta.env.MODE === 'test'` |
+| Stateless GET     | Data built per request via `buildProductList(tenantId)` — no module-level mutable `let` state |
+| Factory imports   | `buildProduct()`, `buildProductList()`, `resetProductCounter()` from `../factories/product` |
+| File extension    | Extensionless imports (TS `moduleResolution: "Bundler"`)                             |
 
 ### Handler index — `handlers/index.ts`
 
@@ -125,24 +142,51 @@ Source: `packages/infra/src/mocks/factories/product.ts`
 
 ```typescript
 import type { Product } from '@repo/domain'
+import { PRODUCT_TENANT_CONFIGS, RATE_VALUE } from '../constants'
+import { PriceConfig } from '../models'
 
-const FRAMEWORK_NAMES = ['solid', 'react', 'vue', 'svelte', 'angular'] as const
 let counter = 0
 
-export function buildProduct(overrides?: Partial<Product>): Product {
-  counter++
+type TenantId = keyof typeof PRODUCT_TENANT_CONFIGS
+
+function isValidTenant(id: string): id is TenantId {
+  return id in PRODUCT_TENANT_CONFIGS
+}
+
+function calculatePrice(counter: number, config?: PriceConfig): number {
+  if (!config) return 0
+  return parseFloat((config.base + counter * config.increment).toFixed(2))
+}
+
+function getPriceRecord(counter: number, tenantId: TenantId): Product {
+  const config = PRODUCT_TENANT_CONFIGS[tenantId]
   return {
     id: `prod-${counter}`,
-    name: FRAMEWORK_NAMES[(counter - 1) % FRAMEWORK_NAMES.length],
-    previousPrice: parseFloat((29.99 + counter * 10).toFixed(2)),
-    price: 0,
-    rate: (counter % 5) + 1,
+    name: config.names[(counter - 1) % config.names.length],
+    previousPrice: calculatePrice(counter, config.previousPrice),
+    price: calculatePrice(counter, config.price),
+    rate: RATE_VALUE[config.rateType](counter),
+  }
+}
+
+export function buildProduct(
+  tenantId: TenantId = 'wl',
+  overrides?: Partial<Product>,
+): Product {
+  if (!isValidTenant(tenantId)) {
+    throw new Error(`Unknown tenant: ${tenantId}`)
+  }
+
+  counter++
+  return {
+    ...getPriceRecord(counter, tenantId),
     ...overrides,
   }
 }
 
-export function buildProductList(count = 3): Product[] {
-  return Array.from({ length: count }, () => buildProduct())
+export function buildProductList(tenantId: TenantId): Product[] {
+  const count = PRODUCT_TENANT_CONFIGS[tenantId].names.length
+  return Array.from({ length: count }, () => buildProduct(tenantId))
 }
 
 export function resetProductCounter(): void {
@@ -150,7 +194,7 @@ export function resetProductCounter(): void {
 }
 ```
 
-Factories produce deterministic data without faker — sequential counter + cyclic name pool. `resetProductCounter()` ensures isolated test runs.
+Factories produce deterministic data without faker — sequential counter + per-tenant name pool from `constants/` (seeded by `data/mocked-data.json`). `resetProductCounter()` ensures isolated test runs. `RATE_VALUE` supports `cyclic` (`(counter % 5) + 1`) or `random` rate types per tenant. Unknown tenant IDs throw.
 
 ---
 
@@ -337,8 +381,10 @@ This creates `apps/white-label-vue/public/mockServiceWorker.js`. The `--save` fl
 ### Success response
 
 ```typescript
-http.get('*/api/products', () => {
-  const data: Product[] = buildProductList(3)
+http.get('*/api/products', ({ request }) => {
+  const tenantId = request.headers.get('x-tenant-id') || 'wl'
+  resetProductCounter()
+  const data: Product[] = buildProductList(tenantId)
   return HttpResponse.json({ data, total: data.length })
 })
 ```
@@ -346,7 +392,9 @@ http.get('*/api/products', () => {
 ### Single item response
 
 ```typescript
-http.get('*/api/products/:id', ({ params }) => {
+http.get('*/api/products/:id', async ({ params, request }) => {
+  const tenantId = request.headers.get('x-tenant-id') || 'wl'
+  const products = buildProductList(tenantId)
   const product = products.find((p) => p.id === params.id)
   if (!product) {
     return HttpResponse.json({ error: 'Not found' }, { status: 404 })
@@ -383,14 +431,14 @@ http.get('*/api/products', ({ request }) => {
 
 ```typescript
 http.post('*/api/products', async ({ request }) => {
+  const tenantId = request.headers.get('x-tenant-id') || 'wl'
   const body: Partial<Product> = await request.json()
 
   if (!body.name) {
     return HttpResponse.json({ error: 'Name is required' }, { status: 400 })
   }
 
-  const newProduct = buildProduct(body)
-  products = [...products, newProduct]
+  const newProduct = buildProduct(tenantId, body)
   return HttpResponse.json({ data: newProduct }, { status: 201 })
 })
 ```
@@ -424,8 +472,9 @@ Handler spec files live alongside handlers in `packages/infra/src/mocks/handlers
 
 ```
 packages/infra/src/mocks/handlers/
-├── products.ts       ← handler definitions
-└── products.spec.ts  ← handler tests
+├── products.ts              ← handler definitions
+├── products.spec.ts         ← handler tests
+└── products.test-delay.spec.ts ← dev-delay gating tests (vitest mode only)
 ```
 
 These tests verify:
@@ -479,20 +528,22 @@ From `@repo/infra` package.json:
   "exports": {
     ".": "./src/index.ts",
     "./mocks/browser": "./src/mocks/browser.ts",
-    "./mocks/server": "./src/mocks/server.ts"
+    "./mocks/server": "./src/mocks/server.ts",
+    "./mocks/helpers": "./src/mocks/helpers.ts"
   }
 }
 ```
 
 Import paths:
 
-| Import                                               | Target                   |
-| ---------------------------------------------------- | ------------------------ |
-| `import { getProducts } from '@repo/infra'`          | Adapters                 |
-| `import { server } from '@repo/infra/mocks/server'`  | Node MSW server (tests)  |
-| `import { worker } from '@repo/infra/mocks/browser'` | Browser MSW worker (dev) |
-| `import { buildProduct } from '@repo/infra/mocks'`   | Test data factory        |
-| `import { handlers } from '@repo/infra/mocks'`       | Raw handler array        |
+| Import                                             | Target                  |
+| -------------------------------------------------- | ----------------------- |
+| `import { getProducts } from '@repo/infra'`         | Adapters                |
+| `import { server } from '@repo/infra/mocks/server'` | Node MSW server (tests) |
+| `import { worker } from '@repo/infra/mocks/browser'`| Browser MSW worker (dev)|
+| `import { delayDev } from '@repo/infra/mocks/helpers'` | Dev-delay helper     |
+
+> Note: `handlers`, `buildProduct`, etc. are re-exported from the internal barrel at `packages/infra/src/mocks/index.ts` but **not** exposed as a package subpath (`@repo/infra/mocks`). Infra-internal files import from relative paths; tests may import `./mocks` relatively.
 
 ---
 

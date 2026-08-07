@@ -64,10 +64,26 @@ packages/infra/
 ├── tsconfig.json            # extends base.json, lib: ES2022 + DOM
 │
 └── src/
-    ├── index.ts             # Barrel: re-exports getProducts
-    └── adapters/
-        ├── get-products.adapter.ts      # fetch-based product adapter
-        └── get-products.adapter.spec.ts # Unit tests (vitest)
+    ├── index.ts             # Barrel: exports getProducts, getProductImageUrl
+    ├── adapters/
+    │   ├── get-products.adapter.ts      # fetch-based product adapter
+    │   ├── get-products.adapter.spec.ts # Unit tests (vitest)
+    │   ├── get-product-image.adapter.ts # deterministic product image URL helper
+    │   └── get-product-image.adapter.spec.ts # Unit tests (vitest)
+    └── mocks/
+        ├── index.ts              # Barrel: exports server, worker, handlers, factories
+        ├── server.ts             # MSW Node server (tests)
+        ├── browser.ts            # MSW browser worker (dev)
+        ├── helpers.ts            # mockOkResponse, delayDev (DEV_DELAY, gated in test mode)
+        ├── data/mocked-data.json # tenant name/config seed data
+        ├── constants/index.ts    # tenant configs, name pools, RATE_VALUE, DEV_DELAY
+        ├── models/index.ts       # TenantConfig, PriceConfig types
+        ├── factories/product.ts  # tenant-aware deterministic product factories
+        └── handlers/
+            ├── products.ts              # product MSW handlers
+            ├── products.spec.ts         # handler tests
+            ├── products.test-delay.spec.ts # dev-delay gate tests (vitest)
+            └── index.ts                 # handler barrel
 ```
 
 ---
@@ -78,28 +94,39 @@ packages/infra/
 packages/ui/
 ├── package.json             # @repo/ui — hybrids, WA deps
 ├── tsconfig.json            # extends base.json, strictNullChecks: true
-├── index.ts                 # Barrel: re-exports FeButton, FeButtonElement
 ├── css-modules.d.ts         # CSS module type declaration
 ├── vitest.config.ts         # Vitest: jsdom env
 ├── vitest.setup.ts          # ElementInternals polyfill for jsdom
 │
 ├── components/
-│   ├── fe-async-content.ts      # <fe-async-content> hybridJS CE for loading/error/content states
-│   ├── fe-async-content.spec.ts # CE unit tests (7 tests, 3 states, slot overrides, transitions)
-│   ├── fe-button.ts             # <fe-button> custom element (hybridJS)
-│   ├── fe-button.spec.ts        # CE unit tests (188 lines, full coverage)
-│   ├── fe-card.ts               # <fe-card> hybridJS CE forwarding to <wa-card> (appearance, orientation, disabled, slot detection)
-│   ├── fe-card.spec.ts          # CE unit tests (registration, props, slots, header/footer/media detection)
-│   ├── fe-icon.ts               # <fe-icon> hybridJS wrapper over <wa-icon> (name, library, animation, etc.)
-│   ├── fe-icon.spec.ts          # CE unit tests (registration, property forwarding)
-│   ├── fe-rating.ts             # <fe-rating> hybridJS wrapper over <wa-rating> (value, max, precision, etc.)
-│   └── fe-rating.spec.ts        # CE unit tests (23 tests, 9 props, events)
+│   ├── fe-async-content/
+│   │   ├── fe-async-content.ts      # <fe-async-content> hybridJS CE for loading/error/content states
+│   │   └── fe-async-content.spec.ts # CE unit tests (7 tests, 3 states, slot overrides, transitions)
+│   ├── fe-button/
+│   │   ├── fe-button.ts             # <fe-button> custom element (hybridJS)
+│   │   └── fe-button.spec.ts        # CE unit tests (188 lines, full coverage)
+│   ├── fe-card/
+│   │   ├── fe-card.ts               # <fe-card> hybridJS CE forwarding to <wa-card> (appearance, orientation, disabled, slot detection)
+│   │   └── fe-card.spec.ts          # CE unit tests (registration, props, slots, header/footer/media detection)
+│   ├── fe-icon/
+│   │   ├── fe-icon.ts               # <fe-icon> hybridJS wrapper over <wa-icon> (name, library, animation, etc.)
+│   │   └── fe-icon.spec.ts          # CE unit tests (registration, property forwarding)
+│   ├── fe-img/
+│   │   ├── fe-img.ts                # <fe-img> wrapper over native <img> (cache dedup, fallback)
+│   │   ├── fe-img.constants.ts      # Fallback SVG + in-memory CACHE map
+│   │   └── fe-img.spec.ts           # CE unit tests (src loading state, error fallback, attribute reflection)
+│   ├── fe-loader/
+│   │   ├── fe-loader.ts             # <fe-loader> indeterminate loading bar (size sm/md/lg, reduced-motion aware)
+│   │   └── fe-loader.spec.ts        # CE unit tests
+│   └── fe-rating/
+│       ├── fe-rating.ts             # <fe-rating> hybridJS wrapper over <wa-rating> (value, max, precision, etc.)
+│       └── fe-rating.spec.ts        # CE unit tests (23 tests, 9 props, events)
 │
 └── styles/
     ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
     └── themes/
         ├── default.ts       # WA default theme (for white-label-vue)
-        ├── awesome.ts       # WA awesome theme (for future web-angular)
+        ├── awesome.ts       # WA awesome theme (for future white-label-angular)
         └── shoelace.ts      # WA shoelace theme (for future web-react)
 ```
 
@@ -151,7 +178,7 @@ apps/white-label-vue/
     │   └── useProducts.spec.ts   # Composable tests (loading, success, HTTP failure, manual fetch)
     │
     └── pages/
-        ├── ProductsPage.vue      # Product grid with fe-async-content (loading/error/content states)
+        ├── ProductsPage.vue      # Product grid with fe-async-content (fe-loader loading / error / content states)
         ├── ProductsPage.spec.ts  # Page component tests (loading, success grid, error display)
         └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
 ```

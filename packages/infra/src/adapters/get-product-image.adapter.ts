@@ -1,6 +1,6 @@
 /**
  * Returns a deterministic loremflickr image URL for a product.
- * Uses djb2 hash of product ID for collision-free seed.
+ * Uses djb2 hash of product ID for collision-resistant seed.
  *
  * Why seed? loremflickr `?seed=` returns the same image for the same value.
  * `?random=` gives a different image every request — no persistence.

@@ -21,7 +21,7 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 | `apps/white-label-vue` | Vue 3 + Vite 6                   | Active (layer base) |
 | `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active              |
 | `apps/docs`            | Astro + Starlight                | Active              |
-| `apps/web-angular`     | Angular                          | Future              |
+| `apps/white-label-angular`     | Angular                          | Future              |
 | `apps/web-react`       | React                            | Future              |
 
 ## Project structure

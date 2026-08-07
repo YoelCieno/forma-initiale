@@ -85,6 +85,7 @@ Hexagonal + Vue 3 — all 5 layers active:
   "./fe-card": "./components/fe-card/fe-card.ts",
   "./fe-icon": "./components/fe-icon/fe-icon.ts",
   "./fe-img": "./components/fe-img/fe-img.ts",
+  "./fe-loader": "./components/fe-loader/fe-loader.ts",
   "./fe-rating": "./components/fe-rating/fe-rating.ts",
   "./styles": "./styles/webawesome.ts",
   "./styles/themes/default": "./styles/themes/default.ts",
