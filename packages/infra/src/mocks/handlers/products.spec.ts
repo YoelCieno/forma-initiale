@@ -96,7 +96,7 @@ describe('products API handlers', () => {
       })
       expect(res.status).toBe(200)
 
-      const body = (await res.json()) as { data: Product[] }
+      const body: { data: Product[] } = await res.json()
       for (const product of body.data) {
         expect(product.price).toBe(0)
         expect(product.previousPrice).toBeGreaterThan(0)
@@ -109,7 +109,7 @@ describe('products API handlers', () => {
       })
       expect(res.status).toBe(200)
 
-      const body = (await res.json()) as { data: Product[] }
+      const body: { data: Product[] } = await res.json()
       for (const product of body.data) {
         expect(product.price).toBeGreaterThan(0)
         expect(product.previousPrice).toBe(0)
@@ -120,7 +120,7 @@ describe('products API handlers', () => {
       const res = await fetch(`${BASE_URL}/api/products`)
       expect(res.status).toBe(200)
 
-      const body = (await res.json()) as { data: Product[] }
+      const body: { data: Product[] } = await res.json()
       for (const product of body.data) {
         expect(product.price).toBe(0)
         expect(product.previousPrice).toBeGreaterThan(0)
@@ -131,7 +131,7 @@ describe('products API handlers', () => {
       const listRes = await fetch(`${BASE_URL}/api/products`, {
         headers: { 'x-tenant-id': 'fp' },
       })
-      const listBody = (await listRes.json()) as { data: Product[] }
+      const listBody: { data: Product[] } = await listRes.json()
       const knownId = listBody.data[0].id
 
       const res = await fetch(`${BASE_URL}/api/products/${knownId}`, {
@@ -139,7 +139,7 @@ describe('products API handlers', () => {
       })
       expect(res.status).toBe(200)
 
-      const body = (await res.json()) as { data: Product }
+      const body: { data: Product } = await res.json()
       expect(body.data.price).toBeGreaterThan(0)
       expect(body.data.previousPrice).toBe(0)
     })
@@ -170,7 +170,7 @@ describe('products API handlers', () => {
 
       expect(res.status).toBe(201)
 
-      const body = (await res.json()) as { data: Product }
+      const body: { data: Product } = await res.json()
       // POST overrides with provided body, but check shape
       expect(body.data.price).toBe(39.99)
       expect(body.data.previousPrice).toBe(0)
