@@ -1,0 +1,39 @@
+{
+  "name": "white-label-angular",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "dev": "ng serve --port 4200 --prebundle=false",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "ng test --watch=false"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^22.1.0",
+    "@angular/compiler": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/forms": "^22.1.0",
+    "@angular/platform-browser": "^22.1.0",
+    "@angular/router": "^22.1.0",
+    "@repo/domain": "*",
+    "@repo/infra": "*",
+    "@repo/presenters": "*",
+    "@repo/ui": "*",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.1.4",
+    "@angular/cli": "^22.1.4",
+    "@angular/compiler-cli": "^22.1.0",
+    "@repo/eslint-config": "*",
+    "eslint": "^8.57.1",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}
