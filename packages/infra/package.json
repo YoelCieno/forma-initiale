@@ -22,6 +22,6 @@
     "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
     "msw": "^2.14.6",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   }
 }
