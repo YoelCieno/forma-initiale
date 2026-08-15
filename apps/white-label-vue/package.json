@@ -31,7 +31,7 @@
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.10",
     "eslint": "^8.57.1",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.0",
     "msw": "^2.14.6",
     "typescript": "5.9.3",
     "unplugin-auto-import": "^19.3.0",

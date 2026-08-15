@@ -27,7 +27,7 @@
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.0",
     "typescript": "5.9.3"
   }
 }
