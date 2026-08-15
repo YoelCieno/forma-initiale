@@ -2,11 +2,13 @@
   "name": "@repo/ui",
   "version": "0.0.0",
   "exports": {
-    "./fe-button": "./components/fe-button.ts",
-    "./fe-async-content": "./components/fe-async-content.ts",
-    "./fe-card": "./components/fe-card.ts",
-    "./fe-icon": "./components/fe-icon.ts",
-    "./fe-rating": "./components/fe-rating.ts",
+    "./fe-button": "./components/fe-button/fe-button.ts",
+    "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
+    "./fe-card": "./components/fe-card/fe-card.ts",
+    "./fe-img": "./components/fe-img/fe-img.ts",
+    "./fe-icon": "./components/fe-icon/fe-icon.ts",
+    "./fe-loader": "./components/fe-loader/fe-loader.ts",
+    "./fe-rating": "./components/fe-rating/fe-rating.ts",
     "./styles": "./styles/webawesome.ts",
     "./styles/themes/default": "./styles/themes/default.ts",
     "./styles/themes/awesome": "./styles/themes/awesome.ts",
@@ -26,6 +28,6 @@
     "@repo/typescript-config": "*",
     "eslint": "^8.57.0",
     "jsdom": "^29.1.1",
-    "typescript": "5.5.4"
+    "typescript": "5.9.3"
   }
 }

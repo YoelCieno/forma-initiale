@@ -67,7 +67,12 @@ Slots in Web Awesome/web components are functionally the same as basic slots in 
 Here is an example:
 
 ```jsx
-<wa-drawer label="Drawer" placement="start" class="drawer-placement-start" bind:open={drawerIsOpen}>
+<wa-drawer
+  label="Drawer"
+  placement="start"
+  class="drawer-placement-start"
+  bind:open={drawerIsOpen}
+>
   This drawer slides in from the start.
   <div slot="footer">
     <wa-button variant="primary" onclick={() => (drawerIsOpen = false)}>

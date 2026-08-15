@@ -1,4 +1,4 @@
-import type { Product } from "@repo/domain";
+import type { Product } from '@repo/domain'
 
 export interface GetProductsResponse {
   data: Product[]
@@ -10,10 +10,10 @@ export async function getProducts(): Promise<GetProductsResponse> {
   const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
   const response = await fetch(`${baseUrl}/products`, {
     headers: { 'x-tenant-id': tenantId },
-  });
+  })
   if (!response.ok) {
-    throw new Error(`Failed to fetch products: HTTP ${response.status}`);
+    throw new Error(`Failed to fetch products: HTTP ${response.status}`)
   }
 
-  return response.json();
+  return response.json()
 }

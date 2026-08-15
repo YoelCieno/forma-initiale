@@ -6,7 +6,7 @@
 :where(:root) {
   color-scheme: light dark;
   /* #region Brand Colors ~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-  --brand-fill-quiet: #e0e7ff;
+  --brand-fill-quiet: #dee2f0;
   --brand-fill-normal: #4f46e5; /* indigo-600 */
   --brand-fill-loud: #4338ca; /* indigo-700 */
   --brand-border-quiet: #c7d2fe;

@@ -13,9 +13,13 @@ describe('ComponentsPage', () => {
 
   it('renders all child container components', () => {
     const wrapper = mount(ComponentsPage)
-    expect(wrapper.findComponent({ name: 'ButtonContainer' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'ButtonContainer' }).exists()).toBe(
+      true,
+    )
     expect(wrapper.findComponent({ name: 'IconContainer' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'RatingContainer' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'RatingContainer' }).exists()).toBe(
+      true,
+    )
     expect(wrapper.findComponent({ name: 'CardContainer' }).exists()).toBe(true)
   })
 

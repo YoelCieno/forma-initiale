@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import "@repo/ui/fe-card";
 import "@repo/ui/fe-icon";
+import ProductCard from "./ProductCard.vue";
 </script>
 
 <template>
@@ -56,6 +57,7 @@ import "@repo/ui/fe-icon";
       <h3 class="subheading__h3">Product Card</h3>
       <div class="card-container__wrapper">
         <ProductCard
+          id="product-0"
           title="FW Name"
           description="Generic FW"
           image="code"

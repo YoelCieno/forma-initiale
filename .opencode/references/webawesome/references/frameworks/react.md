@@ -15,11 +15,11 @@ npm install @awesome.me/webawesome
 Next, include the Web Awesome theme in your app, import the components you need, and start using them!
 
 ```jsx
-import '@awesome.me/webawesome/dist/styles/webawesome.css';
-import '@awesome.me/webawesome/dist/components/button/button.js';
+import '@awesome.me/webawesome/dist/styles/webawesome.css'
+import '@awesome.me/webawesome/dist/components/button/button.js'
 
 export default function App() {
-  return <wa-button variant="brand">Button</wa-button>;
+  return <wa-button variant="brand">Button</wa-button>
 }
 ```
 
@@ -44,7 +44,9 @@ This gives you inline documentation, autocomplete, and type-safe validation for 
 ```json
 {
   "compilerOptions": {
-    "types": ["node_modules/@awesome.me/webawesome/dist/custom-elements-jsx.d.ts"]
+    "types": [
+      "node_modules/@awesome.me/webawesome/dist/custom-elements-jsx.d.ts"
+    ]
   }
 }
 ```
@@ -52,7 +54,10 @@ This gives you inline documentation, autocomplete, and type-safe validation for 
 Alternatively, you can create a declaration file and extend JSX's `IntrinsicElements`:
 
 ```ts
-import type { CustomElements, CustomCssProperties } from '@awesome.me/webawesome/dist/custom-elements-jsx.d.ts';
+import type {
+  CustomElements,
+  CustomCssProperties,
+} from '@awesome.me/webawesome/dist/custom-elements-jsx.d.ts'
 
 declare module 'react' {
   namespace JSX {
@@ -69,32 +74,39 @@ Many Web Awesome components emit [native events](https://developer.mozilla.org/e
 Here's how you can bind the input's value to a state variable.
 
 ```jsx
-import { useState } from 'react';
-import '@awesome.me/webawesome/dist/components/input/input.js';
+import { useState } from 'react'
+import '@awesome.me/webawesome/dist/components/input/input.js'
 
 function MyComponent() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
 
-  return <wa-input value={value} onInput={event => setValue(event.target.value)} />;
+  return (
+    <wa-input value={value} onInput={(event) => setValue(event.target.value)} />
+  )
 }
 
-export default MyComponent;
+export default MyComponent
 ```
 
 If you're using TypeScript, it's important to note that `event.target` will be a reference to the underlying custom element. You can use `(event.target as any).value` as a quick fix, or you can strongly type the event target as shown below.
 
 ```tsx
-import { useState } from 'react';
-import '@awesome.me/webawesome/dist/components/input/input.js';
-import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js';
+import { useState } from 'react'
+import '@awesome.me/webawesome/dist/components/input/input.js'
+import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js'
 
 function MyComponent() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
 
-  return <wa-input value={value} onInput={event => setValue((event.target as WaInputElement).value)} />;
+  return (
+    <wa-input
+      value={value}
+      onInput={(event) => setValue((event.target as WaInputElement).value)}
+    />
+  )
 }
 
-export default MyComponent;
+export default MyComponent
 ```
 
 ### Preact
@@ -128,7 +140,7 @@ In `src/setupTests.js`, add the following.
 ```js
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -138,7 +150,7 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-});
+})
 ```
 
 For more details, refer to Jest's [manual mocking](https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom) documentation.
@@ -174,11 +186,11 @@ React 18 and below have [poor support](https://custom-elements-everywhere.com/#r
 Every Web Awesome component is available to import as a React component. Note that you import the `<WaButton>` _React component_ instead of the `<wa-button>` _custom element_ in the example below.
 
 ```jsx
-import WaButton from '@awesome.me/webawesome/dist/react/button/index.js';
+import WaButton from '@awesome.me/webawesome/dist/react/button/index.js'
 
-const MyComponent = () => <WaButton variant="primary">Click me</WaButton>;
+const MyComponent = () => <WaButton variant="primary">Click me</WaButton>
 
-export default MyComponent;
+export default MyComponent
 ```
 
 You can find a copy + paste import for each component by selecting the _React_ tab in the _Importing_ section of each component's documentation.
@@ -188,7 +200,7 @@ You can find a copy + paste import for each component by selecting the _React_ t
 Previously, it was recommended to import from a single entrypoint like so:
 
 ```jsx
-import { WaButton } from '@awesome.me/webawesome/dist/react';
+import { WaButton } from '@awesome.me/webawesome/dist/react'
 ```
 
 However, tree-shaking extra Web Awesome components proved to be a challenge. As a result, we now recommend cherry-picking components you want to use, rather than importing from a single entrypoint.
@@ -205,56 +217,72 @@ Many Web Awesome components emit [native events](https://developer.mozilla.org/e
 Here's how you can bind the input's value to a state variable.
 
 ```jsx
-import { useState } from 'react';
-import WaInput from '@awesome.me/webawesome/dist/react/input/index.js';
+import { useState } from 'react'
+import WaInput from '@awesome.me/webawesome/dist/react/input/index.js'
 
 function MyComponent() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
 
   return (
     <>
-      <WaInput value={value} onInput={event => setValue(event.target.value)} />;
+      <WaInput
+        value={value}
+        onInput={(event) => setValue(event.target.value)}
+      />
+      ;
       <WaInput defaultValue={'Foo'} /> {/* This is an "uncontrolled input" */}
     </>
-  );
+  )
 }
 
-export default MyComponent;
+export default MyComponent
 ```
 
 If you're using TypeScript, it's important to note that `event.target` will be a reference to the underlying custom element. You can use `(event.target as any).value` as a quick fix, or you can strongly type the event target as shown below.
 
 ```tsx
-import { useState } from 'react';
-import WaInput from '@awesome.me/webawesome/dist/react/input/index.js';
-import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js';
+import { useState } from 'react'
+import WaInput from '@awesome.me/webawesome/dist/react/input/index.js'
+import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js'
 
 function MyComponent() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
 
-  return <WaInput value={value} onInput={event => setValue((event.target as WaInputElement).value)} />;
+  return (
+    <WaInput
+      value={value}
+      onInput={(event) => setValue((event.target as WaInputElement).value)}
+    />
+  )
 }
 
-export default MyComponent;
+export default MyComponent
 ```
 
 You can also import the event type for use in your callbacks, shown below.
 
 ```tsx
-import { useCallback, useState } from 'react';
-import WaInput, { type WaInputEvent } from '@awesome.me/webawesome/dist/react/input/index.js';
-import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js';
+import { useCallback, useState } from 'react'
+import WaInput, {
+  type WaInputEvent,
+} from '@awesome.me/webawesome/dist/react/input/index.js'
+import type WaInputElement from '@awesome.me/webawesome/dist/components/input/input.js'
 
 function MyComponent() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('')
   const onInput = useCallback((event: WaInputEvent) => {
-    setValue(event.detail);
-  }, []);
+    setValue(event.detail)
+  }, [])
 
-  return <WaInput value={value} onInput={event => setValue((event.target as WaInputElement).value)} />;
+  return (
+    <WaInput
+      value={value}
+      onInput={(event) => setValue((event.target as WaInputElement).value)}
+    />
+  )
 }
 
-export default MyComponent;
+export default MyComponent
 ```
 
 Are you using Web Awesome with React? [Help us improve this page!](https://github.com/shoelace-style/webawesome/blob/next/packages/webawesome/docs/docs/frameworks/react.md)

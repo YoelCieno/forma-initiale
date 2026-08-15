@@ -1,3 +1,3 @@
-import { productHandlers } from './products.js'
+import { productHandlers } from './products'
 
 export const handlers = [...productHandlers]

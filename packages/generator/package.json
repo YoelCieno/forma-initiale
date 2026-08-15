@@ -1,0 +1,22 @@
+{
+  "name": "@repo/generator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"**/*.ts\"",
+    "test": "vp test"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/inquirer": "^9.0.7",
+    "eslint": "^8.57.0",
+    "inquirer": "^9.3.2",
+    "typescript": "5.9.3"
+  }
+}

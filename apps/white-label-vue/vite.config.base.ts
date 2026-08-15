@@ -13,14 +13,18 @@ export interface WhiteLabelViteOptions {
   componentDirs?: string[]
   /** Tenant auto-import directories (e.g., ['./src/composables']) */
   autoImportDirs?: string[]
+  /** Dev server port. Defaults to Vite default (5173) if omitted. */
+  devPort?: number
 }
 
 /**
  * Creates a Vite UserConfig pre-configured with Vue plugin, AutoImport, and Components.
  * Tenant apps call this instead of duplicating the plugin setup.
  */
-export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): UserConfig {
-  return defineConfig({
+export function defineWhiteLabelViteConfig(
+  opts: WhiteLabelViteOptions = {},
+): UserConfig {
+  const config: UserConfig = {
     plugins: [
       vue({
         template: {
@@ -31,7 +35,10 @@ export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): Us
       }),
       AutoImport({
         imports: ['vue', 'vue-router'],
-        dirs: [...(opts.autoImportDirs ?? []), resolve(layerSrc, 'composables')],
+        dirs: [
+          ...(opts.autoImportDirs ?? []),
+          resolve(layerSrc, 'composables'),
+        ],
         dts: './src/auto-imports.d.ts',
       }),
       Components({
@@ -43,5 +50,17 @@ export function defineWhiteLabelViteConfig(opts: WhiteLabelViteOptions = {}): Us
         dts: './src/components.d.ts',
       }),
     ],
-  })
+  }
+
+  config.server = {
+    watch: {
+      ignored: ['!**/node_modules/@repo/**'],
+    },
+  }
+
+  if (opts.devPort !== undefined) {
+    config.server.port = opts.devPort
+  }
+
+  return defineConfig(config)
 }

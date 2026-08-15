@@ -3,21 +3,26 @@
 **Status:** ✅ COMPLETE
 
 ## Goal
+
 Find KISSME docs solution (agnostic, simple), create composables layer for web-vue, finalize framework-agnostic UI components.
 
 ## Key Constraint
+
 `packages/ui` must stay **framework-agnostic** (vanilla TS / web components). No Vue, React, or Angular imports in `packages/ui/`. Framework-specific wrappers live in each app's own `src/components/` or `src/composables/`.
 
 ## Research Required (do first)
 
 ### Docs solution
+
 Evaluate alternatives to VitePress. Requirements:
+
 - Agnostic (not tied to Vue ecosystem)
 - Simple, minimal config
 - Markdown → HTML
 - Search, navigation, theming
 
 Candidates:
+
 - ~~VitePress~~ (Vue-locked)
 - ~~Docusaurus~~ (React-locked, heavy)
 - ~~Rspress~~ (React-bound)
@@ -39,12 +44,12 @@ Decision: KISSME — lowest effort for good docs.
 
 ## Decisions
 
-| Decision | Choice |
-|----------|--------|
-| Docs framework | Astro + Starlight ✅ |
-| packages/ui paradigm | Framework‑agnostic (vanilla TS) |
-| Vite+ integration | Phase 1 — complete ✅ |
-| Deps maintenance | taze+turbo (manual) + Renovate (auto PR every 2 weeks, no automerge) |
+| Decision             | Choice                                                               |
+| -------------------- | -------------------------------------------------------------------- |
+| Docs framework       | Astro + Starlight ✅                                                 |
+| packages/ui paradigm | Framework‑agnostic (vanilla TS)                                      |
+| Vite+ integration    | Phase 1 — complete ✅                                                |
+| Deps maintenance     | taze+turbo (manual) + Renovate (auto PR every 2 weeks, no automerge) |
 
 ## Notes
 

@@ -1,16 +1,23 @@
 import { http, HttpResponse } from 'msw'
 import type { Product } from '@repo/domain'
-import { buildProduct, buildProductList, resetProductCounter } from '../factories/product.js'
+import {
+  buildProduct,
+  buildProductList,
+  resetProductCounter,
+} from '../factories/product'
+import { delayDev } from '../helpers'
 
 export const productHandlers = [
-  http.get('*/api/products', ({ request }) => {
+  http.get('*/api/products', async ({ request }) => {
+		await delayDev()
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
     resetProductCounter()
     const products = buildProductList(tenantId)
     return HttpResponse.json({ data: products, total: products.length })
   }),
 
-  http.get('*/api/products/:id', ({ params, request }) => {
+  http.get('*/api/products/:id', async ({ params, request }) => {
+    await delayDev()
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
     resetProductCounter()
     const products = buildProductList(tenantId)
@@ -25,9 +32,15 @@ export const productHandlers = [
   }),
 
   http.post('*/api/products', async ({ request }) => {
+    await delayDev()
     const tenantId = request.headers.get('x-tenant-id') || 'wl'
-    const body = await request.json() as Partial<Product>
-    const newProduct = buildProduct(tenantId, { name: body.name, previousPrice: body.previousPrice, price: body.price, rate: body.rate })
+    const body = (await request.json()) as Partial<Product>
+    const newProduct = buildProduct(tenantId, {
+      name: body.name,
+      previousPrice: body.previousPrice,
+      price: body.price,
+      rate: body.rate,
+    })
 
     return HttpResponse.json({ data: newProduct }, { status: 201 })
   }),

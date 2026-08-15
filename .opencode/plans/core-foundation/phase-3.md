@@ -1,19 +1,19 @@
 # Phase 3 — Presenter Layer + White-Label Extend
 
-**Status:** ✅ PARTIALLY COMPLETED (3.1-3.3, 3.5, 3.6 done; 3.4 PENDING)
+**Status:** 🔶 IN PROGRESS
 
 ## Granular Breakdown
 
 See [`phase-3/README.md`](./phase-3/README.md) for full task breakdown with sub-docs per deliverable.
 
-| # | Deliverable | Doc | Status |
-|--------|------------|-----|--------|
-| 3.1 | `@repo/presenters` (pre-req) | [`phase-3/3.1-presenters.md`](./phase-3/3.1-presenters.md) | ✅ COMPLETED |
-| 3.2 | Rename web-vue → white-label-vue + layer factory | [`phase-3/3.2-white-label-rename.md`](./phase-3/3.2-white-label-rename.md) | ✅ COMPLETED |
-| 3.3 | `fake-plants-vue` example tenant (manual) | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md) | ✅ COMPLETED |
-| 3.4 | `@repo/generator` + Vue tenant Pinion generator | [`phase-3/3.4-generator.md`](./phase-3/3.4-generator.md) | ❌ PENDING |
-| 3.5 | Turborepo pipeline update | [`phase-3/3.5-turbo-pipeline.md`](./phase-3/3.5-turbo-pipeline.md) | ✅ COMPLETED |
-| 3.6 | Documentation updates | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md) | ✅ PARTIALLY (CODEMAPS, AGENTS.md, README.md, layer-wiring.md synced; blocked on 3.4 for generator docs) |
+| #   | Deliverable                                      | Doc                                                                        | Status                                                                                                   |
+| --- | ------------------------------------------------ | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 3.1 | `@repo/presenters` (pre-req)                     | [`phase-3/3.1-presenters.md`](./phase-3/3.1-presenters.md)                 | ✅ COMPLETED                                                                                             |
+| 3.2 | Rename web-vue → white-label-vue + layer factory | [`phase-3/3.2-white-label-rename.md`](./phase-3/3.2-white-label-rename.md) | ✅ COMPLETED                                                                                             |
+| 3.3 | `fake-plants-vue` example tenant (manual)        | [`phase-3/3.3-fake-plants-vue.md`](./phase-3/3.3-fake-plants-vue.md)       | ✅ COMPLETED                                                                                             |
+| 3.4 | `@repo/generator` + Vue tenant Pinion generator  | [`phase-3/3.4-generator.md`](./phase-3/3.4-generator.md)                   | ✅ COMPLETED                                                                                             |
+| 3.5 |  Final integration improvements including Turborepo pipeline update                        | [`phase-3/3.5-integration-plus-pipeline.md`](./phase-3/3.5-integration-plus-pipeline.md)         | 🔶 IN PROGRESS                                                                          |
+| 3.6 | Documentation updates                            | [`phase-3/3.6-documentation.md`](./phase-3/3.6-documentation.md)           |                                                                                          |
 
 ## Goal
 
@@ -26,6 +26,7 @@ domain → infra → presenters → apps/white-label-* → apps/tenant-*
 ```
 
 Packages:
+
 - `@repo/domain` — pure TS models/ports (exists)
 - `@repo/infra` — adapters (exists)
 - `@repo/presenters` — DomainModel → ViewModel transformations **(NEW)**
@@ -33,8 +34,9 @@ Packages:
 - `@repo/generator` — Pinion-based code generator **(NEW)**
 
 Apps:
+
 - `white-label-vue` — renamed from web-vue (layer base)
-- `tenant-<name>-vue` — generated via Pinion (extends white-label)
+- `<name>-vue` — generated via Pinion (extends white-label)
 - `fake-plants-vue` — demo tenant (manual, validates mechanism)
 
 ## Layer Mechanism (No Vite Plugin Package)
@@ -47,7 +49,7 @@ Phase 3 uses white-label-vue's own exported config + factory. No separate `@repo
 apps/white-label-vue/
   layer.config.ts         ← exports component dirs, route config, Vite extensions
   src/
-    app.ts                ← exports createWhiteLabelApp() factory
+    bootstrap/            ← factory layer (app.ts + init.ts)
     main.ts               ← standalone entry (calls factory with defaults)
     components/           ← default components
     pages/                ← default pages
@@ -58,7 +60,7 @@ apps/white-label-vue/
 ### Tenant app structure
 
 ```
-apps/tenant-acme-vue/
+apps/acme-vue/
   package.json            ← deps: { "white-label-vue": "workspace:*" } (no @repo scope)
   vite.config.ts          ← imports layer.config, configures component dirs, aliases
   index.html
@@ -75,6 +77,7 @@ apps/tenant-acme-vue/
 2. White-label layer files (fallback defaults)
 
 Implemented via:
+
 - `layer.config.ts` exports white-label's component dirs, route config, Vite extensions
 - Tenant `vite.config.ts` imports layer config and configures `unplugin-vue-components` with both dirs
 - `createWhiteLabelApp()` factory merges routes (tenant pages override white-label by path)
@@ -102,17 +105,21 @@ Tenant only holds override files. White-label is a workspace dependency. Changes
 
 ## Decisions Log
 
-| Decision | Choice |
-|---|---|
-| Override mechanism | Layer system (layer.config.ts + app factory) |
-| Vite plugin package? | No separate package — inline in white-label-vue |
-| Scaffolder name | `@repo/generator` (not scaffolder — Pinion is a code generator) |
-| Layer utility location | Inside white-label-vue |
-| Angular base | Bare Angular CLI (no AnalogJS) — Phase 4 |
-| Tenant lifecycle | Checked into git |
-| Generator UX | Per-framework commands (vue, angular, react) |
-| Tenant file model | Reference + override (no full copy) |
-| White-label app structure | Factory (app.ts) + Standalone entry (main.ts) |
-| Example app | fake-plants-vue (manual creation, validates mechanism before generator) |
-| Presenter package name | @repo/presenters |
-| Presenter placement | Phase 3 pre-req |
+| Decision                  | Choice                                                                  |
+| ------------------------- | ----------------------------------------------------------------------- |
+| Override mechanism        | Layer system (layer.config.ts + app factory)                            |
+| Vite plugin package?      | No separate package — inline in white-label-vue                         |
+| Scaffolder name           | `@repo/generator` (not scaffolder — Pinion is a code generator)         |
+| Layer utility location    | Inside white-label-vue                                                  |
+| Angular base              | Bare Angular CLI (no AnalogJS) — Phase 4                                |
+| Tenant lifecycle          | Checked into git                                                        |
+| Generator UX              | Per-framework commands (vue, angular, react)                            |
+| Tenant file model         | Reference + override (no full copy)                                     |
+| White-label app structure | Factory (app.ts) + Standalone entry (main.ts)                           |
+| Example app               | fake-plants-vue (manual creation, validates mechanism before generator) |
+| Presenter package name    | @repo/presenters                                                        |
+| Presenter placement       | Phase 3 pre-req                                                         |
+
+## Future improvements
+
+See [`README.md`](./README.md#ideas-for-future-improvements) for future ideas (generator, factory, and white-label).

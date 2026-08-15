@@ -1,1 +1,2 @@
-export * from './product.presenter'
+export * from './modules/product.presenter'
+export * from './models'

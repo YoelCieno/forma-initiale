@@ -1,59 +1,58 @@
-# Phase 5 — Angular Implementation
+# Phase 5 — React Implementation
 
-**Goal:** Create an Angular app (`apps/web-angular/`) that consumes `@repo/ui` fe-* web components and follows the same hexagonal architecture as white-label-vue.
+**Goal:** Create a React app (`apps/web-react/`) that consumes `@repo/ui` fe-\* web components and follows the same hexagonal architecture as white-label-vue and white-label-angular.
 
 ## Background
 
 - `@repo/ui` components are framework-agnostic Web Components (`fe-*` tags) built with hybridJS
-- Angular has first-class support for custom elements via `CUSTOM_ELEMENTS_SCHEMA` and `createCustomElement()`
-- White-label-vue serves as the reference layer implementation (app factory, routing, styles, presenters)
+- React supports custom elements natively since React 19 (previously required `ref`/`eventListener` workarounds)
+- White-label-vue serves as reference layer; Angular implementation (Phase 4) provides second reference
 
 ## Tasks
 
-### 5.1. Scaffold Angular app
+### 5.1. Scaffold React app
 
-- `apps/web-angular/` using Angular CLI or manual scaffold
+- `apps/web-react/` using Vite + React template
 - `package.json` with workspace deps: `@repo/domain`, `@repo/infra`, `@repo/presenters`, `@repo/ui`
-- `tsconfig.json` — strict mode, Angular compiler config
-- `angular.json` — build config
-- Vite/Nx as build tool? Evaluate compatibility with turborepo
+- `tsconfig.json` — strict mode
+- Vite config with React plugin
 
-### 5.2. Implement Angular factory (parallel to `createWhiteLabelApp`)
+### 5.2. Implement React factory
 
-- Angular equivalent of white-label-vue's factory pattern
-- Bootstrap Angular app with WA styles (@repo/ui/styles + theme)
-- Register `CUSTOM_ELEMENTS_SCHEMA` for fe-* tags
-- Set up routing (standalone API)
+- React equivalent of `createWhiteLabelApp()`
+- Bootstrap with WA styles (@repo/ui/styles + theme)
+- Set up React Router (hash-based)
+- Wrap WA custom elements (React 19+ handles CE natively, no wrapper needed)
 
-### 5.3. Create Angular base components
+### 5.3. Create React base components
 
-- Replicate white-label-vue page structure (Products, About, etc.) in Angular
-- Use `fe-*` components in Angular templates
+- Replicate page structure using React components
+- Use `fe-*` elements in JSX
 - Wire `@repo/presenters` for view model transforms
-- Implement tenant override mechanism (service injection / module override)
+- Implement tenant override mechanism (React Context / provider pattern)
 
 ### 5.4. Port existing pages
 
-- ProductsPage, AboutPage, AppShell in Angular
-- Connect to `@repo/infra` adapters (fetch-based)
-- Implement metadata injection equivalent (Angular InjectionToken)
+- ProductsPage, AboutPage, AppShell in React
+- Connect to `@repo/infra` adapters
+- Metadata injection via React Context
 
 ### 5.5. Build & verify
 
-- `bun run build` — turborepo includes Angular app
+- `bun run build` — turborepo includes React app
 - Verify routing, data flow, component rendering
-- Run Angular-specific tests
+- Run React-specific tests
 
-### 5.6. Create fake-plants-angular tenant (optional)
+### 5.6. Create fake-plants-react tenant (optional)
 
-- Tenant app consuming `web-angular` as layer
-- Same brand override pattern (tokens.css)
-- Angular DI for tenant-specific overrides
+- Tenant app consuming `web-react` as layer
+- Same brand override pattern
+- React Context for tenant-specific overrides
 
 ## ✅ Manual Confirmation
 
-- [ ] Angular app builds and renders in browser
-- [ ] All fe-* components work in Angular templates
+- [ ] React app builds and renders in browser
+- [ ] All fe-\* components work in React (native CE support in JSX)
 - [ ] Routing works (hash-based)
 - [ ] Presenters wired and producing correct view models
 - [ ] Tenant override mechanism functional

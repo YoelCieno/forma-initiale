@@ -1,0 +1,32 @@
+{
+  "wl": {
+    "names": [
+      "react",
+      "angular",
+      "vue",
+      "svelte",
+      "solid"
+    ],
+    "previousPrice": {
+      "base": 29.99,
+      "increment": 10
+    },
+    "rateType": "cyclic"
+  },
+  "fp": {
+    "names": [
+      "light-bearer",
+      "misty-biter",
+      "silent-trumpet",
+      "dancing-box",
+      "little-shade",
+      "crimson-veil",
+      "ember-leaf"
+    ],
+    "price": {
+      "base": 9.99,
+      "increment": 10
+    },
+    "rateType": "random"
+  }
+}

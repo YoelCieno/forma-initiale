@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/page
 
-
 `<wa-page>` Stable Since 3.0
 
 Pages scaffold an entire application layout with header, navigation, sidebar, main content, aside, and footer regions. Use them to structure full pages with minimal markup and responsive behavior built in.
@@ -62,11 +61,11 @@ Open demo in a new window
 
 The following sections of a page are "sticky" by default, meaning they remain in position as the user scrolls.
 
--   `banner`
--   `header`
--   `sub-header`
--   `menu` (`navigation` itself is not sticky, but its parent `menu` is)
--   `aside`
+- `banner`
+- `header`
+- `sub-header`
+- `menu` (`navigation` itself is not sticky, but its parent `menu` is)
+- `aside`
 
 This is often desirable, but you can change this behavior using the `disable-sticky` attribute. Use a space-delimited list of names to tell the page which sections should not be sticky.
 
@@ -98,18 +97,18 @@ Each slot is a [flex container](https://developer.mozilla.org/en-US/docs/Glossar
 
 The following slots specify `justify-content: space-between` and `flex-wrap: wrap` to evenly distribute child elements horizontally and allow them to wrap when space is limited.
 
--   `header`
--   `subheader`
--   `main-header`
--   `main-footer`
--   `footer`
+- `header`
+- `subheader`
+- `main-header`
+- `main-footer`
+- `footer`
 
 The following slots specify `flex-direction: column` to arrange child elements vertically.
 
--   `navigation-header`
--   `navigation` (or `menu`)
--   `navigation-footer`
--   `aside`
+- `navigation-header`
+- `navigation` (or `menu`)
+- `navigation-footer`
+- `aside`
 
 And the `banner` slot specifies `justify-content: center` to horizontally center its child elements.
 
@@ -192,8 +191,8 @@ You can override the default spacing for each slot with your own CSS. In this ex
 
 [Native styles](https://webawesome.com/docs/utilities/native/) define a few useful defaults for `<wa-page>`, as well as two utility classes you can use for common responsive design tasks:
 
--   `.wa-mobile-only` hides an element on the desktop view
--   `.wa-desktop-only` hides an element on the mobile view
+- `.wa-mobile-only` hides an element on the desktop view
+- `.wa-desktop-only` hides an element on the mobile view
 
 ## Importing
 
@@ -204,7 +203,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/page/page.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/page/page.js'
 ```
 
 \*\*npm\*\*
@@ -212,7 +211,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/page/page.js';
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/page/page.js';
+import '@awesome.me/webawesome/dist/components/page/page.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -220,7 +219,7 @@ import '@awesome.me/webawesome/dist/components/page/page.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/page/page.js';
+import './webawesome/dist/components/page/page.js'
 ```
 
 \*\*React\*\*
@@ -228,85 +227,85 @@ import './webawesome/dist/components/page/page.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaPage from '@awesome.me/webawesome/dist/react/page/index.js';
+import WaPage from '@awesome.me/webawesome/dist/react/page/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The page's main content. |
-| \`aside\` | Content to be shown on the right side of the page. Typically contains a table of contents, ads, etc. This section "sticks" to the top as the page scrolls. |
-| \`banner\` | The banner that gets display above the header. The banner will not be shown if no content is provided. |
-| \`footer\` | The content to display in the footer. This is always displayed underneath the viewport so will always make the page "scrollable". |
-| \`header\` | The header to display at the top of the page. If a banner is present, the header will appear below the banner. The header will not be shown if there is no content. |
-| \`main-footer\` | Footer to display inline below the main content. |
-| \`main-header\` | Header to display inline above the main content. |
-| \`menu\` | \`navigation\` The left side of the page. If you slot an element in here, you will override the default slot and will be handling navigation on your own. This also will not disable the fallback behavior of the navigation button. This section "sticks" to the top as the page scrolls. |
-| \`navigation\` | \`menu\` The main content to display in the navigation area. This is displayed on the left side of the page, if is not used. This section "sticks" to the top as the page scrolls. |
-| \`navigation-footer\` | \`\` The footer for a navigation area. On mobile this will be the footer for . |
-| \`navigation-header\` | \`\` The header for a navigation area. On mobile this will be the header for . |
-| \`navigation-toggle\` | \`\` Use this slot to slot in your own button + icon for toggling the navigation drawer. By default it is a + a 3 bars \` Use this to slot in your own icon for toggling the navigation drawer. By default it is 3 bars . |
-| \`skip-to-content\` | \`Skip to content\` The "skip to content" slot. You can override this If you would like to override the button and add additional "Skip to X", they can be inserted here. |
-| \`subheader\` | \`header\` A sub to display below the header. This is a good place to put things like breadcrumbs. |
+| Name                  | Description                                                                                                                                                                                                                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| (default)             | The page's main content.                                                                                                                                                                                                                                                                   |
+| \`aside\`             | Content to be shown on the right side of the page. Typically contains a table of contents, ads, etc. This section "sticks" to the top as the page scrolls.                                                                                                                                 |
+| \`banner\`            | The banner that gets display above the header. The banner will not be shown if no content is provided.                                                                                                                                                                                     |
+| \`footer\`            | The content to display in the footer. This is always displayed underneath the viewport so will always make the page "scrollable".                                                                                                                                                          |
+| \`header\`            | The header to display at the top of the page. If a banner is present, the header will appear below the banner. The header will not be shown if there is no content.                                                                                                                        |
+| \`main-footer\`       | Footer to display inline below the main content.                                                                                                                                                                                                                                           |
+| \`main-header\`       | Header to display inline above the main content.                                                                                                                                                                                                                                           |
+| \`menu\`              | \`navigation\` The left side of the page. If you slot an element in here, you will override the default slot and will be handling navigation on your own. This also will not disable the fallback behavior of the navigation button. This section "sticks" to the top as the page scrolls. |
+| \`navigation\`        | \`menu\` The main content to display in the navigation area. This is displayed on the left side of the page, if is not used. This section "sticks" to the top as the page scrolls.                                                                                                         |
+| \`navigation-footer\` | \`\` The footer for a navigation area. On mobile this will be the footer for .                                                                                                                                                                                                             |
+| \`navigation-header\` | \`\` The header for a navigation area. On mobile this will be the header for .                                                                                                                                                                                                             |
+| \`navigation-toggle\` | \`\` Use this slot to slot in your own button + icon for toggling the navigation drawer. By default it is a + a 3 bars \` Use this to slot in your own icon for toggling the navigation drawer. By default it is 3 bars .                                                                  |
+| \`skip-to-content\`   | \`Skip to content\` The "skip to content" slot. You can override this If you would like to override the button and add additional "Skip to X", they can be inserted here.                                                                                                                  |
+| \`subheader\`         | \`header\` A sub to display below the header. This is a good place to put things like breadcrumbs.                                                                                                                                                                                         |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[visuallyHidden, styles\] | | |
-| \`disableNavigationToggle\` disable-navigation-toggle | \`data-toggle-nav\` Determines whether or not to hide the default hamburger button. This will automatically flip to "true" if you add an element with anywhere in the element light DOM. Generally this will be set for you and you don't need to do anything, unless you're using SSR, in which case you should set this manually for initial page loads. Type boolean Default false | | |
-| \`mobileBreakpoint\` mobile-breakpoint | \`50em\` At what page width to hide the "navigation" slot and collapse into a hamburger button. Accepts both numbers (interpreted as px) and CSS lengths (e.g. ), which are resolved based on the root element. Type string Default '768px' | | |
-| \`navigationPlacement\` navigation-placement | \`'start' \\| 'end'\` Where to place the navigation when in the mobile viewport. Type Default 'start' | | |
-| \`navOpen\` nav-open | \`boolean\` Whether or not the navigation drawer is open. Note, the navigation drawer is only "open" on mobile views. Type Default false | | |
-| \`view\` view | \`mobile-breakpoint\` The view is a reflection of the "mobileBreakpoint", when the page is larger than the (768px by default), it is considered to be a "desktop" view. The view is merely a way to distinguish when to show/hide the navigation. You can use additional media queries to make other adjustments to content as necessary. The default is "desktop" because the "mobile navigation drawer" isn't accessible via SSR due to drawer requiring JS. Type 'mobile' \\| 'desktop' Default 'desktop' | | |
+| Name                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Reflects                                                                                                                                                           |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --- | --- |
+| \`css\`                                               | \`CSSResultGroup \\                                                                                                                                                                                                                                                                                                                                                                                                                                                             | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[visuallyHidden, styles\] |     |     |
+| \`disableNavigationToggle\` disable-navigation-toggle | \`data-toggle-nav\` Determines whether or not to hide the default hamburger button. This will automatically flip to "true" if you add an element with anywhere in the element light DOM. Generally this will be set for you and you don't need to do anything, unless you're using SSR, in which case you should set this manually for initial page loads. Type boolean Default false                                                                                           |                                                                                                                                                                    |     |
+| \`mobileBreakpoint\` mobile-breakpoint                | \`50em\` At what page width to hide the "navigation" slot and collapse into a hamburger button. Accepts both numbers (interpreted as px) and CSS lengths (e.g. ), which are resolved based on the root element. Type string Default '768px'                                                                                                                                                                                                                                     |                                                                                                                                                                    |     |
+| \`navigationPlacement\` navigation-placement          | \`'start' \\                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 'end'\` Where to place the navigation when in the mobile viewport. Type Default 'start'                                                                            |     |     |
+| \`navOpen\` nav-open                                  | \`boolean\` Whether or not the navigation drawer is open. Note, the navigation drawer is only "open" on mobile views. Type Default false                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                    |     |
+| \`view\` view                                         | \`mobile-breakpoint\` The view is a reflection of the "mobileBreakpoint", when the page is larger than the (768px by default), it is considered to be a "desktop" view. The view is merely a way to distinguish when to show/hide the navigation. You can use additional media queries to make other adjustments to content as necessary. The default is "desktop" because the "mobile navigation drawer" isn't accessible via SSR due to drawer requiring JS. Type 'mobile' \\ | 'desktop' Default 'desktop'                                                                                                                                        |     |     |
 
 ## Methods
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`hideNavigation()\` | Hides the mobile navigation drawer | |
-| \`showNavigation()\` | Shows the mobile navigation drawer | |
-| \`toggleNavigation()\` | Toggles the mobile navigation drawer | |
-| \`visiblePixelsInViewport()\` | https://stackoverflow.com/a/26831113 This prevents awkward gaps when scrolling the page and the aside / menu dont "fill" the gaps. | \`element: HTMLElement \\| null\` |
+| Name                          | Description                                                                                                                        | Arguments                 |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------ |
+| \`hideNavigation()\`          | Hides the mobile navigation drawer                                                                                                 |                           |
+| \`showNavigation()\`          | Shows the mobile navigation drawer                                                                                                 |                           |
+| \`toggleNavigation()\`        | Toggles the mobile navigation drawer                                                                                               |                           |
+| \`visiblePixelsInViewport()\` | https://stackoverflow.com/a/26831113 This prevents awkward gaps when scrolling the page and the aside / menu dont "fill" the gaps. | \`element: HTMLElement \\ | null\` |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--aside-width\` | \`auto\` The wide of the page's "aside" section. Default |
-| \`--banner-height\` | \`0px\` The height of the banner. This gets calculated when the page initializes. If the height is known, you can set it here to prevent shifting when the page loads. Default |
-| \`--header-height\` | \`0px\` The height of the header. This gets calculated when the page initializes. If the height is known, you can set it here to prevent shifting when the page loads. Default |
-| \`--main-width\` | \`1fr\` The width of the page's "main" section. Default |
-| \`--menu-width\` | \`auto\` The width of the page's "menu" section. Default |
+| Name                   | Description                                                                                                                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \`--aside-width\`      | \`auto\` The wide of the page's "aside" section. Default                                                                                                                          |
+| \`--banner-height\`    | \`0px\` The height of the banner. This gets calculated when the page initializes. If the height is known, you can set it here to prevent shifting when the page loads. Default    |
+| \`--header-height\`    | \`0px\` The height of the header. This gets calculated when the page initializes. If the height is known, you can set it here to prevent shifting when the page loads. Default    |
+| \`--main-width\`       | \`1fr\` The width of the page's "main" section. Default                                                                                                                           |
+| \`--menu-width\`       | \`auto\` The width of the page's "menu" section. Default                                                                                                                          |
 | \`--subheader-height\` | \`0px\` The height of the subheader. This gets calculated when the page initializes. If the height is known, you can set it here to prevent shifting when the page loads. Default |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`aside\` | The right hand side of the page. Used for things like table of contents, ads, etc. | \`::part(aside)\` |
-| \`banner\` | The banner to show above header. | \`::part(banner)\` |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
-| \`body\` | The wrapper around menu, main, and aside. | \`::part(body)\` |
-| \`dialog-wrapper\` | A wrapper around elements such as dialogs or other modal-like elements. | \`::part(dialog-wrapper)\` |
-| \`footer\` | The footer of the page. This is always below the initial viewport size. | \`::part(footer)\` |
-| \`header\` | The header, usually for top level navigation / branding. | \`::part(header)\` |
-| \`main-content\` | The main content. | \`::part(main-content)\` |
-| \`main-footer\` | The footer below main content. | \`::part(main-footer)\` |
-| \`main-header\` | The header above main content. | \`::part(main-header)\` |
-| \`menu\` | The left hand side of the page. Generally intended for navigation. | \`::part(menu)\` |
-| \`navigation\` | \`
+| Name               | Description                                                                        | CSS selector               |
+| ------------------ | ---------------------------------------------------------------------------------- | -------------------------- |
+| \`aside\`          | The right hand side of the page. Used for things like table of contents, ads, etc. | \`::part(aside)\`          |
+| \`banner\`         | The banner to show above header.                                                   | \`::part(banner)\`         |
+| \`base\`           | The component's base wrapper.                                                      | \`::part(base)\`           |
+| \`body\`           | The wrapper around menu, main, and aside.                                          | \`::part(body)\`           |
+| \`dialog-wrapper\` | A wrapper around elements such as dialogs or other modal-like elements.            | \`::part(dialog-wrapper)\` |
+| \`footer\`         | The footer of the page. This is always below the initial viewport size.            | \`::part(footer)\`         |
+| \`header\`         | The header, usually for top level navigation / branding.                           | \`::part(header)\`         |
+| \`main-content\`   | The main content.                                                                  | \`::part(main-content)\`   |
+| \`main-footer\`    | The footer below main content.                                                     | \`::part(main-footer)\`    |
+| \`main-header\`    | The header above main content.                                                     | \`::part(main-header)\`    |
+| \`menu\`           | The left hand side of the page. Generally intended for navigation.                 | \`::part(menu)\`           |
+| \`navigation\`     | \`                                                                                 |
 
 \` The that wraps the navigation slots on desktop viewports. | \`::part(navigation)\` |
 | \`navigation-footer\` | \`\` The footer for a navigation area. On mobile this will be the footer for . | \`::part(navigation-footer)\` |

@@ -6,8 +6,16 @@ import App from './App.vue'
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    { path: '/', name: 'products', component: { template: '<div>Products page</div>' } },
-    { path: '/about', name: 'about', component: { template: '<div>About page</div>' } },
+    {
+      path: '/',
+      name: 'products',
+      component: { template: '<div>Products page</div>' },
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: { template: '<div>About page</div>' },
+    },
   ],
 })
 
@@ -20,7 +28,7 @@ describe('App', () => {
     })
     expect(wrapper.text()).toContain('Products')
     const links = wrapper.findAll('a')
-    const productsLink = links.find(l => l.text() === 'Products')
+    const productsLink = links.find((l) => l.text() === 'Products')
     expect(productsLink).toBeDefined()
     expect(productsLink?.attributes('href')).toBe('#/')
   })
@@ -33,7 +41,7 @@ describe('App', () => {
     })
     expect(wrapper.text()).toContain('About')
     const links = wrapper.findAll('a')
-    const aboutLink = links.find(l => l.text() === 'About')
+    const aboutLink = links.find((l) => l.text() === 'About')
     expect(aboutLink).toBeDefined()
     expect(aboutLink?.attributes('href')).toBe('#/about')
   })

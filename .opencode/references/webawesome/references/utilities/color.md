@@ -10,11 +10,11 @@ Several Web Awesome components (like [`<wa-badge>`](https://webawesome.com/docs/
 
 Add one of these classes to any element to apply a semantic color:
 
--   `.wa-brand`
--   `.wa-neutral`
--   `.wa-success`
--   `.wa-warning`
--   `.wa-danger`
+- `.wa-brand`
+- `.wa-neutral`
+- `.wa-success`
+- `.wa-warning`
+- `.wa-danger`
 
 ## How Variants Work
 

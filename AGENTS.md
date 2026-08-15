@@ -7,23 +7,26 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 - Root package name: `forma-initiale`
 - Package manager: `bun@1.3.13` (declared in root `package.json`, bun reads lockfile format)
 - Workspaces: `apps/*` `packages/*`
-- Local packages: `@repo/*` scope (domain, presenters, infra, ui, eslint-config, typescript-config)
+- Local packages: `@repo/*` scope (domain, presenters, infra, ui, generator, eslint-config, typescript-config)
 - Build: Turborepo 2.9.14 (`turbo.json`)
 - Mise: `.mise.toml` at root with `bun = "latest"` — run `eval "$(mise activate bash)"` before bun commands if mise not sourcing automatically
 
 ## Commands (exact, verified)
 
-| cmd | what |
-|---|---|
-| `bun run dev` | turbo dev — all apps, persistent |
-| `bun run build` | turbo build — (white-label-vue: `vp build`, docs: `astro build`) |
-| `bun run lint` | turbo lint — eslint all packages |
-| `bun run format` | prettier on `*.{ts,tsx,md}` |
-| `bun run test` | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
-| `cd apps/white-label-vue && bun run dev` | white-label-vue only |
-| `cd apps/docs && bun run dev` | docs only |
-| `bun add <pkg>` | add dep (bun workspace-aware) |
-| `bun add -d <pkg>` | dev dep |
+| cmd                                      | what                                                                                    |
+| ---------------------------------------- | --------------------------------------------------------------------------------------- |
+| `bun run dev`                            | turbo dev — all apps, persistent                                                        |
+| `bun run build`                          | turbo build — (white-label-vue: `vp build`, docs: `astro build`)                        |
+| `bun run lint`                           | turbo lint — eslint all packages                                                        |
+| `bun run format`                         | prettier on `*.{ts,tsx,md}`                                                             |
+| `bun run test`                           | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
+| `cd apps/white-label-vue && bun run dev` | white-label-vue only                                                                    |
+| `cd apps/docs && bun run dev`            | docs only                                                                               |
+| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
+| `bun run generate:vue-tenant`            | interactive Pinion generator — scaffolds new Vue tenant app                            |
+| `bun run register-tenant`                | register MSW tenant config — `--prefix <key> --names-json '[...]'`                     |
+| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
+| `bun add -d <pkg>`                       | dev dep                                                                                 |
 
 ## Package layout
 
@@ -37,6 +40,7 @@ packages/
   presenters/ — presentation layer transforming domain models into view models (@repo/presenters)
   infra/      — adapters implementing domain contracts (@repo/infra)
   ui/         — hybridJS WC wrappers, framework-agnostic (@repo/ui)
+  generator/  — Pinion-based tenant code generator (@repo/generator)
   eslint-config/  — CJS ESLint 8 config
   typescript-config/  — base.json + vite.json tsconfigs
 ```
@@ -63,7 +67,7 @@ Hexagonal + Vue 3 — all 5 layers active:
 - **App dev:** `vite --clearScreen false` (suppresses vite startup banner)
 - **Vite 6.x (white-label-vue):** has `vite.config.ts` with `@vitejs/plugin-vue`, `unplugin-auto-import` (imports: ['vue', 'vue-router']), `unplugin-vue-components`. `isCustomElement` configured for `fe-` prefixed tags. Tenants use `vite.config.base.ts` factory `defineWhiteLabelViteConfig()`.
 - **Vite+ integrated:** `vp` CLI. Vite v6.x for white-label-vue via Vite+ core. `vitest: ^4.1.7` bundles Vite 6 types.
-- **App factory pattern:** `apps/white-label-vue/src/app.ts` exports `createWhiteLabelApp()` — bootstraps Vue + router + MSW. `main.ts` calls it. Tenants import from `white-label-vue/app` (workspace name, no `@repo` scope).
+- **App factory pattern:** `apps/white-label-vue/src/bootstrap/app.ts` exports `createWhiteLabelApp()` via `src/bootstrap/init.ts` (options + merge logic). Tenants import from `white-label-vue/app` (workspace name, no `@repo` scope). Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`.
 - **Routes extracted:** `apps/white-label-vue/src/routes.ts` exports route array. Tenants can merge with their own routes before passing to `createWhiteLabelApp()`.
 - **Presenters package:** Presenters moved from app to `packages/presenters/` (`@repo/presenters`). Composables import `toProductViewList` from `@repo/presenters`.
 - **Turbo `^build`:** deps build before consumers; vanilla TS packages w/o build script get skipped gracefully
@@ -76,11 +80,13 @@ Hexagonal + Vue 3 — all 5 layers active:
 
 ```json
 {
-  "./fe-button": "./components/fe-button.ts",
-  "./fe-async-content": "./components/fe-async-content.ts",
-  "./fe-card": "./components/fe-card.ts",
-  "./fe-icon": "./components/fe-icon.ts",
-  "./fe-rating": "./components/fe-rating.ts",
+  "./fe-button": "./components/fe-button/fe-button.ts",
+  "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
+  "./fe-card": "./components/fe-card/fe-card.ts",
+  "./fe-icon": "./components/fe-icon/fe-icon.ts",
+  "./fe-img": "./components/fe-img/fe-img.ts",
+  "./fe-loader": "./components/fe-loader/fe-loader.ts",
+  "./fe-rating": "./components/fe-rating/fe-rating.ts",
   "./styles": "./styles/webawesome.ts",
   "./styles/themes/default": "./styles/themes/default.ts",
   "./styles/themes/awesome": "./styles/themes/awesome.ts",
@@ -89,12 +95,13 @@ Hexagonal + Vue 3 — all 5 layers active:
 ```
 
 Import from apps:
+
 ```typescript
 import '@repo/ui/fe-button'
 import type { FeButtonElement } from '@repo/ui/fe-button'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-async-content'
-import '@repo/ui/styles'              // WA base (native+utilities, no theme)
+import '@repo/ui/styles' // WA base (native+utilities, no theme)
 import '@repo/ui/styles/themes/default' // WA theme
 ```
 
@@ -127,6 +134,7 @@ Web Awesome publishes an Agent Skill (`@awesome.me/webawesome@3.7.0`) with full 
 ### When to load
 
 When implementing or modifying `fe-*` wrapper components in `packages/ui/`, consult the relevant WA component docs in `.opencode/references/webawesome/references/components/<component>.md` for:
+
 - Component API (props, events, methods, slots)
 - CSS custom properties for styling
 - CSS parts for internal element targeting
@@ -146,6 +154,15 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
 9. **`apps/white-label-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
 10. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
 11. **WA Agent Skill available** — WA publishes an Agent Skill at `.opencode/references/webawesome/` with full component docs (API, events, CSS parts, tokens). When building `fe-*` wrappers, read the relevant `<component>.md` first for API contract.
+12. **hybrids styling — use `html.css`, not `<style>`** — When a `fe-*` component needs custom CSS, chain `.css\`...\`` on the hybrid template literal. `html.css` creates one shared `CSSStyleSheet` across all instances via adopted stylesheets — no per-instance `<style>` overhead.
+    ```ts
+    render: (host) => html\`
+      <img src="\${host.src}" />
+    \`.css\`
+      :host { display: inline-block; }
+    \`
+    ```
+    Exception: `fe-img` uses `<style>` in template currently. All NEW custom styles MUST use `html.css`.
 
 ## Agent rules
 

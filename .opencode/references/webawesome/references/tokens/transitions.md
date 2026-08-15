@@ -14,16 +14,16 @@ Web Awesome uses different transition durations to make it easy to track a compo
 
 Properties that change between frequent, incidental states (like hover) typically use faster durations than properties that change between intentional states (like opening a menu or checking a box).
 
-| Custom Property | Description |
-| --- | --- |
-| \`--wa-transition-fast\` | Fast duration for frequent, incidental state changes like hover and focus |
-| \`--wa-transition-normal\` | Standard duration for typical state changes |
-| \`--wa-transition-slow\` | Slow duration for intentional, impactful state changes like opening a panel or checking a box |
+| Custom Property            | Description                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------- |
+| \`--wa-transition-fast\`   | Fast duration for frequent, incidental state changes like hover and focus                     |
+| \`--wa-transition-normal\` | Standard duration for typical state changes                                                   |
+| \`--wa-transition-slow\`   | Slow duration for intentional, impactful state changes like opening a panel or checking a box |
 
 ## Easing
 
 Easing controls the standard `transition-timing-function` used for transitions throughout Web Awesome.
 
-| Custom Property | Description |
-| --- | --- |
+| Custom Property            | Description                                                                            |
+| -------------------------- | -------------------------------------------------------------------------------------- |
 | \`--wa-transition-easing\` | \`transition-timing-function\` Timing function () used for all Web Awesome transitions |

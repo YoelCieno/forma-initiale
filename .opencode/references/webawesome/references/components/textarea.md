@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/textarea
 
-
 `<wa-textarea>` Stable Since 2.0
 
 Textareas collect multi-line text input from the user, with optional resizing and character counting.
@@ -28,7 +27,8 @@ Use the `label` attribute to give the textarea an accessible label. For labels t
 Add descriptive hint to a textarea with the `hint` attribute. For hints that contain HTML, use the `hint` slot instead.
 
 ```html
-<wa-textarea label="Feedback" hint="Please tell us what you think."> </wa-textarea>
+<wa-textarea label="Feedback" hint="Please tell us what you think.">
+</wa-textarea>
 ```
 
 ### Rows
@@ -52,8 +52,13 @@ Use the `placeholder` attribute to add a placeholder.
 Use the `appearance` attribute to change the textarea's visual appearance.
 
 ```html
-<wa-textarea placeholder="Type something" appearance="filled"></wa-textarea><br />
-<wa-textarea placeholder="Type something" appearance="filled-outlined"></wa-textarea><br />
+<wa-textarea placeholder="Type something" appearance="filled"></wa-textarea
+><br />
+<wa-textarea
+  placeholder="Type something"
+  appearance="filled-outlined"
+></wa-textarea
+><br />
 <wa-textarea placeholder="Type something" appearance="outlined"></wa-textarea>
 ```
 
@@ -126,9 +131,18 @@ Textareas can be made to resize both vertically and horizontally when `resize` i
 Add the `with-count` attribute to show a character count below the textarea. When combined with `maxlength`, the count shows remaining characters instead. The count is exposed to assistive technologies using a live region so screen readers can announce updates as the user types.
 
 ```html
-<wa-textarea label="Comments" hint="Share your thoughts with us" with-count></wa-textarea>
+<wa-textarea
+  label="Comments"
+  hint="Share your thoughts with us"
+  with-count
+></wa-textarea>
 <br />
-<wa-textarea label="Bio" hint="Tell us a little about yourself" with-count maxlength="100"></wa-textarea>
+<wa-textarea
+  label="Bio"
+  hint="Tell us a little about yourself"
+  with-count
+  maxlength="100"
+></wa-textarea>
 ```
 
 ## Importing
@@ -140,7 +154,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/textarea/textarea.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/textarea/textarea.js'
 ```
 
 \*\*npm\*\*
@@ -148,7 +162,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/textarea/textare
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/textarea/textarea.js';
+import '@awesome.me/webawesome/dist/components/textarea/textarea.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -156,7 +170,7 @@ import '@awesome.me/webawesome/dist/components/textarea/textarea.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/textarea/textarea.js';
+import './webawesome/dist/components/textarea/textarea.js'
 ```
 
 \*\*React\*\*
@@ -164,34 +178,34 @@ import './webawesome/dist/components/textarea/textarea.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaTextarea from '@awesome.me/webawesome/dist/react/textarea/index.js';
+import WaTextarea from '@awesome.me/webawesome/dist/react/textarea/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| \`hint\` | \`hint\` Text that describes how to use the input. Alternatively, you can use the attribute. |
-| \`label\` | \`label\` The textarea's . Alternatively, you can use the label attribute. |
+| Name      | Description                                                                                  |
+| --------- | -------------------------------------------------------------------------------------------- |
+| \`hint\`  | \`hint\` Text that describes how to use the input. Alternatively, you can use the attribute. |
+| \`label\` | \`label\` The textarea's . Alternatively, you can use the label attribute.                   |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'filled' \\| 'outlined' \\| 'filled-outlined'\` The textarea's visual appearance. Type Default 'outlined' | | |
-| \`autocapitalize\` autocapitalize | \`'off' \\| 'none' \\| 'on' \\| 'sentences' \\| 'words' \\| 'characters'\` Controls whether and how text input is automatically capitalized as it is entered by the user. Type | | |
-| \`autocomplete\` autocomplete | \`string\` Specifies what permission the browser has to provide assistance in filling out form field values. Refer to this page on MDN for available values. Type | | |
-| \`autocorrect\` autocorrect | \`"off"\` Indicates whether the browser's autocorrect feature is on or off. When set as an attribute, use or "on". When set as a property, use true or false. Type boolean | | |
-| \`autofocus\` autofocus | \`boolean\` Indicates that the input should receive focus on page load. Type | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, formControlStyles, sizeStyles, visuallyHidden\] | | |
-| \`defaultValue\` value | \`string\` The default value of the form control. Primarily used for resetting the form control. Type | | |
-| \`disabled\` disabled | \`boolean\` Disables the textarea. Type Default false | | |
-| \`enterkeyhint\` enterkeyhint | \`'enter' \\| 'done' \\| 'go' \\| 'next' \\| 'previous' \\| 'search' \\| 'send'\` Used to customize the label or icon of the Enter key on virtual keyboards. Type | | |
-| \`form\` | \`
+| Name                              | Description                                                                                                                                                                | Reflects                                                                                                                                                                                          |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------- | ------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- | --- | --- |
+| \`appearance\` appearance         | \`'filled' \\                                                                                                                                                              | 'outlined' \\                                                                                                                                                                                     | 'filled-outlined'\` The textarea's visual appearance. Type Default 'outlined' |                |               |
+| \`autocapitalize\` autocapitalize | \`'off' \\                                                                                                                                                                 | 'none' \\                                                                                                                                                                                         | 'on' \\                                                                       | 'sentences' \\ | 'words' \\    | 'characters'\` Controls whether and how text input is automatically capitalized as it is entered by the user. Type |                                                                                          |     |
+| \`autocomplete\` autocomplete     | \`string\` Specifies what permission the browser has to provide assistance in filling out form field values. Refer to this page on MDN for available values. Type          |                                                                                                                                                                                                   |                                                                               |
+| \`autocorrect\` autocorrect       | \`"off"\` Indicates whether the browser's autocorrect feature is on or off. When set as an attribute, use or "on". When set as a property, use true or false. Type boolean |                                                                                                                                                                                                   |                                                                               |
+| \`autofocus\` autofocus           | \`boolean\` Indicates that the input should receive focus on page load. Type                                                                                               |                                                                                                                                                                                                   |                                                                               |
+| \`css\`                           | \`CSSResultGroup \\                                                                                                                                                        | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, formControlStyles, sizeStyles, visuallyHidden\] |                                                                               |                |
+| \`defaultValue\` value            | \`string\` The default value of the form control. Primarily used for resetting the form control. Type                                                                      |                                                                                                                                                                                                   |                                                                               |
+| \`disabled\` disabled             | \`boolean\` Disables the textarea. Type Default false                                                                                                                      |                                                                                                                                                                                                   |                                                                               |
+| \`enterkeyhint\` enterkeyhint     | \`'enter' \\                                                                                                                                                               | 'done' \\                                                                                                                                                                                         | 'go' \\                                                                       | 'next' \\      | 'previous' \\ | 'search' \\                                                                                                        | 'send'\` Used to customize the label or icon of the Enter key on virtual keyboards. Type |     |     |
+| \`form\`                          | \`                                                                                                                                                                         |
 
 \` By default, form controls are associated with the nearest containing element. This attribute allows you to place the form control outside of a form and associate it with the form that has this id. The form must be in the same document or shadow root for this to work. Type HTMLFormElement \\| null | | |
 | \`hint\` hint | \`hint\` The textarea's . If you need to display HTML, use the hint slot instead. Type string Default '' | | |
@@ -218,49 +232,49 @@ Learn more about [attributes and properties](https://webawesome.com/docs/usage/#
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`blur()\` | Removes focus from the textarea. | |
-| \`focus()\` | Sets focus on the textarea. | \`options: FocusOptions\` |
-| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\| File \\| FormData \\| null, reason: 'autocomplete' \\| 'restore'\` |
-| \`resetValidity()\` | Reset validity is a way of removing manual custom errors and native validation. | |
-| \`scrollPosition()\` | Gets or sets the textarea's scroll position. | \`position: { top?: number; left?: number }\` |
-| \`select()\` | Selects all the text in the textarea. | |
-| \`setCustomValidity()\` | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators. | \`message: string\` |
-| \`setRangeText()\` | Replaces a range of text with a new string. | \`replacement: string, start: number, end: number, selectMode: 'select' \\| 'start' \\| 'end' \\| 'preserve'\` |
-| \`setSelectionRange()\` | Sets the start and end positions of the text selection (0-based). | \`selectionStart: number, selectionEnd: number, selectionDirection: 'forward' \\| 'backward' \\| 'none'\` |
+| Name                           | Description                                                                                                                                                                                                                                                                                                                                       | Arguments                                                                        |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------- | ----------- | ------------------------------- | ----------- |
+| \`blur()\`                     | Removes focus from the textarea.                                                                                                                                                                                                                                                                                                                  |                                                                                  |
+| \`focus()\`                    | Sets focus on the textarea.                                                                                                                                                                                                                                                                                                                       | \`options: FocusOptions\`                                                        |
+| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\                                                               | File \\       | FormData \\ | null, reason: 'autocomplete' \\ | 'restore'\` |
+| \`resetValidity()\`            | Reset validity is a way of removing manual custom errors and native validation.                                                                                                                                                                                                                                                                   |                                                                                  |
+| \`scrollPosition()\`           | Gets or sets the textarea's scroll position.                                                                                                                                                                                                                                                                                                      | \`position: { top?: number; left?: number }\`                                    |
+| \`select()\`                   | Selects all the text in the textarea.                                                                                                                                                                                                                                                                                                             |                                                                                  |
+| \`setCustomValidity()\`        | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators.                                                                                                                                                          | \`message: string\`                                                              |
+| \`setRangeText()\`             | Replaces a range of text with a new string.                                                                                                                                                                                                                                                                                                       | \`replacement: string, start: number, end: number, selectMode: 'select' \\       | 'start' \\    | 'end' \\    | 'preserve'\`                    |
+| \`setSelectionRange()\`        | Sets the start and end positions of the text selection (0-based).                                                                                                                                                                                                                                                                                 | \`selectionStart: number, selectionEnd: number, selectionDirection: 'forward' \\ | 'backward' \\ | 'none'\`    |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
-| \`blur\` | Emitted when the control loses focus. |
-| \`change\` | Emitted when an alteration to the control's value is committed by the user. |
-| \`focus\` | Emitted when the control gains focus. |
-| \`input\` | Emitted when the control receives input. |
+| Name           | Description                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| \`blur\`       | Emitted when the control loses focus.                                                             |
+| \`change\`     | Emitted when an alteration to the control's value is committed by the user.                       |
+| \`focus\`      | Emitted when the control gains focus.                                                             |
+| \`input\`      | Emitted when the control receives input.                                                          |
 | \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied. |
 
 ## Custom States
 
 Learn more about [custom states](https://webawesome.com/docs/usage/#custom-states).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
+| Name      | Description            | CSS selector      |
+| --------- | ---------------------- | ----------------- |
 | \`blank\` | The textarea is empty. | \`:state(blank)\` |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | \`\` The wrapper around the control. | \`::part(base)\` |
-| \`count\` | \`with-count\` The character count element, rendered when the attribute is present. | \`::part(count)\` |
-| \`form-control-input\` | The input's wrapper. | \`::part(form-control-input)\` |
-| \`hint\` | The hint's wrapper. | \`::part(hint)\` |
-| \`label\` | The label | \`::part(label)\` |
-| \`textarea\` | \`\` The internal control. | \`::part(textarea)\` |
+| Name                   | Description                                                                         | CSS selector                   |
+| ---------------------- | ----------------------------------------------------------------------------------- | ------------------------------ |
+| \`base\`               | \`\` The wrapper around the control.                                                | \`::part(base)\`               |
+| \`count\`              | \`with-count\` The character count element, rendered when the attribute is present. | \`::part(count)\`              |
+| \`form-control-input\` | The input's wrapper.                                                                | \`::part(form-control-input)\` |
+| \`hint\`               | The hint's wrapper.                                                                 | \`::part(hint)\`               |
+| \`label\`              | The label                                                                           | \`::part(label)\`              |
+| \`textarea\`           | \`\` The internal control.                                                          | \`::part(textarea)\`           |
 
 **Need a hand?** Report a bug Ask for help

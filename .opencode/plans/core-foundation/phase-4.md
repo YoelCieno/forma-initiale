@@ -1,55 +1,61 @@
-# Phase 4 — CSS `@layer` Cascade Strategy
+# Phase 4 — Angular Implementation
 
-**Goal:** Move from implicit unlayered CSS cascade to explicit `@layer` control. Add `app` and `tenant` layers to the WA layer stack so that app/tenant styles have deterministic ordering without relying on unlayered-CSS-beats-layered-CSS behavior.
+**Goal:** Create an Angular app (`apps/white-label-angular/`) that consumes `@repo/ui` fe-\* web components and follows the same hexagonal architecture as white-label-vue.
+
+**Status:** 🔧 IN PROGRESS — research-first. Evaluate Angular CLI vs manual scaffold, Vite/Nx compatibility with turborepo, and `CUSTOM_ELEMENTS_SCHEMA`/`createCustomElement()` approach before scaffolding.
 
 ## Background
 
-- WA declares 7 layers in `styles/layers.css` (wa-native → wa-utilities → wa-color-palette → wa-color-variant → wa-theme → wa-theme-dimension → wa-theme-overrides)
-- Currently app/tenant styles are unlayered — they beat WA layered styles by CSS spec, but this is implicit and fragile (e.g. if WA ever adds more layers, or other libs introduce layers, ordering becomes unpredictable)
-- Tenant override chains (WL var → tenant var → WA component) work via CSS custom properties, which don't care about layers — but direct style rules (e.g. `.card { padding: ... }`) need predictable layering
+- `@repo/ui` components are framework-agnostic Web Components (`fe-*` tags) built with hybridJS
+- Angular has first-class support for custom elements via `CUSTOM_ELEMENTS_SCHEMA` and `createCustomElement()`
+- White-label-vue serves as the reference layer implementation (app factory, routing, styles, presenters)
 
 ## Tasks
 
-### 4.1. Declare app layer order
+### 4.1. Scaffold Angular app
 
-Add `@layer` declaration in `@repo/ui/styles` or white-label-vue:
-```css
-@layer app, tenant;
-```
-This must precede all other CSS. Position it after WA's layers.css import so the full layer stack is: wa-*, app, tenant.
+- `apps/white-label-angular/` using Angular CLI or manual scaffold
+- `package.json` with workspace deps: `@repo/domain`, `@repo/infra`, `@repo/presenters`, `@repo/ui`
+- `tsconfig.json` — strict mode, Angular compiler config
+- `angular.json` — build config
+- Vite/Nx as build tool? Evaluate compatibility with turborepo
 
-### 4.2. Wrap white-label styles in `@layer app`
+### 4.2. Implement Angular factory (parallel to `createWhiteLabelApp`)
 
-- `apps/white-label-vue/src/styles/base.css` → `@layer app { ... }`
-- Verify no regressions: unlayered styles that were previously highest precedence now live in `app` layer (still after WA, same effective position but explicit)
+- Angular equivalent of white-label-vue's factory pattern
+- Bootstrap Angular app with WA styles (@repo/ui/styles + theme)
+- Register `CUSTOM_ELEMENTS_SCHEMA` for fe-\* tags
+- Set up routing (standalone API)
 
-### 4.3. Wrap tenant styles in `@layer tenant`
+### 4.3. Create Angular base components
 
-- `apps/fake-plants-vue/src/styles/*` → `@layer tenant { ... }`
-- Tenant overrides WL in layer order (tenant declared after app)
-- Test with a concrete override case
+- Replicate white-label-vue page structure (Products, About, etc.) in Angular
+- Use `fe-*` components in Angular templates
+- Wire `@repo/presenters` for view model transforms
+- Implement tenant override mechanism (service injection / module override)
 
-### 4.4. Verify no cascade changes
+### 4.4. Port existing pages
 
-- Build white-label-vue and fake-plants-vue
-- Visually verify component rendering matches pre-@layer state
-- Check that WA component styles aren't accidentally leaking through
+- ProductsPage, AboutPage, AppShell in Angular
+- Connect to `@repo/infra` adapters (fetch-based)
+- Implement metadata injection equivalent (Angular InjectionToken)
 
-### 4.5. Document @layer architecture
+### 4.5. Build & verify
 
-- Add layer diagram to `docs/integrations/layer-wiring.md`
-- Explain layer order, var resolution (layer-independent), and tenant override flow
+- `bun run build` — turborepo includes Angular app
+- Verify routing, data flow, component rendering
+- Run Angular-specific tests
+
+### 4.6. Create fake-plants-angular tenant (optional)
+
+- Tenant app consuming `white-label-angular` as layer
+- Same brand override pattern (tokens.css)
+- Angular DI for tenant-specific overrides
 
 ## ✅ Manual Confirmation
 
-- [ ] WA layers.css declares wa-* layers before app/tenant
-- [ ] `@layer app` wraps WL styles, `@layer tenant` wraps tenant overrides
-- [ ] Builds pass for all apps
-- [ ] Visual regression: components render identically to pre-@layer state
-- [ ] Docs updated with layer diagram
-
-## Notes
-
-- Phase 4 assumes no new visual design work — only structural CSS refactoring
-- If WA adds/changes layers, the layer declaration may need updating
-- `@layer` is well-supported in all modern browsers (2024+)
+- [ ] Angular app builds and renders in browser
+- [ ] All fe-\* components work in Angular templates
+- [ ] Routing works (hash-based)
+- [ ] Presenters wired and producing correct view models
+- [ ] Tenant override mechanism functional

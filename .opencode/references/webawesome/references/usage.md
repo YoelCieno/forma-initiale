@@ -61,8 +61,8 @@ Some components have methods you can call to trigger various behaviors. For exam
 <wa-input></wa-input>
 
 <script>
-  const input = document.querySelector('wa-input');
-  input.focus();
+  const input = document.querySelector('wa-input')
+  input.focus()
 </script>
 ```
 
@@ -83,39 +83,39 @@ When you interact with components from JavaScript on first load, the elements ma
 You can use the [`customElements.whenDefined()`](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/whenDefined) method to ensure a specific component is ready:
 
 ```ts
-await customElements.whenDefined('wa-button');
+await customElements.whenDefined('wa-button')
 
 // <wa-button> is ready to use!
-const button = document.querySelector('wa-button');
+const button = document.querySelector('wa-button')
 ```
 
 When working with multiple components, checking each one individually can become tedious. For convenience, Web Awesome provides the `allDefined()` function which automatically detects and waits for all Web Awesome components in the DOM to be initialized before resolving.
 
 ```ts
-import { allDefined } from '/dist/webawesome.js';
+import { allDefined } from '/dist/webawesome.js'
 
 // Waits for all Web Awesome components in the DOM to be registered
-await allDefined();
+await allDefined()
 
 // All Web Awesome components on the page are ready!
 ```
 
 By default, `allDefined()` will wait for all `wa-` prefixed custom elements within the current `document` to be registered. You can customize this behavior by passing in options:
 
--   `root` allows you to pass in a different element to search within, or a different document entirely (defaults to `document`).
--   `match` allows you to specify a custom function to determine which elements to wait for. This function should return `true` for elements you want to wait for and `false` for those you don't.
--   `additionalElements` allows you to wait for custom elements to be defined that may not be present in the DOM at the time `allDefined()` is called. This can be useful for elements that are loaded dynamically via JS.
+- `root` allows you to pass in a different element to search within, or a different document entirely (defaults to `document`).
+- `match` allows you to specify a custom function to determine which elements to wait for. This function should return `true` for elements you want to wait for and `false` for those you don't.
+- `additionalElements` allows you to wait for custom elements to be defined that may not be present in the DOM at the time `allDefined()` is called. This can be useful for elements that are loaded dynamically via JS.
 
 Here is an example of using `match` and `root` to await registration of Web Awesome components inside an element with an id of `sidebar`, plus a `<my-component>` element if present in the DOM, and `<wa-slider>` and `<other-slider>` elements whether present in the DOM or not:
 
 ```js
-import { allDefined } from '/dist/webawesome.js';
+import { allDefined } from '/dist/webawesome.js'
 
 await allDefined({
-  match: tagName => tagName.startsWith('wa-') || tagName === 'my-component',
+  match: (tagName) => tagName.startsWith('wa-') || tagName === 'my-component',
   root: document.getElementById('sidebar'),
   additionalElements: ['wa-slider', 'other-slider'],
-});
+})
 ```
 
 ## Component Rendering and Updating
@@ -127,21 +127,21 @@ To optimize performance and reduce re-renders, Lit batches component updates. Th
 Consider this example. We're going to change the `checked` property of the checkbox and observe its corresponding `checked` attribute, which happens to reflect.
 
 ```js
-const checkbox = document.querySelector('wa-checkbox');
-checkbox.checked = true;
+const checkbox = document.querySelector('wa-checkbox')
+checkbox.checked = true
 
-console.log(checkbox.hasAttribute('checked')); // false
+console.log(checkbox.hasAttribute('checked')) // false
 ```
 
 Most developers will expect this to be `true` instead of `false`, but the component hasn't had a chance to re-render yet so the attribute doesn't exist when `hasAttribute()` is called. Since changes are batched, we need to wait for the update before proceeding. This can be done using the `updateComplete` property, which is available on all Lit-based components.
 
 ```js
-const checkbox = document.querySelector('wa-checkbox');
-checkbox.checked = true;
+const checkbox = document.querySelector('wa-checkbox')
+checkbox.checked = true
 
 checkbox.updateComplete.then(() => {
-  console.log(checkbox.hasAttribute('checked')); // true
-});
+  console.log(checkbox.hasAttribute('checked')) // true
+})
 ```
 
 This time we see `true`, confirming the boolean attribute is present after the update.
@@ -149,7 +149,7 @@ This time we see `true`, confirming the boolean attribute is present after the u
 To wait for multiple components to update, await all of their `updateComplete` promises together:
 
 ```js
-await Promise.all(elements.map(el => el.updateComplete));
+await Promise.all(elements.map((el) => el.updateComplete))
 ```
 
 ## Code Completion
@@ -165,7 +165,9 @@ Web Awesome ships with a file called `vscode.html-custom-data.json` that can be 
 
 ```json
 {
-  "html.customData": ["./node_modules/@awesome.me/webawesome/dist/vscode.html-custom-data.json"]
+  "html.customData": [
+    "./node_modules/@awesome.me/webawesome/dist/vscode.html-custom-data.json"
+  ]
 }
 ```
 
@@ -204,8 +206,8 @@ Most popular editors support custom code completion with a bit of configuration.
 
 ## Where to Go Next
 
--   [Customizing](https://webawesome.com/docs/customizing) — themes, CSS parts, custom properties, and custom states.
--   [Form Controls](https://webawesome.com/docs/form-controls) — using Web Awesome inputs, validation, and form submission.
--   [Frameworks](https://webawesome.com/docs/frameworks) — guides for React, Vue, Angular, and Svelte.
--   [Localization](https://webawesome.com/docs/localization) — translating component strings and configuring text direction.
--   [Preventing FOUCE](https://webawesome.com/docs/utilities/fouce) — avoid the flash of un-upgraded custom elements on first load.
+- [Customizing](https://webawesome.com/docs/customizing) — themes, CSS parts, custom properties, and custom states.
+- [Form Controls](https://webawesome.com/docs/form-controls) — using Web Awesome inputs, validation, and form submission.
+- [Frameworks](https://webawesome.com/docs/frameworks) — guides for React, Vue, Angular, and Svelte.
+- [Localization](https://webawesome.com/docs/localization) — translating component strings and configuring text direction.
+- [Preventing FOUCE](https://webawesome.com/docs/utilities/fouce) — avoid the flash of un-upgraded custom elements on first load.

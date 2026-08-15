@@ -40,7 +40,7 @@ describe('RatingContainer', () => {
   it('renders all 5 sizes', () => {
     const wrapper = mount(RatingContainer)
     const sizes = ['xs', 's', 'm', 'l', 'xl']
-    sizes.forEach(size => {
+    sizes.forEach((size) => {
       expect(wrapper.find(`fe-rating[size="${size}"]`).exists()).toBe(true)
     })
   })

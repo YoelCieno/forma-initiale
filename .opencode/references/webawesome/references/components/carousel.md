@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/carousel
 
-
 `<wa-carousel>` Experimental Since 2.2
 
 Carousels display a series of content slides along a horizontal or vertical axis, one or more at a time. Users can navigate between slides with controls, pagination, or autoplay.
@@ -247,13 +246,13 @@ This example is best demonstrated using a mouse. Try clicking and dragging the s
 </div>
 
 <script>
-  const container = document.querySelector('.mouse-dragging');
-  const carousel = container.querySelector('wa-carousel');
-  const toggle = container.querySelector('wa-switch');
+  const container = document.querySelector('.mouse-dragging')
+  const carousel = container.querySelector('wa-carousel')
+  const toggle = container.querySelector('wa-switch')
 
   toggle.addEventListener('change', () => {
-    carousel.toggleAttribute('mouse-dragging', toggle.checked);
-  });
+    carousel.toggleAttribute('mouse-dragging', toggle.checked)
+  })
 </script>
 ```
 
@@ -310,37 +309,39 @@ The content of the carousel can be changed by adding or removing carousel items.
 </style>
 
 <script>
-  (() => {
-    const dynamicCarousel = document.querySelector('.dynamic-carousel');
-    const dynamicAdd = document.querySelector('#dynamic-add');
-    const dynamicRemove = document.querySelector('#dynamic-remove');
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
-    let colorIndex = 2;
+  ;(() => {
+    const dynamicCarousel = document.querySelector('.dynamic-carousel')
+    const dynamicAdd = document.querySelector('#dynamic-add')
+    const dynamicRemove = document.querySelector('#dynamic-remove')
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
+    let colorIndex = 2
 
     const addSlide = () => {
-      const slide = document.createElement('wa-carousel-item');
-      const color = colors[++colorIndex % colors.length];
-      slide.innerText = `Slide ${dynamicCarousel.children.length + 1}`;
-      slide.style.setProperty('background', color);
-      dynamicCarousel.appendChild(slide);
-      dynamicRemove.disabled = false;
-    };
+      const slide = document.createElement('wa-carousel-item')
+      const color = colors[++colorIndex % colors.length]
+      slide.innerText = `Slide ${dynamicCarousel.children.length + 1}`
+      slide.style.setProperty('background', color)
+      dynamicCarousel.appendChild(slide)
+      dynamicRemove.disabled = false
+    }
 
     const removeSlide = () => {
-      const slide = dynamicCarousel.children[dynamicCarousel.children.length - 1];
-      const numSlides = dynamicCarousel.querySelectorAll('wa-carousel-item').length;
+      const slide =
+        dynamicCarousel.children[dynamicCarousel.children.length - 1]
+      const numSlides =
+        dynamicCarousel.querySelectorAll('wa-carousel-item').length
 
       if (numSlides > 1) {
-        slide.remove();
-        colorIndex--;
+        slide.remove()
+        colorIndex--
       }
 
-      dynamicRemove.disabled = numSlides - 1 <= 1;
-    };
+      dynamicRemove.disabled = numSlides - 1 <= 1
+    }
 
-    dynamicAdd.addEventListener('click', addSlide);
-    dynamicRemove.addEventListener('click', removeSlide);
-  })();
+    dynamicAdd.addEventListener('click', addSlide)
+    dynamicRemove.addEventListener('click', removeSlide)
+  })()
 </script>
 ```
 
@@ -406,7 +407,12 @@ Setting the `orientation` attribute to `vertical` will render the carousel in a 
 Use the `--aspect-ratio` custom property to customize the size of the carousel's viewport from the default value of 16/9.
 
 ```html
-<wa-carousel class="aspect-ratio" navigation pagination style="--aspect-ratio: 3/2;">
+<wa-carousel
+  class="aspect-ratio"
+  navigation
+  pagination
+  style="--aspect-ratio: 3/2;"
+>
   <wa-carousel-item>
     <img
       alt="The sun shines on the mountains and trees (by Adam Kool on Unsplash)"
@@ -448,14 +454,14 @@ Use the `--aspect-ratio` custom property to customize the size of the carousel's
 </wa-select>
 
 <script>
-  (() => {
-    const carousel = document.querySelector('wa-carousel.aspect-ratio');
-    const aspectRatio = document.querySelector('wa-select[name="aspect"]');
+  ;(() => {
+    const carousel = document.querySelector('wa-carousel.aspect-ratio')
+    const aspectRatio = document.querySelector('wa-select[name="aspect"]')
 
     aspectRatio.addEventListener('change', () => {
-      carousel.style.setProperty('--aspect-ratio', aspectRatio.value);
-    });
-  })();
+      carousel.style.setProperty('--aspect-ratio', aspectRatio.value)
+    })
+  })()
 </script>
 ```
 
@@ -543,10 +549,26 @@ The carousel has a robust API that makes it possible to extend and customize. Th
       class="image active"
       src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=10"
     />
-    <img alt="Thumbnail by 2" class="image" src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=10" />
-    <img alt="Thumbnail by 3" class="image" src="https://images.unsplash.com/photo-1499002238440-d264edd596ec?q=10" />
-    <img alt="Thumbnail by 4" class="image" src="https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?q=10" />
-    <img alt="Thumbnail by 5" class="image" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=10" />
+    <img
+      alt="Thumbnail by 2"
+      class="image"
+      src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=10"
+    />
+    <img
+      alt="Thumbnail by 3"
+      class="image"
+      src="https://images.unsplash.com/photo-1499002238440-d264edd596ec?q=10"
+    />
+    <img
+      alt="Thumbnail by 4"
+      class="image"
+      src="https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?q=10"
+    />
+    <img
+      alt="Thumbnail by 5"
+      class="image"
+      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=10"
+    />
   </div>
 </div>
 
@@ -592,31 +614,31 @@ The carousel has a robust API that makes it possible to extend and customize. Th
 
 <script>
   {
-    const carousel = document.querySelector('.carousel-thumbnails');
-    const scroller = document.querySelector('.scroller');
-    const thumbnails = document.querySelectorAll('.image');
+    const carousel = document.querySelector('.carousel-thumbnails')
+    const scroller = document.querySelector('.scroller')
+    const thumbnails = document.querySelectorAll('.image')
 
-    scroller.addEventListener('click', e => {
-      const target = e.target;
+    scroller.addEventListener('click', (e) => {
+      const target = e.target
 
       if (target.matches('.image')) {
-        const index = [...thumbnails].indexOf(target);
-        carousel.goToSlide(index);
+        const index = [...thumbnails].indexOf(target)
+        carousel.goToSlide(index)
       }
-    });
+    })
 
-    carousel.addEventListener('wa-slide-change', e => {
-      const slideIndex = e.detail.index;
+    carousel.addEventListener('wa-slide-change', (e) => {
+      const slideIndex = e.detail.index
 
-      [...thumbnails].forEach((thumb, i) => {
-        thumb.classList.toggle('active', i === slideIndex);
+      ;[...thumbnails].forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === slideIndex)
         if (i === slideIndex) {
           thumb.scrollIntoView({
             block: 'nearest',
-          });
+          })
         }
-      });
-    });
+      })
+    })
   }
 </script>
 ```
@@ -630,7 +652,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/carousel/carousel.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/carousel/carousel.js'
 ```
 
 \*\*npm\*\*
@@ -638,7 +660,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/carousel/carouse
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/carousel/carousel.js';
+import '@awesome.me/webawesome/dist/components/carousel/carousel.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -646,7 +668,7 @@ import '@awesome.me/webawesome/dist/components/carousel/carousel.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/carousel/carousel.js';
+import './webawesome/dist/components/carousel/carousel.js'
 ```
 
 \*\*React\*\*
@@ -654,83 +676,83 @@ import './webawesome/dist/components/carousel/carousel.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaCarousel from '@awesome.me/webawesome/dist/react/carousel/index.js';
+import WaCarousel from '@awesome.me/webawesome/dist/react/carousel/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | \`\` The carousel's main content, one or more elements. |
+| Name          | Description                                                                  |
+| ------------- | ---------------------------------------------------------------------------- |
+| (default)     | \`\` The carousel's main content, one or more elements.                      |
 | \`next-icon\` | \`\` Optional previous icon to use instead of the default. Works best with . |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`autoplay\` autoplay | \`boolean\` When set, the slides will scroll automatically when the user is not interacting with them. Type Default false | | |
-| \`autoplayInterval\` autoplay-interval | \`number\` Specifies the amount of time, in milliseconds, between each automatic scroll. Type Default 3000 | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`loop\` loop | \`boolean\` When set, allows the user to navigate the carousel in the same direction indefinitely. Type Default false | | |
-| \`mouseDragging\` mouse-dragging | \`boolean\` When set, it is possible to scroll through the slides by dragging them with the mouse. Type Default false | | |
-| \`navigation\` navigation | \`boolean\` When set, show the carousel's navigation. Type Default false | | |
-| \`orientation\` orientation | \`'horizontal' \\| 'vertical'\` Specifies the orientation in which the carousel will lay out. Type Default 'horizontal' | | |
-| \`pagination\` pagination | \`boolean\` When set, show the carousel's pagination indicators. Type Default false | | |
-| \`slidesPerMove\` slides-per-move | \`slides-per-page\` Specifies the number of slides the carousel will advance when scrolling, useful when specifying a greater than one. It can't be higher than slides-per-page. Type number Default 1 | | |
-| \`slidesPerPage\` slides-per-page | \`number\` Specifies how many slides should be shown at a given time. Type Default 1 | | |
+| Name                                   | Description                                                                                                                                                                                            | Reflects                                                                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`autoplay\` autoplay                  | \`boolean\` When set, the slides will scroll automatically when the user is not interacting with them. Type Default false                                                                              |                                                                                                                                                |     |
+| \`autoplayInterval\` autoplay-interval | \`number\` Specifies the amount of time, in milliseconds, between each automatic scroll. Type Default 3000                                                                                             |                                                                                                                                                |     |
+| \`css\`                                | \`CSSResultGroup \\                                                                                                                                                                                    | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`loop\` loop                          | \`boolean\` When set, allows the user to navigate the carousel in the same direction indefinitely. Type Default false                                                                                  |                                                                                                                                                |     |
+| \`mouseDragging\` mouse-dragging       | \`boolean\` When set, it is possible to scroll through the slides by dragging them with the mouse. Type Default false                                                                                  |                                                                                                                                                |     |
+| \`navigation\` navigation              | \`boolean\` When set, show the carousel's navigation. Type Default false                                                                                                                               |                                                                                                                                                |     |
+| \`orientation\` orientation            | \`'horizontal' \\                                                                                                                                                                                      | 'vertical'\` Specifies the orientation in which the carousel will lay out. Type Default 'horizontal'                                           |     |     |
+| \`pagination\` pagination              | \`boolean\` When set, show the carousel's pagination indicators. Type Default false                                                                                                                    |                                                                                                                                                |     |
+| \`slidesPerMove\` slides-per-move      | \`slides-per-page\` Specifies the number of slides the carousel will advance when scrolling, useful when specifying a greater than one. It can't be higher than slides-per-page. Type number Default 1 |                                                                                                                                                |     |
+| \`slidesPerPage\` slides-per-page      | \`number\` Specifies how many slides should be shown at a given time. Type Default 1                                                                                                                   |                                                                                                                                                |     |
 
 ## Methods
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
+| Name            | Description                                                | Arguments                                   |
+| --------------- | ---------------------------------------------------------- | ------------------------------------------- |
 | \`goToSlide()\` | \`index\` Scrolls the carousel to the slide specified by . | \`index: number, behavior: ScrollBehavior\` |
-| \`next()\` | \`slides-per-move\` Move the carousel forward by slides. | \`behavior: ScrollBehavior\` |
-| \`previous()\` | \`slides-per-move\` Move the carousel backward by slides. | \`behavior: ScrollBehavior\` |
+| \`next()\`      | \`slides-per-move\` Move the carousel forward by slides.   | \`behavior: ScrollBehavior\`                |
+| \`previous()\`  | \`slides-per-move\` Move the carousel backward by slides.  | \`behavior: ScrollBehavior\`                |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
+| Name                | Description                            |
+| ------------------- | -------------------------------------- |
 | \`wa-slide-change\` | Emitted when the active slide changes. |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--aspect-ratio\` | \`16/9\` The aspect ratio of each slide. Default |
-| \`--scroll-hint\` | The amount of padding to apply to the scroll area, allowing adjacent slides to become partially visible as a scroll hint. |
-| \`--slide-gap\` | \`var(--wa-space-m)\` The space between each slide. Default |
+| Name               | Description                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| \`--aspect-ratio\` | \`16/9\` The aspect ratio of each slide. Default                                                                          |
+| \`--scroll-hint\`  | The amount of padding to apply to the scroll area, allowing adjacent slides to become partially visible as a scroll hint. |
+| \`--slide-gap\`    | \`var(--wa-space-m)\` The space between each slide. Default                                                               |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The carousel's internal wrapper. | \`::part(base)\` |
-| \`navigation\` | The navigation wrapper. | \`::part(navigation)\` |
-| \`navigation-button\` | The navigation button. | \`::part(navigation-button)\` |
-| \`navigation-button-next\` | Applied to the next button. | \`::part(navigation-button-next)\` |
-| \`navigation-button-previous\` | Applied to the previous button. | \`::part(navigation-button-previous)\` |
-| \`pagination\` | The pagination indicators wrapper. | \`::part(pagination)\` |
-| \`pagination-item\` | The pagination indicator. | \`::part(pagination-item)\` |
-| \`pagination-item-active\` | Applied when the item is active. | \`::part(pagination-item-active)\` |
-| \`scroll-container\` | The scroll container that wraps the slides. | \`::part(scroll-container)\` |
+| Name                           | Description                                 | CSS selector                           |
+| ------------------------------ | ------------------------------------------- | -------------------------------------- |
+| \`base\`                       | The carousel's internal wrapper.            | \`::part(base)\`                       |
+| \`navigation\`                 | The navigation wrapper.                     | \`::part(navigation)\`                 |
+| \`navigation-button\`          | The navigation button.                      | \`::part(navigation-button)\`          |
+| \`navigation-button-next\`     | Applied to the next button.                 | \`::part(navigation-button-next)\`     |
+| \`navigation-button-previous\` | Applied to the previous button.             | \`::part(navigation-button-previous)\` |
+| \`pagination\`                 | The pagination indicators wrapper.          | \`::part(pagination)\`                 |
+| \`pagination-item\`            | The pagination indicator.                   | \`::part(pagination-item)\`            |
+| \`pagination-item-active\`     | Applied when the item is active.            | \`::part(pagination-item-active)\`     |
+| \`scroll-container\`           | The scroll container that wraps the slides. | \`::part(scroll-container)\`           |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
 
 **Need a hand?** Report a bug Ask for help

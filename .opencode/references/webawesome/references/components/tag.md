@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/tag
 
-
 `<wa-tag>` Stable Since 2.0
 
 Tags label, categorize, or represent selections with a compact visual marker. Use them for status indicators, filters, or removable chips.
@@ -25,34 +24,44 @@ Use the `size` attribute to change a tag's visual appearance. The default appear
 <div class="wa-stack">
   <p>
     <wa-tag variant="brand" appearance="accent">Accent</wa-tag>
-    <wa-tag variant="brand" appearance="filled-outlined">Filled-Outlined</wa-tag>
+    <wa-tag variant="brand" appearance="filled-outlined"
+      >Filled-Outlined</wa-tag
+    >
     <wa-tag variant="brand" appearance="filled">Filled</wa-tag>
     <wa-tag variant="brand" appearance="outlined">Outlined</wa-tag>
   </p>
   <p>
     <wa-tag variant="success" appearance="accent">Accent</wa-tag>
-    <wa-tag variant="success" appearance="filled-outlined">Filled-Outlined</wa-tag>
+    <wa-tag variant="success" appearance="filled-outlined"
+      >Filled-Outlined</wa-tag
+    >
     <wa-tag variant="success" appearance="filled">Filled</wa-tag>
     <wa-tag variant="success" appearance="outlined">Outlined</wa-tag>
   </p>
 
   <p>
     <wa-tag variant="neutral" appearance="accent">Accent</wa-tag>
-    <wa-tag variant="neutral" appearance="filled-outlined">Filled-Outlined</wa-tag>
+    <wa-tag variant="neutral" appearance="filled-outlined"
+      >Filled-Outlined</wa-tag
+    >
     <wa-tag variant="neutral" appearance="filled">Filled</wa-tag>
     <wa-tag variant="neutral" appearance="outlined">Outlined</wa-tag>
   </p>
 
   <p>
     <wa-tag variant="warning" appearance="accent">Accent</wa-tag>
-    <wa-tag variant="warning" appearance="filled-outlined">Filled-Outlined</wa-tag>
+    <wa-tag variant="warning" appearance="filled-outlined"
+      >Filled-Outlined</wa-tag
+    >
     <wa-tag variant="warning" appearance="filled">Filled</wa-tag>
     <wa-tag variant="warning" appearance="outlined">Outlined</wa-tag>
   </p>
 
   <p>
     <wa-tag variant="danger" appearance="accent">Accent</wa-tag>
-    <wa-tag variant="danger" appearance="filled-outlined">Filled-Outlined</wa-tag>
+    <wa-tag variant="danger" appearance="filled-outlined"
+      >Filled-Outlined</wa-tag
+    >
     <wa-tag variant="danger" appearance="filled">Filled</wa-tag>
     <wa-tag variant="danger" appearance="outlined">Outlined</wa-tag>
   </p>
@@ -97,13 +106,13 @@ Use the `with-remove` attribute to add a remove button to the tag.
 </div>
 
 <script>
-  const div = document.querySelector('.tags-removable');
+  const div = document.querySelector('.tags-removable')
 
-  div.addEventListener('wa-remove', event => {
-    const tag = event.target;
-    tag.style.opacity = '0';
-    setTimeout(() => (tag.style.opacity = '1'), 2000);
-  });
+  div.addEventListener('wa-remove', (event) => {
+    const tag = event.target
+    tag.style.opacity = '0'
+    setTimeout(() => (tag.style.opacity = '1'), 2000)
+  })
 </script>
 
 <style>
@@ -122,7 +131,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tag/tag.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tag/tag.js'
 ```
 
 \*\*npm\*\*
@@ -130,7 +139,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/tag/tag.js';
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/tag/tag.js';
+import '@awesome.me/webawesome/dist/components/tag/tag.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -138,7 +147,7 @@ import '@awesome.me/webawesome/dist/components/tag/tag.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/tag/tag.js';
+import './webawesome/dist/components/tag/tag.js'
 ```
 
 \*\*React\*\*
@@ -146,55 +155,55 @@ import './webawesome/dist/components/tag/tag.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaTag from '@awesome.me/webawesome/dist/react/tag/index.js';
+import WaTag from '@awesome.me/webawesome/dist/react/tag/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
+| Name      | Description        |
+| --------- | ------------------ |
 | (default) | The tag's content. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'accent' \\| 'filled' \\| 'outlined' \\| 'filled-outlined'\` The tag's visual appearance. Type Default 'filled-outlined' | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] | | |
-| \`pill\` pill | \`boolean\` Draws a pill-style tag with rounded edges. Type Default false | | |
-| \`size\` size | \`'xs' \\| 's' \\| 'm' \\| 'l' \\| 'xl' \\| 'small' \\| 'medium' \\| 'large'\` The tag's size. Type Default 'm' | | |
-| \`variant\` variant | \`neutral\` The tag's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\| 'neutral' \\| 'success' \\| 'warning' \\| 'danger' Default 'neutral' | | |
-| \`withRemove\` with-remove | \`boolean\` Makes the tag removable and shows a remove button. Type Default false | | |
+| Name                       | Description                                                                                                    | Reflects                                                                                                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------- | -------------------------- | ---------- | ----------- | ------------------------------------------ | --- | --- |
+| \`appearance\` appearance  | \`'accent' \\                                                                                                  | 'filled' \\                                                                                                                                                                   | 'outlined' \\ | 'filled-outlined'\` The tag's visual appearance. Type Default 'filled-outlined' |                            |            |
+| \`css\`                    | \`CSSResultGroup \\                                                                                            | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] |               |                                                                                 |
+| \`pill\` pill              | \`boolean\` Draws a pill-style tag with rounded edges. Type Default false                                      |                                                                                                                                                                               |               |
+| \`size\` size              | \`'xs' \\                                                                                                      | 's' \\                                                                                                                                                                        | 'm' \\        | 'l' \\                                                                          | 'xl' \\                    | 'small' \\ | 'medium' \\ | 'large'\` The tag's size. Type Default 'm' |     |     |
+| \`variant\` variant        | \`neutral\` The tag's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\ | 'neutral' \\                                                                                                                                                                  | 'success' \\  | 'warning' \\                                                                    | 'danger' Default 'neutral' |            |             |
+| \`withRemove\` with-remove | \`boolean\` Makes the tag removable and shows a remove button. Type Default false                              |                                                                                                                                                                               |               |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
+| Name          | Description                                  |
+| ------------- | -------------------------------------------- |
 | \`wa-remove\` | Emitted when the remove button is activated. |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
-| \`content\` | The tag's content. | \`::part(content)\` |
-| \`remove-button\` | \`\` The tag's remove button, a . | \`::part(remove-button)\` |
+| Name                      | Description                                 | CSS selector                      |
+| ------------------------- | ------------------------------------------- | --------------------------------- |
+| \`base\`                  | The component's base wrapper.               | \`::part(base)\`                  |
+| \`content\`               | The tag's content.                          | \`::part(content)\`               |
+| \`remove-button\`         | \`\` The tag's remove button, a .           | \`::part(remove-button)\`         |
 | \`remove-button\_\_base\` | \`base\` The remove button's exported part. | \`::part(remove-button\_\_base)\` |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-button>`](https://webawesome.com/docs/components/button)
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
--   [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
+- [`<wa-button>`](https://webawesome.com/docs/components/button)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-spinner>`](https://webawesome.com/docs/components/spinner)
 
 **Need a hand?** Report a bug Ask for help

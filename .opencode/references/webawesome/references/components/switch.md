@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/switch
 
-
 `<wa-switch>` Stable Since 2.0
 
 Switches toggle a single setting on or off and apply the change immediately, without requiring a form submission.
@@ -62,7 +61,9 @@ Add descriptive hint to a switch with the `hint` attribute. For hints that conta
 Use the available custom properties to change how the switch is styled.
 
 ```html
-<wa-switch style="--width: 80px; --height: 40px; --thumb-size: 36px;">Really big</wa-switch>
+<wa-switch style="--width: 80px; --height: 40px; --thumb-size: 36px;"
+  >Really big</wa-switch
+>
 ```
 
 ## Importing
@@ -74,7 +75,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/switch/switch.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/switch/switch.js'
 ```
 
 \*\*npm\*\*
@@ -82,7 +83,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/switch/switch.js
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/switch/switch.js';
+import '@awesome.me/webawesome/dist/components/switch/switch.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -90,7 +91,7 @@ import '@awesome.me/webawesome/dist/components/switch/switch.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/switch/switch.js';
+import './webawesome/dist/components/switch/switch.js'
 ```
 
 \*\*React\*\*
@@ -98,29 +99,29 @@ import './webawesome/dist/components/switch/switch.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaSwitch from '@awesome.me/webawesome/dist/react/switch/index.js';
+import WaSwitch from '@awesome.me/webawesome/dist/react/switch/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The switch's label. |
-| \`hint\` | \`hint\` Text that describes how to use the switch. Alternatively, you can use the attribute. |
+| Name      | Description                                                                                   |
+| --------- | --------------------------------------------------------------------------------------------- |
+| (default) | The switch's label.                                                                           |
+| \`hint\`  | \`hint\` Text that describes how to use the switch. Alternatively, you can use the attribute. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`checked\` | Draws the checkbox in a checked state. | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[formControlStyles, sizeStyles, styles\] | | |
-| \`defaultChecked\` checked | \`boolean\` The default value of the form control. Primarily used for resetting the form control. Type | | |
-| \`disabled\` disabled | \`boolean\` Disables the switch. Type Default false | | |
-| \`form\` | \`
+| Name                       | Description                                                                                            | Reflects                                                                                                                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`checked\`                | Draws the checkbox in a checked state.                                                                 |                                                                                                                                                                                   |     |
+| \`css\`                    | \`CSSResultGroup \\                                                                                    | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[formControlStyles, sizeStyles, styles\] |     |     |
+| \`defaultChecked\` checked | \`boolean\` The default value of the form control. Primarily used for resetting the form control. Type |                                                                                                                                                                                   |     |
+| \`disabled\` disabled      | \`boolean\` Disables the switch. Type Default false                                                    |                                                                                                                                                                                   |     |
+| \`form\`                   | \`                                                                                                     |
 
 \` By default, form controls are associated with the nearest containing element. This attribute allows you to place the form control outside of a form and associate it with the form that has this id. The form must be in the same document or shadow root for this to work. Type HTMLFormElement \\| null | | |
 | \`hint\` hint | \`hint\` The switch's . If you need to display HTML, use the hint slot instead. Type string Default '' | | |
@@ -136,47 +137,47 @@ Learn more about [attributes and properties](https://webawesome.com/docs/usage/#
 
 Learn more about [methods](https://webawesome.com/docs/usage/#methods).
 
-| Name | Description | Arguments |
-| --- | --- | --- |
-| \`blur()\` | Removes focus from the switch. | |
-| \`click()\` | Simulates a click on the switch. | |
-| \`focus()\` | Sets focus on the switch. | \`options: FocusOptions\` |
-| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\| File \\| FormData \\| null, reason: 'autocomplete' \\| 'restore'\` |
-| \`resetValidity()\` | Reset validity is a way of removing manual custom errors and native validation. | |
-| \`setCustomValidity()\` | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators. | \`message: string\` |
+| Name                           | Description                                                                                                                                                                                                                                                                                                                                       | Arguments                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------- | ----------- | ------------------------------- | ----------- |
+| \`blur()\`                     | Removes focus from the switch.                                                                                                                                                                                                                                                                                                                    |                           |
+| \`click()\`                    | Simulates a click on the switch.                                                                                                                                                                                                                                                                                                                  |                           |
+| \`focus()\`                    | Sets focus on the switch.                                                                                                                                                                                                                                                                                                                         | \`options: FocusOptions\` |
+| \`formStateRestoreCallback()\` | Called when the browser is trying to restore element’s state to state in which case reason is "restore", or when the browser is trying to fulfill autofill on behalf of user in which case reason is "autocomplete". In the case of "restore", state is a string, File, or FormData object previously set as the second argument to setFormValue. | \`state: string \\        | File \\ | FormData \\ | null, reason: 'autocomplete' \\ | 'restore'\` |
+| \`resetValidity()\`            | Reset validity is a way of removing manual custom errors and native validation.                                                                                                                                                                                                                                                                   |                           |
+| \`setCustomValidity()\`        | Do not use this when creating a "Validator". This is intended for end users of components. We track manually defined custom errors so we don't clear them on accident in our validators.                                                                                                                                                          | \`message: string\`       |
 
 ## Events
 
 Learn more about [events](https://webawesome.com/docs/usage/#events).
 
-| Name | Description |
-| --- | --- |
-| \`blur\` | Emitted when the control loses focus. |
-| \`change\` | Emitted when the control's checked state changes. |
-| \`focus\` | Emitted when the control gains focus. |
-| \`input\` | Emitted when the control receives input. |
+| Name           | Description                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| \`blur\`       | Emitted when the control loses focus.                                                             |
+| \`change\`     | Emitted when the control's checked state changes.                                                 |
+| \`focus\`      | Emitted when the control gains focus.                                                             |
+| \`input\`      | Emitted when the control receives input.                                                          |
 | \`wa-invalid\` | Emitted when the form control has been checked for validity and its constraints aren't satisfied. |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--height\` | The height of the switch. |
-| \`--thumb-size\` | The size of the thumb. |
-| \`--width\` | The width of the switch. |
+| Name             | Description               |
+| ---------------- | ------------------------- |
+| \`--height\`     | The height of the switch. |
+| \`--thumb-size\` | The size of the thumb.    |
+| \`--width\`      | The width of the switch.  |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
+| Name        | Description                                 | CSS selector        |
+| ----------- | ------------------------------------------- | ------------------- |
+| \`base\`    | The component's base wrapper.               | \`::part(base)\`    |
 | \`control\` | The control that houses the switch's thumb. | \`::part(control)\` |
-| \`hint\` | The hint's wrapper. | \`::part(hint)\` |
-| \`label\` | The switch's label. | \`::part(label)\` |
-| \`thumb\` | The switch's thumb. | \`::part(thumb)\` |
+| \`hint\`    | The hint's wrapper.                         | \`::part(hint)\`    |
+| \`label\`   | The switch's label.                         | \`::part(label)\`   |
+| \`thumb\`   | The switch's thumb.                         | \`::part(thumb)\`   |
 
 **Need a hand?** Report a bug Ask for help

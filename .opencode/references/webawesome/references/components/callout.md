@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/callout
 
-
 `<wa-callout>` Stable Since 3.0
 
 Callouts display important messages inline with surrounding content. Use them to highlight tips, warnings, errors, or other information users should not miss.
@@ -143,7 +142,9 @@ Use the `size` attribute to change a callout's size.
 Icons are optional. Simply omit the `icon` slot if you don't want them.
 
 ```html
-<wa-callout variant="brand"> Nothing fancy here, just a simple callout. </wa-callout>
+<wa-callout variant="brand">
+  Nothing fancy here, just a simple callout.
+</wa-callout>
 ```
 
 ### Styling
@@ -159,7 +160,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/callout/callout.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/callout/callout.js'
 ```
 
 \*\*npm\*\*
@@ -167,7 +168,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/callout/callout.
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/callout/callout.js';
+import '@awesome.me/webawesome/dist/components/callout/callout.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -175,7 +176,7 @@ import '@awesome.me/webawesome/dist/components/callout/callout.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/callout/callout.js';
+import './webawesome/dist/components/callout/callout.js'
 ```
 
 \*\*React\*\*
@@ -183,36 +184,36 @@ import './webawesome/dist/components/callout/callout.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaCallout from '@awesome.me/webawesome/dist/react/callout/index.js';
+import WaCallout from '@awesome.me/webawesome/dist/react/callout/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
+| Name      | Description                 |
+| --------- | --------------------------- |
 | (default) | The callout's main content. |
-| \`icon\` | \`
+| \`icon\`  | \`                          |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`appearance\` appearance | \`'accent' \\| 'filled' \\| 'outlined' \\| 'plain' \\| 'filled-outlined'\` The callout's visual appearance. Type | | |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] | | |
-| \`size\` size | \`'xs' \\| 's' \\| 'm' \\| 'l' \\| 'xl' \\| 'small' \\| 'medium' \\| 'large'\` The callout's size. Type Default 'm' | | |
-| \`variant\` variant | \`brand\` The callout's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\| 'neutral' \\| 'success' \\| 'warning' \\| 'danger' Default 'brand' | | |
+| Name                      | Description                                                                                                      | Reflects                                                                                                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------ | --------------------------------------------------------- | ---------- | ----------- | ---------------------------------------------- | --- | --- |
+| \`appearance\` appearance | \`'accent' \\                                                                                                    | 'filled' \\                                                                                                                                                                   | 'outlined' \\ | 'plain' \\   | 'filled-outlined'\` The callout's visual appearance. Type |            |             |
+| \`css\`                   | \`CSSResultGroup \\                                                                                              | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default \[styles, variantStyles, sizeStyles\] |               |              |
+| \`size\` size             | \`'xs' \\                                                                                                        | 's' \\                                                                                                                                                                        | 'm' \\        | 'l' \\       | 'xl' \\                                                   | 'small' \\ | 'medium' \\ | 'large'\` The callout's size. Type Default 'm' |     |     |
+| \`variant\` variant       | \`brand\` The callout's theme variant. Defaults to if not within another element with a variant. Type 'brand' \\ | 'neutral' \\                                                                                                                                                                  | 'success' \\  | 'warning' \\ | 'danger' Default 'brand'                                  |            |             |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`icon\` | The container that wraps the optional icon. | \`::part(icon)\` |
+| Name        | Description                                          | CSS selector        |
+| ----------- | ---------------------------------------------------- | ------------------- |
+| \`icon\`    | The container that wraps the optional icon.          | \`::part(icon)\`    |
 | \`message\` | The container that wraps the callout's main content. | \`::part(message)\` |
 
 **Need a hand?** Report a bug Ask for help

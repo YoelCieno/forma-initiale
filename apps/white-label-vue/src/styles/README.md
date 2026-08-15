@@ -18,7 +18,7 @@ All component styles in Vue SFCs follow **BEM** (Block Element Modifier) naming.
 4. **No nested element selectors** — always use explicit BEM class names
 5. **Scoped styles** — always use `<style scoped>` for component isolation
 6. **Global tokens** — use `var(--wa-*)` from `styles/tokens/` for theming values
-7. **Not for fe-* WC wrappers** — fe-* components use WA shadow DOM, no custom CSS (unless adding internal structure)
+7. **Not for fe-\* WC wrappers** — fe-\* components use WA shadow DOM, no custom CSS (unless adding internal structure)
 
 ## Why BEM + Scoped
 

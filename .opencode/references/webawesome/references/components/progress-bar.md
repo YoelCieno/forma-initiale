@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/progress-bar
 
-
 `<wa-progress-bar>` Stable Since 2.0
 
 Progress bars show how far along an ongoing operation is as a horizontal fill. Use them for file uploads, multi-step flows, or any task with measurable progress.
@@ -48,21 +47,25 @@ Use the default slot to show a value.
 </div>
 
 <script>
-  const progressBar = document.querySelector('#progress-bar-demo');
-  const subtractButton = document.querySelector('wa-button:has(wa-icon[name="minus"])');
-  const addButton = document.querySelector('wa-button:has(wa-icon[name="plus"])');
+  const progressBar = document.querySelector('#progress-bar-demo')
+  const subtractButton = document.querySelector(
+    'wa-button:has(wa-icon[name="minus"])',
+  )
+  const addButton = document.querySelector(
+    'wa-button:has(wa-icon[name="plus"])',
+  )
 
   addButton.addEventListener('click', () => {
-    const value = Math.min(100, progressBar.value + 10);
-    progressBar.value = value;
-    progressBar.textContent = `${value}%`;
-  });
+    const value = Math.min(100, progressBar.value + 10)
+    progressBar.value = value
+    progressBar.textContent = `${value}%`
+  })
 
   subtractButton.addEventListener('click', () => {
-    const value = Math.max(0, progressBar.value - 10);
-    progressBar.value = value;
-    progressBar.textContent = `${value}%`;
-  });
+    const value = Math.max(0, progressBar.value - 10)
+    progressBar.value = value
+    progressBar.textContent = `${value}%`
+  })
 </script>
 ```
 
@@ -83,7 +86,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/progress-bar/progress-bar.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/progress-bar/progress-bar.js'
 ```
 
 \*\*npm\*\*
@@ -91,7 +94,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/progress-bar/pro
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/progress-bar/progress-bar.js';
+import '@awesome.me/webawesome/dist/components/progress-bar/progress-bar.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -99,7 +102,7 @@ import '@awesome.me/webawesome/dist/components/progress-bar/progress-bar.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/progress-bar/progress-bar.js';
+import './webawesome/dist/components/progress-bar/progress-bar.js'
 ```
 
 \*\*React\*\*
@@ -107,46 +110,46 @@ import './webawesome/dist/components/progress-bar/progress-bar.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaProgressBar from '@awesome.me/webawesome/dist/react/progress-bar/index.js';
+import WaProgressBar from '@awesome.me/webawesome/dist/react/progress-bar/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
+| Name      | Description                                    |
+| --------- | ---------------------------------------------- |
 | (default) | A label to show inside the progress indicator. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`indeterminate\` indeterminate | \`boolean\` When true, percentage is ignored, the label is hidden, and the progress bar is drawn in an indeterminate state. Type Default false | | |
-| \`label\` label | \`string\` A custom label for assistive devices. Type Default '' | | |
-| \`value\` value | \`number\` The current progress as a percentage, 0 to 100. Type Default 0 | | |
+| Name                            | Description                                                                                                                                    | Reflects                                                                                                                                       |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                         | \`CSSResultGroup \\                                                                                                                            | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`indeterminate\` indeterminate | \`boolean\` When true, percentage is ignored, the label is hidden, and the progress bar is drawn in an indeterminate state. Type Default false |                                                                                                                                                |     |
+| \`label\` label                 | \`string\` A custom label for assistive devices. Type Default ''                                                                               |                                                                                                                                                |     |
+| \`value\` value                 | \`number\` The current progress as a percentage, 0 to 100. Type Default 0                                                                      |                                                                                                                                                |     |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
+| Name                  | Description                                                             |
+| --------------------- | ----------------------------------------------------------------------- |
 | \`--indicator-color\` | \`var(--wa-color-brand-fill-loud)\` The color of the indicator. Default |
-| \`--track-color\` | \`var(--wa-color-neutral-fill-normal)\` The color of the track. Default |
-| \`--track-height\` | \`1rem\` The color of the track. Default |
+| \`--track-color\`     | \`var(--wa-color-neutral-fill-normal)\` The color of the track. Default |
+| \`--track-height\`    | \`1rem\` The color of the track. Default                                |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`base\` | The component's base wrapper. | \`::part(base)\` |
+| Name          | Description                   | CSS selector          |
+| ------------- | ----------------------------- | --------------------- |
+| \`base\`      | The component's base wrapper. | \`::part(base)\`      |
 | \`indicator\` | The progress bar's indicator. | \`::part(indicator)\` |
-| \`label\` | The progress bar's label. | \`::part(label)\` |
+| \`label\`     | The progress bar's label.     | \`::part(label)\`     |
 
 **Need a hand?** Report a bug Ask for help

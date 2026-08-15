@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/option
 
-
 `<wa-option>` Stable Since 2.0
 
 Options represent the individual choices inside a select or similar form control. Each option holds a value and the label shown to the user.
@@ -18,7 +17,7 @@ If you're using the autoloader or a hosted project, components load on demand �
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/option/option.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/option/option.js'
 ```
 
 \*\*npm\*\*
@@ -26,7 +25,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/option/option.js
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/option/option.js';
+import '@awesome.me/webawesome/dist/components/option/option.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -34,7 +33,7 @@ import '@awesome.me/webawesome/dist/components/option/option.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/option/option.js';
+import './webawesome/dist/components/option/option.js'
 ```
 
 \*\*React\*\*
@@ -42,54 +41,54 @@ import './webawesome/dist/components/option/option.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaOption from '@awesome.me/webawesome/dist/react/option/index.js';
+import WaOption from '@awesome.me/webawesome/dist/react/option/index.js'
 ```
 
 ## Slots
 
 Learn more about [using slots](https://webawesome.com/docs/usage/#slots).
 
-| Name | Description |
-| --- | --- |
-| (default) | The option's label. |
-| \`end\` | \`\` An element, such as , placed before the label. |
+| Name      | Description                                         |
+| --------- | --------------------------------------------------- |
+| (default) | The option's label.                                 |
+| \`end\`   | \`\` An element, such as , placed before the label. |
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`defaultLabel\` | \`label\` The default , generated from the element contents. Will be equal to label in most cases. Type string | | |
-| \`defaultSelected\` selected | \`boolean\` Selects an option initially. Type Default false | | |
-| \`disabled\` disabled | \`boolean\` Draws the option in a disabled state, preventing selection. Type Default false | | |
-| \`label\` label | \`string\` The option’s plain text label. Usually automatically generated, but can be useful to provide manually for cases involving complex content. Type | | |
-| \`value\` value | \`string\` The option's value. When selected, the containing form control will receive this value. The value must be unique from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing multiple values. Type Default '' | | |
+| Name                         | Description                                                                                                                                                                                                                                                                     | Reflects                                                                                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                      | \`CSSResultGroup \\                                                                                                                                                                                                                                                             | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`defaultLabel\`             | \`label\` The default , generated from the element contents. Will be equal to label in most cases. Type string                                                                                                                                                                  |                                                                                                                                                |     |
+| \`defaultSelected\` selected | \`boolean\` Selects an option initially. Type Default false                                                                                                                                                                                                                     |                                                                                                                                                |     |
+| \`disabled\` disabled        | \`boolean\` Draws the option in a disabled state, preventing selection. Type Default false                                                                                                                                                                                      |                                                                                                                                                |     |
+| \`label\` label              | \`string\` The option’s plain text label. Usually automatically generated, but can be useful to provide manually for cases involving complex content. Type                                                                                                                      |                                                                                                                                                |     |
+| \`value\` value              | \`string\` The option's value. When selected, the containing form control will receive this value. The value must be unique from other options in the same group. Values may not contain spaces, as spaces are used as delimiters when listing multiple values. Type Default '' |                                                                                                                                                |     |
 
 ## Custom States
 
 Learn more about [custom states](https://webawesome.com/docs/usage/#custom-states).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`current\` | The user has keyed into the option, but hasn't selected it yet (shows a highlight) | \`:state(current)\` |
-| \`disabled\` | Applied when the option is disabled | \`:state(disabled)\` |
-| \`hover\` | \`:hover\` Like but works while dragging in Safari | \`:state(hover)\` |
-| \`selected\` | The option is selected and has aria-selected="true" | \`:state(selected)\` |
+| Name         | Description                                                                        | CSS selector         |
+| ------------ | ---------------------------------------------------------------------------------- | -------------------- |
+| \`current\`  | The user has keyed into the option, but hasn't selected it yet (shows a highlight) | \`:state(current)\`  |
+| \`disabled\` | Applied when the option is disabled                                                | \`:state(disabled)\` |
+| \`hover\`    | \`:hover\` Like but works while dragging in Safari                                 | \`:state(hover)\`    |
+| \`selected\` | The option is selected and has aria-selected="true"                                | \`:state(selected)\` |
 
 ## CSS parts
 
 Learn more about [CSS parts](https://webawesome.com/docs/usage/#css-parts).
 
-| Name | Description | CSS selector |
-| --- | --- | --- |
-| \`checked-icon\` | \`
+| Name             | Description | CSS selector |
+| ---------------- | ----------- | ------------ |
+| \`checked-icon\` | \`          |
 
 ## Dependencies
 
 This component automatically imports the following elements. Sub-dependencies, if any exist, will also be included in this list.
 
--   [`<wa-icon>`](https://webawesome.com/docs/components/icon)
+- [`<wa-icon>`](https://webawesome.com/docs/components/icon)
 
 **Need a hand?** Report a bug Ask for help

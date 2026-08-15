@@ -20,8 +20,8 @@ Next, import the Web Awesome stylesheet, import the components you need, and the
 
 ```jsx
 // main.js or main.ts
-import '@awesome.me/webawesome/dist/styles/webawesome.css';
-import '@awesome.me/webawesome/dist/components/button/button.js';
+import '@awesome.me/webawesome/dist/styles/webawesome.css'
+import '@awesome.me/webawesome/dist/components/button/button.js'
 ```
 
 ## Configuration
@@ -51,18 +51,23 @@ Once you have configured your application for custom elements, you should be abl
   <div class="container">
     <h1>QR code generator</h1>
 
-    <wa-input maxlength="255" clearable label="Value" v-model="qrCode"></wa-input>
+    <wa-input
+      maxlength="255"
+      clearable
+      label="Value"
+      v-model="qrCode"
+    ></wa-input>
 
     <wa-qr-code :value="qrCode"></wa-qr-code>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
-  import '@awesome.me/webawesome/dist/components/qr-code/qr-code.js';
-  import '@awesome.me/webawesome/dist/components/input/input.js';
+  import { ref } from 'vue'
+  import '@awesome.me/webawesome/dist/components/qr-code/qr-code.js'
+  import '@awesome.me/webawesome/dist/components/input/input.js'
 
-  const qrCode = ref();
+  const qrCode = ref()
 </script>
 
 <style>
@@ -99,7 +104,12 @@ Slots in Web Awesome / web components are functionally the same as basic slots i
 Here is an example:
 
 ```html
-<wa-drawer label="Drawer" placement="start" class="drawer-placement-start" :open="drawerIsOpen">
+<wa-drawer
+  label="Drawer"
+  placement="start"
+  class="drawer-placement-start"
+  :open="drawerIsOpen"
+>
   This drawer slides in from the start.
   <div slot="footer">
     <wa-button variant="primary" @click="drawerIsOpen = false">Close</wa-button>

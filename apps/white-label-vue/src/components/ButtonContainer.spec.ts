@@ -31,10 +31,9 @@ describe('ButtonContainer', () => {
       const found = buttons.some(
         (b) => b.attributes('appearance') === appearance,
       )
-      expect(
-        found,
-        `expected fe-button with appearance="${appearance}"`,
-      ).toBe(true)
+      expect(found, `expected fe-button with appearance="${appearance}"`).toBe(
+        true,
+      )
     })
   })
 
@@ -50,7 +49,7 @@ describe('ButtonContainer', () => {
     const wrapper = mount(ButtonContainer)
     const buttons = wrapper.findAll('fe-button')
     expect(buttons.length).toBe(16)
-	})
+  })
 
   it('has block class on root element', () => {
     const wrapper = mount(ButtonContainer)
@@ -75,7 +74,7 @@ describe('ButtonContainer', () => {
     const wrapper = mount(ButtonContainer)
     const subheadings = wrapper.findAll('h3')
     expect(subheadings.length).toBe(4)
-    subheadings.forEach(h3 => {
+    subheadings.forEach((h3) => {
       expect(h3.classes()).toContain('subheading__h3')
     })
   })

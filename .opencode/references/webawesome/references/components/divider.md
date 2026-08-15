@@ -2,7 +2,6 @@
 
 **Full documentation:** https://webawesome.com/docs/components/divider
 
-
 `<wa-divider>` Stable Since 2.0
 
 Dividers visually separate or group adjacent elements with a horizontal or vertical line. Use them to establish rhythm and hierarchy within menus, toolbars, and layouts.
@@ -83,7 +82,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/divider/divider.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/divider/divider.js'
 ```
 
 \*\*npm\*\*
@@ -91,7 +90,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/divider/divider.
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/divider/divider.js';
+import '@awesome.me/webawesome/dist/components/divider/divider.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -99,7 +98,7 @@ import '@awesome.me/webawesome/dist/components/divider/divider.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/divider/divider.js';
+import './webawesome/dist/components/divider/divider.js'
 ```
 
 \*\*React\*\*
@@ -107,26 +106,26 @@ import './webawesome/dist/components/divider/divider.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaDivider from '@awesome.me/webawesome/dist/react/divider/index.js';
+import WaDivider from '@awesome.me/webawesome/dist/react/divider/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles | | |
-| \`orientation\` orientation | \`'horizontal' \\| 'vertical'\` Sets the divider's orientation. Type Default 'horizontal' | | |
+| Name                        | Description         | Reflects                                                                                                                                       |
+| --------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`                     | \`CSSResultGroup \\ | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type Default styles |     |     |
+| \`orientation\` orientation | \`'horizontal' \\   | 'vertical'\` Sets the divider's orientation. Type Default 'horizontal'                                                                         |     |     |
 
 ## CSS custom properties
 
 Learn more about [CSS custom properties](https://webawesome.com/docs/usage/#custom-properties).
 
-| Name | Description |
-| --- | --- |
-| \`--color\` | The color of the divider. |
+| Name          | Description                 |
+| ------------- | --------------------------- |
+| \`--color\`   | The color of the divider.   |
 | \`--spacing\` | The spacing of the divider. |
-| \`--width\` | The width of the divider. |
+| \`--width\`   | The width of the divider.   |
 
 **Need a hand?** Report a bug Ask for help

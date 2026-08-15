@@ -5,7 +5,19 @@
 function createInternalsStub(): ElementInternals {
   const internals = Object.create(ElementInternals.prototype)
   Object.defineProperty(internals, 'validity', {
-    get: () => ({ valid: true, badInput: false, customError: false, patternMismatch: false, rangeOverflow: false, rangeUnderflow: false, stepMismatch: false, tooLong: false, tooShort: false, typeMismatch: false, valueMissing: false }),
+    get: () => ({
+      valid: true,
+      badInput: false,
+      customError: false,
+      patternMismatch: false,
+      rangeOverflow: false,
+      rangeUnderflow: false,
+      stepMismatch: false,
+      tooLong: false,
+      tooShort: false,
+      typeMismatch: false,
+      valueMissing: false,
+    }),
     configurable: true,
   })
   internals.setValidity = () => {}

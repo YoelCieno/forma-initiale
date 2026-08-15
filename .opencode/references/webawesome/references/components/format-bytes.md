@@ -2,23 +2,28 @@
 
 **Full documentation:** https://webawesome.com/docs/components/format-bytes
 
-
 `<wa-format-bytes>` Stable Since 2.0
 
 Formats a number of bytes as a human-readable string with the appropriate unit, such as kB, MB, or GB. Supports both byte and bit units with configurable locale.
 
 ```html
 <div class="format-bytes-overview">
-  The file is <wa-format-bytes value="1000"></wa-format-bytes> in size. <br /><br />
-  <wa-input type="number" value="1000" label="Number to Format" style="max-width: 180px;"></wa-input>
+  The file is <wa-format-bytes value="1000"></wa-format-bytes> in size.
+  <br /><br />
+  <wa-input
+    type="number"
+    value="1000"
+    label="Number to Format"
+    style="max-width: 180px;"
+  ></wa-input>
 </div>
 
 <script>
-  const container = document.querySelector('.format-bytes-overview');
-  const formatter = container.querySelector('wa-format-bytes');
-  const input = container.querySelector('wa-input');
+  const container = document.querySelector('.format-bytes-overview')
+  const formatter = container.querySelector('wa-format-bytes')
+  const input = container.querySelector('wa-input')
 
-  input.addEventListener('input', () => (formatter.value = input.value || 0));
+  input.addEventListener('input', () => (formatter.value = input.value || 0))
 </script>
 ```
 
@@ -66,7 +71,7 @@ If you're using the autoloader or a hosted project, components load on demand â€
 Import this component directly from the CDN:
 
 ```js
-import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-bytes/format-bytes.js';
+import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-bytes/format-bytes.js'
 ```
 
 \*\*npm\*\*
@@ -74,7 +79,7 @@ import 'https://ka-f.webawesome.com/webawesome@3.7.0/components/format-bytes/for
 After installing Web Awesome via npm, import this component:
 
 ```js
-import '@awesome.me/webawesome/dist/components/format-bytes/format-bytes.js';
+import '@awesome.me/webawesome/dist/components/format-bytes/format-bytes.js'
 ```
 
 \*\*Self-Hosted\*\*
@@ -82,7 +87,7 @@ import '@awesome.me/webawesome/dist/components/format-bytes/format-bytes.js';
 If you're self-hosting Web Awesome, import this component from your server:
 
 ```js
-import './webawesome/dist/components/format-bytes/format-bytes.js';
+import './webawesome/dist/components/format-bytes/format-bytes.js'
 ```
 
 \*\*React\*\*
@@ -90,18 +95,18 @@ import './webawesome/dist/components/format-bytes/format-bytes.js';
 To import this component for React 18 or below, use the following code:
 
 ```js
-import WaFormatBytes from '@awesome.me/webawesome/dist/react/format-bytes/index.js';
+import WaFormatBytes from '@awesome.me/webawesome/dist/react/format-bytes/index.js'
 ```
 
 ## Attributes & Properties
 
 Learn more about [attributes and properties](https://webawesome.com/docs/usage/#attributes-and-properties).
 
-| Name | Description | Reflects |
-| --- | --- | --- |
-| \`css\` | \`CSSResultGroup \\| undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type | | |
-| \`display\` display | \`'long' \\| 'short' \\| 'narrow'\` Determines how to display the result, e.g. "100 bytes", "100 b", or "100b". Type Default 'short' | | |
-| \`unit\` unit | \`'byte' \\| 'bit'\` The type of unit to display. Type Default 'byte' | | |
-| \`value\` value | \`number\` The to format in bytes. Type number Default 0 | | |
+| Name                | Description                                              | Reflects                                                                                                                        |
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --- | --- |
+| \`css\`             | \`CSSResultGroup \\                                      | undefined\` One or more CSSResultGroup to include in the component's shadow root. Host styles are automatically prepended. Type |                                                                                                             |     |
+| \`display\` display | \`'long' \\                                              | 'short' \\                                                                                                                      | 'narrow'\` Determines how to display the result, e.g. "100 bytes", "100 b", or "100b". Type Default 'short' |     |     |
+| \`unit\` unit       | \`'byte' \\                                              | 'bit'\` The type of unit to display. Type Default 'byte'                                                                        |                                                                                                             |     |
+| \`value\` value     | \`number\` The to format in bytes. Type number Default 0 |                                                                                                                                 |                                                                                                             |
 
 **Need a hand?** Report a bug Ask for help
