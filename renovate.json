@@ -10,7 +10,7 @@
   ],
   "bun": {
     "enabled": true,
-    "fileMatch": ["^bun\\.lock$"]
+    "managerFilePatterns": ["/^bun\\.lock$/"]
   },
   "gitAuthor": "Yoel Cieno <frmonteira@gmail.com>"
 }
