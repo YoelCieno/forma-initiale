@@ -1,0 +1,13 @@
+/* DS tokens — forma-initiale Angular white-label
+ * Overrides --wa-* custom properties. Cascade provable via --wa-color-brand-fill-normal override.
+ * Mirrors white-label-vue/src/styles/tokens.css
+ */
+
+:where(:root) {
+  color-scheme: light dark;
+  /* Brand — provable override: indigo-600 */
+  --brand-fill-normal: #4f46e5;
+  --wa-color-brand-fill-normal: var(--brand-fill-normal);
+  --wa-color-brand-fill-quiet: #dee2f0;
+  --wa-color-brand-fill-loud: #4338ca;
+}

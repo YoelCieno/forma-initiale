@@ -24,7 +24,11 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"]
+            "styles": [
+              "../../packages/ui/styles/wa-theme-default.css",
+              "src/styles/tokens.css",
+              "src/styles/base.css"
+            ]
           },
           "configurations": {
             "production": {

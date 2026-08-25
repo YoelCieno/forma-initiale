@@ -54,7 +54,7 @@ apps/white-label-vue/
     components/           ← default components
     pages/                ← default pages
     styles/tokens.css     ← default brand tokens
-    styles/wa-theme.ts    ← WA theme import
+    styles/               ← tokens.css + (WA theme imported via @repo/ui/styles/themes/<name>)
 ```
 
 ### Tenant app structure

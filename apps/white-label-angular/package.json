@@ -11,6 +11,9 @@
     "test": "ng test --watch=false"
   },
   "private": true,
+  "exports": {
+    "./styles": "./src/styles/index.ts"
+  },
   "dependencies": {
     "@angular/common": "^22.1.0",
     "@angular/compiler": "^22.1.0",
