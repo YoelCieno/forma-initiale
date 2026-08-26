@@ -87,10 +87,8 @@ Hexagonal + Vue 3 — all 5 layers active:
   "./fe-img": "./components/fe-img/fe-img.ts",
   "./fe-loader": "./components/fe-loader/fe-loader.ts",
   "./fe-rating": "./components/fe-rating/fe-rating.ts",
-  "./styles": "./styles/webawesome.ts",
-  "./styles/themes/default": "./styles/themes/default.ts",
-  "./styles/themes/awesome": "./styles/themes/awesome.ts",
-  "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
+  "./styles/*": "./styles/*",
+  "./styles/themes/*": "./styles/themes/*"
 }
 ```
 
@@ -101,8 +99,8 @@ import '@repo/ui/fe-button'
 import type { FeButtonElement } from '@repo/ui/fe-button'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-async-content'
-import '@repo/ui/styles' // WA base (native+utilities, no theme)
-import '@repo/ui/styles/themes/default' // WA theme
+import '@repo/ui/styles/main.css' // WA native base (no theme)
+import '@repo/ui/styles/themes/default.css' // WA theme
 ```
 
 ## WebAwesome Agent Skill Reference
@@ -143,7 +141,7 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
 
 ## Gotchas & quirks
 
-1. **WA styles split into base + theme** — `@repo/ui/styles` now imports only `native.css` + `utilities.css` (no theme). Apps must **separately** import `@repo/ui/styles/themes/<name>` to get WA component styling. Forgetting the theme import causes unstyled WA components.
+1. **WA styles split into base + theme** — `@repo/ui/styles/main.css` imports only `native.css` (no theme; `utilities.css` dropped — app code follows BEM, uses 0 WA utilities). Apps must **separately** import `@repo/ui/styles/themes/<name>.css` to get WA component styling. Forgetting the theme import causes unstyled WA components.
 2. **strictNullChecks is scoped** — only `apps/white-label-vue` overrides it. New packages/apps likely need the same override.
 3. **Vue type checking** — `tsc` doesn't process `.vue` files. `vue-tsc` would be needed for type checking Vue SFCs; not yet added (Phase 0 uses Vite esbuild transpilation only).
 4. **ESLint hoisting** — bun keeps `@typescript-eslint/*` plugins isolated inside `eslint-config/node_modules`. Root `devDependencies` ensures all packages can resolve them. If adding new ESLint plugins, mirror in root devDeps.

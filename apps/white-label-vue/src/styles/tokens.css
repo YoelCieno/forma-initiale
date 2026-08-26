@@ -1,6 +1,7 @@
-/* Design System tokens — Forma Initiale
+/* Design System tokens — Forma Initiale (app-scoped brand overrides)
  * Overrides specific `--wa-*` CSS custom properties.
- * Each theme file imports this to apply DS overrides on top of WA theme defaults.
+ * Imported per-app AFTER the WA theme file (e.g. `@repo/ui/styles/themes/default`).
+ * Must NOT live in the shared WA-palette theme file — multi-brand safety.
  */
 
 :where(:root) {

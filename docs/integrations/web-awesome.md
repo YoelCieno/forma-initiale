@@ -149,22 +149,20 @@ When a slot with a matching `name` attribute exists in light DOM, hybridJS slott
 
 This is the most error-prone part. Missing one layer = broken visuals.
 
-### Layer 1: WA Base (`@repo/ui/styles`)
+### Layer 1: WA Base (`@repo/ui/styles/main.css`)
 
-```typescript
-// packages/ui/styles/webawesome.ts
-import '@awesome.me/webawesome/dist/styles/native.css'
-import '@awesome.me/webawesome/dist/styles/utilities.css'
+```css
+/* packages/ui/styles/main.css */
+@import '@awesome.me/webawesome/dist/styles/native.css';
 ```
 
-- `native.css` — CSS reset, normalize, box-sizing
-- `utilities.css` — layout helpers (visually-hidden, spacing, etc.)
+- `native.css` — CSS reset, normalize, box-sizing (only import in `main.css` — `utilities.css` dropped: app code follows BEM, uses 0 WA utilities)
 - **No component styles** — WA elements appear **unstyled** (wrong layout, invisible backgrounds, no colors) if you stop here
 
-### Layer 2: WA Theme (`@repo/ui/styles/themes/<name>`)
+### Layer 2: WA Theme (`@repo/ui/styles/themes/<name>.css`)
 
 ```typescript
-// packages/ui/styles/themes/default.ts
+// packages/ui/styles/themes/default.css
 import '@awesome.me/webawesome/dist/styles/themes/default.css'
 ```
 
@@ -172,9 +170,9 @@ Three theme choices (each a separate CSS import):
 
 | Theme      | File                        | Target app                  |
 | ---------- | --------------------------- | --------------------------- |
-| `default`  | `styles/themes/default.ts`  | `white-label-vue` (current) |
-| `awesome`  | `styles/themes/awesome.ts`  | `white-label-angular` (future)      |
-| `shoelace` | `styles/themes/shoelace.ts` | `web-react` (future)        |
+| `default`  | `styles/themes/default.css`  | `white-label-vue` (current) |
+| `awesome`  | `styles/themes/awesome.css`  | `white-label-angular` (future)      |
+| `shoelace` | `styles/themes/shoelace.css` | `web-react` (future)        |
 
 Each theme file is a thin barrel re-exporting a WA CSS file. Without this import, WA components have no visual styling.
 
@@ -203,8 +201,8 @@ Order matters — each layer builds on the previous:
 
 ```typescript
 // apps/white-label-vue/src/main.ts
-import '@repo/ui/styles' // Layer 1: native + utilities
-import '@repo/ui/styles/themes/default' // Layer 2: WA component styling
+import '@repo/ui/styles/main.css' // Layer 1: WA native base (no theme)
+import '@repo/ui/styles/themes/default.css' // Layer 2: WA component styling
 import './styles' // Layer 3: tokens + base CSS
 ```
 
@@ -236,10 +234,8 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
     "./fe-img": "./components/fe-img/fe-img.ts",
     "./fe-loader": "./components/fe-loader/fe-loader.ts",
     "./fe-rating": "./components/fe-rating/fe-rating.ts",
-    "./styles": "./styles/webawesome.ts",
-    "./styles/themes/default": "./styles/themes/default.ts",
-    "./styles/themes/awesome": "./styles/themes/awesome.ts",
-    "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
+    "./styles/*": "./styles/*",
+    "./styles/themes/*": "./styles/themes/*"
   }
 }
 ```
@@ -253,10 +249,8 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 | `@repo/ui/fe-img`                 | `./components/fe-img/fe-img.ts`          | `fe-img` CE + `FeImgElement` type                    |
 | `@repo/ui/fe-loader`              | `./components/fe-loader/fe-loader.ts`    | `fe-loader` CE + `FeLoaderElement` type              |
 | `@repo/ui/fe-rating`              | `./components/fe-rating/fe-rating.ts`    | `fe-rating` CE + `FeRatingElement` type              |
-| `@repo/ui/styles`                 | `./styles/webawesome.ts`                 | WA base (native.css + utilities.css)                 |
-| `@repo/ui/styles/themes/default`  | `./styles/themes/default.ts`       | WA default theme                                     |
-| `@repo/ui/styles/themes/awesome`  | `./styles/themes/awesome.ts`       | WA awesome theme                                     |
-| `@repo/ui/styles/themes/shoelace` | `./styles/themes/shoelace.ts`      | WA shoelace theme                                    |
+| `@repo/ui/styles/*`               | `./styles/*`                             | WA base (`main.css` = native.css only) + themes via wildcard |
+| `@repo/ui/styles/themes/*`        | `./styles/themes/*`               | WA themes (`default.css`, `awesome.css`, `shoelace.css`)     |
 
 Dependencies: `@awesome.me/webawesome@3.7.0` and `hybrids@^9`.
 
@@ -400,8 +394,8 @@ When adding a new app that consumes WA:
 3. **Import styles** in `main.ts` (all 3 layers, in order):
 
    ```typescript
-   import '@repo/ui/styles'
-   import '@repo/ui/styles/themes/default'
+   import '@repo/ui/styles/main.css'
+   import '@repo/ui/styles/themes/default.css'
    import './styles/tokens.css'
    ```
 

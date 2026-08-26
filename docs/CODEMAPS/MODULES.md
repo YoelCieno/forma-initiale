@@ -87,10 +87,10 @@ const img = getProductImageUrl(product.id)
 - `components/fe-loader/fe-loader.spec.ts` — Tests
 - `components/fe-rating/fe-rating.ts` — `<fe-rating>` hybridJS wrapper over `<wa-rating>`
 - `components/fe-rating/fe-rating.spec.ts` — Tests (23 tests, 9 props, events)
-- `styles/webawesome.ts` — WA base CSS (native.css + utilities.css, no theme)
-- `styles/themes/default.ts` — WA default theme (for white-label-vue)
-- `styles/themes/awesome.ts` — WA awesome theme (for future white-label-angular)
-- `styles/themes/shoelace.ts` — WA shoelace theme (for future web-react)
+- `styles/main.css` — WA native base (`@import native.css` only — utilities dropped, BEM; no theme)
+- `styles/themes/default.css` — WA default theme (for white-label-vue)
+- `styles/themes/awesome.css` — WA awesome theme (for future white-label-angular)
+- `styles/themes/shoelace.css` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
 - `vitest.setup.ts` — ElementInternals stub for jsdom
 
@@ -103,10 +103,8 @@ const img = getProductImageUrl(product.id)
 - `@repo/ui/fe-img` → `./components/fe-img/fe-img.ts`
 - `@repo/ui/fe-loader` → `./components/fe-loader/fe-loader.ts`
 - `@repo/ui/fe-rating` → `./components/fe-rating/fe-rating.ts`
-- `@repo/ui/styles` → `./styles/webawesome.ts`
-- `@repo/ui/styles/themes/default` → `./styles/themes/default.ts`
-- `@repo/ui/styles/themes/awesome` → `./styles/themes/awesome.ts`
-- `@repo/ui/styles/themes/shoelace` → `./styles/themes/shoelace.ts`
+- `@repo/ui/styles/*` → `./styles/*` (e.g. `@repo/ui/styles/main.css` → WA native base)
+- `@repo/ui/styles/themes/*` → `./styles/themes/*` (e.g. `default.css`, `awesome.css`, `shoelace.css` — WA themes)
 
 **Dependencies**:
 

@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AboutPage: typeof import('./pages/AboutPage.vue')['default']
     ButtonContainer: typeof import('./../../white-label-vue/src/components/ButtonContainer.vue')['default']
     CardContainer: typeof import('./../../white-label-vue/src/components/CardContainer.vue')['default']
     ComponentsPage: typeof import('./../../white-label-vue/src/pages/ComponentsPage.vue')['default']

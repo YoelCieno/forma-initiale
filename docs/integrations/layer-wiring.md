@@ -185,8 +185,8 @@ export const FeButton = define<FeButtonElement>({
 **Styles** split into 2 imports:
 
 ```typescript
-import '@repo/ui/styles' // base: native.css + utilities.css
-import '@repo/ui/styles/themes/default' // theme: WA component styling
+import '@repo/ui/styles/main.css' // base: native.css only (utilities dropped — BEM)
+import '@repo/ui/styles/themes/default.css' // theme: WA component styling
 ```
 
 Package exports from `packages/ui/package.json`:
@@ -200,10 +200,8 @@ Package exports from `packages/ui/package.json`:
   "./fe-img": "./components/fe-img/fe-img.ts",
   "./fe-loader": "./components/fe-loader/fe-loader.ts",
   "./fe-rating": "./components/fe-rating/fe-rating.ts",
-  "./styles": "./styles/webawesome.ts",
-  "./styles/themes/default": "./styles/themes/default.ts",
-  "./styles/themes/awesome": "./styles/themes/awesome.ts",
-  "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
+  "./styles/*": "./styles/*",
+  "./styles/themes/*": "./styles/themes/*"
 }
 ```
 
@@ -295,8 +293,8 @@ export async function createWhiteLabelApp(
 **Entry** (`apps/white-label-vue/src/main.ts`):
 
 ```typescript
-import '@repo/ui/styles'
-import '@repo/ui/styles/themes/default'
+import '@repo/ui/styles/main.css'
+import '@repo/ui/styles/themes/default.css'
 import './styles'
 import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
@@ -382,8 +380,8 @@ export default defineWhiteLabelViteConfig({
 **Tenant entry** (`apps/fake-plants-vue/src/main.ts`):
 
 ```typescript
-import '@repo/ui/styles'
-import '@repo/ui/styles/themes/default'
+import '@repo/ui/styles/main.css'
+import '@repo/ui/styles/themes/default.css'
 import 'white-label-vue/src/styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 import { plantsMap } from '../metadata'

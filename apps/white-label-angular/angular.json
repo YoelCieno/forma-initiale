@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "../../packages/ui/styles/wa-theme-default.css",
+              "../../packages/ui/styles/main.css",
+              "../../packages/ui/styles/themes/default.css",
               "src/styles/tokens.css",
               "src/styles/base.css"
             ]

@@ -146,7 +146,6 @@ describe('useWhiteLabelApp — setupMocks', () => {
     const prevMocks = import.meta.env.VITE_ENABLE_MOCKS
     try {
       import.meta.env.DEV = false
-      // @ts-expect-error VITE_ENABLE_MOCKS is readonly per Vite types
       import.meta.env.VITE_ENABLE_MOCKS = 'true'
 
       const { setupMocks } = useWhiteLabelApp()
@@ -155,7 +154,6 @@ describe('useWhiteLabelApp — setupMocks', () => {
       expect(mockWorkerStart).not.toHaveBeenCalled()
     } finally {
       import.meta.env.DEV = prevDev
-      // @ts-expect-error VITE_ENABLE_MOCKS is readonly per Vite types
       import.meta.env.VITE_ENABLE_MOCKS = prevMocks
     }
   })
@@ -171,7 +169,6 @@ describe('useWhiteLabelApp — setupMocks', () => {
   it('starts worker with { onUnhandledRequest: "bypass" } when DEV and VITE_ENABLE_MOCKS both truthy', async () => {
     const prevMocks = import.meta.env.VITE_ENABLE_MOCKS
     try {
-      // @ts-expect-error VITE_ENABLE_MOCKS is readonly per Vite types
       import.meta.env.VITE_ENABLE_MOCKS = 'true'
 
       const { setupMocks } = useWhiteLabelApp()
@@ -182,7 +179,6 @@ describe('useWhiteLabelApp — setupMocks', () => {
         onUnhandledRequest: 'bypass',
       })
     } finally {
-      // @ts-expect-error VITE_ENABLE_MOCKS is readonly per Vite types
       import.meta.env.VITE_ENABLE_MOCKS = prevMocks
     }
   })
