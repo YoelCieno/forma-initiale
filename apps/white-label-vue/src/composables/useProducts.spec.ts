@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
-import { clearProductsCache } from '../composables/useProducts'
 import { getProducts } from '@repo/infra'
 import { mockProducts } from '../helpers'
+import { useProducts } from './useProducts'
 
 // Mock @repo/infra to control getProducts directly
 vi.mock('@repo/infra', () => ({
@@ -23,7 +23,7 @@ function createTestHarness() {
 describe('useProducts (cached)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    clearProductsCache()
+    useProducts().clearCache()
   })
 
   it('returns expected API shape', async () => {

@@ -1,3 +1,4 @@
+import { computed, inject } from 'vue'
 import type { ProductView, ProductMeta } from '@repo/presenters'
 import { useAsyncState, useMemoize } from '@vueuse/core'
 import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
@@ -49,10 +50,6 @@ export function useProducts() {
     products: state,
     loading: isLoading,
     error,
+    clearCache: () => getCachedProducts.clear(),
   }
-}
-
-// Test helper — clears module-scoped memoize cache between test runs
-export function clearProductsCache() {
-  getCachedProducts.clear()
 }

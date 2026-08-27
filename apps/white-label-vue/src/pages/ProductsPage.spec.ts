@@ -3,14 +3,14 @@ import { mount } from '@vue/test-utils'
 
 import ProductsPage from './ProductsPage.vue'
 
-import { clearProductsCache } from '../composables/useProducts'
 import { mockProducts, mockOkResponse } from '../helpers'
 import { frameworkMap } from '../../metadata'
+import { useProducts } from '../composables/useProducts'
 
 describe('ProductsPage', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    clearProductsCache()
+    useProducts().clearCache()
   })
 
   it('shows loading state while fetching', async () => {
