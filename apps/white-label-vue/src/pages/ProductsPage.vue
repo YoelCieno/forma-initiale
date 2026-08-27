@@ -15,7 +15,7 @@ const { products, loading, error } = useProducts();
       <div class="products-page__grid">
         <ProductCard
           v-for="product in products"
-          :key="product.name"
+          :key="product.id"
           v-bind="product"
         />
       </div>

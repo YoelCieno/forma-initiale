@@ -83,13 +83,13 @@ describe('mainTs', () => {
     const result = mainTs(
       ctx({ metadataMode: 'fixture', camelName: 'test', theme: 'default' }),
     )
-    expect(result).toContain("import '@repo/ui/styles'")
+    expect(result).toContain("import '@repo/ui/styles/main.css'")
     expect(result).toContain("import { testMap } from '../metadata'")
   })
 
   it('does not import metadata when metadataMode is none', () => {
     const result = mainTs(ctx({ metadataMode: 'none', theme: 'default' }))
-    expect(result).toContain("import '@repo/ui/styles'")
+    expect(result).toContain("import '@repo/ui/styles/main.css'")
     expect(result).not.toContain("from '../metadata'")
   })
 })
