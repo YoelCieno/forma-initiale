@@ -8,6 +8,7 @@
 | 4.2 | Scaffold `apps/white-label-angular/` (Angular CLI 22) | [`4.2-scaffold.md`](./4.2-scaffold.md)               | ✅ COMPLETED                       |
 | 4.3 | Angular factory (`createWhiteLabelApp` equivalent)    | [`4.3-factory.md`](./4.3-factory.md)                 | ✅ COMPLETED                       |
 | 4.4 | Angular base components (fe-* compositing, CUSTOM_ELEMENTS_SCHEMA) | [`4.4-base-components.md`](./4.4-base-components.md) | 🔶 IN PROGRESS |
+| 4.4.6 | Shared @repo/utils package (util unification) | [4.4-base-components.md](./4.4-base-components.md) | 🔶 PLANNED |
 | 4.5 | Port pages (Products, Components, AppShell, metaMap)   | [`4.5-pages-port.md`](./4.5-pages-port.md)           | ⏳ PENDING                         |
 | 4.6 | `fake-plants-angular` tenant (manual parity check)     | [`4.6-fake-plants-angular.md`](./4.6-fake-plants-angular.md) | ⏳ PENDING |
 | 4.7 | `@repo/generator` Angular tenant generator             | [`4.7-generator-angular.md`](./4.7-generator-angular.md) | ⏳ PENDING                       |
