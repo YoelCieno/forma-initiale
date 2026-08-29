@@ -92,7 +92,8 @@ const img = getProductImageUrl(product.id)
 - `styles/themes/awesome.css` — WA awesome theme (for future white-label-angular)
 - `styles/themes/shoelace.css` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
-- `vitest.setup.ts` — ElementInternals stub for jsdom
+- `vitest.setup.ts` — ElementInternals stub for jsdom (legacy; `states` is a real `Set`)
+- `apps/white-label-angular/src/test-setup.ts` — `ensureInternalsComplete` FACE shim (canonical; `states` fallback is `{ add, delete, has }` only — see `docs/integrations/form-associated-custom-elements.md`)
 
 **Package Exports**:
 

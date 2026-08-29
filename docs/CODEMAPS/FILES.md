@@ -96,7 +96,7 @@ packages/ui/
 ├── tsconfig.json            # extends base.json, strictNullChecks: true
 ├── css-modules.d.ts         # CSS module type declaration
 ├── vitest.config.ts         # Vitest: jsdom env
-├── vitest.setup.ts          # ElementInternals polyfill for jsdom
+├── vitest.setup.ts          # ElementInternals polyfill for jsdom (legacy; real Set states)
 │
 ├── components/
 │   ├── fe-async-content/

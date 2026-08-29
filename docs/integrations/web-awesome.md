@@ -378,7 +378,8 @@ render: (host) => html`
 | Per-component API docs (props, events, CSS parts, slots) | `.opencode/references/webawesome/references/components/`      |
 | Design tokens (color, typography, spacing, shadows)      | `.opencode/references/webawesome/references/tokens/`          |
 | Theme + palette usage                                    | `.opencode/references/webawesome/references/themes.md`        |
-| Form controls guide                                      | `.opencode/references/webawesome/references/form-controls.md` |
+| Form controls guide                                    | `.opencode/references/webawesome/references/form-controls.md` |
+| FACE browser support + `ensureInternalsComplete` shim  | `docs/integrations/form-associated-custom-elements.md`        |
 | Fix `fe-*` in layer stack                                | `docs/integrations/layer-wiring.md`                           |
 | Architecture principles (POLA for slot names, etc.)      | `docs/ADRS/design-patterns.md`                                |
 | Monorepo commands, gotchas, config                       | `AGENTS.md`                                                   |

@@ -161,6 +161,7 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
     \`
     ```
     Exception: `fe-img` uses `<style>` in template currently. All NEW custom styles MUST use `html.css`.
+13. **FACE / `ElementInternals` shim** — WA form controls are form-associated custom elements; jsdom + old Safari (<17.4) / Firefox (<126) expose incomplete `ElementInternals` (`validity.valid`, `states`, `setFormValue` missing). `apps/white-label-angular/src/test-setup.ts` patches this via `ensureInternalsComplete` (+ a legacy stub at `packages/ui/vitest.setup.ts`). **Caveat:** the `states` fallback is `{ add, delete, has }` only — NOT a real `CustomStateSet` (no `.size`/iteration), so WA `:state()` CSS styling will NOT work under the shim. Test-only, acceptable, but flag it if a component relies on `:state()` in tests. Full browser cutoff table + details: `docs/integrations/form-associated-custom-elements.md`.
 
 ## Agent rules
 
