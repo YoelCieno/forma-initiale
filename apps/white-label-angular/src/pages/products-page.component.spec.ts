@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { ProductsPage } from './products-page.component'
 
@@ -10,6 +11,7 @@ describe('ProductsPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductsPage],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents()
   })
 

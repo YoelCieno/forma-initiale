@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { ProductCard } from './product-card.component'
 
@@ -6,6 +7,7 @@ describe('ProductCard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ProductCard],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents()
   })
 
@@ -18,9 +20,18 @@ describe('ProductCard', () => {
     rate: 4.5,
   }
 
+  const setInputs = (
+    fixture: { componentRef: { setInput: (k: string, v: unknown) => void } },
+    inputs: Record<string, unknown>,
+  ) => {
+    for (const [key, value] of Object.entries(inputs)) {
+      fixture.componentRef.setInput(key, value)
+    }
+  }
+
   it('renders title and description', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, baseInputs)
+    setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.textContent).toContain('Vue')
@@ -29,7 +40,7 @@ describe('ProductCard', () => {
 
   it('renders fe-icon with correct attrs', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, baseInputs)
+    setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
     const icon = el.querySelector('fe-icon')
@@ -40,7 +51,7 @@ describe('ProductCard', () => {
 
   it('renders fe-rating readonly with value', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, baseInputs)
+    setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
     const rating = el.querySelector('fe-rating')
@@ -51,7 +62,7 @@ describe('ProductCard', () => {
 
   it('shows previousPrice when provided', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, { ...baseInputs, previousPrice: '$99' })
+    setInputs(fixture, { ...baseInputs, previousPrice: '$99' })
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.textContent).toContain('$99')
@@ -60,7 +71,7 @@ describe('ProductCard', () => {
 
   it('does NOT show previousPrice when absent', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, baseInputs)
+    setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.querySelector('.product-card__price--previous')).toBeFalsy()
@@ -68,7 +79,7 @@ describe('ProductCard', () => {
 
   it('shows price', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, { ...baseInputs, price: '$29' })
+    setInputs(fixture, { ...baseInputs, price: '$29' })
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.textContent).toContain('$29')
@@ -76,7 +87,7 @@ describe('ProductCard', () => {
 
   it('has product-card class', async () => {
     const fixture = TestBed.createComponent(ProductCard)
-    Object.assign(fixture.componentInstance, baseInputs)
+    setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.querySelector('.product-card, fe-card.product-card')).toBeTruthy()

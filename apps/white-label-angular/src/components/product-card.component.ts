@@ -1,30 +1,37 @@
-import { Input } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  ElementRef,
+  ViewChild,
+  input,
+} from '@angular/core'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-icon'
 import '@repo/ui/fe-rating'
 import type { FeCardElement } from '@repo/ui/fe-card'
-import { ElementRef, ViewChild } from '@angular/core'
-import { feComponent } from '../factories/create-custom-elements'
 
-@feComponent({
+@Component({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   template: `
     <fe-card class="product-card">
       <fe-icon
         slot="media"
-        [attr.name]="image"
-        [attr.family]="imageFamily"
+        [attr.name]="image()"
+        [attr.family]="imageFamily()"
         class="product-card__icon"
       ></fe-icon>
-      <h2 slot="header" class="product-card__title">{{ title }}</h2>
-      <p class="product-card__description">{{ description }}</p>
+      <h2 slot="header" class="product-card__title">{{ title() }}</h2>
+      <p class="product-card__description">{{ description() }}</p>
       <div slot="footer" class="product-card__footer">
-        <fe-rating [attr.value]="rate" readonly class="product-card__rating"></fe-rating>
+        <fe-rating [attr.value]="rate()" readonly class="product-card__rating"></fe-rating>
         <div class="product-card__pricing">
-          @if (previousPrice) {
-            <span class="product-card__price--previous">{{ previousPrice }}</span>
+          @if (previousPrice()) {
+            <span class="product-card__price--previous">{{ previousPrice() }}</span>
           }
-          <strong class="product-card__price">{{ price }}</strong>
+          <strong class="product-card__price">{{ price() }}</strong>
         </div>
       </div>
     </fe-card>
@@ -71,14 +78,14 @@ import { feComponent } from '../factories/create-custom-elements'
   `,
 })
 export class ProductCard {
-  @Input() id = ''
-  @Input() title = ''
-  @Input() description = ''
-  @Input() image = 'code'
-  @Input() imageFamily = 'classic'
-  @Input() price = 'Free'
-  @Input() previousPrice?: string
-  @Input() rate = 0
+  readonly id = input('')
+  readonly title = input('')
+  readonly description = input('')
+  readonly image = input('code')
+  readonly imageFamily = input('classic')
+  readonly price = input('Free')
+  readonly previousPrice = input<string | undefined>(undefined)
+  readonly rate = input(0)
 
   @ViewChild('card') cardRef?: ElementRef<FeCardElement>
 }

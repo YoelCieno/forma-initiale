@@ -1,4 +1,10 @@
-import { InjectionToken, type ApplicationConfig, type Provider, type Type } from '@angular/core'
+import {
+  InjectionToken,
+  provideZonelessChangeDetection,
+  type ApplicationConfig,
+  type Provider,
+  type Type,
+} from '@angular/core'
 import { provideRouter, type Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 import { environment } from '../environments/environment'
@@ -51,7 +57,7 @@ export function useWhiteLabelApp() {
     routes: Routes,
     metaMap?: Record<string, ProductMeta>,
   ): ApplicationConfig => ({
-    providers: [provideRouter(routes), ...injectMetaMap(metaMap)],
+    providers: [provideZonelessChangeDetection(), provideRouter(routes), ...injectMetaMap(metaMap)],
   })
 
   return {
