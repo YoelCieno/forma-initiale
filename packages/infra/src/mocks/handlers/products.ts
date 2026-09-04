@@ -1,47 +1,24 @@
 import { http, HttpResponse } from 'msw'
-import type { Product } from '@repo/domain'
 import {
-  buildProduct,
   buildProductList,
   resetProductCounter,
 } from '../factories/product'
-import { delayDev } from '../helpers'
+import { delayDev, isValidTenant } from '../helpers'
+import type { TenantId } from '../models'
+
+const resolveTenant = (request: Request): TenantId => {
+  const rawHeader = request.headers.get('x-tenant-id')
+  if (rawHeader && isValidTenant(rawHeader)) return rawHeader
+
+  throw new Error(`ERROR: [INFRA] Invalid tenant => ${rawHeader}`)
+}
 
 export const productHandlers = [
-  http.get('*/api/products', async ({ request }) => {
-		await delayDev()
-    const tenantId = request.headers.get('x-tenant-id') || 'wl'
+  http.get('*/api/:tenant/products', async ({ request }) => {
+    await delayDev()
     resetProductCounter()
+    const tenantId = resolveTenant(request)
     const products = buildProductList(tenantId)
     return HttpResponse.json({ data: products, total: products.length })
-  }),
-
-  http.get('*/api/products/:id', async ({ params, request }) => {
-    await delayDev()
-    const tenantId = request.headers.get('x-tenant-id') || 'wl'
-    resetProductCounter()
-    const products = buildProductList(tenantId)
-    const { id } = params
-    const product = products.find((p: Product) => p.id === id)
-
-    if (!product) {
-      return HttpResponse.json({ error: 'Product not found' }, { status: 404 })
-    }
-
-    return HttpResponse.json({ data: product })
-  }),
-
-  http.post('*/api/products', async ({ request }) => {
-    await delayDev()
-    const tenantId = request.headers.get('x-tenant-id') || 'wl'
-    const body = (await request.json()) as Partial<Product>
-    const newProduct = buildProduct(tenantId, {
-      name: body.name,
-      previousPrice: body.previousPrice,
-      price: body.price,
-      rate: body.rate,
-    })
-
-    return HttpResponse.json({ data: newProduct }, { status: 201 })
   }),
 ]

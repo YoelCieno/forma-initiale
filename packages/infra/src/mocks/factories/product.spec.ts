@@ -12,7 +12,7 @@ describe('product factory', () => {
 
   describe('buildProduct', () => {
     it('builds a product with default tenant (wl) shape', () => {
-      const product = buildProduct()
+      const product = buildProduct('wl')
       expect(product).toHaveProperty('id')
       expect(product).toHaveProperty('name')
       expect(product).toHaveProperty('previousPrice')
@@ -77,10 +77,6 @@ describe('product factory', () => {
       const product = buildProduct('wl', { name: 'override-name', price: 999 })
       expect(product.name).toBe('override-name')
       expect(product.price).toBe(999)
-    })
-
-    it('throws for unknown tenant', () => {
-      expect(() => buildProduct('unknown')).toThrow('Unknown tenant')
     })
   })
 

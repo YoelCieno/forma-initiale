@@ -9,7 +9,9 @@ type FetchOptions = { bypass?: boolean }
 
 const getCachedProducts = useMemoize(
   async (metaMap: Record<string, ProductMeta> | undefined) => {
-    const { data } = await getProducts()
+    const baseUrl = import.meta.env.VITE_API_URL
+    const tenantId = import.meta.env.VITE_TENANT_ID
+    const { data } = await getProducts({ baseUrl, tenantId })
     return toProductViewList(data, metaMap)
   },
   { getKey: () => 'products' },

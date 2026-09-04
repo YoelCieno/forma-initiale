@@ -2,6 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, OnInit } from '@angu
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
 import { getProducts } from '@repo/infra'
+import { environment } from '../environments/environment'
 import { toProductViewList, type ProductView } from '@repo/presenters'
 import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { ProductCard } from '../components/product-card.component'
@@ -56,6 +57,7 @@ import { ProductCard } from '../components/product-card.component'
     }
   `,
 })
+
 export class ProductsPage implements OnInit {
   private readonly metaMap = inject(META_MAP_INJECTION_KEY, { optional: true })
 
@@ -65,7 +67,7 @@ export class ProductsPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      const { data } = await getProducts()
+      const { data } = await getProducts({ baseUrl: environment.apiUrl, tenantId: environment.tenantId })
       this.products.set(toProductViewList(data, this.metaMap ?? undefined))
     } catch (e) {
       this.error.set(e instanceof Error ? e.message : 'Failed to load products')

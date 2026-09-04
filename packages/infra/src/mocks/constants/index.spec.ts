@@ -4,7 +4,7 @@ import {
   FAKE_PLANTS_NAMES,
   PRODUCT_TENANT_CONFIGS,
 } from './'
-import type { PriceConfig } from '../models'
+import type { PriceConfig, TenantConfig } from '../models'
 
 describe('mocked-data', () => {
   describe('FRAMEWORK_NAMES', () => {
@@ -45,7 +45,7 @@ describe('mocked-data', () => {
 
   describe('PRODUCT_TENANT_CONFIGS', () => {
     it('exports config for wl tenant', () => {
-      const wl = PRODUCT_TENANT_CONFIGS.wl
+      const wl: TenantConfig = PRODUCT_TENANT_CONFIGS.wl
       expect(wl).toBeDefined()
       expect(wl.names).toEqual(FRAMEWORK_NAMES)
       expect(wl.price).toBeUndefined()
@@ -57,7 +57,7 @@ describe('mocked-data', () => {
     })
 
     it('exports config for fp tenant', () => {
-      const fp = PRODUCT_TENANT_CONFIGS.fp
+      const fp: TenantConfig = PRODUCT_TENANT_CONFIGS.fp
       expect(fp).toBeDefined()
       expect(fp.names).toEqual(FAKE_PLANTS_NAMES)
       expect(fp.price).toEqual({

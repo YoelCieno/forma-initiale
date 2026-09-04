@@ -1,5 +1,8 @@
 import { delay } from 'msw'
-import { DEV_DELAY } from './constants'
+import { DEV_DELAY, PRODUCT_TENANT_CONFIGS } from './constants'
+import type { TenantId } from './models'
+
+const isValidTenant = (value: string): value is TenantId => value in PRODUCT_TENANT_CONFIGS
 
 const mockOkResponse = (data: unknown) => {
   return { ok: true, json: () => Promise.resolve(data) }
@@ -10,4 +13,4 @@ const delayDev = async (): Promise<void> => {
   await delay(DEV_DELAY)
 }
 
-export { mockOkResponse, delayDev }
+export { isValidTenant, mockOkResponse, delayDev }

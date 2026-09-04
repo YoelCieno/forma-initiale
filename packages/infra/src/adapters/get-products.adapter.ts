@@ -1,25 +1,16 @@
-import type { Product } from '@repo/domain'
+import type { GetProductsFn } from '@repo/domain'
 
-export interface GetProductsResponse {
-  data: Product[]
-  total: number
-}
+export type { GetProductsResponse } from '@repo/domain'
 
-const readEnvString = (key: string): string | undefined => {
-  const value = Reflect.get(import.meta.env, key)
-  return typeof value === 'string' ? value : undefined
-}
+const buildProductsUrl = (baseUrl: string, tenantId: string): string => `${baseUrl.replace(/\/$/, '')}/${tenantId}/products`
 
-export async function getProducts(): Promise<GetProductsResponse> {
-  const baseUrl = readEnvString('VITE_API_URL')
-  const tenantId = readEnvString('VITE_TENANT_ID') ?? 'wl'
-
-	const response = await fetch(`${baseUrl}/products`, {
-    headers: { 'x-tenant-id': String(tenantId) },
+export const getProducts: GetProductsFn = async ({ baseUrl, tenantId }) => {
+  const url = buildProductsUrl(baseUrl, tenantId)
+  const response = await fetch(url, {
+    headers: { 'x-tenant-id': tenantId },
   })
   if (!response.ok) {
     throw new Error(`Failed to fetch products: HTTP ${response.status}`)
   }
-
   return response.json()
 }
