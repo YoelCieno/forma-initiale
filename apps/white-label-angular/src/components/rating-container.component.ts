@@ -1,11 +1,11 @@
 import '@repo/ui/fe-rating'
 import '@repo/ui/fe-card'
 import type { FeRatingElement } from '@repo/ui/fe-rating'
-import { ElementRef, ViewChild } from '@angular/core'
-import { feComponent } from '../factories/create-custom-elements'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core'
 
-@feComponent({
+@Component({
   selector: 'app-rating-container',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="rating-container">
       <div>

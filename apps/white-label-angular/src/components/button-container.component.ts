@@ -1,11 +1,11 @@
-import { ElementRef, ViewChild } from '@angular/core'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core'
 import '@repo/ui/fe-button'
 import '@repo/ui/fe-card'
 import type { FeButtonElement } from '@repo/ui/fe-button'
-import { feComponent } from '../factories/create-custom-elements'
 
-@feComponent({
+@Component({
   selector: 'app-button-container',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="button-container">
       <div>

@@ -1,11 +1,12 @@
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-icon'
-import { feComponent } from '../factories/create-custom-elements'
 import { ProductCard } from './product-card.component'
 
-@feComponent({
+@Component({
   selector: 'app-card-container',
   imports: [ProductCard],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="card-container">
       <div>

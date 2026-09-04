@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   CUSTOM_ELEMENTS_SCHEMA,
   Component,
   ElementRef,
@@ -13,7 +12,6 @@ import type { FeCardElement } from '@repo/ui/fe-card'
 
 @Component({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   template: `
     <fe-card class="product-card">

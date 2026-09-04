@@ -1,11 +1,11 @@
 import '@repo/ui/fe-icon'
 import '@repo/ui/fe-card'
 import type { FeIconElement } from '@repo/ui/fe-icon'
-import { ElementRef, ViewChild } from '@angular/core'
-import { feComponent } from '../factories/create-custom-elements'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core'
 
-@feComponent({
+@Component({
   selector: 'app-icon-container',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="icon-container">
       <div>

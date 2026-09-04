@@ -1,15 +1,15 @@
-import { inject, signal, OnInit } from '@angular/core'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, OnInit } from '@angular/core'
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
 import { getProducts } from '@repo/infra'
 import { toProductViewList, type ProductView } from '@repo/presenters'
 import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
-import { feComponent } from '../factories/create-custom-elements'
 import { ProductCard } from '../components/product-card.component'
 
-@feComponent({
+@Component({
   selector: 'app-products-page',
   imports: [ProductCard],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="products-page">
       <h1 class="products-page__title">List of Products</h1>
