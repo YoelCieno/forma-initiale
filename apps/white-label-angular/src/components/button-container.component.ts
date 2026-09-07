@@ -50,8 +50,8 @@ import type { FeButtonElement } from '@repo/ui/fe-button'
         <h3 class="subheading__h3">States</h3>
         <fe-card>
           <div class="button-container__row">
-            <fe-button disabled>Disabled</fe-button>
-            <fe-button loading>Loading</fe-button>
+            <fe-button [disabled]="true">Disabled</fe-button>
+            <fe-button [loading]="true">Loading</fe-button>
           </div>
         </fe-card>
       </div>

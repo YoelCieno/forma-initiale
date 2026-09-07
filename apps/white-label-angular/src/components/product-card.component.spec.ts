@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { ProductCard } from './product-card.component'
+import { ProductView } from '@repo/presenters'
 
 describe('ProductCard', () => {
   beforeEach(async () => {
@@ -11,7 +12,7 @@ describe('ProductCard', () => {
     }).compileComponents()
   })
 
-  const baseInputs = {
+  const baseInputs: Partial<ProductView> = {
     title: 'Vue',
     description: 'Progressive framework',
     image: 'vuejs',
@@ -22,7 +23,7 @@ describe('ProductCard', () => {
 
   const setInputs = (
     fixture: { componentRef: { setInput: (k: string, v: unknown) => void } },
-    inputs: Record<string, unknown>,
+    inputs: Partial<ProductView> ,
   ) => {
     for (const [key, value] of Object.entries(inputs)) {
       fixture.componentRef.setInput(key, value)
@@ -33,7 +34,7 @@ describe('ProductCard', () => {
     const fixture = TestBed.createComponent(ProductCard)
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.textContent).toContain('Vue')
     expect(el.textContent).toContain('Progressive framework')
   })
@@ -43,11 +44,11 @@ describe('ProductCard', () => {
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const icon = el.querySelector('fe-icon') as Element & Record<string, unknown>
+    const icon: Element = el.querySelector('fe-icon')
     expect(icon).toBeTruthy()
     // icon props are bound via [name]/[family] -> check JS properties, fallback to attrs
-    const name = (icon as unknown as Record<string, unknown>)['name'] ?? icon.getAttribute('name')
-    const family = (icon as unknown as Record<string, unknown>)['family'] ?? icon.getAttribute('family')
+    const name = (icon)['name' as keyof Element] ?? icon.getAttribute('name')
+    const family = (icon)['family' as keyof Element] ?? icon.getAttribute('family')
     expect(name).toBe('vuejs')
     expect(family).toBe('brands')
   })
@@ -57,19 +58,19 @@ describe('ProductCard', () => {
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const rating = el.querySelector('fe-rating') as Element & Record<string, unknown>
+    const rating: Element = el.querySelector('fe-rating')
     expect(rating).toBeTruthy()
-    const val = (rating as unknown as Record<string, unknown>)['value']
+    const val = (rating)['value' as keyof Element]
     expect(val).toBe(4.5)
     // Check JS property readonly, not just attribute
-    expect((rating as unknown as Record<string, unknown>)['readonly']).toBe(true)
+    expect((rating)['readonly' as keyof Element]).toBe(true)
   })
 
   it('shows previousPrice when provided', async () => {
     const fixture = TestBed.createComponent(ProductCard)
     setInputs(fixture, { ...baseInputs, previousPrice: '$99' })
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.textContent).toContain('$99')
     expect(el.querySelector('.product-card__price--previous')).toBeTruthy()
   })
@@ -86,7 +87,7 @@ describe('ProductCard', () => {
     const fixture = TestBed.createComponent(ProductCard)
     setInputs(fixture, { ...baseInputs, price: '$29' })
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.textContent).toContain('$29')
   })
 
@@ -94,7 +95,7 @@ describe('ProductCard', () => {
     const fixture = TestBed.createComponent(ProductCard)
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.querySelector('.product-card, fe-card.product-card')).toBeTruthy()
   })
 })

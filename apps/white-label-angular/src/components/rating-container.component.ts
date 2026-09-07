@@ -43,11 +43,11 @@ import { FePropertyShimDirective } from './fe-property-shim.directive'
         <h3 class="subheading__h3">Sizes</h3>
         <fe-card>
           <div class="rating-container__row--inline">
-            <fe-rating size="xs" [value]="3"></fe-rating>
-            <fe-rating size="s" [value]="3"></fe-rating>
-            <fe-rating size="m" [value]="3"></fe-rating>
-            <fe-rating size="l" [value]="3"></fe-rating>
-            <fe-rating size="xl" [value]="3"></fe-rating>
+            <fe-rating [size]="'xs'" [value]="3"></fe-rating>
+            <fe-rating [size]="'s'" [value]="3"></fe-rating>
+            <fe-rating [size]="'m'" [value]="3"></fe-rating>
+            <fe-rating [size]="'l'" [value]="3"></fe-rating>
+            <fe-rating [size]="'xl'" [value]="3"></fe-rating>
           </div>
         </fe-card>
       </div>

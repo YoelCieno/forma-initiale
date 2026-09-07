@@ -12,11 +12,11 @@ describe('ButtonContainer', () => {
   it('renders all variant buttons', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     const buttons: NodeListOf<Element> = el.querySelectorAll('fe-button')
     const variants = ['neutral', 'brand', 'success', 'warning', 'danger']
     variants.forEach((variant) => {
-      const found = Array.from(buttons).some((b) => (b as unknown as Record<string, unknown>)['variant'] === variant)
+      const found = Array.from(buttons).some((b) => (b)['variant' as keyof Element] === variant)
       expect(found, `expected fe-button with variant="${variant}"`).toBe(true)
     })
   })
@@ -24,11 +24,11 @@ describe('ButtonContainer', () => {
   it('renders all size variants', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     const buttons: NodeListOf<Element> = el.querySelectorAll('fe-button')
     const sizes = ['xs', 's', 'm', 'l', 'xl']
     sizes.forEach((size) => {
-      const found = Array.from(buttons).some((b) => (b as unknown as Record<string, unknown>)['size'] === size)
+      const found = Array.from(buttons).some((b) => (b)['size' as keyof Element] === size)
       expect(found, `expected fe-button with size="${size}"`).toBe(true)
     })
   })
@@ -36,28 +36,28 @@ describe('ButtonContainer', () => {
   it('renders 16 fe-button elements', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.querySelectorAll('fe-button').length).toBe(16)
   })
 
   it('renders section fe-card', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.querySelectorAll('fe-card').length).toBe(4)
   })
 
   it('has block class on root element', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     expect(el.querySelector('.button-container')).toBeTruthy()
   })
 
   it('renders section headings', () => {
     const fixture = TestBed.createComponent(ButtonContainer)
     fixture.detectChanges()
-    const el = fixture.nativeElement
+    const el: Element = fixture.nativeElement
     const text = el.textContent ?? ''
     expect(text).toContain('Variants')
     expect(text).toContain('Sizes')

@@ -19,9 +19,9 @@ import { ProductCard } from './product-card.component'
       <div>
         <h3 class="subheading__h3">Appearances</h3>
         <div class="card-container__wrapper">
-          <fe-card appearance="outlined"><p>Outlined (default)</p></fe-card>
-          <fe-card appearance="filled"><p>Filled</p></fe-card>
-          <fe-card appearance="accent"><p>Accent</p></fe-card>
+          <fe-card [appearance]="'outlined'"><p>Outlined (default)</p></fe-card>
+          <fe-card [appearance]="'filled'"><p>Filled</p></fe-card>
+          <fe-card [appearance]="'accent'"><p>Accent</p></fe-card>
         </div>
       </div>
 
@@ -30,15 +30,15 @@ import { ProductCard } from './product-card.component'
         <fe-card>
           <h4 slot="header" class="card__h4">Card Title</h4>
           <p>Main content goes here. This card has a header and footer.</p>
-          <fe-icon slot="footer" name="star"></fe-icon>
+          <fe-icon slot="footer" [name]="'star'"></fe-icon>
         </fe-card>
       </div>
 
       <div>
         <h3 class="subheading__h3">Horizontal</h3>
-        <fe-card orientation="horizontal">
+        <fe-card [orientation]="'horizontal'">
           <p>Horizontal card with side-by-side layout.</p>
-          <fe-icon slot="actions" name="gear"></fe-icon>
+          <fe-icon slot="actions" [name]="'gear'"></fe-icon>
         </fe-card>
       </div>
 

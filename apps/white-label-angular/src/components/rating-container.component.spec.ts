@@ -20,33 +20,33 @@ describe('RatingContainer', () => {
     const fixture = TestBed.createComponent(RatingContainer)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const ratings = el.querySelectorAll('fe-rating')
-    expect(Array.from(ratings as unknown as Element[]).some((r: Element) => (r as unknown as Record<string, unknown>)['value'] === 3)).toBeTruthy()
+    const ratings: Element[] = el.querySelectorAll('fe-rating')
+    expect(Array.from(ratings).some((r) => (r)['value' as keyof Element] === 3)).toBeTruthy()
   })
 
   it('renders readonly rating', () => {
     const fixture = TestBed.createComponent(RatingContainer)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const ratings = el.querySelectorAll('fe-rating')
+    const ratings: Element[] = el.querySelectorAll('fe-rating')
     // Check JS property, not just HTML attribute — directive ensures lowercase readonly prop set
-    expect(Array.from(ratings as unknown as Element[]).some((r: Element) => (r as unknown as Record<string, unknown>)['readonly'] === true)).toBeTruthy()
+    expect(Array.from(ratings).some((r: Element) => (r)['readonly' as keyof Element] === true)).toBeTruthy()
   })
 
   it('renders disabled rating', () => {
     const fixture = TestBed.createComponent(RatingContainer)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const ratings = el.querySelectorAll('fe-rating')
-    expect(Array.from(ratings as unknown as Element[]).some((r: Element) => (r as unknown as Record<string, unknown>)['disabled'] === true)).toBeTruthy()
+    const ratings: Element[] = el.querySelectorAll('fe-rating')
+    expect(Array.from(ratings).some((r: Element) => (r)['disabled' as keyof Element] === true)).toBeTruthy()
   })
 
   it('renders rating with different max', () => {
     const fixture = TestBed.createComponent(RatingContainer)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const ratings = el.querySelectorAll('fe-rating')
-    expect(Array.from(ratings as unknown as Element[]).some((r: Element) => (r as unknown as Record<string, unknown>)['max'] === 3)).toBeTruthy()
+    const ratings: Element[] = el.querySelectorAll('fe-rating')
+    expect(Array.from(ratings).some((r: Element) => (r)['max' as keyof Element] === 3)).toBeTruthy()
   })
 
   it('renders half-star precision', () => {
@@ -54,8 +54,8 @@ describe('RatingContainer', () => {
     fixture.detectChanges()
     const el = fixture.nativeElement
     expect(el.textContent).toContain('Half-Star Precision')
-    const ratings = el.querySelectorAll('fe-rating')
-    expect(Array.from(ratings as unknown as Element[]).some((r: Element) => (r as unknown as Record<string, unknown>)['precision'] === 0.5)).toBeTruthy()
+    const ratings: Element[] = el.querySelectorAll('fe-rating')
+    expect(Array.from(ratings).some((r: Element) => (r)['precision' as keyof Element] === 0.5)).toBeTruthy()
   })
 
   it('renders all 5 sizes', () => {
@@ -63,8 +63,10 @@ describe('RatingContainer', () => {
     fixture.detectChanges()
     const el = fixture.nativeElement
     const sizes = ['xs', 's', 'm', 'l', 'xl']
+    const ratings: Element[] = Array.from(el.querySelectorAll('fe-rating') as NodeListOf<Element>)
+    const getProp = (r: Element, key: string) => (r)[key as keyof Element]
     sizes.forEach((size) => {
-      expect(el.querySelector(`fe-rating[size="${size}"]`), `size ${size}`).toBeTruthy()
+      expect(ratings.some((r) => getProp(r, 'size') === size), `size ${size}`).toBeTruthy()
     })
   })
 

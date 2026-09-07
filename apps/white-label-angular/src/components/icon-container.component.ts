@@ -12,11 +12,11 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angul
         <h3 class="subheading__h3">Basic Icons</h3>
         <fe-card>
           <div class="icon-container__row">
-            <fe-icon name="check"></fe-icon>
-            <fe-icon name="star"></fe-icon>
-            <fe-icon name="heart"></fe-icon>
-            <fe-icon name="rocket"></fe-icon>
-            <fe-icon name="gear"></fe-icon>
+            <fe-icon [name]="'check'"></fe-icon>
+            <fe-icon [name]="'star'"></fe-icon>
+            <fe-icon [name]="'heart'"></fe-icon>
+            <fe-icon [name]="'rocket'"></fe-icon>
+            <fe-icon [name]="'gear'"></fe-icon>
           </div>
         </fe-card>
       </div>
@@ -25,9 +25,9 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angul
         <h3 class="subheading__h3">Animations</h3>
         <fe-card>
           <div class="icon-container__row">
-            <fe-icon name="star" animation="spin"></fe-icon>
-            <fe-icon name="star" animation="pulse"></fe-icon>
-            <fe-icon name="star" animation="bounce"></fe-icon>
+            <fe-icon [name]="'star'" [animation]="'spin'"></fe-icon>
+            <fe-icon [name]="'star'" [animation]="'pulse'"></fe-icon>
+            <fe-icon [name]="'star'" [animation]="'bounce'"></fe-icon>
           </div>
         </fe-card>
       </div>
@@ -36,11 +36,11 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angul
         <h3 class="subheading__h3">Sizes</h3>
         <fe-card>
           <div class="icon-container__row">
-            <fe-icon name="rocket" style="font-size: var(--fs-xs)"></fe-icon>
-            <fe-icon name="rocket" style="font-size: var(--fs-s)"></fe-icon>
-            <fe-icon name="rocket" style="font-size: var(--fs-m)"></fe-icon>
-            <fe-icon name="rocket" style="font-size: var(--fs-l)"></fe-icon>
-            <fe-icon name="rocket" style="font-size: var(--fs-xl)"></fe-icon>
+            <fe-icon [name]="'rocket'" style="font-size: var(--fs-xs)"></fe-icon>
+            <fe-icon [name]="'rocket'" style="font-size: var(--fs-s)"></fe-icon>
+            <fe-icon [name]="'rocket'" style="font-size: var(--fs-m)"></fe-icon>
+            <fe-icon [name]="'rocket'" style="font-size: var(--fs-l)"></fe-icon>
+            <fe-icon [name]="'rocket'" style="font-size: var(--fs-xl)"></fe-icon>
           </div>
         </fe-card>
       </div>
