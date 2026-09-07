@@ -16,7 +16,7 @@ describe('ButtonContainer', () => {
     const buttons: NodeListOf<Element> = el.querySelectorAll('fe-button')
     const variants = ['neutral', 'brand', 'success', 'warning', 'danger']
     variants.forEach((variant) => {
-      const found = Array.from(buttons).some((b) => b.getAttribute('variant') === variant)
+      const found = Array.from(buttons).some((b) => (b as unknown as Record<string, unknown>)['variant'] === variant)
       expect(found, `expected fe-button with variant="${variant}"`).toBe(true)
     })
   })
@@ -28,7 +28,7 @@ describe('ButtonContainer', () => {
     const buttons: NodeListOf<Element> = el.querySelectorAll('fe-button')
     const sizes = ['xs', 's', 'm', 'l', 'xl']
     sizes.forEach((size) => {
-      const found = Array.from(buttons).some((b) => b.getAttribute('size') === size)
+      const found = Array.from(buttons).some((b) => (b as unknown as Record<string, unknown>)['size'] === size)
       expect(found, `expected fe-button with size="${size}"`).toBe(true)
     })
   })

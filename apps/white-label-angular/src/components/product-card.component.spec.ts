@@ -43,10 +43,13 @@ describe('ProductCard', () => {
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const icon = el.querySelector('fe-icon')
+    const icon = el.querySelector('fe-icon') as Element & Record<string, unknown>
     expect(icon).toBeTruthy()
-    expect(icon.getAttribute('name')).toBe('vuejs')
-    expect(icon.getAttribute('family')).toBe('brands')
+    // icon props are bound via [name]/[family] -> check JS properties, fallback to attrs
+    const name = (icon as unknown as Record<string, unknown>)['name'] ?? icon.getAttribute('name')
+    const family = (icon as unknown as Record<string, unknown>)['family'] ?? icon.getAttribute('family')
+    expect(name).toBe('vuejs')
+    expect(family).toBe('brands')
   })
 
   it('renders fe-rating readonly with value', async () => {
@@ -54,10 +57,12 @@ describe('ProductCard', () => {
     setInputs(fixture, baseInputs)
     fixture.detectChanges()
     const el = fixture.nativeElement
-    const rating = el.querySelector('fe-rating')
+    const rating = el.querySelector('fe-rating') as Element & Record<string, unknown>
     expect(rating).toBeTruthy()
-    expect(rating.getAttribute('value')).toBe('4.5')
-    expect(rating.hasAttribute('readonly')).toBe(true)
+    const val = (rating as unknown as Record<string, unknown>)['value']
+    expect(val).toBe(4.5)
+    // Check JS property readonly, not just attribute
+    expect((rating as unknown as Record<string, unknown>)['readonly']).toBe(true)
   })
 
   it('shows previousPrice when provided', async () => {

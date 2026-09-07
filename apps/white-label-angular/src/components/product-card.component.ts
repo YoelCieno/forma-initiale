@@ -8,23 +8,25 @@ import {
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-icon'
 import '@repo/ui/fe-rating'
+import { FePropertyShimDirective } from './fe-property-shim.directive'
 import type { FeCardElement } from '@repo/ui/fe-card'
 
 @Component({
+  imports: [FePropertyShimDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'app-product-card',
   template: `
     <fe-card class="product-card">
       <fe-icon
         slot="media"
-        [attr.name]="image()"
-        [attr.family]="imageFamily()"
+        [name]="image()"
+        [family]="imageFamily()"
         class="product-card__icon"
       ></fe-icon>
       <h2 slot="header" class="product-card__title">{{ title() }}</h2>
       <p class="product-card__description">{{ description() }}</p>
       <div slot="footer" class="product-card__footer">
-        <fe-rating [attr.value]="rate()" readonly class="product-card__rating"></fe-rating>
+        <fe-rating [value]="rate()" [readonly]="true" class="product-card__rating"></fe-rating>
         <div class="product-card__pricing">
           @if (previousPrice()) {
             <span class="product-card__price--previous">{{ previousPrice() }}</span>

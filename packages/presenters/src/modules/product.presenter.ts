@@ -11,8 +11,9 @@ export function toProductView(
     description: '',
     image: 'code',
     imageFamily: 'classic',
-  }
-  const meta = override ?? fallback
+	}
+
+	const meta = override ?? fallback
 
   return {
 		id: product.id,

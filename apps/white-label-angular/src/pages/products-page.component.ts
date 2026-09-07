@@ -14,8 +14,7 @@ import { ProductCard } from '../components/product-card.component'
   template: `
     <div class="products-page">
       <h1 class="products-page__title">List of Products</h1>
-
-      <fe-async-content [attr.loading]="loading() ? '' : null" [attr.error]="error() ?? null">
+      <fe-async-content [loading]="loading()" [error]="error()">
         <fe-loader slot="loading"></fe-loader>
         <p slot="error" class="products-page__error">{{ error() }}</p>
         <div class="products-page__grid">
