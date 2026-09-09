@@ -5,6 +5,7 @@ import {
   type Provider,
   type Type,
 } from '@angular/core'
+import { provideHttpClient } from '@angular/common/http'
 import { provideRouter, type Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 import { environment } from '../environments/environment'
@@ -57,7 +58,7 @@ export function useWhiteLabelApp() {
     routes: Routes,
     metaMap?: Record<string, ProductMeta>,
   ): ApplicationConfig => ({
-    providers: [provideZonelessChangeDetection(), provideRouter(routes), ...injectMetaMap(metaMap)],
+    providers: [provideZonelessChangeDetection(), provideRouter(routes), provideHttpClient(), ...injectMetaMap(metaMap)],
   })
 
   return {

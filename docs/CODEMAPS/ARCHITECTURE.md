@@ -7,10 +7,10 @@
 ```
 ┌───────────────────────────────────────────────────────────────────────┐
 │                          Apps (framework)                         		│
-│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐		│
-│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │		│
-│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │		│
-│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘		│
+│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐ │
+│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │  │white-label-angular │ │
+│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │  │  (Angular 22)      │ │
+│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘  └─────────┬──────────┘ │
 │          │                   │                                    		│
 ├──────────┼───────────────────┼────────────────────────────────────────┤
 │          │    packages (framework-agnostic)                           │
@@ -47,11 +47,18 @@ Domain (pure TS)  →  Presenters (view models)  →  Infra (adapters)  →  UI 
                                                           			          │
                                                           			          │
                      ┌────────────────────┐               			          │
-                     │  fake-plants-vue   │ ◄─────────────────────────────┘
-                     │  ├─ App.vue        │
-                     │  ├─ ProductsPage   │
-                     │  └─ AboutPage      │
-                     └────────────────────┘
+                      │  fake-plants-vue   │ ◄─────────────────────────────┘
+                      │  ├─ App.vue        │
+                      │  ├─ ProductsPage   │
+                      │  └─ AboutPage      │
+                      └────────────────────┘
+                      ┌────────────────────┐
+                      │  white-label-angular│◄─────────────────────────────┘
+                      │  ├─ ProductsPage   │
+                       │  ├─ ProductsService │
+                      │  │  (resource())   │
+                      │  └─ ComponentsPage │
+                      └────────────────────┘
                      ┌────────────────────┐
                      │  docs              │
                      │  ├─ Architecture   │
@@ -85,6 +92,31 @@ Vue Reactive State (ref<ProductView[]>)
     │
     ▼
 Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
+```
+
+### Angular Data Flow
+
+```
+Angular Component (ProductsPage)
+    │  uses fe-async-content for loading/error/content
+    ▼
+Service (ProductsService)
+    │  resource() calls getProducts → pipe through presenter
+    │  Singleton cache across components, reload() for mutations
+    ▼
+Infra Adapter (getProducts.adapter.ts)  ── fetch() ──► MSW (dev/test) or External API (prod)
+    │
+    ▼
+Domain Model (Product interface)
+    │
+    ▼
+Presenter (product.presenter.ts)
+    │  Product → ProductView
+    ▼
+Angular Signal State (resource.value signal)
+    │
+    ▼
+Template renders (fe-async-content → app-product-card × N)
 ```
 
 ## Dependency Graph
@@ -129,6 +161,7 @@ Template renders (fe-async-content → fe-card × N with fe-icon, fe-rating)
 | Ports/Adapters        | Domain → Infra                                           | Pure domain, swappable infra                                                                                                                                                                |
 | Custom elements       | `<fe-*>` wrapper → `<wa-*>`                              | Single definition in @repo/ui                                                                                                                                                               |
 | State mgmt            | Composables + ref/reactive + @vueuse/core                | Vue native + useAsyncState for async                                                                                                                                                        |
+| State mgmt (Angular)  | Injectable service + resource() signal                     | Angular 22 signals-native, singleton cache, reload() for mutations |
 | Presenter             | Pure TS transform layer (domain model → view model)      | Decouples API shape from template, enriches with UI metadata                                                                                                                                |
 | Routing               | vue-router (hash mode)                                   | SPA hash-based routing                                                                                                                                                                      |
 | Type checking         | tsc (noEmit)                                             | Type-check only, Vite for bundling                                                                                                                                                          |

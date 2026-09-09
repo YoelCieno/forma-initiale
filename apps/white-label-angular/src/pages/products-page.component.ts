@@ -1,11 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, signal, OnInit } from '@angular/core'
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core'
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
-import { getProducts } from '@repo/infra'
-import { environment } from '../environments/environment'
-import { toProductViewList, type ProductView } from '@repo/presenters'
-import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { ProductCard } from '../components/product-card.component'
+import { ProductsService } from '../services/products.service'
 
 @Component({
   selector: 'app-products-page',
@@ -56,22 +53,10 @@ import { ProductCard } from '../components/product-card.component'
     }
   `,
 })
+export class ProductsPage {
+  private readonly catalog = inject(ProductsService)
 
-export class ProductsPage implements OnInit {
-  private readonly metaMap = inject(META_MAP_INJECTION_KEY, { optional: true })
-
-  readonly products = signal<ProductView[]>([])
-  readonly loading = signal(true)
-  readonly error = signal<string | undefined>(undefined)
-
-  async ngOnInit(): Promise<void> {
-    try {
-      const { data } = await getProducts({ baseUrl: environment.apiUrl, tenantId: environment.tenantId })
-      this.products.set(toProductViewList(data, this.metaMap ?? undefined))
-    } catch (e) {
-      this.error.set(e instanceof Error ? e.message : 'Failed to load products')
-    } finally {
-      this.loading.set(false)
-    }
-  }
+  readonly products = this.catalog.items
+  readonly loading = this.catalog.loading
+  readonly error = this.catalog.error
 }

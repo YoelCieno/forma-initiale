@@ -1,15 +1,8 @@
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  Component,
-  ElementRef,
-  ViewChild,
-  input,
-} from '@angular/core'
+import { CUSTOM_ELEMENTS_SCHEMA, Component, input } from '@angular/core'
 import '@repo/ui/fe-card'
 import '@repo/ui/fe-icon'
 import '@repo/ui/fe-rating'
 import { FePropertyShimDirective } from './fe-property-shim.directive'
-import type { FeCardElement } from '@repo/ui/fe-card'
 
 @Component({
   imports: [FePropertyShimDirective],
@@ -78,14 +71,12 @@ import type { FeCardElement } from '@repo/ui/fe-card'
   `,
 })
 export class ProductCard {
-  readonly id = input('')
+  readonly id = input.required<string>()
+  readonly price = input.required<string>()
   readonly title = input('')
   readonly description = input('')
-  readonly image = input('code')
-  readonly imageFamily = input('classic')
-  readonly price = input('Free')
+  readonly image = input('')
+  readonly imageFamily = input('')
   readonly previousPrice = input<string | undefined>(undefined)
   readonly rate = input(0)
-
-  @ViewChild('card') cardRef?: ElementRef<FeCardElement>
 }

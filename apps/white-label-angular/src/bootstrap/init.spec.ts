@@ -153,7 +153,7 @@ describe('useWhiteLabelApp — buildAppConfig', () => {
     ]
 
     const config = buildAppConfig(merged)
-    expect(config.providers).toHaveLength(2)
+    expect(config.providers).toHaveLength(3)
 
     TestBed.configureTestingModule({ providers: config.providers })
     const router = TestBed.inject(Router)
@@ -172,7 +172,7 @@ describe('useWhiteLabelApp — buildAppConfig', () => {
     }
 
     const config = buildAppConfig([], meta)
-    expect(config.providers).toHaveLength(3)
+    expect(config.providers).toHaveLength(4)
 
     TestBed.configureTestingModule({ providers: config.providers })
     expect(TestBed.inject(META_MAP_INJECTION_KEY)).toEqual(meta)
