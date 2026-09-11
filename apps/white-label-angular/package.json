@@ -25,6 +25,7 @@
     "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
+    "@repo/utils": "*",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

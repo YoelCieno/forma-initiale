@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-import { onExit } from './error-utils'
+import { onExit } from './error'
 
 beforeEach(() => {
   vi.spyOn(process, 'exit').mockImplementation((() => {}) as never)

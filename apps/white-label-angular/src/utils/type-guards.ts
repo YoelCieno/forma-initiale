@@ -1,5 +1,6 @@
-export const isFunction = (value: unknown): value is (...args: unknown[]) => unknown =>
-  typeof value === 'function'
+export { isFunction } from '@repo/utils/type-guards'
+import { object } from '@repo/utils/object'
 
-export const isObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null
+const { isObject } = object()
+
+export { isObject }

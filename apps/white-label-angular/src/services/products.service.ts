@@ -1,10 +1,10 @@
-import { computed, Injectable, inject, resource } from '@angular/core'
+import { computed, inject, resource, Service } from '@angular/core'
 import { getProducts } from '@repo/infra'
 import { environment } from '../environments/environment'
 import { toProductViewList, type ProductView } from '@repo/presenters'
 import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProductsService {
   private readonly metaMap = inject(META_MAP_INJECTION_KEY, { optional: true })
 
