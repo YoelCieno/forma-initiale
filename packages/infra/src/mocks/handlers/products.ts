@@ -4,7 +4,7 @@ import {
   resetProductCounter,
 } from '../factories/product'
 import { delayDev, isValidTenant } from '../helpers'
-import type { TenantId } from '../models'
+import type { TenantId } from '@repo/domain'
 
 const resolveTenant = (request: Request): TenantId => {
   const rawHeader = request.headers.get('x-tenant-id')

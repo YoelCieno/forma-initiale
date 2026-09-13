@@ -1,6 +1,5 @@
-import type { Product } from '@repo/domain'
+import type { Product, PriceConfig, TenantConfig, TenantId } from '@repo/domain'
 import { PRODUCT_TENANT_CONFIGS, RATE_VALUE } from '../constants'
-import type { PriceConfig, TenantConfig, TenantId } from '../models'
 
 let counter = 0
 

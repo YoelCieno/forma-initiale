@@ -4,7 +4,7 @@ import {
   FAKE_PLANTS_NAMES,
   PRODUCT_TENANT_CONFIGS,
 } from './'
-import type { PriceConfig, TenantConfig } from '../models'
+import type { PriceConfig, TenantConfig } from '@repo/domain'
 
 describe('mocked-data', () => {
   describe('FRAMEWORK_NAMES', () => {

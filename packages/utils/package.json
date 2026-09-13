@@ -8,7 +8,8 @@
     "./object": "./src/object.ts",
     "./string": "./src/string.ts",
     "./validate": "./src/validate.ts",
-    "./css": "./src/css.ts"
+    "./css": "./src/css.ts",
+    "./error": "./src/error.ts"
   },
   "license": "MIT",
   "scripts": {

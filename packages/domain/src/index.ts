@@ -1,2 +1,5 @@
 export type { Product } from './entities/Product'
 export type { GetProductsFn, GetProductsResponse } from './ports/get-products'
+export type { TenantConfig, TenantId, PriceConfig } from './models/tenant'
+export { isValidTenant } from './helpers/tenant'
+export { theme } from './helpers/theme'

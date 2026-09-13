@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { delayDev } from './helpers'
-import { DEV_DELAY } from './constants'
+import { delayDev } from '.'
+import { DEV_DELAY } from '../constants'
 
 const env: { MODE: 'test' | 'development' | 'production' } = import.meta.env
 
