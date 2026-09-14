@@ -1,7 +1,5 @@
 import type { GetProductsFn } from '@repo/domain'
 
-export type { GetProductsResponse } from '@repo/domain'
-
 const buildProductsUrl = (baseUrl: string, tenantId: string): string => `${baseUrl.replace(/\/$/, '')}/${tenantId}/products`
 
 export const getProducts: GetProductsFn = async ({ baseUrl, tenantId }) => {
