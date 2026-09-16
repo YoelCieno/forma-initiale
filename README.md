@@ -18,11 +18,12 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 
 | App                    | Stack                            | Status              |
 | ---------------------- | -------------------------------- | ------------------- |
-| `apps/white-label-vue` | Vue 3 + Vite 6                   | Active (layer base) |
-| `apps/fake-plants-vue` | Vue 3 tenant app (plants-themed) | Active              |
-| `apps/docs`            | Astro + Starlight                | Active              |
-| `apps/white-label-angular`     | Angular                          | Future              |
-| `apps/web-react`       | React                            | Future              |
+| `apps/white-label-vue`      | Vue 3 + Vite 6                   | Active (layer base) |
+| `apps/fake-plants-vue`      | Vue 3 tenant app (plants-themed) | Active              |
+| `apps/docs`                 | Astro + Starlight                | Active              |
+| `apps/white-label-angular`  | Angular 22 (zoneless, signals)   | Active (layer base) |
+| `apps/fake-plants-angular`  | Angular 22 tenant app            | Pending             |
+| `apps/web-react`            | React                            | Future              |
 
 ## Project structure
 
@@ -37,6 +38,7 @@ forma-initiale/
 │   ├── presenters/       # Presentation layer (domain → view models)
 │   ├── infra/            # Adapters (domain contracts)
 │   ├── ui/               # Framework-agnostic shared components
+│   ├── utils/            # Shared utilities (type-guards, string, object, validate, css, error)
 │   ├── generator/        # Pinion-based tenant code generator
 │   ├── eslint-config/    # Shared ESLint 8 config (CJS)
 │   └── typescript-config/# Shared tsconfigs (base.json, vite.json)

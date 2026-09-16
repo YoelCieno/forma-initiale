@@ -13,18 +13,27 @@
 **Key Files**:
 
 - `index.ts` — Barrel exports
-- `models/Product.ts` — Product domain model
+- `entities/Product.ts` — Product domain model
+- `entities/tenant.ts` — TenantConfig, TenantId, PriceConfig types
+- `helpers/tenant.ts` — isValidTenant type guard
+- `helpers/theme.ts` — theme() factory (getThemeClass, getThemeTokens)
+- `ports/get-products.ts` — GetProductsFn port
 
 **Dependencies**: None (pure TS)
 
 **Exports**:
 
 - `Product` (type) — `{ id: string; name: string; previousPrice: number; price: number; rate: number }`
+- `TenantConfig`, `TenantId`, `PriceConfig` (types) — Tenant configuration
+- `isValidTenant(value, validIds)` — Type guard
+- `theme()` — Factory returning `getThemeClass`, `getThemeTokens`
+- `GetProductsFn`, `GetProductsResponse` (types) — Port contract
 
 **Usage**:
 
 ```typescript
-import type { Product } from '@repo/domain'
+import type { Product, TenantConfig, TenantId } from '@repo/domain'
+import { isValidTenant, theme } from '@repo/domain'
 ```
 
 ---
@@ -89,7 +98,7 @@ const img = getProductImageUrl(product.id)
 - `components/fe-rating/fe-rating.spec.ts` — Tests (23 tests, 9 props, events)
 - `styles/main.css` — WA native base (`@import native.css` only — utilities dropped, BEM; no theme)
 - `styles/themes/default.css` — WA default theme (for white-label-vue)
-- `styles/themes/awesome.css` — WA awesome theme (for future white-label-angular)
+- `styles/themes/awesome.css` — WA awesome theme (for white-label-angular)
 - `styles/themes/shoelace.css` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
 - `vitest.setup.ts` — ElementInternals stub for jsdom (legacy; `states` is a real `Set`)
@@ -405,6 +414,44 @@ const views = toProductViewList(products, metaMap)
 
 ---
 
+## @repo/utils
+
+**Purpose**: Shared utility modules — type guards, string/case transforms, object helpers, validation, CSS utilities, error handling.
+
+**Location**: `packages/utils/src/`
+
+**Key Files**:
+
+- `type-guards.ts` — `isObject()`, `isString()`, `isNumber()`, `isBoolean()` type guards
+- `string.ts` — `toKebabCase()`, `toPascalCase()`, `toCamelCase()` case transforms
+- `object.ts` — `deepMerge()`, `pick()` object utilities
+- `validate.ts` — `validateHex()`, `validateUrl()` validators
+- `css.ts` — CSS utility helpers
+- `error.ts` — `getErrorMessage()` error extraction
+
+**Package Exports**:
+
+- `@repo/utils/type-guards` → `./src/type-guards.ts`
+- `@repo/utils/string` → `./src/string.ts`
+- `@repo/utils/object` → `./src/object.ts`
+- `@repo/utils/validate` → `./src/validate.ts`
+- `@repo/utils/css` → `./src/css.ts`
+- `@repo/utils/error` → `./src/error.ts`
+
+**Dependencies**: None (pure TS)
+
+**Pattern**: Factory-closure for 2+ functions per module, direct export for single functions.
+
+**Usage**:
+
+```typescript
+import { isObject } from '@repo/utils/type-guards'
+import { toKebabCase } from '@repo/utils/string'
+import { getErrorMessage } from '@repo/utils/error'
+```
+
+---
+
 ## @repo/typescript-config
 
 **Purpose**: Shared TypeScript base configurations.
@@ -541,6 +588,38 @@ const views = toProductViewList(products, metaMap)
 | -------- | ------------ | ---------------------------------------------------- |
 | `/`      | ProductsPage | Product grid (inherited from white-label-vue)        |
 | `/about` | AboutPage    | About this store — fe-card with platform description |
+
+---
+
+## white-label-angular
+
+**Purpose**: Angular 22 SPA — layer base for Angular tenant apps. Zoneless, signals, OnPush. Exports factory + shared config.
+
+**Location**: `apps/white-label-angular/`
+
+**Key Files**:
+
+- `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp()`
+- `src/bootstrap/` — Factory layer: `init.ts` (options + merge logic)
+- `src/services/products.service.ts` — Angular resource() signal-based data service
+- `src/components/` — fe-* container components (Button, Card, Icon, Rating, ProductCard)
+- `src/pages/` — ProductsPage, ComponentsPage
+- `src/environments/` — Angular environment config (NG_APP_* workaround)
+- `src/test-setup.ts` — ElementInternals shim for jsdom
+
+**Dependencies**:
+
+- `@repo/domain` — Product, TenantConfig types
+- `@repo/infra` — getProducts adapter
+- `@repo/presenters` — toProductViewList
+- `@repo/ui` — fe-* WCs, WA styles
+- `@angular/core` — Angular 22 (zoneless, signals)
+
+**Usage**:
+
+```typescript
+import { createWhiteLabelApp } from './bootstrap/init'
+```
 
 ---
 

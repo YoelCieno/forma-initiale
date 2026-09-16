@@ -7,7 +7,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 - Root package name: `forma-initiale`
 - Package manager: `bun@1.3.13` (declared in root `package.json`, bun reads lockfile format)
 - Workspaces: `apps/*` `packages/*`
-- Local packages: `@repo/*` scope (domain, presenters, infra, ui, generator, eslint-config, typescript-config)
+- Local packages: `@repo/*` scope (domain, presenters, infra, ui, utils, generator, eslint-config, typescript-config)
 - Build: Turborepo 2.9.14 (`turbo.json`)
 - Mise: `.mise.toml` at root with `bun = "latest"` — run `eval "$(mise activate bash)"` before bun commands if mise not sourcing automatically
 
@@ -40,6 +40,7 @@ packages/
   presenters/ — presentation layer transforming domain models into view models (@repo/presenters)
   infra/      — adapters implementing domain contracts (@repo/infra)
   ui/         — hybridJS WC wrappers, framework-agnostic (@repo/ui)
+  utils/      — shared utilities: type-guards, string, object, validate, css, error (@repo/utils)
   generator/  — Pinion-based tenant code generator (@repo/generator)
   eslint-config/  — CJS ESLint 8 config
   typescript-config/  — base.json + vite.json tsconfigs
@@ -47,15 +48,17 @@ packages/
 
 ## Architecture direction
 
-Hexagonal + Vue 3 — all 5 layers active:
+Hexagonal + Vue 3 + Angular — all 6 layers active:
 
 - `packages/domain/` — pure TS models (no framework deps) — EXISTS
 - `packages/presenters/` — presentation layer (domain → view model transforms) — EXISTS
 - `packages/infra/` — adapters implementing domain contracts — EXISTS
 - `packages/ui/` → framework-agnostic hybridJS WC wrappers — ACTIVE
+- `packages/utils/` → shared utilities (type-guards, string, object, validate, css, error) — ACTIVE
 - `apps/white-label-vue/` → Vue 3 (Vite 6 via Vite+, auto-import, vue-router hash) — ACTIVE (layer base, exports factory + base config)
 - `apps/docs/` → Astro + Starlight — ACTIVE
 - `apps/fake-plants-vue/` → Vue 3 tenant app, extends white-label layer — ACTIVE
+- `apps/white-label-angular/` → Angular 22 (zoneless, signals, OnPush) — ACTIVE (layer base, exports factory + base config)
 
 ## Key config details
 
@@ -162,6 +165,7 @@ When styling with WA design tokens, see `.opencode/references/webawesome/referen
     ```
     Exception: `fe-img` uses `<style>` in template currently. All NEW custom styles MUST use `html.css`.
 13. **FACE / `ElementInternals` shim** — WA form controls are form-associated custom elements; jsdom + old Safari (<17.4) / Firefox (<126) expose incomplete `ElementInternals` (`validity.valid`, `states`, `setFormValue` missing). `apps/white-label-angular/src/test-setup.ts` patches this via `ensureInternalsComplete` (+ a legacy stub at `packages/ui/vitest.setup.ts`). **Caveat:** the `states` fallback is `{ add, delete, has }` only — NOT a real `CustomStateSet` (no `.size`/iteration), so WA `:state()` CSS styling will NOT work under the shim. Test-only, acceptable, but flag it if a component relies on `:state()` in tests. Full browser cutoff table + details: `docs/integrations/form-associated-custom-elements.md`.
+14. **Angular bare attrs broken on fe-*** — Angular `CUSTOM_ELEMENTS_SCHEMA` only calls `setAttribute()`, never property setter. hybrids `define()` reads attributes once in constructor via `getAttribute()`. Angular creates element via `document.createElement()` (constructor runs), THEN sets attributes via `setAttribute()` — too late. All `fe-*` properties in Angular MUST use `[prop]="value"` (property binding). Bare attrs like `readonly`/`tabindex` need `FePropertyShimDirective` (maps prop name to property setter). See `apps/white-label-angular/src/components/fe-property-shim.directive.ts`.
 
 ## Agent rules
 

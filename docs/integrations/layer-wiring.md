@@ -31,10 +31,10 @@ Pure TypeScript types and interfaces. Zero framework dependencies — no Vue, no
 **Export:** `packages/domain/src/index.ts`
 
 ```typescript
-export type { Product } from './models/Product'
+export type { Product } from './entities/Product'
 ```
 
-**Example model:** `packages/domain/src/models/Product.ts`
+**Example model:** `packages/domain/src/entities/Product.ts`
 
 ```typescript
 export interface Product {

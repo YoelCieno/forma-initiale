@@ -19,14 +19,16 @@ forma-initiale/
 ├── turbo.json             # Turborepo pipeline (build, test, lint, dev)
 │
 ├── apps/
-│   ├── white-label-vue/   # Vue 3 SPA — layer base for tenant apps
-│   ├── fake-plants-vue/   # Vue 3 tenant app — plants-themed store
+│   ├── white-label-vue/    # Vue 3 SPA — layer base for tenant apps
+│   ├── white-label-angular/# Angular 22 SPA — layer base for Angular tenants
+│   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
 │   ├── domain/            # Pure TS business models (@repo/domain)
 │   ├── infra/             # Adapters implementing domain contracts (@repo/infra)
 │   ├── ui/                # Framework-agnostic WC wrappers (@repo/ui)
+│   ├── utils/             # Shared utilities (@repo/utils)
 │   ├── generator/         # Pinion-based tenant code generator (@repo/generator)
 │   ├── eslint-config/     # Shared ESLint 8 CJS config
 │   └── typescript-config/ # Shared TS base configs
@@ -49,9 +51,18 @@ packages/domain/
 ├── tsconfig.json            # extends base.json, lib: ES2022
 │
 └── src/
-    ├── index.ts             # Barrel: re-exports Product type
-    └── models/
-        └── Product.ts       # Product interface {id, name, previousPrice, price, rate}
+    ├── index.ts             # Barrel: re-exports Product, TenantConfig, helpers
+    ├── entities/
+    │   ├── Product.ts       # Product interface {id, name, previousPrice, price, rate}
+    │   ├── tenant.ts        # TenantConfig, TenantId, PriceConfig types
+    │   └── tenant.spec.ts   # Tenant entity tests
+    ├── helpers/
+    │   ├── tenant.ts        # isValidTenant type guard
+    │   ├── tenant.spec.ts   # Tenant helper tests
+    │   ├── theme.ts         # theme() factory (getThemeClass, getThemeTokens)
+    │   └── theme.spec.ts    # Theme helper tests
+    └── ports/
+        └── get-products.ts  # GetProductsFn port contract
 ```
 
 ---
@@ -77,7 +88,6 @@ packages/infra/
         ├── helpers.ts            # mockOkResponse, delayDev (DEV_DELAY, gated in test mode)
         ├── data/mocked-data.json # tenant name/config seed data
         ├── constants/index.ts    # tenant configs, name pools, RATE_VALUE, DEV_DELAY
-        ├── models/index.ts       # TenantConfig, PriceConfig types
         ├── factories/product.ts  # tenant-aware deterministic product factories
         └── handlers/
             ├── products.ts              # product MSW handlers
@@ -123,11 +133,120 @@ packages/ui/
 │       └── fe-rating.spec.ts        # CE unit tests (23 tests, 9 props, events)
 │
 └── styles/
-    ├── webawesome.ts        # Imports WA base CSS (native + utilities, no theme)
+    ├── main.css             # WA base CSS (native.css only — no utilities, no theme)
     └── themes/
-        ├── default.ts       # WA default theme (for white-label-vue)
-        ├── awesome.ts       # WA awesome theme (for future white-label-angular)
-        └── shoelace.ts      # WA shoelace theme (for future web-react)
+        ├── default.css      # WA default theme (for white-label-vue)
+        ├── awesome.css      # WA awesome theme (for white-label-angular)
+        └── shoelace.css     # WA shoelace theme (for future web-react)
+```
+
+---
+
+## packages/presenters
+
+The presenter logic moved from `apps/white-label-vue/src/presenters/` to a dedicated package:
+
+```
+packages/presenters/
+├── package.json             # @repo/presenters — depends on @repo/domain
+├── tsconfig.json            # extends base.json
+├── .eslintrc.cjs
+│
+└── src/
+    ├── index.ts             # Barrel: re-exports toProductView, toProductViewList, ProductView
+    ├── product.presenter.ts # ProductView mapping (Product → ProductView with framework metadata)
+    └── product.presenter.spec.ts # Presenter tests
+```
+
+---
+
+## packages/utils
+
+```
+packages/utils/
+├── package.json             # @repo/utils — pure TS, no runtime deps
+├── tsconfig.json            # extends base.json
+├── .eslintrc.cjs            # ESLint config
+│
+└── src/
+    ├── type-guards.ts       # isObject, isString, isNumber, isBoolean
+    ├── type-guards.spec.ts  # Type guard tests
+    ├── string.ts            # toKebabCase, toPascalCase, toCamelCase
+    ├── string.spec.ts       # String transform tests
+    ├── object.ts            # deepMerge, pick
+    ├── object.spec.ts       # Object utility tests
+    ├── validate.ts          # validateHex, validateUrl
+    ├── validate.spec.ts     # Validator tests
+    ├── css.ts               # CSS utility helpers
+    ├── css.spec.ts          # CSS utility tests
+    ├── error.ts             # getErrorMessage
+    └── error.spec.ts        # Error helper tests
+```
+
+---
+
+## packages/eslint-config
+
+```
+packages/eslint-config/
+├── package.json             # @repo/eslint-config
+├── index.js                 # Base config: TS parser, TS plugin, Prettier
+└── vue.js                   # Vue 3 extension: + vue/recommended
+```
+
+---
+
+## packages/typescript-config
+
+```
+packages/typescript-config/
+├── package.json             # @repo/typescript-config
+├── base.json                # Base: strict, ESNext, Bundler
+└── vite.json                # Vite: extends base, noEmit, DOM lib
+```
+
+---
+
+## packages/generator
+
+```
+packages/generator/
+├── package.json             # @repo/generator — pinion, inquirer deps
+├── tsconfig.json            # extends base.json
+├── vitest.config.ts         # Vitest config
+├── .eslintrc.cjs            # ESLint config
+│
+└── src/
+    ├── index.ts             # Barrel: exports generate, validateHex, getThemeClass, types
+    │
+    ├── generators/
+    │   ├── vue-tenant.tpl.ts      # Pinion generator: renderSetup, renderSourceFiles,
+    │   │                           # renderConditionalAssets, renderTestInfra, mswRegistration
+    │   └── vue-tenant.tpl.spec.ts # Orchestration tests
+    │
+    ├── helpers/
+    │   ├── cases.ts              # Kebab/Pascal/Camel case transforms + prefix derivation
+    │   ├── cases.spec.ts         # Case transform tests
+    │   ├── palette.ts            # Hex validation + theme class helper
+    │   └── palette.spec.ts       # Palette tests
+    │
+    ├── models/
+    │   └── index.ts              # VueTenantContext + Theme type definitions
+    │
+    ├── msw/
+    │   ├── add-tenant.ts             # addTenantConfig() — validates + appends MSW tenant entry
+    │   ├── add-tenant.spec.ts        # MSW config tests
+    │   ├── file-io.ts                # readMockedData, writeMockedData, copyMswWorker utilities
+    │   ├── file-io.spec.ts           # File I/O tests
+    │   └── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
+    │
+    ├── prompts/
+    │   ├── index.ts              # Interactive prompts (name, description, theme, metadata, MSW)
+    │   └── index.spec.ts         # Prompt shape tests
+    │
+    └── templates/
+        ├── index.ts              # All output templates (package.json, vite.config, main.ts, etc.)
+        └── index.spec.ts         # Template rendering tests
 ```
 
 ---
@@ -183,7 +302,9 @@ apps/white-label-vue/
         └── ComponentsPage.vue    # Component showcase hub (button, icon, rating, card)
 ```
 
-### apps/fake-plants-vue
+---
+
+## apps/fake-plants-vue
 
 Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory from white-label-vue (workspace dep, no `@repo` scope).
 
@@ -223,20 +344,52 @@ apps/fake-plants-vue/
         └── base.css         # Base element styles
 ```
 
-### Presenters — Extracted to `packages/presenters`
+---
 
-The presenter logic moved from `apps/white-label-vue/src/presenters/` to a dedicated package:
+## apps/white-label-angular
 
 ```
-packages/presenters/
-├── package.json             # @repo/presenters — depends on @repo/domain
-├── tsconfig.json            # extends base.json
-├── .eslintrc.cjs
+apps/white-label-angular/
+├── package.json             # white-label-angular — Angular 22, zoneless
+├── tsconfig.json            # Angular TS config
+├── angular.json             # Angular CLI workspace config (serve.options.prebundle: false)
+├── index.html               # SPA entry HTML
 │
 └── src/
-    ├── index.ts             # Barrel: re-exports toProductView, toProductViewList, ProductView
-    ├── product.presenter.ts # ProductView mapping (Product → ProductView with framework metadata)
-    └── product.presenter.spec.ts # Presenter tests
+    ├── main.ts              # Entry: imports WA styles, bootstrap
+    ├── index.html           # HTML shell
+    ├── app/                 # Root app component
+    ├── bootstrap/
+    │   ├── init.ts          # Factory: createWhiteLabelApp() + merge logic
+    │   └── init.spec.ts     # Factory tests
+    ├── components/
+    │   ├── button-container.component.ts      # Button demos (fe-button)
+    │   ├── button-container.component.spec.ts # Tests
+    │   ├── card-container.component.ts        # Card demos (fe-card)
+    │   ├── card-container.component.spec.ts   # Tests
+    │   ├── icon-container.component.ts        # Icon demos (fe-icon)
+    │   ├── icon-container.component.spec.ts   # Tests
+    │   ├── rating-container.component.ts      # Rating demos (fe-rating)
+    │   ├── rating-container.component.spec.ts # Tests
+    │   ├── product-card.component.ts          # Product card (fe-card + fe-icon + fe-rating)
+    │   ├── product-card.component.spec.ts     # Tests
+    │   └── fe-property-shim.directive.spec.ts # Property shim directive tests
+    ├── environments/
+    │   ├── environment.ts          # Production config
+    │   └── environment.development.ts # Dev config
+    ├── pages/
+    │   ├── products-page.component.ts      # Products page (fe-async-content)
+    │   ├── products-page.component.spec.ts # Tests
+    │   └── components-page.component.ts    # Components showcase page
+    ├── services/
+    │   ├── products.service.ts     # Angular resource() signal-based data service
+    │   └── products.service.spec.ts # Service tests
+    ├── styles/
+    │   ├── tokens.css       # DS token overrides
+    │   └── themes/          # WA theme CSS
+    ├── utils/
+    │   └── type-guards.ts   # Angular-specific type guards
+    └── test-setup.ts        # ElementInternals FACE shim for jsdom
 ```
 
 ---
@@ -262,28 +415,6 @@ apps/docs/
             │   └── getting-started.md # Setup & dev guide
             └── reference/
                 └── configuration.md   # Config reference
-```
-
----
-
-## packages/eslint-config
-
-```
-packages/eslint-config/
-├── package.json             # @repo/eslint-config
-├── index.js                 # Base config: TS parser, TS plugin, Prettier
-└── vue.js                   # Vue 3 extension: + vue/recommended
-```
-
----
-
-## packages/typescript-config
-
-```
-packages/typescript-config/
-├── package.json             # @repo/typescript-config
-├── base.json                # Base: strict, ESNext, Bundler
-└── vite.json                # Vite: extends base, noEmit, DOM lib
 ```
 
 ---
@@ -317,47 +448,3 @@ docs/
 | `renovate.json` | Automated dep update schedule             |
 | `.gitignore`    | dist, .turbo, node_modules, .env          |
 | `.npmrc`        | npm settings                              |
-
----
-
-## packages/generator
-
-```
-packages/generator/
-├── package.json             # @repo/generator — pinion, inquirer deps
-├── tsconfig.json            # extends base.json
-├── vitest.config.ts         # Vitest config
-├── .eslintrc.cjs            # ESLint config
-│
-└── src/
-    ├── index.ts             # Barrel: exports generate, validateHex, getThemeClass, types
-    │
-    ├── generators/
-    │   ├── vue-tenant.tpl.ts      # Pinion generator: renderSetup, renderSourceFiles,
-    │   │                           # renderConditionalAssets, renderTestInfra, mswRegistration
-    │   └── vue-tenant.tpl.spec.ts # Orchestration tests
-    │
-    ├── helpers/
-    │   ├── cases.ts              # Kebab/Pascal/Camel case transforms + prefix derivation
-    │   ├── cases.spec.ts         # Case transform tests
-    │   ├── palette.ts            # Hex validation + theme class helper
-    │   └── palette.spec.ts       # Palette tests
-    │
-    ├── models/
-    │   └── index.ts              # VueTenantContext + Theme type definitions
-    │
-    ├── msw/
-    │   ├── add-tenant.ts             # addTenantConfig() — validates + appends MSW tenant entry
-    │   ├── add-tenant.spec.ts        # MSW config tests
-    │   ├── file-io.ts                # readMockedData, writeMockedData, copyMswWorker utilities
-    │   ├── file-io.spec.ts           # File I/O tests
-    │   └── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
-    │
-    ├── prompts/
-    │   ├── index.ts              # Interactive prompts (name, description, theme, metadata, MSW)
-    │   └── index.spec.ts         # Prompt shape tests
-    │
-    └── templates/
-        ├── index.ts              # All output templates (package.json, vite.config, main.ts, etc.)
-        └── index.spec.ts         # Template rendering tests
-```

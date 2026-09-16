@@ -171,7 +171,7 @@ Three theme choices (each a separate CSS import):
 | Theme      | File                        | Target app                  |
 | ---------- | --------------------------- | --------------------------- |
 | `default`  | `styles/themes/default.css`  | `white-label-vue` (current) |
-| `awesome`  | `styles/themes/awesome.css`  | `white-label-angular` (future)      |
+| `awesome`  | `styles/themes/awesome.css`  | `white-label-angular` (current)      |
 | `shoelace` | `styles/themes/shoelace.css` | `web-react` (future)        |
 
 Each theme file is a thin barrel re-exporting a WA CSS file. Without this import, WA components have no visual styling.
