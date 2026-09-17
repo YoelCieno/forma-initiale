@@ -33,9 +33,9 @@ import { RatingContainer } from '../components/rating-container.component'
   styles: `
     .components-page {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(var(--min-width-layout), 1fr));
       column-gap: 2.25rem;
-      max-width: 75rem;
+      max-width: var(--max-width-layout);
       margin: 0 auto;
       padding: 1rem 1rem 1.75rem;
     }

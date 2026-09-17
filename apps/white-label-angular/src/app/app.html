@@ -1,1 +1,14 @@
-<router-outlet />
+<nav>
+  <a
+    routerLink="/"
+    routerLinkActive="nav-link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Products
+  </a>
+  <a routerLink="/components" routerLinkActive="nav-link--active">Components</a>
+</nav>
+
+<main>
+  <router-outlet />
+</main>

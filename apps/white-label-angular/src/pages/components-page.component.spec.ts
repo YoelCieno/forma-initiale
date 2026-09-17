@@ -34,4 +34,25 @@ describe('ComponentsPage', () => {
     expect(texts).toContain('Rating')
     expect(texts).toContain('Card')
   })
+
+  it('renders correct number of sections', () => {
+    const fixture = TestBed.createComponent(ComponentsPage)
+    fixture.detectChanges()
+    const sections = fixture.nativeElement.querySelectorAll('.components-page__section')
+    expect(sections.length).toBe(2)
+  })
+
+  it('renders subsections for Icon and Rating', () => {
+    const fixture = TestBed.createComponent(ComponentsPage)
+    fixture.detectChanges()
+    const subsections = fixture.nativeElement.querySelectorAll('.components-page__subsection')
+    expect(subsections.length).toBe(2)
+  })
+
+  it('renders all four section headings', () => {
+    const fixture = TestBed.createComponent(ComponentsPage)
+    fixture.detectChanges()
+    const headings = fixture.nativeElement.querySelectorAll('.components-page__heading')
+    expect(headings.length).toBe(4)
+  })
 })

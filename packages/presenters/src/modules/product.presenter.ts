@@ -14,7 +14,6 @@ export function toProductView(
 	}
 
 	const meta = override ?? fallback
-	console.log('🚀~meta:', meta)
 
   return {
 		id: product.id,
