@@ -1,11 +1,8 @@
 import { afterAll, expect, describe, it } from 'vitest';
 import { renderSetup } from '../generators/vue-tenant.tpl';
 import { VueTenantContext } from '../models';
-import { tmpdir } from 'node:os';
-import { mkdtempSync, rmSync } from 'node:fs';
-import { join } from 'node:path';
-
-const tmpDirs: string[] = []
+import { rmSync } from 'node:fs';
+import { createMockContext, tmpDirs } from './mocks';
 
 afterAll(() => {
   for (const dir of tmpDirs) {
@@ -13,45 +10,8 @@ afterAll(() => {
   }
 })
 
-function createMockContext<T>(
-  overrides: Partial<VueTenantContext> = {},
-): T {
-  const tmpDir = mkdtempSync(join(tmpdir(), 'gen-test-'))
-  tmpDirs.push(tmpDir)
-  return {
-    name: 'test',
-    Name: 'Test',
-    camelName: 'test',
-    description: 'Test tenant',
-    metadataMode: 'fixture',
-    theme: 'default',
-    brandHex: undefined,
-    overrideComponent: false,
-    overrideComponentName: undefined,
-    registerMsw: false,
-    prefix: 'te',
-    cwd: tmpDir,
-    argv: [],
-    pinion: {
-      cwd: tmpDir,
-      force: true,
-      logger: {
-        notice: () => {},
-        warn: () => {},
-        error: () => {},
-        log: () => {},
-      },
-      prompt: (() => Promise.resolve({})),
-      trace: [],
-      exec: async () => 0,
-    },
-    ...overrides,
-  } as T
-}
-
-
 describe('helpers.scaffold', () => {
-  it('renders package.json, vite.config.ts, tsconfig.json, index.html, .eslintrc.cjs', async () => {
+  it('renders package.json, main.ts, tokens.css, pages/, vitest.setup.ts, .eslintrc.cjs', async () => {
     const ctx: VueTenantContext = createMockContext()
     const result = await renderSetup(ctx)
 

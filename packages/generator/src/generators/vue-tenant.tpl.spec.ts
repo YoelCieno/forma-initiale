@@ -1,7 +1,6 @@
 import { describe, it, expect, afterAll } from 'vitest'
-import { mkdtempSync, rmSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { rmSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { tmpdir } from 'node:os'
 import type { VueTenantContext } from '../models'
 import {
   renderSetup,
@@ -10,50 +9,13 @@ import {
   renderTestInfra,
   generate,
 } from './vue-tenant.tpl'
-
-const tmpDirs: string[] = []
+import { createMockContext, tmpDirs } from '../helpers/mocks'
 
 afterAll(() => {
   for (const dir of tmpDirs) {
     rmSync(dir, { recursive: true, force: true })
   }
 })
-
-function createMockContext<T>(
-  overrides: Partial<VueTenantContext> = {},
-): T {
-  const tmpDir = mkdtempSync(join(tmpdir(), 'gen-test-'))
-  tmpDirs.push(tmpDir)
-  return {
-    name: 'test',
-    Name: 'Test',
-    camelName: 'test',
-    description: 'Test tenant',
-    metadataMode: 'fixture',
-    theme: 'default',
-    brandHex: undefined,
-    overrideComponent: false,
-    overrideComponentName: undefined,
-    registerMsw: false,
-    prefix: 'te',
-    cwd: tmpDir,
-    argv: [],
-    pinion: {
-      cwd: tmpDir,
-      force: true,
-      logger: {
-        notice: () => {},
-        warn: () => {},
-        error: () => {},
-        log: () => {},
-      },
-      prompt: (() => Promise.resolve({})),
-      trace: [],
-      exec: async () => 0,
-    },
-    ...overrides,
-  } as T
-}
 
 function renderFiles(
   trace: VueTenantContext['pinion']['trace'],
@@ -64,7 +26,7 @@ function renderFiles(
 }
 
 describe('renderSetup', () => {
-  it('renders package.json, vite.config.ts, tsconfig.json, index.html, .eslintrc.cjs', async () => {
+  it('renders vite.config.ts, tsconfig.json, index.html', async () => {
     const ctx: VueTenantContext = createMockContext()
     const result = await renderSetup(ctx)
 
@@ -75,11 +37,9 @@ describe('renderSetup', () => {
     const files = trace.map(
       (t) => (t.info as { fileName: string }).fileName,
     )
-    expect(files.some((f) => f.endsWith('package.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('vite.config.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('index.html'))).toBe(true)
-    expect(files.some((f) => f.endsWith('.eslintrc.cjs'))).toBe(true)
   })
 })
 
