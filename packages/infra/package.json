@@ -15,7 +15,8 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@repo/domain": "*"
+    "@repo/domain": "*",
+    "@repo/presenters": "*"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

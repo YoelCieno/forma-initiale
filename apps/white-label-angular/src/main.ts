@@ -2,7 +2,7 @@ import { bootstrapApplication } from '@angular/platform-browser'
 import { createWhiteLabelApp } from './bootstrap/app'
 import { useWhiteLabelApp } from './bootstrap/init'
 import { routes } from './routes'
-import { frameworkMap } from '../metadata'
+import { frameworkMap } from '@repo/infra'
 
 const { setupMocks } = useWhiteLabelApp()
 

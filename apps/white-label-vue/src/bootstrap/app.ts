@@ -1,15 +1,21 @@
-import { createApp } from 'vue'
-import { useWhiteLabelApp, META_MAP_INJECTION_KEY } from './init'
+import { createApp, type InjectionKey } from 'vue'
+import { useWhiteLabelApp } from './init'
 import type { WhiteLabelAppOptions, WhiteLabelApp } from './init'
+import type { ProductMeta } from '@repo/presenters'
 
-export { META_MAP_INJECTION_KEY }
+export const META_MAP_INJECTION_KEY: InjectionKey<Record<string, ProductMeta>> = Symbol('metaMap')
+
 export type { WhiteLabelAppOptions, WhiteLabelApp }
 
 export async function createWhiteLabelApp(
   opts: WhiteLabelAppOptions,
 ): Promise<WhiteLabelApp> {
-  const { setupMocks, resolveAppShell, createWlRouter, injectMetaMap } =
-    useWhiteLabelApp()
+  const {
+    setupMocks,
+    resolveAppShell,
+    createWlRouter,
+    injectMetaMap
+  } = useWhiteLabelApp()
 
   await setupMocks()
   const AppShell = await resolveAppShell(opts)

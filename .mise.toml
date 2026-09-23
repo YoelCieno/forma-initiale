@@ -1,3 +1,4 @@
 [tools]
 bun = "latest"
 "npm:@fission-ai/openspec" = "latest"
+"npm:@playwright/cli" = "latest"

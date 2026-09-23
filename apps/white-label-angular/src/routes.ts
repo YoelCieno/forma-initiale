@@ -1,14 +1,10 @@
-import type { Routes } from '@angular/router'
+import { Routes } from '@angular/router'
+import { ProductsPage } from './pages/products-page.component'
 
 export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () =>
-      import('./pages/products-page.component').then((m) => m.ProductsPage),
-  },
+  { path: '', component: ProductsPage },
   {
     path: 'components',
-    loadComponent: () =>
-      import('./pages/components-page.component').then((m) => m.ComponentsPage),
+    loadComponent: () => import('./pages/components-page.component').then(m => m.ComponentsPage),
   },
 ]
