@@ -2,7 +2,7 @@ import '@repo/ui/styles/main.css'
 import '@repo/ui/styles/themes/default.css'
 import 'white-label-vue/styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
-import { plantsMap } from '../metadata'
+import { plantsMap } from '@repo/infra'
 import './styles'
 
 createWhiteLabelApp({

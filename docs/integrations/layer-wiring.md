@@ -66,6 +66,7 @@ Implements domain contracts. Uses `fetch` for HTTP, MSW for mock data.
 export { getProducts } from './adapters/get-products.adapter'
 export { getProductImageUrl } from './adapters/get-product-image.adapter'
 export { frameworkMap } from './metadata/white-label'
+export { plantsMap } from './metadata/fake-plants'
 export { mockOkResponse } from './mocks/helpers'
 ```
 
