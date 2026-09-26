@@ -1,9 +1,10 @@
-import type { Component, App } from 'vue'
+import type { Component, App, InjectionKey } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { ProductMeta } from '@repo/presenters'
 
-export const META_MAP_INJECTION_KEY = 'metaMap'
+export const META_MAP_INJECTION_KEY: InjectionKey<Record<string, ProductMeta>> =
+  Symbol('metaMap')
 
 export interface WhiteLabelAppOptions {
   /** FULL route override — replaces WL defaults entirely */

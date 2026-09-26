@@ -4,7 +4,8 @@ import { mount } from '@vue/test-utils'
 import ProductsPage from './ProductsPage.vue'
 
 import { mockProducts, mockOkResponse } from '../helpers'
-import { frameworkMap } from '../../metadata'
+import { frameworkMap } from '@repo/infra'
+import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { useProducts } from '../composables/useProducts'
 
 describe('ProductsPage', () => {
@@ -17,7 +18,7 @@ describe('ProductsPage', () => {
     vi.stubGlobal('fetch', vi.fn().mockReturnValue(new Promise(() => {})))
 
     const wrapper = mount(ProductsPage, {
-      global: { provide: { metaMap: frameworkMap } },
+      global: { provide: { [META_MAP_INJECTION_KEY]: frameworkMap } },
     })
     // Flush hybridJS + Lit microtasks for WC initialization
     await Promise.resolve()
@@ -42,7 +43,7 @@ describe('ProductsPage', () => {
     )
 
     const wrapper = mount(ProductsPage, {
-      global: { provide: { metaMap: frameworkMap } },
+      global: { provide: { [META_MAP_INJECTION_KEY]: frameworkMap } },
     })
 
     // Wait for cards to appear (fe-async-content projects default slot)

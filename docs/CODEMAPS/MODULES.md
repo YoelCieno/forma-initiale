@@ -494,7 +494,7 @@ import { getErrorMessage } from '@repo/utils/error'
 
 **Key Files**:
 
-- `metadata.ts` — Per-product metadata overrides keyed by product name (frameworkMap)
+- `@repo/infra/src/metadata/white-label.ts` — frameworkMap (product metadata overrides keyed by product name)
 - `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp({ routes, metaMap })`.mount('#app')
 - `src/bootstrap/` — Factory layer: `app.ts` + `init.ts` (options + merge logic). `createWhiteLabelApp(opts)` bootstraps Vue app, router, MSW. Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`
 - `src/styles/index.ts` — Styles entry point, imports `tokens.css` + `base.css`

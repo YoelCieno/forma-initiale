@@ -1,10 +1,8 @@
-import { createApp, type InjectionKey } from 'vue'
-import { useWhiteLabelApp } from './init'
+import { createApp } from 'vue'
+import { useWhiteLabelApp, META_MAP_INJECTION_KEY } from './init'
 import type { WhiteLabelAppOptions, WhiteLabelApp } from './init'
-import type { ProductMeta } from '@repo/presenters'
 
-export const META_MAP_INJECTION_KEY: InjectionKey<Record<string, ProductMeta>> = Symbol('metaMap')
-
+export { META_MAP_INJECTION_KEY }
 export type { WhiteLabelAppOptions, WhiteLabelApp }
 
 export async function createWhiteLabelApp(

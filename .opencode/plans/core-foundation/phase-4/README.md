@@ -8,8 +8,8 @@
 | 4.2 | Scaffold `apps/white-label-angular/` (Angular CLI 22)                                                                 | [`4.2-scaffold.md`](./4.2-scaffold.md)                       | ✅ COMPLETED                   |
 | 4.3 | Angular factory (`createWhiteLabelApp` equivalent)                                                                    | [`4.3-factory.md`](./4.3-factory.md)                         | ✅ COMPLETED                   |
 | 4.4 | Angular base components (fe-\* compositing, CUSTOM_ELEMENTS_SCHEMA) <br>Shared @repo/utils package (util unification) | [`4.4-base-components.md`](./4.4-base-components.md)         | ✅ COMPLETED                   |
-| 4.5.0 | Behavior Specs & Delta Pattern Integration | [`4.5.0-behavior-specs-delta.md`](./4.5.0-behavior-specs-delta.md) | ❌ PENDING |
-| 4.5 | Port pages (Products, Components, AppShell, metaMap)                                                                  | [`4.5-pages-port.md`](./4.5-pages-port.md)                   | ⏳ PENDING                     |
+| 4.5.0 | Behavior Specs & Delta Pattern Integration | [`4.5.0-behavior-specs-delta.md`](./4.5.0-behavior-specs-delta.md) | ✅ COMPLETE |
+| 4.5 | Port pages (Products, Components, AppShell, metaMap)                                                                  | [`4.5-pages-port.md`](./4.5-pages-port.md)                   | ✅ COMPLETE                     |
 | 4.6 | `fake-plants-angular` tenant (manual parity check)                                                                    | [`4.6-fake-plants-angular.md`](./4.6-fake-plants-angular.md) | ⏳ PENDING                     |
 | 4.7 | `@repo/generator` Angular tenant generator                                                                            | [`4.7-generator-angular.md`](./4.7-generator-angular.md)     | ⏳ PENDING                     |
 | 4.8 | Build & verify + documentation                                                                                        | [`4.8-verify-docs.md`](./4.8-verify-docs.md)                 | ⏳ PENDING                     |

@@ -75,7 +75,7 @@ packages/infra/
 ├── tsconfig.json            # extends base.json, lib: ES2022 + DOM
 │
 └── src/
-    ├── index.ts             # Barrel: exports getProducts, getProductImageUrl
+    ├── index.ts             # Barrel: exports getProducts, getProductImageUrl, frameworkMap, mockOkResponse
     ├── adapters/
     │   ├── get-products.adapter.ts      # fetch-based product adapter
     │   ├── get-products.adapter.spec.ts # Unit tests (vitest)
@@ -85,7 +85,8 @@ packages/infra/
         ├── index.ts              # Barrel: exports server, worker, handlers, factories
         ├── server.ts             # MSW Node server (tests)
         ├── browser.ts            # MSW browser worker (dev)
-        ├── helpers.ts            # mockOkResponse, delayDev (DEV_DELAY, gated in test mode)
+        └── helpers/
+             # mockOkResponse, delayDev (DEV_DELAY, gated in test mode)
         ├── data/mocked-data.json # tenant name/config seed data
         ├── constants/index.ts    # tenant configs, name pools, RATE_VALUE, DEV_DELAY
         ├── factories/product.ts  # tenant-aware deterministic product factories
@@ -256,7 +257,6 @@ packages/generator/
 ```
 apps/white-label-vue/
 ├── package.json             # white-label-vue — Vue 3, vite, vue-router, exports ./app, ./vite.config.base
-├── metadata.ts              # Product metadata overrides (frameworkMap with title, description, image)
 ├── tsconfig.json            # extends vite.json, strictNullChecks: true
 ├── vite.config.ts           # Thin: calls defineWhiteLabelViteConfig() from base
 ├── vite.config.base.ts      # Shared Vite config factory: Vue, AutoImport, Components — used by tenants

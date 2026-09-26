@@ -64,22 +64,20 @@ Implements domain contracts. Uses `fetch` for HTTP, MSW for mock data.
 
 ```typescript
 export { getProducts } from './adapters/get-products.adapter'
+export { getProductImageUrl } from './adapters/get-product-image.adapter'
+export { frameworkMap } from './metadata/white-label'
+export { mockOkResponse } from './mocks/helpers'
 ```
 
 **Adapter:** `packages/infra/src/adapters/get-products.adapter.ts`
 
 ```typescript
-import type { Product } from '@repo/domain'
+import { getProducts } from '@repo/infra'
+import type { GetProductsFn } from '@repo/domain'
 
-export interface GetProductsResponse {
-  data: Product[]
-  total: number
-}
-
-export async function getProducts(): Promise<GetProductsResponse> {
-  const baseUrl = import.meta.env.VITE_API_URL
-  const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
-  const response = await fetch(`${baseUrl}/products`, {
+const getProducts: GetProductsFn = async ({ baseUrl, tenantId }) => {
+  const url = `${baseUrl.replace(/\/$/, '')}/${tenantId}/products`
+  const response = await fetch(url, {
     headers: { 'x-tenant-id': tenantId },
   })
   if (!response.ok) {
@@ -92,7 +90,7 @@ export async function getProducts(): Promise<GetProductsResponse> {
 Key patterns:
 
 - Returns domain types (`Product[]` from `@repo/domain`)
-- Uses `import.meta.env.VITE_API_URL` for base URL (Vite env var)
+- Accepts `{ baseUrl, tenantId }` config params (hexagonal); no `import.meta.env`
 - Throws descriptive errors on HTTP failure
 - All adapters exported from `packages/infra/src/index.ts`
 
@@ -298,7 +296,7 @@ import '@repo/ui/styles/themes/default.css'
 import './styles'
 import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
-import { frameworkMap } from '../metadata'
+import { frameworkMap } from '@repo/infra'
 
 createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) =>
   app.mount('#app'),
@@ -487,7 +485,7 @@ Composables orchestrate data fetching → presenting → state management. Now i
 ```typescript
 import type { ProductView, ProductMeta } from '@repo/presenters'
 import { useAsyncState, useMemoize } from '@vueuse/core'
-import { META_MAP_INJECTION_KEY } from '../app'
+import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { getProducts } from '@repo/infra'
 import { toProductViewList } from '@repo/presenters'
 
