@@ -13,5 +13,5 @@ export const getProductImageUrl = (productId: string): string => {
     hash = (hash << 5) + productId.charCodeAt(i)
     hash >>>= 0
 	}
-  return `https://loremflickr.com/500/250/plant/all?seed=${hash}`
+  return `https://picsum.photos/seed/plants-${hash}/800/250`
 }

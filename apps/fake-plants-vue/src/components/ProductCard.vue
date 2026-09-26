@@ -21,7 +21,7 @@ withDefaults(defineProps<Omit<ProductView, 'name'>>(), {
     />
     <header slot="header" class="fp-product-card__header">
       <h2 class="fp-product-card__title">{{ title }}</h2>
-      <strong class="fp-product-card__price">{{ price }}</strong>
+      <strong>{{ price }}</strong>
     </header>
     <p class="fp-product-card__description">{{ description }}</p>
     <div slot="footer" class="fp-product-card__footer">
