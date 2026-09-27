@@ -17,4 +17,4 @@
 - [x] 3.1 Run `bunx ng test --watch=false` in `apps/fake-plants-angular` and verify exit code 0 (all specs green)
 - [x] 3.2 Run `bun run build` at repo root and verify the `fake-plants-angular` task succeeds in Turborepo
 - [x] 3.3 Verify `git status --porcelain apps/white-label-angular` is empty (shell untouched — merge logic reused, not modified)
-- [ ] 3.4 Human check: `cd apps/fake-plants-angular && bun run dev`, visit `/about` → tenant AboutPage renders; `/components` → no route match (ComponentsPage absent); `/` → shell ProductsPage default; record result
+- [x] 3.4 Human check: `cd apps/fake-plants-angular && bun run dev`, visit `/about` → tenant AboutPage renders; `/components` → no route match (ComponentsPage absent); `/` → shell ProductsPage default; record result
