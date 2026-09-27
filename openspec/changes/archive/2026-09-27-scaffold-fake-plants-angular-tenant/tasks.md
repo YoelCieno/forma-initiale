@@ -16,5 +16,5 @@
 
 ## 3. Human verification (factory proof)
 
-- [ ] 3.1 Run `cd apps/fake-plants-angular && bun run dev`, open the app in a browser, and verify: page renders (not blank), nav shows shell defaults (Products / Components), Products page renders its page shell (loading or error state acceptable — MSW deferred to follow-up), browser console free of factory/bootstrap/DI errors (network errors excepted) — record the observation in this checkbox on completion
-- [ ] 3.2 Record human sign-off that the factory boots with zero overrides (override checks — routes/shell/metaMap — deferred to plan 4.6 Manual Confirmation after 4.6.2–4.6.6)
+- [x] 3.1 Run `cd apps/fake-plants-angular && bun run dev`, open the app in a browser, and verify: page renders (not blank), nav shows shell defaults (Products / Components), Products page renders its page shell (loading or error state acceptable — MSW deferred to follow-up), browser console free of factory/bootstrap/DI errors (network errors excepted) — **human checked OK** (2026-09-27, http://localhost:4201/)
+- [x] 3.2 Record human sign-off that the factory boots with zero overrides (override checks — routes/shell/metaMap — deferred to plan 4.6 Manual Confirmation after 4.6.2–4.6.6) — **signed off** (2026-09-27)
