@@ -8,8 +8,12 @@ export type { WhiteLabelAppOptions, WhiteLabelApp }
 export async function createWhiteLabelApp(
   opts: WhiteLabelAppOptions,
 ): Promise<WhiteLabelApp> {
-  const { setupMocks, resolveAppShell, createWlRouter, injectMetaMap } =
-    useWhiteLabelApp()
+  const {
+    setupMocks,
+    resolveAppShell,
+    createWlRouter,
+    injectMetaMap
+  } = useWhiteLabelApp()
 
   await setupMocks()
   const AppShell = await resolveAppShell(opts)

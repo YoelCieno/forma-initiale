@@ -10,7 +10,7 @@ Monorepo plan overview.
 | 1     | Docs solution research + implementation, UI components conversion  | `phase-1.md` | ✅ COMPLETED           |
 | 2     | Web Awesome UI layer (WA + hybridJS wrappers)                      | `phase-2.md` | ✅ COMPLETED           |
 | 3     | White-label extend layer (inherit app, override components/styles) | `phase-3.md` | ✅ COMPLETED           |
-| 4     | Angular implementation                                             | `phase-4.md` | 🔧 IN PROGRESS (research) |
+| 4     | Angular implementation                                             | `phase-4.md` | 🔧 IN PROGRESS           |
 | 5     | React implementation                                               | `phase-5.md` | ❌ PENDING             |
 | 6     | CSS `@layer` cascade strategy (optional)                           | `phase-6.md` | ⏸️ OPTIONAL            |
 

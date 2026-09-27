@@ -84,8 +84,8 @@ const mainTs = (ctx: VueTenantContext) => {
       ? `  metaMap: ${ctx.camelName}Map,`
       : '  // metaMap: myMap,'
 
-  return `import '@repo/ui/styles'
-import '@repo/ui/styles/themes/default'
+	return `import '@repo/ui/styles/main.css'
+import '@repo/ui/styles/themes/default.css'
 import './styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 ${metaImport}

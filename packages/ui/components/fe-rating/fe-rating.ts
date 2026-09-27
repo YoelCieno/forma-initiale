@@ -9,7 +9,7 @@ export interface FeRatingElement extends HTMLElement {
   size: string
   label: string
   disabled: boolean
-  readonly: boolean
+	readonly: boolean
   required: boolean
   name: string | undefined
 }
@@ -22,7 +22,7 @@ export const FeRating = define<FeRatingElement>({
   size: 'm',
   label: '',
   disabled: false,
-  readonly: false,
+	readonly: false,
   required: false,
   name: undefined,
   render: {

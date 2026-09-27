@@ -1,2 +1,33 @@
 {
-  "$schema": "https://opencode.ai/config.json",}
+  "$schema": "https://opencode.ai/config.json",
+  "command": {
+    "opsx:propose": {
+      "description": "Propose a new change - create it and generate all artifacts in one step",
+      "template": ".opencode/references/opsx/opsx-propose.md"
+    },
+    "opsx:apply": {
+      "description": "Implement tasks from an OpenSpec change (Experimental)",
+      "template": ".opencode/references/opsx/opsx-apply.md"
+    },
+    "opsx:archive": {
+      "description": "Archive a completed change in the experimental workflow",
+      "template": ".opencode/references/opsx/opsx-archive.md"
+    },
+    "opsx:explore": {
+      "description": "Enter explore mode - think through ideas, investigate problems, clarify requirements",
+      "template": ".opencode/references/opsx/opsx-explore.md"
+    },
+    "opsx:sync": {
+      "description": "Sync delta specs from a change to main specs",
+      "template": ".opencode/references/opsx/opsx-sync.md"
+    },
+    "opsx:update": {
+      "description": "Update a change - revise existing planning artifacts and keep them coherent (Experimental)",
+      "template": ".opencode/references/opsx/opsx-update.md"
+    },
+    "opsx:flow": {
+      "description": "Run the full OpenSpec lifecycle — propose, apply, archive — with git checkpoints between steps",
+      "template": ".opencode/references/opsx/opsx-flow.md"
+    }
+  }
+}

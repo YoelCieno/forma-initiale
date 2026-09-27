@@ -1,3 +1,4 @@
+import { computed, inject } from 'vue'
 import type { ProductView, ProductMeta } from '@repo/presenters'
 import { useAsyncState, useMemoize } from '@vueuse/core'
 import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
@@ -8,7 +9,9 @@ type FetchOptions = { bypass?: boolean }
 
 const getCachedProducts = useMemoize(
   async (metaMap: Record<string, ProductMeta> | undefined) => {
-    const { data } = await getProducts()
+    const baseUrl = import.meta.env.VITE_API_URL
+    const tenantId = import.meta.env.VITE_TENANT_ID
+    const { data } = await getProducts({ baseUrl, tenantId })
     return toProductViewList(data, metaMap)
   },
   { getKey: () => 'products' },
@@ -49,10 +52,6 @@ export function useProducts() {
     products: state,
     loading: isLoading,
     error,
+    clearCache: () => getCachedProducts.clear(),
   }
-}
-
-// Test helper — clears module-scoped memoize cache between test runs
-export function clearProductsCache() {
-  getCachedProducts.clear()
 }

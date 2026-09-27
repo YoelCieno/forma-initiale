@@ -1,19 +1,14 @@
-import type { Product } from '@repo/domain'
+import type { GetProductsFn } from '@repo/domain'
 
-export interface GetProductsResponse {
-  data: Product[]
-  total: number
-}
+const buildProductsUrl = (baseUrl: string, tenantId: string): string => `${baseUrl.replace(/\/$/, '')}/${tenantId}/products`
 
-export async function getProducts(): Promise<GetProductsResponse> {
-  const baseUrl = import.meta.env.VITE_API_URL
-  const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
-  const response = await fetch(`${baseUrl}/products`, {
+export const getProducts: GetProductsFn = async ({ baseUrl, tenantId }) => {
+  const url = buildProductsUrl(baseUrl, tenantId)
+  const response = await fetch(url, {
     headers: { 'x-tenant-id': tenantId },
   })
   if (!response.ok) {
     throw new Error(`Failed to fetch products: HTTP ${response.status}`)
   }
-
   return response.json()
 }

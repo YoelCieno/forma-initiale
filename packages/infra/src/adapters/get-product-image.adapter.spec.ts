@@ -16,7 +16,7 @@ describe('getProductImageUrl', () => {
 
   it('URL contains seed parameter', () => {
     const url = getProductImageUrl('test-id')
-    expect(url).toContain('seed=')
+    expect(url).toContain('/seed')
   })
 
   it('URL is derived deterministically (not random)', () => {

@@ -31,10 +31,10 @@ Pure TypeScript types and interfaces. Zero framework dependencies — no Vue, no
 **Export:** `packages/domain/src/index.ts`
 
 ```typescript
-export type { Product } from './models/Product'
+export type { Product } from './entities/Product'
 ```
 
-**Example model:** `packages/domain/src/models/Product.ts`
+**Example model:** `packages/domain/src/entities/Product.ts`
 
 ```typescript
 export interface Product {
@@ -64,22 +64,21 @@ Implements domain contracts. Uses `fetch` for HTTP, MSW for mock data.
 
 ```typescript
 export { getProducts } from './adapters/get-products.adapter'
+export { getProductImageUrl } from './adapters/get-product-image.adapter'
+export { frameworkMap } from './metadata/white-label'
+export { plantsMap } from './metadata/fake-plants'
+export { mockOkResponse } from './mocks/helpers'
 ```
 
 **Adapter:** `packages/infra/src/adapters/get-products.adapter.ts`
 
 ```typescript
-import type { Product } from '@repo/domain'
+import { getProducts } from '@repo/infra'
+import type { GetProductsFn } from '@repo/domain'
 
-export interface GetProductsResponse {
-  data: Product[]
-  total: number
-}
-
-export async function getProducts(): Promise<GetProductsResponse> {
-  const baseUrl = import.meta.env.VITE_API_URL
-  const tenantId = import.meta.env.VITE_TENANT_ID || 'wl'
-  const response = await fetch(`${baseUrl}/products`, {
+const getProducts: GetProductsFn = async ({ baseUrl, tenantId }) => {
+  const url = `${baseUrl.replace(/\/$/, '')}/${tenantId}/products`
+  const response = await fetch(url, {
     headers: { 'x-tenant-id': tenantId },
   })
   if (!response.ok) {
@@ -92,7 +91,7 @@ export async function getProducts(): Promise<GetProductsResponse> {
 Key patterns:
 
 - Returns domain types (`Product[]` from `@repo/domain`)
-- Uses `import.meta.env.VITE_API_URL` for base URL (Vite env var)
+- Accepts `{ baseUrl, tenantId }` config params (hexagonal); no `import.meta.env`
 - Throws descriptive errors on HTTP failure
 - All adapters exported from `packages/infra/src/index.ts`
 
@@ -185,8 +184,8 @@ export const FeButton = define<FeButtonElement>({
 **Styles** split into 2 imports:
 
 ```typescript
-import '@repo/ui/styles' // base: native.css + utilities.css
-import '@repo/ui/styles/themes/default' // theme: WA component styling
+import '@repo/ui/styles/main.css' // base: native.css only (utilities dropped — BEM)
+import '@repo/ui/styles/themes/default.css' // theme: WA component styling
 ```
 
 Package exports from `packages/ui/package.json`:
@@ -200,10 +199,8 @@ Package exports from `packages/ui/package.json`:
   "./fe-img": "./components/fe-img/fe-img.ts",
   "./fe-loader": "./components/fe-loader/fe-loader.ts",
   "./fe-rating": "./components/fe-rating/fe-rating.ts",
-  "./styles": "./styles/webawesome.ts",
-  "./styles/themes/default": "./styles/themes/default.ts",
-  "./styles/themes/awesome": "./styles/themes/awesome.ts",
-  "./styles/themes/shoelace": "./styles/themes/shoelace.ts"
+  "./styles/*": "./styles/*",
+  "./styles/themes/*": "./styles/themes/*"
 }
 ```
 
@@ -295,12 +292,12 @@ export async function createWhiteLabelApp(
 **Entry** (`apps/white-label-vue/src/main.ts`):
 
 ```typescript
-import '@repo/ui/styles'
-import '@repo/ui/styles/themes/default'
+import '@repo/ui/styles/main.css'
+import '@repo/ui/styles/themes/default.css'
 import './styles'
 import { createWhiteLabelApp } from './app'
 import { routes } from './routes'
-import { frameworkMap } from '../metadata'
+import { frameworkMap } from '@repo/infra'
 
 createWhiteLabelApp({ routes, metaMap: frameworkMap }).then(({ app }) =>
   app.mount('#app'),
@@ -382,8 +379,8 @@ export default defineWhiteLabelViteConfig({
 **Tenant entry** (`apps/fake-plants-vue/src/main.ts`):
 
 ```typescript
-import '@repo/ui/styles'
-import '@repo/ui/styles/themes/default'
+import '@repo/ui/styles/main.css'
+import '@repo/ui/styles/themes/default.css'
 import 'white-label-vue/src/styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 import { plantsMap } from '../metadata'
@@ -489,7 +486,7 @@ Composables orchestrate data fetching → presenting → state management. Now i
 ```typescript
 import type { ProductView, ProductMeta } from '@repo/presenters'
 import { useAsyncState, useMemoize } from '@vueuse/core'
-import { META_MAP_INJECTION_KEY } from '../app'
+import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
 import { getProducts } from '@repo/infra'
 import { toProductViewList } from '@repo/presenters'
 

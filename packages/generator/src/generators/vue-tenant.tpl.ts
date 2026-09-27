@@ -1,5 +1,4 @@
-import { copyFileSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { copyFileSync } from 'node:fs'
 import {
   prompt,
   renderTemplate,
@@ -29,8 +28,8 @@ import { VueTenantContext } from '../models'
 import { findNextDevPort } from '../helpers/port-allocator'
 import { tenantPrompts } from '../prompts'
 import { copyServiceWorker } from '../msw/copy-service-worker'
-
-const outDir = (ctx: VueTenantContext) => `apps/${ctx.name}-vue`
+import { getLog, getMissingScaffoldFiles, outDir } from '../helpers/scaffold'
+import { join } from 'node:path'
 
 export const renderSetup = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
@@ -89,27 +88,9 @@ export const installDeps = async (ctx: VueTenantContext): Promise<VueTenantConte
 }
 
 export const verifyScaffold = (ctx: VueTenantContext): VueTenantContext => {
-  const base = join(ctx.cwd, outDir(ctx))
-  const checks = [
-    join(base, 'package.json'),
-    join(base, 'vite.config.ts'),
-    join(base, 'src/main.ts'),
-    join(base, 'src/styles/tokens.css'),
-    join(base, 'src/pages/.gitkeep'),
-    join(base, 'vitest.setup.ts'),
-  ]
-  let missing = 0
-  for (const file of checks) {
-    if (!existsSync(file)) {
-      ctx.pinion.logger.warn(`Missing expected file: ${file}`)
-      missing++
-    }
-  }
-  if (missing === 0) {
-		ctx.pinion.logger.notice(`✅ Tenant "${ctx.name}-vue" created successfully`)
-		return ctx;
-  }
-  ctx.pinion.logger.warn(`⚠️  ${missing} file(s) missing — check generator output`)
+  const missingFiles = getMissingScaffoldFiles(ctx)
+  getLog(ctx, missingFiles)
+
   return ctx
 }
 

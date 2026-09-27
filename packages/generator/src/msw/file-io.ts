@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, copyFileSync, mkdirSync } from 'node:fs'
 import type { MockedData } from '../models'
-import { safeJsonParse } from '../helpers/safe-json-parse'
+import { safeJsonParse } from '../utils'
 
 
 export const readMockedData = (configPath: string): MockedData => {

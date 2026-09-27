@@ -7,6 +7,10 @@
     "./*": "./src/*.ts"
   },
   "license": "MIT",
+  "dependencies": {
+    "@repo/domain": "*",
+    "@repo/utils": "*"
+  },
   "scripts": {
     "lint": "eslint \"**/*.ts\"",
     "test": "vp test"

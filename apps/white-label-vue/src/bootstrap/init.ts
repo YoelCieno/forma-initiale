@@ -1,9 +1,10 @@
-import type { Component, App } from 'vue'
+import type { Component, App, InjectionKey } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { ProductMeta } from '@repo/presenters'
 
-export const META_MAP_INJECTION_KEY = 'metaMap'
+export const META_MAP_INJECTION_KEY: InjectionKey<Record<string, ProductMeta>> =
+  Symbol('metaMap')
 
 export interface WhiteLabelAppOptions {
   /** FULL route override — replaces WL defaults entirely */
@@ -31,9 +32,7 @@ export function useWhiteLabelApp() {
     }
   }
 
-  const resolveAppShell = async (
-    opts: WhiteLabelAppOptions,
-  ): Promise<Component> => {
+  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Component> => {
     if (opts.appShell) {
       return (await opts.appShell()).default
     }
@@ -41,18 +40,13 @@ export function useWhiteLabelApp() {
     return (await import('../App.vue')).default
   }
 
-  const mergeRoutes = (
-    wlRoutes: RouteRecordRaw[],
-    opts: WhiteLabelAppOptions,
-  ): RouteRecordRaw[] => {
+  const mergeRoutes = (wlRoutes: RouteRecordRaw[], opts: WhiteLabelAppOptions): RouteRecordRaw[] => {
     if (opts.routes) {
       return opts.routes
     }
 
     const routes = [...wlRoutes, ...(opts.extendRoutes ?? [])]
-    return routes.filter(
-      (r) => !(opts.omitRoutePaths ?? []).includes(r.path ?? ''),
-    )
+    return routes.filter((r) => !(opts.omitRoutePaths ?? []).includes(r.path ?? ''))
   }
 
   const createWlRouter = async (
@@ -66,10 +60,7 @@ export function useWhiteLabelApp() {
     })
   }
 
-  const injectMetaMap = (
-    app: App<Element>,
-    metaMap?: Record<string, ProductMeta>,
-  ): void => {
+  const injectMetaMap = (app: App<Element>, metaMap?: Record<string, ProductMeta>): void => {
     if (metaMap) {
       app.provide(META_MAP_INJECTION_KEY, metaMap)
     }

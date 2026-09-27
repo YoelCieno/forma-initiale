@@ -82,6 +82,13 @@ The UI is built from composable, reusable, self-contained components.
 
 > This section grows as the codebase evolves. Each entry links a concrete artefact to the principle it exemplifies.
 
+### Async Data Loading Pattern
+
+- **Cached async state over lifecycle fetching:** Components never own raw `fetch` calls. Async data lives in a cached async-state primitive (composable, service, or signal resource) that outlives individual component instances. No manual `loading`/`error` signal management — the primitive provides these. Component is thin: bind state, render. No `ngOnInit` try/catch/finally.
+- **Cache scope matches data scope:** Data shared across components → singleton scope. Data per-navigation → route scope. Cache key by request params. Provide explicit `reload()` / `refetch()` for mutations.
+- **Port-based loader, never raw HTTP:** The async-state loader calls an infra port (`getProducts`), not raw `HttpClient`/`fetch`. Keeps adapters swappable. Framework HTTP clients (`httpResource`, `axios`) belong in the infra layer — apps go through ports.
+- **Implementations:** See [Async Data Loading Pattern](../integrations/data-loading.md) for concrete Vue and Angular examples.
+
 ### KISSME Examples
 
 - **`fe-card` disabled attribute:** Pure CSS approach — `opacity` + `pointer-events` on the host element. No subclassing WA, no complex JS interception. One CSS property change, zero new logic.
@@ -115,3 +122,4 @@ The UI is built from composable, reusable, self-contained components.
 - [`docs/CODEMAPS/ARCHITECTURE.md`](../CODEMAPS/ARCHITECTURE.md) — hexagonal layer diagram and dependency graph.
 - [`AGENTS.md`](../../AGENTS.md) — architecture direction and package layout overview.
 - [Web Awesome Agent Skill](../../.opencode/references/webawesome/SKILL.md) — upstream component API conventions that inform POLA.
+- [Async Data Loading Pattern](../integrations/data-loading.md) — framework-agnostic cached async state pattern with Vue and Angular examples.

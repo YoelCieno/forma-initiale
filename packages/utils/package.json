@@ -1,0 +1,25 @@
+{
+  "name": "@repo/utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./type-guards": "./src/type-guards.ts",
+    "./object": "./src/object.ts",
+    "./string": "./src/string.ts",
+    "./validate": "./src/validate.ts",
+    "./css": "./src/css.ts",
+    "./error": "./src/error.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"**/*.ts\"",
+    "test": "vp test"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "eslint": "^8.57.0",
+    "typescript": "5.9.3"
+  }
+}

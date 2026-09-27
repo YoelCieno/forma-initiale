@@ -11,8 +11,8 @@
 import { resolve } from 'node:path'
 import { addTenantConfig } from './add-tenant'
 import { readMockedData, writeMockedData } from './file-io'
-import { safeJsonParse } from '../helpers/safe-json-parse'
-import { onExit } from '../helpers/error-utils'
+import { safeJsonParse } from '../utils'
+import { onExit } from '../helpers/error'
 
 // Resolves from repo root (always invoked from repo root via package.json script)
 const CONFIG_PATH = resolve(process.cwd(), 'packages/infra/src/mocks/data/mocked-data.json')
