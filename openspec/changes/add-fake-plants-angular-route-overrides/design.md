@@ -14,9 +14,9 @@ Constraint from exploration: shell routes are declared slash-less (`path: 'compo
 - Guard the slash-less path convention with a regression test
 
 **Non-Goals:**
-- Nav link to `/about` (shell nav override = 4.6.3 AppShell override)
+- Nav/appShell override (shell `appShell` option + `resolveAppShell`, tenant root component) — plan 4.6.3
 - metaMap, brand tokens, component overrides, MSW wiring (4.6.4-4.6.6)
-- Shell API changes — merge logic is final as-is
+- Shell API changes — merge logic is final as-is (appShell option deferred to 4.6.3)
 
 ## Decisions
 
@@ -26,12 +26,12 @@ Constraint from exploration: shell routes are declared slash-less (`path: 'compo
 
 3. **AboutPage as plain standalone component** — `@Component` + `CUSTOM_ELEMENTS_SCHEMA` (AOT rule: no `@feComponent` wrapper), single file `src/pages/about-page.component.ts` + colocated spec, mirroring shell's `pages/*` layout. Content parity with `fake-plants-vue` AboutPage.
 
-4. **Tenant-level route spec** — failing spec first (TDD RED): assert merged config contains `about`, excludes `components`, keeps shell defaults. Options: (a) export merged routes from a testable tenant module, (b) test through `createWhiteLabelApp()` result. Chosen (b): no new tenant export needed; `createWhiteLabelApp` already returns config with `provideRouter` routes — reachable via injector in tests, same pattern as shell `app.spec.ts`.
+4. **No tenant route unit spec — factory tests stay in the shell** — `extendRoutes`/`omitRoutePaths` are shell factory behavior, already unit-tested in `apps/white-label-angular/src/bootstrap/init.spec.ts` (extend + omit + precedence, slash-less paths). A tenant spec passing opts inline could never fail (RED unreachable) without extracting a `tenant-options` module just for testability — rejected as test-driven structure. Alternative: extend shell init.spec — rejected, coverage already exists. Tenant wiring (`main.ts` opts) is a few lines of config, verified by the manual 3.4 check; wiring drift is an accepted, documented gap.
 
 ## Risks / Trade-offs
 
 - [Silent omission failure if slash creeps back in] → regression spec asserts `components` (slash-less) removes the route; comment in `main.ts` warns about exact match
-- [`/about` has no nav entry, looks unreachable in manual check] → 4.6.2 validation navigates by direct URL; nav deferred to 4.6.3 (documented in proposal Impact)
+- [`/about` has no nav entry, looks unreachable in manual check] → 4.6.2 validation navigates by direct URL; nav/appShell deferred to plan 4.6.3 (agreed approach: `appShell` option + `resolveAppShell`, Vue parity)
 - [`createWhiteLabelApp` boots MSW/env side effects in tests] → `environment.enableMocks` is false in test fileReplacements; shell `app.spec.ts` already exercises this safely
 
 ## Migration Plan
@@ -40,4 +40,4 @@ None — additive tenant change, no deploy/rollback concern.
 
 ## Open Questions
 
-None — scope fixed by plan 4.6.2; nav/metaMap/MSW explicitly deferred.
+None — nav/appShell deferred to plan 4.6.3 (approach agreed: `appShell` option + `resolveAppShell`, Vue parity); metaMap / brand tokens / MSW still deferred (4.6.4-4.6.6).

@@ -26,5 +26,5 @@
 - `apps/fake-plants-angular/src/main.ts` — route override options added
 - `apps/fake-plants-angular/src/pages/about-page.component.ts` (+ spec) — new
 - No shell code, no `@repo/*` changes
-- Nav link to `/about` is NOT included — shell nav override belongs to 4.6.3; `/about` is reachable by direct URL for validation
+- Nav link to `/about` is NOT included — nav/appShell override belongs to 4.6.3; `/about` is reachable by direct URL for validation
 - Validation: `bunx ng test --watch=false` (tenant) green, `bun run build` green

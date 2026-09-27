@@ -38,3 +38,4 @@ Override values SHALL use slash-less route paths matching the shell's `Routes.pa
 #### Scenario: Extension path declared slash-less
 - **WHEN** the tenant declares the About route
 - **THEN** its `path` SHALL be `about` (no leading slash), consistent with the shell's `Routes` and navigable at URL `/about`
+
