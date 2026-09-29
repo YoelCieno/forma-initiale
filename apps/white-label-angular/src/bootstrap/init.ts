@@ -15,6 +15,15 @@ export const META_MAP_INJECTION_KEY = new InjectionToken<Record<string, ProductM
   'META_MAP_INJECTION_KEY',
 )
 
+/** Runtime env config injected into app services (API base URL, tenant, mocks gate) */
+export interface AppEnv {
+  apiUrl: string
+  tenantId: string
+  enableMocks: boolean
+}
+
+export const APP_ENV = new InjectionToken<AppEnv>('APP_ENV')
+
 export interface WhiteLabelAppOptions {
   /** FULL route override — replaces WL defaults entirely */
   routes?: Routes
@@ -26,6 +35,8 @@ export interface WhiteLabelAppOptions {
   metaMap?: Record<string, ProductMeta>
   /** Optional override for the root App component (tenant-owned shell) */
   appShell?: () => Promise<Type<unknown>>
+  /** Runtime env config; defaults to shell environment when omitted */
+  env?: AppEnv
 }
 
 export interface WhiteLabelApp {
@@ -34,8 +45,8 @@ export interface WhiteLabelApp {
 }
 
 export function useWhiteLabelApp() {
-  const setupMocks = async (): Promise<void> => {
-    if (environment.enableMocks) {
+  const setupMocks = async (env?: AppEnv): Promise<void> => {
+    if ((env ?? environment).enableMocks) {
       const { worker } = await import('@repo/infra/mocks/browser')
       await worker.start({ onUnhandledRequest: 'bypass' })
     }
@@ -65,11 +76,14 @@ export function useWhiteLabelApp() {
     return [{ provide: META_MAP_INJECTION_KEY, useValue: metaMap }]
   }
 
-  const buildAppConfig = (
-    routes: Routes,
-    metaMap?: Record<string, ProductMeta>,
-  ): ApplicationConfig => ({
-    providers: [provideZonelessChangeDetection(), provideRouter(routes), provideHttpClient(), ...injectMetaMap(metaMap)],
+  const buildAppConfig = (routes: Routes, opts?: WhiteLabelAppOptions): ApplicationConfig => ({
+    providers: [
+      provideZonelessChangeDetection(),
+      provideRouter(routes),
+      provideHttpClient(),
+      { provide: APP_ENV, useValue: opts?.env ?? environment },
+      ...injectMetaMap(opts?.metaMap),
+    ],
   })
 
   return {

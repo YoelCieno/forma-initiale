@@ -5,7 +5,7 @@ import type { Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 
 // RED phase: these imports fail until init.ts exists — that's the point
-import { useWhiteLabelApp, META_MAP_INJECTION_KEY } from './init'
+import { useWhiteLabelApp, META_MAP_INJECTION_KEY, APP_ENV } from './init'
 import { App } from '../app/app'
 
 // environment module created by coder (Phase 4.2 impl); gate toggled below
@@ -142,6 +142,32 @@ describe('useWhiteLabelApp — setupMocks', () => {
       onUnhandledRequest: 'bypass',
     })
   })
+
+  it('starts worker from passed env even when shell environment has mocks off', async () => {
+    environment.enableMocks = false
+
+    const { setupMocks } = useWhiteLabelApp()
+    await setupMocks({
+      apiUrl: 'https://api.example.com/api',
+      tenantId: 'fp',
+      enableMocks: true,
+    })
+
+    expect(mockWorkerStart).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not start worker when passed env has mocks off despite shell environment on', async () => {
+    environment.enableMocks = true
+
+    const { setupMocks } = useWhiteLabelApp()
+    await setupMocks({
+      apiUrl: 'https://api.example.com/api',
+      tenantId: 'fp',
+      enableMocks: false,
+    })
+
+    expect(mockWorkerStart).not.toHaveBeenCalled()
+  })
 })
 
 // ══════════════════════════════════════════════════════════════════
@@ -156,7 +182,7 @@ describe('useWhiteLabelApp — buildAppConfig', () => {
     ]
 
     const config = buildAppConfig(merged)
-    expect(config.providers).toHaveLength(3)
+    expect(config.providers).toHaveLength(4)
 
     TestBed.configureTestingModule({ providers: config.providers })
     const router = TestBed.inject(Router)
@@ -174,8 +200,8 @@ describe('useWhiteLabelApp — buildAppConfig', () => {
       },
     }
 
-    const config = buildAppConfig([], meta)
-    expect(config.providers).toHaveLength(4)
+    const config = buildAppConfig([], { metaMap: meta })
+    expect(config.providers).toHaveLength(5)
 
     TestBed.configureTestingModule({ providers: config.providers })
     expect(TestBed.inject(META_MAP_INJECTION_KEY)).toEqual(meta)
@@ -238,5 +264,30 @@ describe('useWhiteLabelApp — resolveAppShell', () => {
       metaMap: {},
     })
     expect(shell).toBe(TenantShellCmp)
+  })
+})
+
+// ══════════════════════════════════════════════════════════════════
+// APP_ENV provider — env option, shell environment default
+// ══════════════════════════════════════════════════════════════════
+describe('useWhiteLabelApp — buildAppConfig APP_ENV', () => {
+  it('provides APP_ENV with the passed env', () => {
+    const { buildAppConfig } = useWhiteLabelApp()
+    const env = {
+      apiUrl: 'https://api.example.com/api',
+      tenantId: 'fp',
+      enableMocks: true,
+    }
+
+    const config = buildAppConfig([], { env })
+    TestBed.configureTestingModule({ providers: config.providers })
+    expect(TestBed.inject(APP_ENV)).toEqual(env)
+  })
+
+  it('falls back to shell environment defaults when env omitted', () => {
+    const { buildAppConfig } = useWhiteLabelApp()
+    const config = buildAppConfig([])
+    TestBed.configureTestingModule({ providers: config.providers })
+    expect(TestBed.inject(APP_ENV)).toEqual(environment)
   })
 })

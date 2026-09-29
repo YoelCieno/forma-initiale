@@ -1,7 +1,14 @@
 import { bootstrapApplication } from '@angular/platform-browser'
-import { createWhiteLabelApp } from 'white-label-angular/app'
+import { createWhiteLabelApp, useWhiteLabelApp } from 'white-label-angular/app'
+import { plantsMap } from '@repo/infra'
+import { environment } from './environments/environment'
 
+const { setupMocks } = useWhiteLabelApp()
+
+await setupMocks(environment)
 const { root, config } = await createWhiteLabelApp({
+  env: environment,
+  metaMap: plantsMap,
   extendRoutes: [
     {
       path: 'about',

@@ -1,16 +1,16 @@
 import { computed, inject, resource, Service } from '@angular/core'
 import { getProducts } from '@repo/infra'
-import { environment } from '../environments/environment'
 import { toProductViewList, type ProductView } from '@repo/presenters'
-import { META_MAP_INJECTION_KEY } from '../bootstrap/init'
+import { APP_ENV, META_MAP_INJECTION_KEY } from '../bootstrap/init'
 
 @Service()
 export class ProductsService {
   private readonly metaMap = inject(META_MAP_INJECTION_KEY, { optional: true })
+  private readonly env = inject(APP_ENV)
 
   private readonly catalog = resource({
     loader: async () => {
-      const { data } = await getProducts({ baseUrl: environment.apiUrl, tenantId: environment.tenantId })
+      const { data } = await getProducts({ baseUrl: this.env.apiUrl, tenantId: this.env.tenantId })
       return toProductViewList(data, this.metaMap ?? undefined)
     },
   })
