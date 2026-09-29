@@ -6,6 +6,7 @@ import type { ProductMeta } from '@repo/presenters'
 
 // RED phase: these imports fail until init.ts exists — that's the point
 import { useWhiteLabelApp, META_MAP_INJECTION_KEY } from './init'
+import { App } from '../app/app'
 
 // environment module created by coder (Phase 4.2 impl); gate toggled below
 import { environment } from '../environments/environment'
@@ -24,6 +25,8 @@ class HomeCmp {}
 class ProductsCmp {}
 class ExtraCmp {}
 class OverrideCmp {}
+class AboutCmp {}
+class TenantShellCmp {}
 
 // ══════════════════════════════════════════════════════════════════
 // mergeRoutes — pure sync, no mocking needed
@@ -205,5 +208,35 @@ describe('useWhiteLabelApp — injectMetaMap', () => {
   it('returns empty array when metaMap is undefined', () => {
     const { injectMetaMap } = useWhiteLabelApp()
     expect(injectMetaMap(undefined)).toEqual([])
+  })
+})
+
+// ══════════════════════════════════════════════════════════════════
+// resolveAppShell — tenant override w/ static App default
+// ══════════════════════════════════════════════════════════════════
+describe('useWhiteLabelApp — resolveAppShell', () => {
+  it('returns shell App component when no appShell option', async () => {
+    const { resolveAppShell } = useWhiteLabelApp()
+    const shell = await resolveAppShell({})
+    expect(shell).toBe(App)
+  })
+
+  it('returns tenant component when appShell option provided', async () => {
+    const { resolveAppShell } = useWhiteLabelApp()
+    const shell = await resolveAppShell({
+      appShell: () => Promise.resolve(TenantShellCmp),
+    })
+    expect(shell).toBe(TenantShellCmp)
+  })
+
+  it('resolves appShell independently of routes/metaMap options', async () => {
+    const { resolveAppShell } = useWhiteLabelApp()
+    const shell = await resolveAppShell({
+      appShell: () => Promise.resolve(TenantShellCmp),
+      extendRoutes: [{ path: 'about', component: AboutCmp }],
+      omitRoutePaths: ['products'],
+      metaMap: {},
+    })
+    expect(shell).toBe(TenantShellCmp)
   })
 })

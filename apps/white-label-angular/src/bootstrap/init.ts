@@ -9,6 +9,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { provideRouter, type Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 import { environment } from '../environments/environment'
+import { App } from '../app/app'
 
 export const META_MAP_INJECTION_KEY = new InjectionToken<Record<string, ProductMeta>>(
   'META_MAP_INJECTION_KEY',
@@ -23,6 +24,8 @@ export interface WhiteLabelAppOptions {
   omitRoutePaths?: string[]
   /** Per-product metadata overrides keyed by product name */
   metaMap?: Record<string, ProductMeta>
+  /** Optional override for the root App component (tenant-owned shell) */
+  appShell?: () => Promise<Type<unknown>>
 }
 
 export interface WhiteLabelApp {
@@ -36,6 +39,14 @@ export function useWhiteLabelApp() {
       const { worker } = await import('@repo/infra/mocks/browser')
       await worker.start({ onUnhandledRequest: 'bypass' })
     }
+  }
+
+  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Type<unknown>> => {
+    if (opts.appShell) {
+      return opts.appShell()
+    }
+
+    return App
   }
 
   const mergeRoutes = (wlRoutes: Routes, opts: WhiteLabelAppOptions): Routes => {
@@ -63,6 +74,7 @@ export function useWhiteLabelApp() {
 
   return {
     setupMocks,
+    resolveAppShell,
     mergeRoutes,
     buildAppConfig,
     injectMetaMap,

@@ -11,5 +11,6 @@ const { root, config } = await createWhiteLabelApp({
   // Angular route paths are slash-less ('components', not '/components') —
   // mergeRoutes filters by exact route.path match, a leading slash silently no-ops.
   omitRoutePaths: ['components'],
+  appShell: () => import('./app/app.component').then((m) => m.FpApp),
 })
 bootstrapApplication(root, config).catch((err) => console.error(err))
