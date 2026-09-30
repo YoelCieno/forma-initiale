@@ -19,7 +19,7 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 | `bun run build`                          | turbo build — (white-label-vue: `vp build`, docs: `astro build`)                        |
 | `bun run lint`                           | turbo lint — eslint all packages                                                        |
 | `bun run format`                         | prettier on `*.{ts,tsx,md}`                                                             |
-| `bun run test`                           | turbo test — runs vitest in infra + ui + presenters + white-label-vue + fake-plants-vue |
+| `bun run test`                           | turbo test — vitest (infra, ui, presenters, white-label-vue, fake-plants-vue) + `ng test`/vitest (white-label-angular, fake-plants-angular) |
 | `cd apps/white-label-vue && bun run dev` | white-label-vue only                                                                    |
 | `cd apps/docs && bun run dev`            | docs only                                                                               |
 | `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
@@ -34,6 +34,8 @@ Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
 apps/
   white-label-vue/ — Vite 6 Vue 3 app (via Vite+ `vp` CLI), layer base for tenants
   fake-plants-vue/ — Vue 3 tenant app — plants-themed store
+  white-label-angular/ — Angular 22 layer base (zoneless, signals, OnPush)
+  fake-plants-angular/ — Angular 22 tenant app — plants-themed store (port 4201)
   docs/            — Astro + Starlight docs site
 packages/
   domain/     — pure TS models/ports (@repo/domain)
@@ -59,6 +61,7 @@ Hexagonal + Vue 3 + Angular — all 6 layers active:
 - `apps/docs/` → Astro + Starlight — ACTIVE
 - `apps/fake-plants-vue/` → Vue 3 tenant app, extends white-label layer — ACTIVE
 - `apps/white-label-angular/` → Angular 22 (zoneless, signals, OnPush) — ACTIVE (layer base, exports factory + base config)
+- `apps/fake-plants-angular/` → Angular 22 tenant app, extends white-label-angular layer — ACTIVE
 
 ## Key config details
 

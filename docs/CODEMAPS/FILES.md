@@ -22,6 +22,7 @@ forma-initiale/
 │   ├── white-label-vue/    # Vue 3 SPA — layer base for tenant apps
 │   ├── white-label-angular/# Angular 22 SPA — layer base for Angular tenants
 │   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
+│   ├── fake-plants-angular/# Angular 22 tenant app — plants-themed store (port 4201)
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
@@ -360,8 +361,10 @@ apps/white-label-angular/
     ├── index.html           # HTML shell
     ├── app/                 # Root app component
     ├── bootstrap/
-    │   ├── init.ts          # Factory: createWhiteLabelApp() + merge logic
-    │   └── init.spec.ts     # Factory tests
+    │   ├── init.ts          # Options + merge logic, tokens: META_MAP_INJECTION_KEY, APP_ENV, COMPONENT_OVERRIDES, injectComponentOverride()
+    │   ├── init.spec.ts     # Factory tests
+    │   ├── app.ts           # createWhiteLabelApp() + useWhiteLabelApp, re-exports APP_ENV
+    │   └── app.spec.ts      # App bootstrap tests
     ├── components/
     │   ├── button-container.component.ts      # Button demos (fe-button)
     │   ├── button-container.component.spec.ts # Tests
@@ -378,7 +381,7 @@ apps/white-label-angular/
     │   ├── environment.ts          # Production config
     │   └── environment.development.ts # Dev config
     ├── pages/
-    │   ├── products-page.component.ts      # Products page (fe-async-content)
+    │   ├── products-page.component.ts      # Products page (fe-async-content; resolves 'product-card' override via injectComponentOverride + ngComponentOutlet)
     │   ├── products-page.component.spec.ts # Tests
     │   └── components-page.component.ts    # Components showcase page
     ├── services/
@@ -390,6 +393,41 @@ apps/white-label-angular/
     ├── utils/
     │   └── type-guards.ts   # Angular-specific type guards
     └── test-setup.ts        # ElementInternals FACE shim for jsdom
+```
+
+---
+
+## apps/fake-plants-angular
+
+```
+apps/fake-plants-angular/
+├── package.json             # fake-plants-angular — Angular 22 tenant (dev port 4201)
+├── angular.json             # Angular CLI config (deep-ref styles TEMPORAL — see AGENTS gotcha #16)
+├── tsconfig.json            # Angular TS config
+├── tsconfig.spec.json       # Spec TS config
+├── public/
+│   └── mockServiceWorker.js # MSW worker script
+│
+└── src/
+    ├── main.ts              # Entry: createWhiteLabelApp({ appShell, extendRoutes, omitRoutePaths, metaMap })
+    ├── main.spec.ts         # Bootstrap tests
+    ├── main.wiring.spec.ts  # Env + metaMap injection wiring tests
+    ├── index.html           # HTML shell (host tag <fp-root>)
+    ├── app/
+    │   └── app.component.ts # FpApp — tenant root shell (nav: Products / About)
+    ├── components/
+    │   ├── fp-product-card.component.ts       # Photo card override, registered as 'product-card'
+    │   └── fp-product-card.component.spec.ts  # Tests
+    ├── pages/
+    │   ├── about-page.component.ts      # Tenant About page (extendRoutes)
+    │   ├── about-page.component.spec.ts # Tests
+    │   └── products-page.integration.spec.ts # Products integration (override resolution)
+    ├── environments/         # environment.ts / environment.development.ts (NG_APP_* workaround)
+    ├── import-meta-env.d.ts  # Ambient ImportMeta.env typing (gotcha #15)
+    ├── styles/
+    │   ├── tokens.css        # Green brand overrides (9 --brand-* values)
+    │   └── tokens.spec.ts    # Token content tests (shell-untouched assertion)
+    └── test-setup.ts         # ElementInternals FACE shim (interim, thinner than shell)
 ```
 
 ---

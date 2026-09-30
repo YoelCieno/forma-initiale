@@ -22,7 +22,7 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 | `apps/fake-plants-vue`      | Vue 3 tenant app (plants-themed) | Active              |
 | `apps/docs`                 | Astro + Starlight                | Active              |
 | `apps/white-label-angular`  | Angular 22 (zoneless, signals)   | Active (layer base) |
-| `apps/fake-plants-angular`  | Angular 22 tenant app            | Pending             |
+| `apps/fake-plants-angular`  | Angular 22 tenant app            | Active              |
 | `apps/web-react`            | React                            | Future              |
 
 ## Project structure
@@ -30,9 +30,11 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 ```
 forma-initiale/
 ├── apps/
-│   ├── white-label-vue/    # Vue 3 app (Vite 6 via Vite+), layer base for tenants
-│   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
-│   └── docs/             # Documentation site
+│   ├── white-label-vue/     # Vue 3 app (Vite 6 via Vite+), layer base for tenants
+│   ├── fake-plants-vue/     # Vue 3 tenant app — plants-themed store
+│   ├── white-label-angular/ # Angular 22 layer base (zoneless, signals, OnPush)
+│   ├── fake-plants-angular/ # Angular 22 tenant app — plants-themed store
+│   └── docs/                # Documentation site
 ├── packages/
 │   ├── domain/           # Pure TS models, ports
 │   ├── presenters/       # Presentation layer (domain → view models)
@@ -63,7 +65,7 @@ Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhos
 | `bun run dev`    | Start all apps (dev mode, persistent) |
 | `bun run build`  | Build all apps                        |
 | `bun run lint`   | Lint all packages                     |
-| `bun run test`   | Run tests (Vitest)                    |
+| `bun run test`   | Run tests (Vitest; Angular apps via `ng test`)    |
 | `bun run format` | Format code (Prettier)                |
 | `bun run generate:vue-tenant` | Scaffold a new Vue tenant app (interactive) |
 | `bun run register-tenant`     | Register MSW tenant config (`--prefix <key> --names-json '[...]'`) |

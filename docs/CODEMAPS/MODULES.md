@@ -600,10 +600,11 @@ import { getErrorMessage } from '@repo/utils/error'
 **Key Files**:
 
 - `src/main.ts` — App entry: imports WA styles, calls `createWhiteLabelApp()`
-- `src/bootstrap/` — Factory layer: `init.ts` (options + merge logic)
+- `src/bootstrap/init.ts` — Options + merge logic; tokens `META_MAP_INJECTION_KEY`, `APP_ENV`, `COMPONENT_OVERRIDES`, helper `injectComponentOverride(name, fallback)`
+- `src/bootstrap/app.ts` — `createWhiteLabelApp()` async bootstrap (`appShell` resolution via `resolveAppShell`), re-exports `useWhiteLabelApp` + `APP_ENV`
 - `src/services/products.service.ts` — Angular resource() signal-based data service
 - `src/components/` — fe-* container components (Button, Card, Icon, Rating, ProductCard)
-- `src/pages/` — ProductsPage, ComponentsPage
+- `src/pages/` — ProductsPage (override-aware `ngComponentOutlet`), ComponentsPage
 - `src/environments/` — Angular environment config (NG_APP_* workaround)
 - `src/test-setup.ts` — ElementInternals shim for jsdom
 
@@ -620,6 +621,41 @@ import { getErrorMessage } from '@repo/utils/error'
 ```typescript
 import { createWhiteLabelApp } from './bootstrap/init'
 ```
+
+---
+
+## fake-plants-angular
+
+**Purpose**: Angular 22 tenant app — validates the Angular layer mechanism end-to-end (manual parity vs `fake-plants-vue`), precursor to the 4.7 Angular generator.
+
+**Location**: `apps/fake-plants-angular/`
+
+**Key Files**:
+
+- `src/main.ts` — `createWhiteLabelApp({ appShell, extendRoutes, omitRoutePaths, metaMap })`
+- `src/app/app.component.ts` — `FpApp` root shell via `appShell` option (nav: Products / About)
+- `src/components/fp-product-card.component.ts` — `FpProductCard` photo card, registered under `'product-card'` via `componentOverrides` (shell ProductsPage resolves through `injectComponentOverride` + `ngComponentOutlet`)
+- `src/styles/tokens.css` — Green brand overrides (same 9 `--brand-*` values as fake-plants-vue)
+- `src/pages/about-page.component.ts` — Tenant About route (`extendRoutes`, slash-less Angular paths)
+- `public/mockServiceWorker.js` — MSW worker; tenant registered via `bun run register-tenant`
+
+**Overrides vs white-label-angular**:
+
+| Option               | Value                                                |
+| -------------------- | ---------------------------------------------------- |
+| `appShell`           | `FpApp` (`<fp-root>` host tag)                       |
+| `extendRoutes`       | `about` → AboutPage                                  |
+| `omitRoutePaths`     | `['components']`                                     |
+| `metaMap`            | `plantsMap` (7 plants) via `META_MAP_INJECTION_KEY`  |
+| `componentOverrides` | `'product-card'` → `FpProductCard`                   |
+
+**Dependencies**:
+
+- `white-label-angular` — factory + base pages/components
+- `@repo/domain`, `@repo/infra`, `@repo/presenters`, `@repo/ui`
+- `@angular/core` (^22)
+
+**Dev**: `bun run dev` → `ng serve --port 4201`
 
 ---
 

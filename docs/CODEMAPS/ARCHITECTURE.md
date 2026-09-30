@@ -5,24 +5,24 @@
 ## System Layers
 
 ```
-┌───────────────────────────────────────────────────────────────────────┐
-│                          Apps (framework)                             │
-│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
-│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │  │white-label-angular │
-│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │  │  (Angular 22)      │
-│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘  └─────────┬──────────┘
-│          │                   │                                    	│
-├──────────┼───────────────────┼────────────────────────────────────────┤
-│          │    packages (framework-agnostic)                           │
-│  ┌───────┴───────┐  ┌───────────┐  ┌────────────────┐  ┌────────────┐ │
-│  │   @repo/ui    │  │@repo/infra│  │@repo/presenters│ │@repo/domain │ │
-│  │ (WC wrappers) │  │(adapters) │  │ (view models)  │ │(pure models)│ │
-│  └───────┬───────┘  └─────┬─────┘  └──────┬─────────┘  └─────┬──────┘ │
-│          │                │               │               │           │
-└──────────┼────────────────┼───────────────┼───────────────┼───────────┘
-           │                │               │               │
-           ▼                ▼               ▼               ▼
-     WebAwesome 3.7    fetch/HTTP API   (pure TS)       (no deps)
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                    Apps (framework)                                              │
+│  ┌───────────────┐  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
+│  │white-label-vue│  │  fake-plants-vue   │  │  docs              │  │white-label-angular │  │fake-plants-angular │
+│  │  (Vue 3, Vite)│  │  (Vue 3, Vite+)    │  │  (Astro+Starlight) │  │  (Angular 22)      │  │  (Angular 22)      │
+│  └───────┬───────┘  └────────┬───────────┘  └────────────────────┘  └─────────┬──────────┘  └─────────┬──────────┘
+│          │                   │                                                                                   │
+├──────────┼───────────────────┼───────────────────────────────────────────────────────────────────────────────────┤
+│          │                                     packages (framework-agnostic)                                     │
+│  ┌───────┴───────┐  ┌───────────┐  ┌────────────────┐  ┌────────────┐                                            │
+│  │   @repo/ui    │  │@repo/infra│  │@repo/presenters│ │@repo/domain │                                            │
+│  │ (WC wrappers) │  │(adapters) │  │ (view models)  │ │(pure models)│                                            │
+│  └───────┬───────┘  └─────┬─────┘  └──────┬─────────┘  └─────┬──────┘                                            │
+│          │                │               │                  │                                                   │
+└──────────┼────────────────┼───────────────┼───────────   ────┼───────────────────────────────────────────────────┘
+           │                │               │                  │
+           ▼                ▼               ▼                  ▼
+     WebAwesome 3.7    fetch/HTTP API   (pure TS)          (no deps)
      (design system)
 ```
 
@@ -37,7 +37,7 @@ Domain (pure TS)  →  Presenters (view models)  →  Infra (adapters)  →  UI 
                                                          │			          │
                     Apps (framework-specific)            │			          │
                      ┌────────────────────┐              │			          │
-                     │  white-label-vue   │◄─────────────┘────────────────┘
+                     │  white-label-vue   │◄─────────────┘────────────────────┘
                      │  ├─ App.vue        │  <fe-button>  			          │
                      │  ├─ ProductsPage   │               			          │
                      │  ├─ ComponentsPage │               			          │
@@ -58,6 +58,12 @@ Domain (pure TS)  →  Presenters (view models)  →  Infra (adapters)  →  UI 
                       │  ├─ ProductsService│
                       │  │  (resource())   │
                       │  └─ ComponentsPage │
+                      └────────────────────┘
+                      ┌────────────────────┐
+                      │ fake-plants-angular│ ◄────────────────────────────────┘
+                      │  ├─ FpApp (shell)  │
+                      │  ├─ FpProductCard  │
+                      │  └─ AboutPage      │
                       └────────────────────┘
                      ┌────────────────────┐
                      │  docs              │
@@ -150,6 +156,10 @@ Template renders (fe-async-content → app-product-card × N)
                 ▼
       white-label-angular ◄────────────────┘
             deps: domain, infra, presenters, ui, angular
+                │
+                ▼
+      fake-plants-angular
+            deps: white-label-angular, domain, infra, presenters, ui
                 │
                 ▼
            docs
