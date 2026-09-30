@@ -47,3 +47,24 @@ describe('tenant main bootstrap wiring', () => {
     )
   })
 })
+
+describe('tenant componentOverrides wiring', () => {
+  beforeEach(() => {
+    vi.resetModules()
+    createWhiteLabelAppMock.mockReset().mockResolvedValue({ root: 'ROOT', config: 'CONFIG' })
+    setupMocksMock.mockReset().mockResolvedValue(undefined)
+    bootstrapMock.mockReset().mockResolvedValue(undefined)
+  })
+
+  it('registers FpProductCard under the product-card key', async () => {
+    const { FpProductCard } = await import('./components/fp-product-card.component')
+
+    await import('./main')
+
+    expect(createWhiteLabelAppMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        componentOverrides: { 'product-card': FpProductCard },
+      }),
+    )
+  })
+})

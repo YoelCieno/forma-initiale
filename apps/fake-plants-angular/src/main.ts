@@ -1,6 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser'
 import { createWhiteLabelApp, useWhiteLabelApp } from 'white-label-angular/app'
 import { plantsMap } from '@repo/infra'
+import { FpProductCard } from './components/fp-product-card.component'
 import { environment } from './environments/environment'
 
 const { setupMocks } = useWhiteLabelApp()
@@ -9,6 +10,8 @@ await setupMocks(environment)
 const { root, config } = await createWhiteLabelApp({
   env: environment,
   metaMap: plantsMap,
+  // filename-key registry: tenant src/components entry wins over white-label
+  componentOverrides: { 'product-card': FpProductCard },
   extendRoutes: [
     {
       path: 'about',

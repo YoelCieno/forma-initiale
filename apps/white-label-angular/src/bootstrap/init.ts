@@ -1,5 +1,6 @@
 import {
   InjectionToken,
+  inject,
   provideZonelessChangeDetection,
   type ApplicationConfig,
   type Provider,
@@ -24,6 +25,28 @@ export interface AppEnv {
 
 export const APP_ENV = new InjectionToken<AppEnv>('APP_ENV')
 
+/**
+ * Tenant component overrides keyed by white-label component name
+ * (kebab-case = white-label component file name, e.g. 'product-card').
+ * Root factory default = empty map → zero-override tenants/tests get shell defaults.
+ */
+export const COMPONENT_OVERRIDES = new InjectionToken<Record<string, Type<unknown>>>(
+  'COMPONENT_OVERRIDES',
+  { providedIn: 'root', factory: () => ({}) },
+)
+
+/**
+ * Resolve a component through the override registry with shell fallback.
+ * Each overrideable shell consumer calls this instead of importing the
+ * concrete class directly for rendering.
+ */
+export const injectComponentOverride = <T>(name: string, fallback: Type<T>): Type<T> => {
+  const overrides = inject(COMPONENT_OVERRIDES)
+  // documented boundary cast: runtime Record<string, Type<unknown>> cannot
+  // carry the per-key generic T — caller controls both name and fallback
+  return (overrides[name] as Type<T> | undefined) ?? fallback
+}
+
 export interface WhiteLabelAppOptions {
   /** FULL route override — replaces WL defaults entirely */
   routes?: Routes
@@ -33,6 +56,8 @@ export interface WhiteLabelAppOptions {
   omitRoutePaths?: string[]
   /** Per-product metadata overrides keyed by product name */
   metaMap?: Record<string, ProductMeta>
+  /** Tenant component overrides keyed by white-label component name ('product-card': FpProductCard) */
+  componentOverrides?: Record<string, Type<unknown>>
   /** Optional override for the root App component (tenant-owned shell) */
   appShell?: () => Promise<Type<unknown>>
   /** Runtime env config; defaults to shell environment when omitted */
@@ -76,6 +101,11 @@ export function useWhiteLabelApp() {
     return [{ provide: META_MAP_INJECTION_KEY, useValue: metaMap }]
   }
 
+  const injectComponentOverrides = (overrides?: Record<string, Type<unknown>>): Provider[] =>
+    overrides
+      ? [{ provide: COMPONENT_OVERRIDES, useValue: overrides }]
+      : []
+
   const buildAppConfig = (routes: Routes, opts?: WhiteLabelAppOptions): ApplicationConfig => ({
     providers: [
       provideZonelessChangeDetection(),
@@ -83,6 +113,7 @@ export function useWhiteLabelApp() {
       provideHttpClient(),
       { provide: APP_ENV, useValue: opts?.env ?? environment },
       ...injectMetaMap(opts?.metaMap),
+      ...injectComponentOverrides(opts?.componentOverrides),
     ],
   })
 
@@ -92,5 +123,6 @@ export function useWhiteLabelApp() {
     mergeRoutes,
     buildAppConfig,
     injectMetaMap,
+    injectComponentOverrides,
   }
 }

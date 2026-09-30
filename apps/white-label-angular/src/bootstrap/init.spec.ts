@@ -5,7 +5,13 @@ import type { Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 
 // RED phase: these imports fail until init.ts exists — that's the point
-import { useWhiteLabelApp, META_MAP_INJECTION_KEY, APP_ENV } from './init'
+import {
+  useWhiteLabelApp,
+  META_MAP_INJECTION_KEY,
+  APP_ENV,
+  COMPONENT_OVERRIDES,
+  injectComponentOverride,
+} from './init'
 import { App } from '../app/app'
 
 // environment module created by coder (Phase 4.2 impl); gate toggled below
@@ -27,6 +33,8 @@ class ExtraCmp {}
 class OverrideCmp {}
 class AboutCmp {}
 class TenantShellCmp {}
+class ProductCardCmp {}
+class TenantCmp {}
 
 // ══════════════════════════════════════════════════════════════════
 // mergeRoutes — pure sync, no mocking needed
@@ -289,5 +297,57 @@ describe('useWhiteLabelApp — buildAppConfig APP_ENV', () => {
     const config = buildAppConfig([])
     TestBed.configureTestingModule({ providers: config.providers })
     expect(TestBed.inject(APP_ENV)).toEqual(environment)
+  })
+})
+
+// ══════════════════════════════════════════════════════════════════
+// COMPONENT_OVERRIDES registry — component override (plan 4.6.5)
+// ══════════════════════════════════════════════════════════════════
+describe('injectComponentOverride', () => {
+  it('returns fallback when registry empty', () => {
+    TestBed.configureTestingModule({})
+    const result = TestBed.runInInjectionContext(() =>
+      injectComponentOverride('product-card', ProductCardCmp),
+    )
+    expect(result).toBe(ProductCardCmp)
+  })
+
+  it('returns tenant class when map has key', () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: COMPONENT_OVERRIDES, useValue: { 'product-card': TenantCmp } }],
+    })
+    const result = TestBed.runInInjectionContext(() =>
+      injectComponentOverride('product-card', ProductCardCmp),
+    )
+    expect(result).toBe(TenantCmp)
+  })
+
+  it('returns fallback for unknown key even when registry non-empty', () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: COMPONENT_OVERRIDES, useValue: { 'other-cmp': TenantCmp } }],
+    })
+    const result = TestBed.runInInjectionContext(() =>
+      injectComponentOverride('product-card', ProductCardCmp),
+    )
+    expect(result).toBe(ProductCardCmp)
+  })
+})
+
+describe('buildAppConfig — componentOverrides provider', () => {
+  it('adds COMPONENT_OVERRIDES provider when componentOverrides provided', () => {
+    const { buildAppConfig } = useWhiteLabelApp()
+    const config = buildAppConfig([], { componentOverrides: { 'product-card': TenantCmp } })
+
+    TestBed.configureTestingModule({ providers: config.providers })
+    expect(TestBed.inject(COMPONENT_OVERRIDES)).toEqual({ 'product-card': TenantCmp })
+  })
+
+  it('adds no COMPONENT_OVERRIDES provider when componentOverrides omitted', () => {
+    const { buildAppConfig } = useWhiteLabelApp()
+    const config = buildAppConfig([])
+
+    TestBed.configureTestingModule({ providers: config.providers })
+    // root factory default = empty map
+    expect(TestBed.inject(COMPONENT_OVERRIDES)).toEqual({})
   })
 })

@@ -1,2 +1,12 @@
-/* Fake Plants tenant token overrides — green brand lands in follow-up (plan 4.6.5).
-   Base tokens come from white-label-angular/src/styles/tokens.css via angular.json. */
+/* Fake Plants brand override */
+:where(:root) {
+  --brand-fill-quiet: #d6e1da;
+  --brand-fill-normal: #16a34a;  /* green-600 */
+  --brand-fill-loud: #15803d;    /* green-700 */
+  --brand-border-quiet: #bbf7d0;
+  --brand-border-normal: #86efac;
+  --brand-border-loud: #22c55e;
+  --brand-on-quiet: #166534;
+  --brand-on-normal: #fff;
+  --brand-on-loud: #f0fdf4;
+}

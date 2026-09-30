@@ -189,3 +189,86 @@ describe('ProductsPage', () => {
     expect(el.querySelector('.products-page__error')?.textContent).toContain('Failed to load')
   })
 })
+
+// ── component override registry (plan 4.6.5, task 2.4) ──
+
+import { Component, input } from '@angular/core'
+import { COMPONENT_OVERRIDES } from '../bootstrap/init'
+
+@Component({
+  selector: 'dummy-product-card',
+  template: `<span
+    class="dummy-card"
+    [attr.data-id]="id()"
+    [attr.data-title]="title()"
+    [attr.data-description]="description()"
+    [attr.data-image]="image()"
+    [attr.data-image-family]="imageFamily()"
+    [attr.data-price]="price()"
+    [attr.data-previous-price]="previousPrice()"
+    [attr.data-rate]="rate()"
+  ></span>`,
+})
+class DummyProductCard {
+  readonly id = input.required<string>()
+  readonly title = input('')
+  readonly description = input('')
+  readonly image = input('')
+  readonly imageFamily = input('')
+  readonly price = input('')
+  readonly previousPrice = input<string | undefined>(undefined)
+  readonly rate = input(0)
+}
+
+describe('ProductsPage — componentOverrides registry', () => {
+  beforeEach(() => {
+    TestBed.resetTestingModule()
+    vi.clearAllMocks()
+    mockCatalog.items.set([mockProduct({ id: 'p1', previousPrice: '$9' })])
+    mockCatalog.loading.set(false)
+    mockCatalog.error.set(undefined)
+    mockCatalog.hasValue.set(true)
+  })
+
+  const setupWithOverride = async () => {
+    await TestBed.configureTestingModule({
+      imports: [ProductsPage],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: ProductsService, useValue: mockCatalog },
+        { provide: COMPONENT_OVERRIDES, useValue: { 'product-card': DummyProductCard } },
+      ],
+    }).compileComponents()
+    return TestBed.createComponent(ProductsPage)
+  }
+
+  it('renders tenant dummy instead of shell ProductCard when key registered', async () => {
+    const fixture = await setupWithOverride()
+    fixture.detectChanges()
+    await fixture.whenStable()
+
+    const el = fixture.nativeElement
+    expect(el.querySelectorAll('dummy-product-card').length).toBe(1)
+    expect(el.querySelectorAll('app-product-card').length).toBe(0)
+  })
+
+  it('binds all 7 inputs through the outlet', async () => {
+    const fixture = await setupWithOverride()
+    fixture.detectChanges()
+    await fixture.whenStable()
+    // hybridJS/zoneless settle: outlet applies setInput on a later microtask
+    await Promise.resolve()
+    await Promise.resolve()
+    fixture.detectChanges()
+
+    const card = fixture.nativeElement.querySelector('dummy-product-card .dummy-card')
+    expect(card.getAttribute('data-id')).toBe('p1')
+    expect(card.getAttribute('data-title')).toBe('Vue')
+    expect(card.getAttribute('data-description')).toBe('Progressive framework')
+    expect(card.getAttribute('data-image')).toBe('vuejs')
+    expect(card.getAttribute('data-image-family')).toBe('brands')
+    expect(card.getAttribute('data-price')).toBe('Free')
+    expect(card.getAttribute('data-previous-price')).toBe('$9')
+    expect(card.getAttribute('data-rate')).toBe('4.5')
+  })
+})

@@ -1,12 +1,27 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core'
+import { NgComponentOutlet } from '@angular/common'
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
 import { ProductCard } from '../components/product-card.component'
+import { injectComponentOverride } from '../bootstrap/init'
 import { ProductsService } from '../services/products.service'
+import type { ProductView } from '@repo/presenters'
+
+/** Input surface any 'product-card' override must accept (shell card = reference impl) */
+export interface ProductCardInputs {
+  id: string
+  title: string
+  description: string
+  image: string
+  imageFamily: string
+  price: string
+  previousPrice?: string
+  rate: number
+}
 
 @Component({
   selector: 'app-products-page',
-  imports: [ProductCard],
+  imports: [NgComponentOutlet],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="products-page">
@@ -16,16 +31,10 @@ import { ProductsService } from '../services/products.service'
         <p slot="error" class="products-page__error">{{ error() }}</p>
         <div class="products-page__grid">
           @for (product of products(); track product.id) {
-            <app-product-card
-              [id]="product.id"
-              [title]="product.title"
-              [description]="product.description"
-              [image]="product.image"
-              [imageFamily]="product.imageFamily"
-              [price]="product.price"
-              [previousPrice]="product.previousPrice"
-              [rate]="product.rate"
-            ></app-product-card>
+            <ng-container
+              [ngComponentOutlet]="productCard"
+              [ngComponentOutletInputs]="cardInputs(product)"
+            />
           }
         </div>
       </fe-async-content>
@@ -59,4 +68,19 @@ export class ProductsPage {
   readonly products = this.catalog.items
   readonly loading = this.catalog.loading
   readonly error = this.catalog.error
+
+  /** Shell default unless tenant registers 'product-card' override */
+  readonly productCard = injectComponentOverride('product-card', ProductCard)
+
+  /** Single typed boundary for the loosely-typed ngComponentOutletInputs */
+  readonly cardInputs = (product: ProductView): ProductCardInputs & Record<string, unknown> => ({
+    id: product.id,
+    title: product.title,
+    description: product.description,
+    image: product.image,
+    imageFamily: product.imageFamily,
+    price: product.price,
+    previousPrice: product.previousPrice,
+    rate: product.rate,
+  })
 }
