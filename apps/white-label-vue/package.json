@@ -30,7 +30,7 @@
     "@repo/typescript-config": "*",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.10",
-    "eslint": "^8.57.1",
+    "eslint": "^10.0.0",
     "jsdom": "^29.1.1",
     "msw": "^2.14.6",
     "typescript": "5.9.3",
