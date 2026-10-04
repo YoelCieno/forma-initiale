@@ -3,7 +3,8 @@ import { Component, input, provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 // TDD RED: ./component-override.component (ComponentOverride) does NOT exist yet.
 // This spec must fail to compile/run until the SUT is implemented (GREEN phase).
-import { ComponentOverride, type ProductCardInputs } from './component-override.component'
+import { ComponentOverride } from './component-override.component'
+import { type ProductCardInputs } from './product-card.model'
 import { COMPONENT_OVERRIDES } from '../bootstrap/init'
 
 /**

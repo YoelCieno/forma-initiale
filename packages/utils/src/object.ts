@@ -14,5 +14,8 @@ export function object() {
     }
   }
 
-  return { isObject, safeJsonParse }
+  const pick = (src: Record<string, unknown>, keys: readonly string[]): Record<string, unknown> =>
+    keys.reduce<Record<string, unknown>>((acc, k) => ({ ...acc, [k]: src[k] }), {})
+
+  return { isObject, safeJsonParse, pick }
 }

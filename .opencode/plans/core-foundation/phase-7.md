@@ -23,6 +23,7 @@
 - **Problems solved:**
   - (a) automatic override registration — write a component, override it in any tenant
   - (b) eliminate per-component wrapper files (supersedes the `universal-override-wrapper` stopgap, openspec change just scaffolded)
+- **Capability — input-declaration codegen:** dynamic `@Input` names are IMPOSSIBLE in Angular — `@Input()` decorator + `inputs:` metadata are static literals and AOT checks consumer template bindings against declared inputs at compile time. Irreducible per-slot cost today = 1 static `@Input()` line + selector-list entry + slot-registry entry. The plugin could generate ALL three from a single slot config (selector + input name + input type + fallback + payload keys) — the real answer to "dynamic inputs": build-time codegen, not runtime.
 - **Gates before any code** (each = research task):
   1. **Override-mapping source** — glob discovery cannot infer shell↔override relationship; decide config file vs naming convention vs marker decorator
   2. **Selector unification** — template element must match injected class selector; mixed prefixes today (`app-product-card`, `fp-product-card`, neutral `<product-card>` template tag) conflict

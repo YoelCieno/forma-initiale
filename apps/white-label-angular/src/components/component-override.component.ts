@@ -8,31 +8,33 @@ import {
   type Type,
 } from '@angular/core'
 import { NgComponentOutlet } from '@angular/common'
+import { object } from '@repo/utils/object'
 import { ProductCard } from './product-card.component'
 import { injectComponentOverride } from '../bootstrap/init'
+import { PRODUCT_CARD_INPUT_KEYS, type ProductCardInputs } from './product-card.model'
+
+const { pick } = object()
+
+/** Per-slot wiring: shell fallback component + input keys forwarded to it. */
+type SlotConfig = { fallback: Type<unknown>; inputKeys: readonly string[] }
 
 /**
- * Input surface any 'product-card' override must accept (shell card = reference impl).
- * Moved here from the deleted product-card wrapper module.
+ * Merged slot registry keyed by consumer tag (host localName) — fallback
+ * component + payload keys in one lookup. Grows with future overrideable
+ * hosts: 'product-card, wl-header, ...'.
  */
-export interface ProductCardInputs {
-  id: string
-  title: string
-  description: string
-  image: string
-  imageFamily: string
-  price: string
-  previousPrice?: string
-  rate: number
+const SLOTS: Record<string, SlotConfig> = {
+  'product-card': { fallback: ProductCard, inputKeys: PRODUCT_CARD_INPUT_KEYS },
+} satisfies Record<string, SlotConfig>
+
+/** Registry lookup guard — unknown host tag fails loudly, never silently. */
+const resolveSlot = (name: string): SlotConfig => {
+  const slot = SLOTS[name]
+  if (slot === undefined) {
+    throw new Error(`Unknown override slot: '${name}' — add selector + SLOTS entry`)
+  }
+  return slot
 }
-
-/**
- * Shell fallbacks keyed by consumer tag (host localName). Grows with future
- * overrideable hosts: 'product-card, wl-header, ...'.
- */
-const OVERRIDE_FALLBACKS: Record<string, Type<unknown>> = {
-  'product-card': ProductCard,
-} satisfies Record<string, Type<unknown>>
 
 /**
  * Consumer-facing host that hides the override plumbing (registry lookup +
@@ -53,10 +55,13 @@ export class ComponentOverride implements OnChanges {
   /** Host tag = registry key ('component-tag') */
   private readonly localName: string = inject(ElementRef).nativeElement.localName
 
+  /** Merged registry entry for this host tag — unknown slot throws in constructor */
+  private readonly slot: SlotConfig = resolveSlot(this.localName)
+
   /** Resolved ONCE eagerly — constructor is an injection context */
   private readonly resolvedComponent: Type<unknown> = injectComponentOverride(
     this.localName,
-    OVERRIDE_FALLBACKS[this.localName],
+    this.slot.fallback,
   )
 
   /**
@@ -81,25 +86,16 @@ export class ComponentOverride implements OnChanges {
   readonly resolved = (): Type<unknown> => this.resolvedComponent
 
   /**
-   * Forwards only the `ProductCardInputs` surface — consumer objects may carry
-   * extra fields (e.g. Product.name) and NgComponentOutlet setInput throws
-   * NG0303 on keys the target does not declare as inputs.
+   * Forwards only the keys declared for this slot in the registry — consumer
+   * objects may carry extra fields (e.g. Product.name) and NgComponentOutlet
+   * setInput throws NG0303 on keys the target does not declare as inputs.
    * Throws at render when no payload input was bound (guard, not silent empty render).
    */
-  readonly payload = (): ProductCardInputs & Record<string, unknown> => {
+  readonly payload = (): Record<string, unknown> => {
     const current = this.payloadValue
     if (current === undefined) {
-      throw new Error(`Missing 'input' payload input on <${this.localName}>`)
+      throw new Error(`Missing payload input on <${this.localName}>`)
     }
-    return {
-      id: current.id,
-      title: current.title,
-      description: current.description,
-      image: current.image,
-      imageFamily: current.imageFamily,
-      price: current.price,
-      previousPrice: current.previousPrice,
-      rate: current.rate,
-    }
+    return pick(current, this.slot.inputKeys)
   }
 }
