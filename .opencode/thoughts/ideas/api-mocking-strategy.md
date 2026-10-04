@@ -31,10 +31,10 @@ Custom Node.js Fastify server. Full control, fullstack learning opportunity, no 
 ## Architecture Fit
 
 ```
-┌─────────────┐     fetch     ┌──────────────┐
+┌─────────────┐     fetch    ┌───────────────┐
 │  App (Vue)  │ ──────────▶  │  MSW Handler  │
-│  (dev/test) │ ◀──────────  │  (browser/Node)│
-└─────────────┘              └──────────────┘
+│  (dev/test) │ ◀──────────  │ (browser/Node)│
+└─────────────┘              └───────────────┘
        │                            │
        │ domain contracts           │ mock data
        ▼                            ▼

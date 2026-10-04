@@ -66,6 +66,27 @@ describe('ProductsPage', () => {
     expect(el.querySelector('.products-page__grid')).toBeTruthy()
   })
 
+  // ── consumer shape: plumbing hidden behind <product-card [product]> ──
+
+  it('loaded state: grid children are product-card hosts wrapping the card', async () => {
+    mockCatalog.loading.set(false)
+    mockCatalog.items.set([mockProduct(), mockProduct({ id: '2', title: 'Angular' })])
+    mockCatalog.error.set(undefined)
+    const fixture = await setup()
+    fixture.detectChanges()
+    await fixture.whenStable()
+    await Promise.resolve()
+    await Promise.resolve()
+    fixture.detectChanges()
+
+    const grid = fixture.nativeElement.querySelector('.products-page__grid')
+    expect(grid.children.length).toBe(2)
+    for (const child of grid.children) {
+      expect(child.tagName.toLowerCase()).toBe('product-card')
+    }
+    expect(grid.querySelectorAll('product-card > app-product-card').length).toBe(2)
+  })
+
   it('has products-page block class', async () => {
     const fixture = await setup()
     fixture.detectChanges()
@@ -248,7 +269,7 @@ describe('ProductsPage — componentOverrides registry', () => {
     await fixture.whenStable()
 
     const el = fixture.nativeElement
-    expect(el.querySelectorAll('dummy-product-card').length).toBe(1)
+    expect(el.querySelectorAll('product-card > dummy-product-card').length).toBe(1)
     expect(el.querySelectorAll('app-product-card').length).toBe(0)
   })
 

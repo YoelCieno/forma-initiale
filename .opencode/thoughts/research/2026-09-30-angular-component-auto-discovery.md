@@ -3,7 +3,7 @@
 **Date:** 2026-09-30
 **Context:** Change `add-fake-plants-angular-brand-components` (plan 4.6.5) ships an explicit `componentOverrides` map. Goal: filename-based auto-discovery — tenant `src/components/<name>.component.ts` wins over white-label `<name>.component.ts` — like Vue's `componentDirs` (unplugin-vue-components scans tenant dir first, name clash = tenant wins). Decision pencilled in plan `.opencode/plans/core-foundation/phase-4/4.6-fake-plants-angular.md` §4.6.7.
 
-**Invariant for all candidates:** discovery only *populates* the existing `COMPONENT_OVERRIDES` map (`bootstrap/init.ts`). Registry API, `injectComponentOverride()` accessor, and factory option stay fixed.
+**Invariant for all candidates:** discovery only _populates_ the existing `COMPONENT_OVERRIDES` map (`bootstrap/init.ts`). Registry API, `injectComponentOverride()` accessor, and factory option stay fixed.
 
 ## Key fact: `import.meta.glob` does NOT work out of the box
 
@@ -20,7 +20,9 @@ A small script (bun/node) scans `apps/<tenant>/src/components/*.component.ts`, e
 ```ts
 // AUTO-GENERATED — do not edit
 import { FpProductCard } from './fp-product-card.component'
-export const COMPONENT_OVERRIDES = { 'fp-product-card': FpProductCard } satisfies Record<string, Type<unknown>>
+export const COMPONENT_OVERRIDES = {
+  'fp-product-card': FpProductCard,
+} satisfies Record<string, Type<unknown>>
 ```
 
 Tenant `main.ts` passes `COMPONENT_OVERRIDES` (or a tiny `discoverOverrides()` helper) to `createWhiteLabelApp()`.
@@ -29,6 +31,10 @@ Tenant `main.ts` passes `COMPONENT_OVERRIDES` (or a tiny `discoverOverrides()` h
 - **Cons:** (1) file add/remove needs re-run — mitigate: run script in dev/build/test pre-hooks + optional `--watch`; (2) generated file in VCS (or gitignored + always regenerated — pick gitignored + pre-hooks, like `components.d.ts` / `auto-imports.d.ts` pattern already used by unplugin in the Vue app); (3) class-name extraction needs a simple regex/TS-AST rule (KISSME: convention `export class <Pascal>` in `*.component.ts`).
 - **Effort:** ~1 script + 3 pre-hook lines + 1 spec.
 - **AOT compat:** ✅ static imports. **`ng update` risk:** ✅ none (no CLI internals).
+
+<!-- INFO: We are taking into account one important side but if reviewing the templates we are using ng-container to deal with overrides. In Vue we don't need that. Would it be possible to use product-card? (Maybe is something related to the selectors (app-product-card, fp-product-card, wl-product-card?)
+We need something similar to unplugin-vue-components, to inclue a hook which scanned BEFORE shell, and first match wins
+-->
 
 ### B. esbuild plugin via custom builder — LATER (only if watch-mode magic required)
 
@@ -45,7 +51,7 @@ Inject a virtual module or expand glob inside the esbuild pipeline.
 
 ### C. Schematic / codegen on `ng generate` — partial, NOT sufficient alone
 
-Schematics run only on `ng generate` events; creating a file in the editor doesn't trigger them. Useful as *companion* (schematic invokes the A codegen), useless as the sole mechanism.
+Schematics run only on `ng generate` events; creating a file in the editor doesn't trigger them. Useful as _companion_ (schematic invokes the A codegen), useless as the sole mechanism.
 
 ### D. Runtime glob — IMPOSSIBLE
 
@@ -58,6 +64,7 @@ Bundled browser code has no filesystem access. Rejected.
 **Later: B, only if A's re-run friction becomes real** (frequent component adds during dev). Evaluate at §4.6.7 verdict time; re-check that `@angular/build` promoted plugin options from `private.d.ts` to public API first.
 
 **Migration path (A → registry):**
+
 1. Keep `injectComponentOverride()` + `COMPONENT_OVERRIDES` token untouched.
 2. Add `scripts/gen-component-overrides.ts` + pre-hooks in tenant `package.json`.
 3. `main.ts`: `componentOverrides: await discoverOverrides()` replaces explicit literal (explicit entries may remain as manual escape hatch — merge order: explicit > generated).
