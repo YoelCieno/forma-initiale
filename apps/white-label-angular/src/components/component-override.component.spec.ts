@@ -1,8 +1,20 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { Component, input, provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { ProductCardWrapper, type ProductCardInputs } from './product-card-wrapper.component'
+// TDD RED: ./component-override.component (ComponentOverride) does NOT exist yet.
+// This spec must fail to compile/run until the SUT is implemented (GREEN phase).
+import { ComponentOverride, type ProductCardInputs } from './component-override.component'
 import { COMPONENT_OVERRIDES } from '../bootstrap/init'
+
+/**
+ * NOTE for implementer: ComponentOverride MUST use classic `@Input` for
+ * `product` — NOT a signal `input()`. Unit-test pipeline externalizes bare
+ * `white-label-angular/*` imports → JIT at runtime → JIT only reads @Component
+ * metadata, so signal inputs would be invisible and `[product]` would fall
+ * through to a DOM property (NG0950). Tenant tests consume the SUT via package
+ * specifier (JIT), shell relative imports stay AOT — classic @Input is safe on
+ * both paths. AGENTS gotcha #17.
+ */
 
 const product: ProductCardInputs = {
   id: 'p1',
@@ -17,9 +29,9 @@ const product: ProductCardInputs = {
 
 @Component({
   template: `<product-card [product]="product" />`,
-  imports: [ProductCardWrapper],
+  imports: [ComponentOverride],
 })
-class WrapperHost {
+class OverrideHost {
   readonly product = product
 }
 
@@ -30,11 +42,18 @@ class WrapperHost {
       <product-card [product]="product" />
     </div>
   `,
-  imports: [ProductCardWrapper],
+  imports: [ComponentOverride],
 })
 class GridHost {
   readonly product = product
 }
+
+/** No [product] binding at all — guard must throw loudly at render, not render empty. */
+@Component({
+  template: `<product-card />`,
+  imports: [ComponentOverride],
+})
+class MissingPayloadHost {}
 
 @Component({
   selector: 'dummy-product-card',
@@ -70,27 +89,37 @@ const settle = async (fixture: { detectChanges: () => void; whenStable: () => Pr
   fixture.detectChanges()
 }
 
-describe('ProductCardWrapper', () => {
+describe('ComponentOverride', () => {
   beforeEach(() => {
     TestBed.resetTestingModule()
   })
 
   const setup = async (overrides?: Record<string, unknown>) => {
     await TestBed.configureTestingModule({
-      imports: [WrapperHost],
+      imports: [OverrideHost],
       providers: [
         provideZonelessChangeDetection(),
         ...(overrides ? [{ provide: COMPONENT_OVERRIDES, useValue: overrides }] : []),
       ],
     }).compileComponents()
-    return TestBed.createComponent(WrapperHost)
+    return TestBed.createComponent(OverrideHost)
   }
+
+  // ── ported from product-card-wrapper.component.spec.ts ────────────────
 
   it('renders neutral product-card host around the card', async () => {
     const fixture = await setup()
     await settle(fixture as never)
     const host = fixture.nativeElement.querySelector('product-card')
     expect(host).toBeTruthy()
+  })
+
+  it('display: contents — host contributes no box (override plumbing invisible)', async () => {
+    const fixture = await setup()
+    await settle(fixture as never)
+    const host = fixture.nativeElement.querySelector('product-card')
+    expect(host).toBeTruthy()
+    expect(getComputedStyle(host).display).toBe('contents')
   })
 
   it('registry empty: renders shell ProductCard (app-product-card)', async () => {
@@ -132,5 +161,48 @@ describe('ProductCardWrapper', () => {
     expect(card.getAttribute('data-title')).toBe('Vue')
     expect(card.getAttribute('data-price')).toBe('Free')
     expect(card.getAttribute('data-rate')).toBe('4.5')
+  })
+
+  // ── new scenarios ─────────────────────────────────────────────────────
+
+  it('element-key resolution: accessor called with host localName, no key input', async () => {
+    // Proxy records every key the registry accessor (injectComponentOverride)
+    // reads off COMPONENT_OVERRIDES — proves the key is the host tag itself.
+    const accessed: string[] = []
+    const recordingOverrides = new Proxy<Record<string, unknown>>(
+      { 'product-card': DummyProductCard },
+      {
+        get: (target, key) => {
+          if (typeof key === 'string') accessed.push(key)
+          return Reflect.get(target, key)
+        },
+      },
+    )
+    const fixture = await setup(recordingOverrides)
+    await settle(fixture as never)
+    expect(accessed).toContain('product-card')
+    // resolution worked WITHOUT any key input — tag is the registry key
+    expect(fixture.nativeElement.querySelectorAll('dummy-product-card').length).toBe(1)
+  })
+
+  it('missing payload: throws loudly at render instead of silent empty render', async () => {
+    await TestBed.configureTestingModule({
+      imports: [MissingPayloadHost],
+      providers: [provideZonelessChangeDetection()],
+    }).compileComponents()
+    const fixture = TestBed.createComponent(MissingPayloadHost)
+    // guard contract: thrown Error message must reference the missing
+    // `product` input (or "payload") — see assumptions in report
+    expect(() => fixture.detectChanges()).toThrowError(/product|payload/i)
+  })
+
+  it('selector contract: consumer tag stays product-card, never component-override', async () => {
+    const fixture = await setup()
+    await settle(fixture as never)
+    const el = fixture.nativeElement
+    expect(el.querySelector('product-card')).toBeTruthy()
+    expect(el.querySelectorAll('product-card > app-product-card').length).toBe(1)
+    // regression guard against reverting to the rejected generic-element design
+    expect(el.querySelectorAll('component-override').length).toBe(0)
   })
 })

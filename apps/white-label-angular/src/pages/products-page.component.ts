@@ -1,12 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core'
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
-import { ProductCardWrapper } from '../components/product-card-wrapper.component'
+import { ComponentOverride } from '../components/component-override.component'
 import { ProductsService } from '../services/products.service'
 
 @Component({
   selector: 'app-products-page',
-  imports: [ProductCardWrapper],
+  imports: [ComponentOverride],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="products-page">
