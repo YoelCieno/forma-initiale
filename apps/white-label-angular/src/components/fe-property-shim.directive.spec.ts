@@ -9,6 +9,7 @@ import '@repo/ui/fe-button';
 
 @Component({
   standalone: true,
+  selector: 'host-readonly-rating',
   imports: [FePropertyShimDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `<fe-rating [readonly]="true"></fe-rating>`,
@@ -25,6 +26,7 @@ class HostTabindexRating {}
 
 @Component({
   standalone: true,
+  selector: 'host-readonly-button',
   imports: [FePropertyShimDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `<fe-button [readonly]="true"></fe-button>`,

@@ -13,6 +13,9 @@ public/dist
 # Astro build output
 *.astro/
 
+# Angular
+/.angular/cache
+
 # serena build output
 *.serena/
 
