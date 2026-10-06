@@ -79,7 +79,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "setupFiles": ["src/test-setup.ts"]
+            "setupFiles": ["../../packages/infra/src/testing/element-internals.ts"]
           }
         }
       }
