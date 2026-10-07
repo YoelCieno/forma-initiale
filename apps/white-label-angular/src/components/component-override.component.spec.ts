@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { Component, input, provideZonelessChangeDetection } from '@angular/core'
-import { TestBed } from '@angular/core/testing'
+import { Component, input, provideZonelessChangeDetection, ChangeDetectorRef } from '@angular/core'
+import { TestBed, type ComponentFixture } from '@angular/core/testing'
+import { By } from '@angular/platform-browser'
 // TDD RED: ./component-override.component (ComponentOverride) does NOT exist yet.
 // This spec must fail to compile/run until the SUT is implemented (GREEN phase).
 import { ComponentOverride } from './component-override.component'
@@ -88,6 +89,13 @@ const settle = async (fixture: { detectChanges: () => void; whenStable: () => Pr
   await Promise.resolve()
   await Promise.resolve()
   fixture.detectChanges()
+}
+
+/** ComponentOverride instance behind a <product-card> host — SUT access for `payload()`. */
+const overrideInstance = (fixture: ComponentFixture<unknown>): ComponentOverride => {
+  const el = fixture.debugElement.query(By.directive(ComponentOverride))
+  if (el === null) throw new Error('ComponentOverride instance not found')
+  return el.componentInstance
 }
 
 describe('ComponentOverride', () => {
@@ -205,5 +213,57 @@ describe('ComponentOverride', () => {
     expect(el.querySelectorAll('product-card > app-product-card').length).toBe(1)
     // regression guard against reverting to the rejected generic-element design
     expect(el.querySelectorAll('component-override').length).toBe(0)
+  })
+
+  // ── payload memoization ──────────────────────────────────────────────
+
+  describe('payload memoization', () => {
+    /** Picked payload of the changed input — exactly the slot keys, no more. */
+    const pickedProductV2: ProductCardInputs = {
+      ...product,
+      id: 'p2',
+      title: 'Angular',
+      description: 'Platform for mobile and desktop',
+      image: 'angular',
+      price: 'Enterprise',
+      previousPrice: '$99',
+      rate: 4.9,
+    }
+
+    /** Consumer object carries an extra field — payload() must NOT leak `name`. */
+    const productV2 = { ...pickedProductV2, name: 'Angular framework' }
+
+    it('stable reference across change-detection passes', async () => {
+      const fixture = await setup()
+      await settle(fixture as never)
+      const instance = overrideInstance(fixture)
+      const first = instance.payload()
+      await settle(fixture as never)
+      const second = instance.payload()
+      expect(second).toBe(first)
+    })
+
+    it('new reference after input changes', async () => {
+      const fixture = await setup()
+      await settle(fixture as never)
+      const instance = overrideInstance(fixture)
+      const before = instance.payload()
+
+      // host field is readonly (template-bound) — widen to rebind between CD passes
+      const host: { product: ProductCardInputs } = fixture.componentInstance
+      host.product = productV2
+      // zoneless: plain-field mutation schedules no CD — dirty-mark the HOST component's
+      // view (fixture.componentRef.changeDetectorRef is the ROOT view; refreshing it
+      // skips this host's template unless the host view itself is flagged)
+      fixture.componentRef.injector.get(ChangeDetectorRef).markForCheck()
+      await settle(fixture as never)
+      const after = instance.payload()
+
+      expect(after).not.toBe(before)
+      expect(after).toEqual(pickedProductV2)
+      expect(after).not.toHaveProperty('name')
+      // memo must not mutate the previously captured snapshot
+      expect(before).toEqual(product)
+    })
   })
 })

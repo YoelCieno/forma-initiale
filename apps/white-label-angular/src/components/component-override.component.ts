@@ -72,13 +72,18 @@ export class ComponentOverride implements OnChanges {
    */
   @Input() product?: ProductCardInputs
 
-  /** First changed input's current value (selector guarantees one input per instance) */
-  private payloadValue?: ProductCardInputs
+  /**
+   * Memoized slot-picked payload — recomputed in ngOnChanges only when the
+   * `product` input changes (undefined value clears it, keeping the
+   * descriptive missing-payload throw above a TypeError inside pick()).
+   */
+  private payloadRecord?: Record<string, unknown>
 
   ngOnChanges(changes: SimpleChanges): void {
     const [firstChange] = Object.values(changes)
     if (firstChange) {
-      this.payloadValue = firstChange.currentValue
+      const value: ProductCardInputs | undefined = firstChange.currentValue
+      this.payloadRecord = value ? pick(value, this.slot.inputKeys) : undefined
     }
   }
 
@@ -86,16 +91,17 @@ export class ComponentOverride implements OnChanges {
   readonly resolved = (): Type<unknown> => this.resolvedComponent
 
   /**
-   * Forwards only the keys declared for this slot in the registry — consumer
-   * objects may carry extra fields (e.g. Product.name) and NgComponentOutlet
-   * setInput throws NG0303 on keys the target does not declare as inputs.
+   * Memoized in ngOnChanges — stable reference between input changes, so no
+   * re-pick per view check (no per-check allocation). Forwards only the keys
+   * declared for this slot in the registry — consumer objects may carry extra
+   * fields (e.g. Product.name) and NgComponentOutlet setInput throws NG0303 on
+   * keys the target does not declare as inputs.
    * Throws at render when no payload input was bound (guard, not silent empty render).
    */
   readonly payload = (): Record<string, unknown> => {
-    const current = this.payloadValue
-    if (current === undefined) {
+    if (!this.payloadRecord) {
       throw new Error(`Missing payload input on <${this.localName}>`)
     }
-    return pick(current, this.slot.inputKeys)
+    return this.payloadRecord
   }
 }
