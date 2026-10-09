@@ -9,7 +9,7 @@ Today the shell renders overrides through `ProductCardWrapper` (`apps/white-labe
 Constraints verified against the code:
 
 - **Accessor is inject-time**: `injectComponentOverride(name: string, fallback: Type<T>): Type<T>` (`bootstrap/init.ts:43-48`) — `name` is a plain runtime string used as `overrides[name]` (dynamic key content-wise OK), but the body calls `inject(COMPONENT_OVERRIDES)` → must execute inside an injection context. The host reads its key in the CONSTRUCTOR (see Decision 4), so the accessor call runs natively in the constructor's injection context — no `runInInjectionContext` needed.
-- **Gotcha #17**: tenant tests externalize bare `white-label-angular/*` imports → JIT → signal inputs invisible → NG0950. Host consumed by tenants (via shell ProductsPage) MUST use classic `@Input()`.
+- **Gotcha #6**: tenant tests externalize bare `white-label-angular/*` imports → JIT → signal inputs invisible → NG0950. Host consumed by tenants (via shell ProductsPage) MUST use classic `@Input()`.
 - **Template checking**: `apps/white-label-angular/tsconfig.json` has NO `strictTemplates` — call-site checking is basic today.
 - **Tenant regression**: `apps/fake-plants-angular/src/pages/products-page.integration.spec.ts` asserts `fp-product-card` ×7 / `app-product-card` ×0 (host tags created by the outlet, not by the wrapper). Byte-frozen for the previous change; this change must not need to edit it.
 - **Current import graph**: only `product-card-wrapper.component.ts` and its spec reference `ProductCardWrapper`/`ProductCardInputs` (grep).
@@ -25,7 +25,7 @@ Constraints verified against the code:
 - Layout parity (`display: contents`) and tenant rendering parity (integration spec untouched) preserved
 
 **Non-Goals:**
-- Signal inputs in the host (gotcha #17 forbids them for tenant-loaded code)
+- Signal inputs in the host (gotcha #6 forbids them for tenant-loaded code)
 - Any registry change — new token, factory option, or `injectComponentOverride()` signature edits
 - `required: true` on host inputs — impossible on a shared multi-selector class (Decision 2); a loud runtime guard substitutes
 - Enabling `strictTemplates` repo-wide (separate concern — see Open Questions)
@@ -46,7 +46,7 @@ Constraints verified against the code:
 **Why:**
 - **`required: true` is IMPOSSIBLE on a shared class**: Angular validates required inputs per-component-instance against the class's full input set — a second slot's input would trip missing-required validation on every `product-card` instance (and vice versa). Optional inputs + a LOUD runtime throw when the payload is missing is the only workable shape (Decision 5).
 - Per-input typing is strictly better than the previous `OverrideInputsMap` union: each call site is checked against EXACTLY its slot's type, forever — no union degradation at N=2 (the previous design's documented degradation disappears entirely).
-- Classic `@Input()` (gotcha #17): JIT-loaded tenant tests can't see signal inputs.
+- Classic `@Input()` (gotcha #6): JIT-loaded tenant tests can't see signal inputs.
 - `OverrideInputsMap` union machinery is DROPPED — no longer needed; per-input typing supersedes it.
 - `strictTemplates` off today (verified in tsconfig); per-input typing keeps its full value if/when it is enabled (Open Question 1).
 
@@ -71,7 +71,7 @@ Constraints verified against the code:
 - **Missing payload = LOUD throw** (descriptive, names the slot) — substitutes for the impossible `required: true`, mirrors the old unknown-key throw. A silent empty render would hide a wiring bug.
 
 ### 6. Tenant `fp-product-card` rendering path
-**Choice:** no tenant-facing change. `NgComponentOutlet` receives the class from the accessor — selector prefixes (`fp-`/`app-`) name only the outlet's dynamic host tag, independent of the host selector list. The consumer template (`<product-card [product]>`) does not change AT ALL, so the tenant reuses the shell ProductsPage unchanged. Tenant integration spec assertions (`fp-product-card` ×7 / `app-product-card` ×0) target outlet hosts → untouched, stays green. Host keeps classic `@Input()` (gotcha #17).
+**Choice:** no tenant-facing change. `NgComponentOutlet` receives the class from the accessor — selector prefixes (`fp-`/`app-`) name only the outlet's dynamic host tag, independent of the host selector list. The consumer template (`<product-card [product]>`) does not change AT ALL, so the tenant reuses the shell ProductsPage unchanged. Tenant integration spec assertions (`fp-product-card` ×7 / `app-product-card` ×0) target outlet hosts → untouched, stays green. Host keeps classic `@Input()` (gotcha #6).
 
 ## Risks / Trade-offs
 

@@ -252,7 +252,7 @@ WA themes activate via a class name on the `<html>` element. The pattern is `wa-
 | `@repo/ui/styles/*`               | `./styles/*`                             | WA base (`main.css` = native.css only) + themes via wildcard |
 | `@repo/ui/styles/themes/*`        | `./styles/themes/*`               | WA themes (`default.css`, `awesome.css`, `shoelace.css`)     |
 
-Dependencies: `@awesome.me/webawesome@3.7.0` and `hybrids@^9`.
+Dependencies: `@awesome.me/webawesome@3.11.0` and `hybrids@^9`.
 
 ---
 

@@ -102,7 +102,7 @@ const img = getProductImageUrl(product.id)
 - `styles/themes/shoelace.css` — WA shoelace theme (for future web-react)
 - `vitest.config.ts` — Vitest config for UI
 - `vitest.setup.ts` — ElementInternals stub for jsdom (legacy; `states` is a real `Set`)
-- `apps/white-label-angular/src/test-setup.ts` — `ensureInternalsComplete` FACE shim (canonical; `states` fallback is `{ add, delete, has }` only — see `docs/integrations/form-associated-custom-elements.md`)
+- Canonical FACE shim: `packages/infra/src/testing/element-internals.ts` (`@repo/infra`) — loaded by both Angular apps via `angular.json` `setupFiles` (gotcha #4; `states` fallback is `{ add, delete, has }` only — see `docs/integrations/form-associated-custom-elements.md`)
 
 **Package Exports**:
 
@@ -603,10 +603,10 @@ import { getErrorMessage } from '@repo/utils/error'
 - `src/bootstrap/init.ts` — Options + merge logic; tokens `META_MAP_INJECTION_KEY`, `APP_ENV`, `COMPONENT_OVERRIDES`, helper `injectComponentOverride(name, fallback)`
 - `src/bootstrap/app.ts` — `createWhiteLabelApp()` async bootstrap (`appShell` resolution via `resolveAppShell`), re-exports `useWhiteLabelApp` + `APP_ENV`
 - `src/services/products.service.ts` — Angular resource() signal-based data service
-- `src/components/` — fe-* container components (Button, Card, Icon, Rating, ProductCard)
-- `src/pages/` — ProductsPage (override-aware `ngComponentOutlet`), ComponentsPage
+- `src/components/` — fe-* container components (Button, Card, Icon, Rating, ProductCard) + universal `component-override` host (registry lookup by `localName`, `ngComponentOutlet`)
+- `src/pages/` — ProductsPage (`<product-card [product]>` consumer wrapper), ComponentsPage
 - `src/environments/` — Angular environment config (NG_APP_* workaround)
-- `src/test-setup.ts` — ElementInternals shim for jsdom
+- ElementInternals shim loaded via `angular.json` `setupFiles` → `../../packages/infra/src/testing/element-internals.ts` (no app-side file — gotcha #4)
 
 **Dependencies**:
 

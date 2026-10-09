@@ -43,14 +43,14 @@ _Not recommended as primary:_ Stack Overflow / Discord (support questions — CO
 | angular/angular-cli | 27951 | vitePlugins options at serveWithVite | closed `not_planned` 2024-07-02 (label `needs: more info`) | High — identical mechanism ask |
 | angular/angular-cli | 27695 | [Feature][Vite] Add support for external vite.config.js | closed `not_planned` 2024-06-06 | Medium — reporter himself conceded "not all vite plugins will work properly with angular" |
 | angular/angular-cli | 26849 | When can we config Plugin or custom config for `builder: application` / `browser-esbuild` | closed `completed` 2024-01 | Medium — esbuild-side variant of same ask |
-| angular/angular-cli | 29003 | Define, webpack transforms and esbuild plugins are not supported in v19 Karma Builder | closed `completed` 2025-01 (bug) | Medium — corroborates repo AGENTS gotcha #17: test pipeline has no supported transform surface |
+| angular/angular-cli | 29003 | Define, webpack transforms and esbuild plugins are not supported in v19 Karma Builder | closed `completed` 2025-01 (bug) | Medium — corroborates repo AGENTS gotcha #6 (JIT = signal inputs invisible in tenant tests): test pipeline has no supported transform surface |
 | angular/angular-cli | 30742 | Expose internal "instrumentForCoverage" option | **OPEN**, `feature: under consideration`, **62 👍** (2025-07) | Framing precedent — narrow "expose one internal option" ask = accepted shape; "give us Vite config" ask = rejected shape |
 | angular/angular-cli | 19390 | fileReplacements no longer accept .html replacements in Angular 11 | closed `completed` 2020 | Historical — Angular once shipped config-dependent template swapping, then removed it; useful "we had this, lost it" framing |
 | angular/angular | 68522 | Prefer components over directives for auto-import in template suggestions | **open**, `needsTriage`, `area: language-service` | Adjacent — auto-import exists **editor-side (LS) only**, not build-side |
 | angular/angular | 47689 | auto import … standalone Component in template like WebStorm (VS Code) | closed `completed` 2022 | Adjacent — same demand satisfied at language-service level, never at build level |
 | just-jeb/angular-builders | 1617 / 1721 | Custom vite builder / Vite loader plugins | open (community repo) | Where maintainers route this class of ask (referenced from 26859 + 29149) |
 
-Repo-local evidence (not web): AGENTS.md gotcha #17 — `ng test` `externalPackages: true` orphans transforms, signal inputs invisible under JIT. Keep as motivating repro, cited as "our workspace finding", not as an Angular issue link.
+Repo-local evidence (not web): AGENTS.md gotcha #6 — `ng test` `externalPackages: true` orphans transforms, signal inputs invisible under JIT. Keep as motivating repro, cited as "our workspace finding", not as an Angular issue link.
 
 ## 4. Duplicate-risk verdict
 

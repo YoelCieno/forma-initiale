@@ -359,6 +359,7 @@ apps/white-label-angular/
 └── src/
     ├── main.ts              # Entry: imports WA styles, bootstrap
     ├── index.html           # HTML shell
+    ├── routes.ts            # Route array (tenants merge via extendRoutes)
     ├── app/                 # Root app component
     ├── bootstrap/
     │   ├── init.ts          # Options + merge logic, tokens: META_MAP_INJECTION_KEY, APP_ENV, COMPONENT_OVERRIDES, injectComponentOverride()
@@ -376,6 +377,10 @@ apps/white-label-angular/
     │   ├── rating-container.component.spec.ts # Tests
     │   ├── product-card.component.ts          # Product card (fe-card + fe-icon + fe-rating)
     │   ├── product-card.component.spec.ts     # Tests
+    │   ├── product-card.model.ts              # ProductCardInputs type
+    │   ├── component-override.component.ts    # Universal override host (selector: product-card; registry lookup by localName + ngComponentOutlet)
+    │   ├── component-override.component.spec.ts # Tests
+    │   ├── fe-property-shim.directive.ts      # Bare-attr → property setter shim (gotcha #5)
     │   └── fe-property-shim.directive.spec.ts # Property shim directive tests
     ├── environments/
     │   ├── environment.ts          # Production config
@@ -390,9 +395,7 @@ apps/white-label-angular/
     ├── styles/
     │   ├── tokens.css       # DS token overrides
     │   └── themes/          # WA theme CSS
-    ├── utils/
-    │   └── type-guards.ts   # Angular-specific type guards
-    └── test-setup.ts        # ElementInternals FACE shim for jsdom
+    └── import-meta-env.d.ts # Ambient ImportMeta.env typing (gotcha #7)
 ```
 
 ---
@@ -402,7 +405,7 @@ apps/white-label-angular/
 ```
 apps/fake-plants-angular/
 ├── package.json             # fake-plants-angular — Angular 22 tenant (dev port 4201)
-├── angular.json             # Angular CLI config (deep-ref styles TEMPORAL — see AGENTS gotcha #16)
+├── angular.json             # Angular CLI config (deep-ref styles TEMPORAL — see AGENTS.md Key Config "white-label-angular `./styles` export is STALE")
 ├── tsconfig.json            # Angular TS config
 ├── tsconfig.spec.json       # Spec TS config
 ├── public/
@@ -423,12 +426,13 @@ apps/fake-plants-angular/
     │   ├── about-page.component.spec.ts # Tests
     │   └── products-page.integration.spec.ts # Products integration (override resolution)
     ├── environments/         # environment.ts / environment.development.ts (NG_APP_* workaround)
-    ├── import-meta-env.d.ts  # Ambient ImportMeta.env typing (gotcha #15)
-    ├── styles/
-    │   ├── tokens.css        # Green brand overrides (9 --brand-* values)
-    │   └── tokens.spec.ts    # Token content tests (shell-untouched assertion)
-    └── test-setup.ts         # ElementInternals FACE shim (interim, thinner than shell)
+    ├── import-meta-env.d.ts  # Ambient ImportMeta.env typing (gotcha #7)
+    └── styles/
+        ├── tokens.css        # Green brand overrides (9 --brand-* values)
+        └── tokens.spec.ts    # Token content tests (shell-untouched assertion)
 ```
+
+ElementInternals shim loaded via `angular.json` `setupFiles` → `packages/infra/src/testing/element-internals.ts` (no app-side file — gotcha #4)
 
 ---
 

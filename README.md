@@ -56,7 +56,7 @@ bun install
 bun run dev
 ```
 
-Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhost:4321).
+Starts all apps in dev mode (white-label-vue on localhost:3100, fake-plants-vue on localhost:3101, white-label-angular on localhost:4200, fake-plants-angular on localhost:4201, docs on localhost:4321).
 
 ## Commands
 
@@ -185,11 +185,11 @@ Adds a tenant config entry to `packages/infra/src/mocks/data/mocked-data.json`.
 
 ## Theming & Design Tokens
 
-The project uses WebAwesome 3.7 as its design system. Styles are split into three layers:
+The project uses WebAwesome 3.11 as its design system. Styles are split into three layers:
 
-1. **WA base** (`@repo/ui/styles`) — imports `native.css` + `utilities.css` (theme-agnostic reset + utilities)
+1. **WA base** (`@repo/ui/styles`) — imports `native.css` only (theme-agnostic reset; utilities dropped — app code is BEM, 0 WA utilities)
 2. **WA theme** (`@repo/ui/styles/themes/<name>`) — each app imports its chosen theme (default, awesome, shoelace)
-3. **DS tokens** (`apps/*/src/styles/tokens/`) — app-level `--wa-*` CSS custom property overrides (brand colors, typography, spacing)
+3. **DS tokens** (`apps/*/src/styles/tokens.css`) — app-level `--wa-*` CSS custom property overrides (brand colors, typography, spacing)
 
 All apps load them via `main.ts`:
 
@@ -203,11 +203,12 @@ import './styles/tokens.css' // DS token overrides
 
 ## Tech stack
 
-- **Framework:** Vue 3 (`apps/white-label-vue`)
-- **Language:** TypeScript 5.5.4
+- **Framework:** Vue 3 (`apps/white-label-vue`), Angular 22 (`apps/white-label-angular`)
+- **Language:** TypeScript 6.0.3
 - **Build:** Vite 6 (via Vite+ `vp` CLI), Turborepo 2.9.14
 - **Package manager:** bun 1.3.13
-- **Test:** Vitest (via Vite+), Vue Test Utils, jsdom
+- **Test:** Vitest (via Vite+), Vue Test Utils, jsdom; Angular apps via `ng test`
 - **Mock:** MSW (Mock Service Worker) — handlers, browser worker, Node server
 - **Lint:** ESLint 8 (CJS), Prettier 3
+- **Design system:** WebAwesome 3.11 (via `fe-*` wrappers in `@repo/ui`)
 - **Tools:** unplugin-auto-import, unplugin-vue-components

@@ -22,7 +22,7 @@
 └──────────┼────────────────┼───────────────┼───────────   ────┼───────────────────────────────────────────────────┘
            │                │               │                  │
            ▼                ▼               ▼                  ▼
-     WebAwesome 3.7    fetch/HTTP API   (pure TS)          (no deps)
+     WebAwesome 3.11    fetch/HTTP API   (pure TS)          (no deps)
      (design system)
 ```
 
@@ -175,7 +175,7 @@ Template renders (fe-async-content → app-product-card × N)
 | Framework             | Vue 3 (white-label-vue)                                  | Standalone components, Composition API                                                                                                                                                      |
 | App framework         | Astro + Starlight (docs)                                 | MDX content, integration-friendly                                                                                                                                                           |
 | UI paradigm           | HybridJS Web Components                                  | Framework-agnostic, no runtime                                                                                                                                                              |
-| Design system         | WebAwesome 3.7                                           | Accessible, themed, WA-compatible                                                                                                                                                           |
+| Design system         | WebAwesome 3.11                                            | Accessible, themed, WA-compatible                                                                                                                                                           |
 | Ports/Adapters        | Domain → Infra                                           | Pure domain, swappable infra                                                                                                                                                                |
 | Custom elements       | `<fe-*>` wrapper → `<wa-*>`                              | Single definition in @repo/ui                                                                                                                                                               |
 | State mgmt            | Composables + ref/reactive + @vueuse/core                | Vue native + useAsyncState for async                                                                                                                                                        |

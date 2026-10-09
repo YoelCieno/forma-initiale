@@ -44,7 +44,7 @@ If you switch host, drop `renovate.json` and use `taze` above. The `check-update
 - **Minor/patch**: PR is created — review and merge at your pace.
 - **Astro/Starlight**: Major-breaking (5→6). Dedicated upgrade task.
 - **ESLint**: 8→9→10 are breaking. ESLint 8 stays for now (CJS config).
-- **TypeScript**: 5.5.4 pinned. 6.0 is major-breaking.
+- **TypeScript**: 6.0.3 at root. Angular/Vue apps may pin older minors locally.
 
 ## ESLint Fix-on-Save (Zed editor)
 

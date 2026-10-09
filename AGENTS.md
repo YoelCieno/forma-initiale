@@ -1,185 +1,80 @@
 # forma-initiale — Agent Guide
 
-Turborepo + bun monorepo. Vue 3 apps → hexagonal architecture.
+Turborepo + bun monorepo. Hexagonal layers: `domain → presenters → infra → packages/ui (framework-agnostic) → apps`. Two shells (Vue 3, Angular 22) + tenants extending shells via app factories.
 
-## Identity
+## Commands
 
-- Root package name: `forma-initiale`
-- Package manager: `bun@1.3.13` (declared in root `package.json`, bun reads lockfile format)
-- Workspaces: `apps/*` `packages/*`
-- Local packages: `@repo/*` scope (domain, presenters, infra, ui, utils, generator, eslint-config, typescript-config)
-- Build: Turborepo 2.9.14 (`turbo.json`)
-- Mise: `.mise.toml` at root with `bun = "latest"` — run `eval "$(mise activate bash)"` before bun commands if mise not sourcing automatically
+| cmd | what |
+| --- | --- |
+| `bun run dev` | all apps, persistent. Ports: white-label-vue **3100**, fake-plants-vue **3101**, white-label-angular 4200, fake-plants-angular 4201, docs 4321 |
+| `bun run build` / `lint` / `test` / `format` | turbo-wide (test = vitest via `vp` in packages + Vue apps; `ng test --watch=false` in Angular apps) |
+| `bun run test --filter=@repo/infra` | single package (turbo filter — verified) |
+| `cd packages/infra && vp test src/<file>.spec.ts` | single test file |
+| `bun run generate:vue-tenant` | interactive Pinion generator — new Vue tenant |
+| `bun run register-tenant --prefix <key> --names-json '[...]'` | add MSW tenant config |
+| `bun add <pkg>` / `bun add -d <pkg>` | workspace-aware dep add |
 
-## Commands (exact, verified)
-
-| cmd                                      | what                                                                                    |
-| ---------------------------------------- | --------------------------------------------------------------------------------------- |
-| `bun run dev`                            | turbo dev — all apps, persistent                                                        |
-| `bun run build`                          | turbo build — (white-label-vue: `vp build`, docs: `astro build`)                        |
-| `bun run lint`                           | turbo lint — eslint all packages                                                        |
-| `bun run format`                         | prettier on `*.{ts,tsx,md}`                                                             |
-| `bun run test`                           | turbo test — vitest (infra, ui, presenters, white-label-vue, fake-plants-vue) + `ng test`/vitest (white-label-angular, fake-plants-angular) |
-| `cd apps/white-label-vue && bun run dev` | white-label-vue only                                                                    |
-| `cd apps/docs && bun run dev`            | docs only                                                                               |
-| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
-| `bun run generate:vue-tenant`            | interactive Pinion generator — scaffolds new Vue tenant app                            |
-| `bun run register-tenant`                | register MSW tenant config — `--prefix <key> --names-json '[...]'`                     |
-| `bun add <pkg>`                          | add dep (bun workspace-aware)                                                           |
-| `bun add -d <pkg>`                       | dev dep                                                                                 |
+- **Pre-commit hook = `bun run test`** (`.husky/pre-commit`) — full suite runs on every commit. Expect slow commits; run tests before committing to avoid hook surprises.
+- **NEVER use `npx`** — root `package.json` overrides `vite`/`vitest` to `@voidzero-dev/vite-plus-*` npm aliases; npm dies with `EOVERRIDE`. Use `bun x` (e.g. `bun x msw init apps/<app>/public/` to regen MSW worker).
+- No typecheck script — TS is `noEmit` only; Vue SFCs have no type checking at all (`vue-tsc` not installed).
 
 ## Package layout
 
 ```
 apps/
-  white-label-vue/ — Vite 6 Vue 3 app (via Vite+ `vp` CLI), layer base for tenants
-  fake-plants-vue/ — Vue 3 tenant app — plants-themed store
-  white-label-angular/ — Angular 22 layer base (zoneless, signals, OnPush)
-  fake-plants-angular/ — Angular 22 tenant app — plants-themed store (port 4201)
-  docs/            — Astro + Starlight docs site
+  white-label-vue/     — Vue 3 shell (Vite 6 via Vite+ `vp`). Exports factory + vite config base
+  fake-plants-vue/     — Vue 3 tenant, extends shell
+  white-label-angular/ — Angular 22 shell (zoneless, signals). Exports ./app, ./fe-property-shim
+  fake-plants-angular/ — Angular 22 tenant, extends shell
+  docs/                — Astro + Starlight
 packages/
-  domain/     — pure TS models/ports (@repo/domain)
-  presenters/ — presentation layer transforming domain models into view models (@repo/presenters)
-  infra/      — adapters implementing domain contracts (@repo/infra)
-  ui/         — hybridJS WC wrappers, framework-agnostic (@repo/ui)
-  utils/      — shared utilities: type-guards, string, object, validate, css, error (@repo/utils)
-  generator/  — Pinion-based tenant code generator (@repo/generator)
-  eslint-config/  — CJS ESLint 8 config
-  typescript-config/  — base.json + vite.json tsconfigs
+  domain/  presenters/  infra/  ui/  utils/  generator/   — @repo/* scope
+  eslint-config/       — CJS ESLint 8
+  typescript-config/   — base.json + vite.json
 ```
 
-## Architecture direction
+Layer direction is enforced: apps must consume `fe-*` wrappers from `@repo/ui`, never `wa-*` directly. Domain/infra adapters take config as params — never import `import.meta.env`/`environment.*` inside packages; apps pass env in.
 
-Hexagonal + Vue 3 + Angular — all 6 layers active:
+## Key config
 
-- `packages/domain/` — pure TS models (no framework deps) — EXISTS
-- `packages/presenters/` — presentation layer (domain → view model transforms) — EXISTS
-- `packages/infra/` — adapters implementing domain contracts — EXISTS
-- `packages/ui/` → framework-agnostic hybridJS WC wrappers — ACTIVE
-- `packages/utils/` → shared utilities (type-guards, string, object, validate, css, error) — ACTIVE
-- `apps/white-label-vue/` → Vue 3 (Vite 6 via Vite+, auto-import, vue-router hash) — ACTIVE (layer base, exports factory + base config)
-- `apps/docs/` → Astro + Starlight — ACTIVE
-- `apps/fake-plants-vue/` → Vue 3 tenant app, extends white-label layer — ACTIVE
-- `apps/white-label-angular/` → Angular 22 (zoneless, signals, OnPush) — ACTIVE (layer base, exports factory + base config)
-- `apps/fake-plants-angular/` → Angular 22 tenant app, extends white-label-angular layer — ACTIVE
+- **TypeScript 6.0.3**, `strict: true` in base; `strictNullChecks` is opt-in per project (`apps/white-label-vue`, `apps/fake-plants-vue`, `packages/ui`). New apps/packages likely need the same override. `vite.json` extends `base.json` and adds `noEmit` + `noUnusedLocals/Parameters`.
+- **ESLint 8 CJS — do NOT upgrade to ESLint 9 / flat config.** Plugins (`@typescript-eslint/*`, `eslint-plugin-vue`, `vue-eslint-parser`) must stay hoisted in root `devDependencies` (bun leaves them isolated otherwise). New plugin? Mirror in root devDeps.
+- **Prettier:** `singleQuote: true`, `semi: false`.
+- **Vite+ `vp` CLI** — `vite`/`vitest` are npm-aliased to `@voidzero-dev/vite-plus-core/test` at root.
+- **Vue shell vite config:** `apps/white-label-vue/vite.config.base.ts` exports `defineWhiteLabelViteConfig()` — `isCustomElement` for `fe-*`, AutoImport (`vue`, `vue-router`), Components dirs (tenant dirs scanned FIRST so they win name clashes), `devPort` opt. `server.watch.ignored` re-includes `node_modules/@repo/**` symlinks — without it, HMR breaks on workspace packages.
+- **App factory (Vue):** `createWhiteLabelApp()` in `white-label-vue/src/bootstrap/app.ts`; tenants import `white-label-vue/app` (workspace name, not `@repo/*`). Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`.
+- **`white-label-angular` `"./styles"` export is STALE** — points at `src/styles/index.ts` which does not exist (dir has `base.css`/`tokens.css` only). `fake-plants-angular/angular.json` deep-refs `../white-label-angular/src/styles/*` directly — accepted interim, planned for consolidation with Angular generator work.
+- **MSW:** mocks in `packages/infra/src/mocks/`. Each app carries its own `public/mockServiceWorker.js` copy — regen per app with `bun x msw init apps/<app>/public/`.
+- **Renovate:** weekly (Mon 5 AM UTC), auto-merge minor/patch, majors manual. `.github/workflows/renovate.yml` + `renovate.json`.
+- **mise** at root (`bun = "latest"`); source via `eval "$(mise activate bash)"` if bun not on PATH.
 
-## Key config details
+## WebAwesome (design system)
 
-- **TypeScript:** 5.5.4, `noEmit: true` (Vite handles bundling, TS is type-check only)
-- **strictNullChecks:** ONLY in `apps/white-label-vue/tsconfig.json` (local override), NOT in base
-- **ESLint 8 CJS:** `packages/eslint-config/index.js` uses `module.exports` (CJS in ESM project; works because ESLint loads via its own resolver)
-- **Root `.eslintrc.js`:** extends `@repo/eslint-config/index.js`, sets `root: true`
-- **App build:** white-label-vue → `vp build` (Vue SFCs need `vue-tsc` for typecheck, not yet added). docs → `astro build`
-- **App dev:** `vite --clearScreen false` (suppresses vite startup banner)
-- **Vite 6.x (white-label-vue):** has `vite.config.ts` with `@vitejs/plugin-vue`, `unplugin-auto-import` (imports: ['vue', 'vue-router']), `unplugin-vue-components`. `isCustomElement` configured for `fe-` prefixed tags. Tenants use `vite.config.base.ts` factory `defineWhiteLabelViteConfig()`.
-- **Vite+ integrated:** `vp` CLI. Vite v6.x for white-label-vue via Vite+ core. `vitest: ^4.1.7` bundles Vite 6 types.
-- **App factory pattern:** `apps/white-label-vue/src/bootstrap/app.ts` exports `createWhiteLabelApp()` via `src/bootstrap/init.ts` (options + merge logic). Tenants import from `white-label-vue/app` (workspace name, no `@repo` scope). Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`.
-- **Routes extracted:** `apps/white-label-vue/src/routes.ts` exports route array. Tenants can merge with their own routes before passing to `createWhiteLabelApp()`.
-- **Presenters package:** Presenters moved from app to `packages/presenters/` (`@repo/presenters`). Composables import `toProductViewList` from `@repo/presenters`.
-- **Turbo `^build`:** deps build before consumers; vanilla TS packages w/o build script get skipped gracefully
-- **Prettier 3.x:** root-level via `bun run format`
-- **ESLint plugin hoisting:** `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` in root `devDependencies` (fixes bun workspace hoisting issue where plugins stay isolated in eslint-config's node_modules). Similarly, `eslint-plugin-vue` and `vue-eslint-parser` hoisted in root for Vue SFC linting.
-- **`.mise.toml`** at root with `bun = "latest"` — source mise before running bun commands if not auto-activated
-- **Dependency Automation:** `.github/workflows/renovate.yml` runs weekly (Monday 5 AM UTC) + manual trigger. Uses `renovate.json` config with `bun` support (`bun.lock` detection, auto-merge minor/patch). Requires `RENOVATE_TOKEN` secret (PAT with `repo` scope).
+Full WA agent skill (component APIs, props, events, CSS parts, tokens) vendored at `.opencode/references/webawesome/`. **Read `references/components/<component>.md` before building/modifying any `fe-*` wrapper.** Tokens docs: `references/tokens/`.
 
-## Package exports (`@repo/ui`)
+## Gotchas
 
-```json
-{
-  "./fe-button": "./components/fe-button/fe-button.ts",
-  "./fe-async-content": "./components/fe-async-content/fe-async-content.ts",
-  "./fe-card": "./components/fe-card/fe-card.ts",
-  "./fe-icon": "./components/fe-icon/fe-icon.ts",
-  "./fe-img": "./components/fe-img/fe-img.ts",
-  "./fe-loader": "./components/fe-loader/fe-loader.ts",
-  "./fe-rating": "./components/fe-rating/fe-rating.ts",
-  "./styles/*": "./styles/*",
-  "./styles/themes/*": "./styles/themes/*"
-}
-```
-
-Import from apps:
-
-```typescript
-import '@repo/ui/fe-button'
-import type { FeButtonElement } from '@repo/ui/fe-button'
-import '@repo/ui/fe-card'
-import '@repo/ui/fe-async-content'
-import '@repo/ui/styles/main.css' // WA native base (no theme)
-import '@repo/ui/styles/themes/default.css' // WA theme
-```
-
-## WebAwesome Agent Skill Reference
-
-Web Awesome publishes an Agent Skill (`@awesome.me/webawesome@3.7.0`) with full component API docs. Copied to stable project path:
-
-`.opencode/references/webawesome/`
-
-### Structure
-
-```
-.opencode/references/webawesome/
-├── SKILL.md                          # Overview, component listing, quick start, themes
-└── references/
-    ├── components/                   # Per-component docs: API, props, events, slots, CSS parts
-    │   ├── button.md, card.md, icon.md, input.md, ... (50+ files)
-    ├── frameworks/                   # React, Vue, Angular, Svelte guides
-    │   └── vue.md
-    ├── tokens/                       # Design tokens: color, typography, spacing, shadows
-    ├── utilities/                    # Layout, rounding, native styles, vis-hidden
-    ├── themes.md                     # Theme + palette usage
-    ├── installation.md
-    ├── usage.md
-    ├── form-controls.md
-    ├── customizing.md
-    └── localization.md
-```
-
-### When to load
-
-When implementing or modifying `fe-*` wrapper components in `packages/ui/`, consult the relevant WA component docs in `.opencode/references/webawesome/references/components/<component>.md` for:
-
-- Component API (props, events, methods, slots)
-- CSS custom properties for styling
-- CSS parts for internal element targeting
-
-When styling with WA design tokens, see `.opencode/references/webawesome/references/tokens/`.
-
-## Gotchas & quirks
-
-1. **WA styles split into base + theme** — `@repo/ui/styles/main.css` imports only `native.css` (no theme; `utilities.css` dropped — app code follows BEM, uses 0 WA utilities). Apps must **separately** import `@repo/ui/styles/themes/<name>.css` to get WA component styling. Forgetting the theme import causes unstyled WA components.
-2. **strictNullChecks is scoped** — only `apps/white-label-vue` overrides it. New packages/apps likely need the same override.
-3. **Vue type checking** — `tsc` doesn't process `.vue` files. `vue-tsc` would be needed for type checking Vue SFCs; not yet added (Phase 0 uses Vite esbuild transpilation only).
-4. **ESLint hoisting** — bun keeps `@typescript-eslint/*` plugins isolated inside `eslint-config/node_modules`. Root `devDependencies` ensures all packages can resolve them. If adding new ESLint plugins, mirror in root devDeps.
-5. **App build divergence** — white-label-vue: `vp build` (no tsc). docs: `astro build`. Turbo `^build` handles the dep graph, but individual build scripts differ.
-6. **TypeScript config packages** — `vite.json` extends `base.json`. `base.json` has `strict: true` but `noUnusedLocals/noUnusedParameters: false` (those are in `vite.json` instead).
-7. **`.gitignore`** covers `dist`, `dist-ssr`, `*.local`, `.env`, `.turbo`, `node_modules`, `.zed/`, `.qwen/`.
-8. **`apps/white-label-vue/src/style.css` deleted** — Vue uses scoped styles. Don't re-add global CSS unless intentional.
-9. **`apps/white-label-vue/src/vite-env.d.ts`** has Vue module declaration (`declare module '*.vue'`) — needed for TS to understand `.vue` imports.
-10. **hybridJS render timing** — `deferred.then()` microtask. Tests need `await Promise.resolve()` (×2 for Lit attr reflection). Set properties not attributes.
-11. **WA Agent Skill available** — WA publishes an Agent Skill at `.opencode/references/webawesome/` with full component docs (API, events, CSS parts, tokens). When building `fe-*` wrappers, read the relevant `<component>.md` first for API contract.
-12. **hybrids styling — use `html.css`, not `<style>`** — When a `fe-*` component needs custom CSS, chain `.css\`...\`` on the hybrid template literal. `html.css` creates one shared `CSSStyleSheet` across all instances via adopted stylesheets — no per-instance `<style>` overhead.
-    ```ts
-    render: (host) => html\`
-      <img src="\${host.src}" />
-    \`.css\`
-      :host { display: inline-block; }
-    \`
-    ```
-    Exception: `fe-img` uses `<style>` in template currently. All NEW custom styles MUST use `html.css`.
-13. **FACE / `ElementInternals` shim** — WA form controls are form-associated custom elements; jsdom + old Safari (<17.4) / Firefox (<126) expose incomplete `ElementInternals` (`validity.valid`, `states`, `setFormValue` missing). shared module `packages/infra/src/testing/element-internals.ts` (`@repo/infra`) patches this via `elementInternalsShim()` — loaded by both Angular apps through `setupFiles: ["../../packages/infra/src/testing/element-internals.ts"]` (Angular unit-test joins to workspace root: paths only, no bare specifiers) (+ a legacy stub at `packages/ui/vitest.setup.ts`). **Caveat:** the `states` fallback is `{ add, delete, has }` only — NOT a real `CustomStateSet` (no `.size`/iteration), so WA `:state()` CSS styling will NOT work under the shim. Test-only, acceptable, but flag it if a component relies on `:state()` in tests. Full browser cutoff table + details: `docs/integrations/form-associated-custom-elements.md`.
-14. **Angular bare attrs broken on fe-*** — Angular `CUSTOM_ELEMENTS_SCHEMA` only calls `setAttribute()`, never property setter. hybrids `define()` reads attributes once in constructor via `getAttribute()`. Angular creates element via `document.createElement()` (constructor runs), THEN sets attributes via `setAttribute()` — too late. All `fe-*` properties in Angular MUST use `[prop]="value"` (property binding). Bare attrs like `readonly`/`tabindex` need `FePropertyShimDirective` (maps prop name to property setter). See `apps/white-label-angular/src/components/fe-property-shim.directive.ts`.
-15. **`import.meta.env` needs ambient typing in Angular tenants** — `@repo/infra` mocks/helpers uses `import.meta.env`; `ng test`/`ng build` in a tenant fail with `TS2339: Property 'env' does not exist on type 'ImportMeta'` unless `src/import-meta-env.d.ts` exists. Tenant scaffold copies shell's `apps/white-label-angular/src/import-meta-env.d.ts` (config-class file — allowed exception to the no-duplication rule).
-16. **Tenant deep-src refs are TEMPORAL** — `apps/fake-plants-angular/angular.json` references shell styles via `../white-label-angular/src/styles/*` paths, and shell's `"./styles"` export points at nonexistent `src/styles/index.ts` (stale, unimported). Accepted interim; consolidate via package subpath exports during 4.7 generator work or debt cleanup.
-17. **JIT = signal inputs invisible in tenant tests** — `@angular/build:unit-test` hardcodes `externalPackages: true` → esbuild `packages:'external'` → bare `white-label-angular/*` imports are externalized from the AOT bundle and loaded by vitest at runtime via plain vite transform → **JIT**. JIT only reads `@Component` metadata `inputs`, so signal `input()` fields are invisible: template bindings like `[product]` fall through to DOM properties (NG0950). Angular forbids adding `inputs:` metadata alongside a signal input (NG1051). Components consumed by tenants via package specifiers must use classic `@Input()` until plan 4.7/debt consolidates package subpath exports. Relative imports (all shell tests) stay AOT — the two paths are separate module instances.
+1. **WA theme = separate import.** `@repo/ui/styles/main.css` imports only `native.css` (no theme; utilities dropped — app code is BEM, 0 WA utilities). Apps must ALSO import `@repo/ui/styles/themes/<name>.css` (default/awesome/shoelace) + their `src/styles/tokens.css`. Missing theme = unstyled components.
+2. **hybridJS render timing** — renders in `deferred.then()` microtask. Tests: `await Promise.resolve()` ×2 (Lit attr reflection). Set JS properties, not attributes.
+3. **hybrids custom CSS = `html.css`, not `<style>`** — chain `.css\`...\`` on the hybrid template literal; one shared `CSSStyleSheet` via adopted stylesheets. Exception: `fe-img` uses `<style>` (legacy). NEW styles MUST use `html.css`.
+4. **FACE / `ElementInternals` shim** — jsdom lacks `validity.valid`/`states`/`setFormValue`. Shared shim: `packages/infra/src/testing/element-internals.ts`, loaded by BOTH Angular apps via `setupFiles` (workspace-root-relative path only — no bare specifiers there) + legacy stub `packages/ui/vitest.setup.ts`. Shim `states` is `{add, delete, has}` only — WA `:state()` styling won't work in tests. Details: `docs/integrations/form-associated-custom-elements.md`.
+5. **Angular bare attrs broken on `fe-*`** — `CUSTOM_ELEMENTS_SCHEMA` only calls `setAttribute()` after the hybrids constructor already read attributes. ALL `fe-*` props in Angular MUST use `[prop]="value"` property bindings. Bare attrs (`readonly`, `tabindex`) need `FePropertyShimDirective`: `apps/white-label-angular/src/components/fe-property-shim.directive.ts`.
+6. **JIT = signal inputs invisible in tenant tests** — `@angular/build:unit-test` hardcodes `externalPackages: true`; bare `white-label-angular/*` imports load via plain vite transform (JIT), which only reads `@Component` metadata `inputs` — signal `input()` fields fall through to DOM props (NG0950), and mixing `inputs:` metadata with signal inputs throws NG1051. Components consumed by tenants via package specifiers MUST use classic `@Input()` until package subpath exports are consolidated. Relative imports (shell tests) stay AOT — two separate module instances.
+7. **`import.meta.env` needs ambient typing in Angular tenants** — `@repo/infra` mocks use it; without `src/import-meta-env.d.ts` tenant `ng test`/`ng build` fails `TS2339 Property 'env' does not exist on type 'ImportMeta'`. Scaffold copies it from shell.
+8. **@feComponent decorator ≠ Angular AOT** — AOT does static analysis, only recognizes `@Component` directly; wrapper falls back to JIT → blank page. Angular components use plain `@Component` + `CUSTOM_ELEMENTS_SCHEMA`.
 
 ## Agent rules
 
-- **BEM CSS naming** — Vue SFCs use BEM convention: `.block__element--modifier`. See `apps/white-label-vue/src/styles/README.md`. No nested element selectors — always explicit BEM class names. Not for `fe-*` wrappers (WA shadow DOM only).
-- **Never hardcode colors/spacing/typography** — always use design system CSS custom properties (`--wa-*` vars). Overrides in `apps/*/src/styles/tokens.css`. Never hardcode literal values.
-- **Prefer i18n keys over hardcoded labels** — framework i18n (setup pending)
-- **Standalone components** — Angular/Vue components must be standalone
-- **Unidirectional data flow** — no two-way bindings for state logic
-- **Immutable updates** — spread operator, never mutate
-- **ESLint 8** — do NOT upgrade to ESLint 9/flat config unless explicitly asked; existing config is CJS `module.exports`
-- **Commit scope** — use `@repo/` pkg name or app name (e.g. `feat(web):`, `chore(ui):`)
+- **BEM CSS** in Vue SFCs (`.block__element--modifier`), no nested element selectors. Not for `fe-*` wrappers (shadow DOM). See `apps/white-label-vue/src/styles/README.md`.
+- **Never hardcode colors/spacing/typography** — always `var(--wa-*)` tokens; overrides live in `apps/*/src/styles/tokens.css`.
+- **Standalone components**, unidirectional data flow, immutable updates (spread, never mutate).
+- **Function factory pattern** — 2+ fns/module → `export function name()` returning inner arrows; 1 fn → direct export. See `utils-factory-pattern` memory block.
+- **TDD** — failing test before implementation; regression tests go beside the fix, not in standalone probe files.
+- **Commits** — ask user before commit/push; conventional commits scoped to app or `@repo/` pkg (e.g. `feat(white-label-angular):`).
+- **Algorithm work** — prefer proven algorithms, verify against canonical spec, `>>> 0` for unsigned 32-bit, never claim "collision-free". Full pattern: `architecture` memory / `.opencode/thoughts/research/2026-07-03-hash-algorithms-seed-generation.md`.
+
+## Other instruction sources
+
+- `.opencode/memory/` — project memory blocks (project, architecture, utils-factory-pattern, session learnings)
+- `openspec/` — active changes in `openspec/changes/`, main specs in `openspec/specs/`. Workflow skills: `.claude/skills/openspec-*` + `.opencode/skills/openspec-*`
+- `docs/integrations/form-associated-custom-elements.md` — FACE browser cutoff table
