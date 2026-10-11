@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "dev": "ng serve --port 4200",
+    "dev": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "eslint \"src/**/*.ts\"",
@@ -13,7 +13,6 @@
   "private": true,
   "exports": {
     "./app": "./src/bootstrap/app.ts",
-    "./styles": "./src/styles/index.ts",
     "./fe-property-shim": "./src/components/fe-property-shim.directive.ts"
   },
   "dependencies": {
