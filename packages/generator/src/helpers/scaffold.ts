@@ -19,10 +19,10 @@ const getMissingScaffoldFiles = (ctx: VueTenantContext): string[] => {
 }
 
 const getLog = (ctx: VueTenantContext, missingFiles: string[]) => {
-  if (missingFiles.length < 0) {
+  if (missingFiles.length === 0) {
 		return ctx.pinion.logger.notice(`✅ Tenant '${ctx.name}-vue' created successfully`)
   }
-  return ctx.pinion.logger.warn(`⚠️  ${missingFiles} file(s) missing — check generator output`)
+  return ctx.pinion.logger.warn(`⚠️  ${missingFiles.length} file(s) missing — check generator output`)
 }
 
 export {

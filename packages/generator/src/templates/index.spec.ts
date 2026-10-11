@@ -47,6 +47,7 @@ describe('packageJson', () => {
     expect(result).toContain('"build": "vp build"')
     expect(result).toContain('"test": "vp test"')
     expect(result).toContain('"white-label-vue": "workspace:*"')
+    expect(result).toContain('"@repo/infra": "*"')
     expect(result).toContain('"vue":')
   })
 })
@@ -84,13 +85,14 @@ describe('mainTs', () => {
       ctx({ metadataMode: 'fixture', camelName: 'test', theme: 'default' }),
     )
     expect(result).toContain("import '@repo/ui/styles/main.css'")
-    expect(result).toContain("import { testMap } from '../metadata'")
+    expect(result).toContain("import { testMap } from '@repo/infra'")
   })
 
   it('does not import metadata when metadataMode is none', () => {
     const result = mainTs(ctx({ metadataMode: 'none', theme: 'default' }))
     expect(result).toContain("import '@repo/ui/styles/main.css'")
-    expect(result).not.toContain("from '../metadata'")
+    expect(result).not.toContain("@repo/infra'")
+    expect(result).toContain('// metaMap: myMap,')
   })
 })
 
@@ -218,8 +220,8 @@ describe('envExample', () => {
 })
 
 describe('metadataTs', () => {
-  it('replaces last segment with alpha/beta/gamma for multi-segment name', () => {
-    const result = metadataTs(ctx({ name: 'my-tenant-alpha', camelName: 'myTenantAlpha' }))
+  it('keys match getProductNames: full name + alpha/beta/gamma', () => {
+    const result = metadataTs(ctx({ name: 'my-tenant', camelName: 'myTenant' }))
     expect(result).toContain("'my-tenant-alpha':")
     expect(result).toContain("'my-tenant-beta':")
     expect(result).toContain("'my-tenant-gamma':")
@@ -229,18 +231,11 @@ describe('metadataTs', () => {
     expect(result).toContain("imageFamily: 'classic'")
   })
 
-  it('works for two-segment name', () => {
-    const result = metadataTs(ctx({ name: 'test-tenant', camelName: 'testTenant' }))
-    expect(result).toContain("'test-alpha':")
-    expect(result).toContain("'test-beta':")
-    expect(result).toContain("'test-gamma':")
-  })
-
   it('works for single-segment name', () => {
-    const result = metadataTs(ctx({ name: 'alpha', camelName: 'alpha' }))
-    expect(result).toContain("'alpha':")
-    expect(result).toContain("'beta':")
-    expect(result).toContain("'gamma':")
+    const result = metadataTs(ctx({ name: 'zen', camelName: 'zen' }))
+    expect(result).toContain("'zen-alpha':")
+    expect(result).toContain("'zen-beta':")
+    expect(result).toContain("'zen-gamma':")
   })
 
   it('uses camelName for the export name', () => {

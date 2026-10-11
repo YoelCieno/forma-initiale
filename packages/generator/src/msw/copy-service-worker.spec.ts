@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { VueTenantContext } from '../models'
 import { existsSync } from 'node:fs'
+import { join } from 'node:path'
 
 vi.mock('./file-io', () => ({
   readMockedData: vi.fn(),
@@ -80,7 +81,7 @@ describe('getProductNames', () => {
 describe('copyServiceWorker', () => {
   it('logs notice and returns ctx unchanged when registerMsw is false', () => {
     const ctx = createMockContext({ registerMsw: false })
-    const result = copyServiceWorker(ctx)
+    const result = copyServiceWorker(ctx, 'vue')
 
     expect(ctx.pinion.logger.notice).toHaveBeenCalledOnce()
     expect(result).toBe(ctx)
@@ -111,7 +112,7 @@ describe('copyServiceWorker', () => {
     vi.mocked(readMockedData).mockReturnValue(mockData)
     vi.mocked(addTenantConfig).mockReturnValue(mockUpdated)
 
-    const result = copyServiceWorker(ctx)
+    const result = copyServiceWorker(ctx, 'vue')
 
     expect(readMockedData).toHaveBeenCalledOnce()
     expect(addTenantConfig).toHaveBeenCalledWith(
@@ -151,7 +152,7 @@ describe('copyServiceWorker', () => {
 
     vi.mocked(existsSync).mockReturnValue(false)
 
-    expect(() => copyServiceWorker(ctx)).toThrow('MSW worker not found')
+    expect(() => copyServiceWorker(ctx, 'vue')).toThrow('MSW worker not found')
 
     expect(readMockedData).toHaveBeenCalledOnce()
     expect(addTenantConfig).toHaveBeenCalledOnce()
@@ -185,6 +186,49 @@ describe('copyServiceWorker', () => {
       throw new Error('EACCES: permission denied')
     })
 
-    expect(() => copyServiceWorker(ctx)).toThrow('EACCES')
+    expect(() => copyServiceWorker(ctx, 'vue')).toThrow('EACCES')
+  })
+})
+
+describe('copyServiceWorker framework-aware paths', () => {
+  beforeEach(() => {
+    // neutralize leaked copyMswWorker impl from the EACCES re-throw test
+    vi.mocked(copyMswWorker).mockImplementation(() => {})
+  })
+
+  it('vue target: source shell + target app carry -vue', () => {
+    const ctx = createMockContext()
+    vi.mocked(readMockedData).mockReturnValue({})
+    vi.mocked(addTenantConfig).mockReturnValue({})
+
+    copyServiceWorker(ctx, 'vue')
+
+    expect(copyMswWorker).toHaveBeenCalledWith(
+      join(ctx.cwd, 'apps/white-label-vue/public/mockServiceWorker.js'),
+      join(ctx.cwd, 'apps/test-vue/public/mockServiceWorker.js'),
+    )
+  })
+
+  it('angular target: source shell + target app carry -angular', () => {
+    const ctx = createMockContext()
+    vi.mocked(readMockedData).mockReturnValue({})
+    vi.mocked(addTenantConfig).mockReturnValue({})
+
+    copyServiceWorker(ctx, 'angular')
+
+    expect(copyMswWorker).toHaveBeenCalledWith(
+      join(ctx.cwd, 'apps/white-label-angular/public/mockServiceWorker.js'),
+      join(ctx.cwd, 'apps/test-angular/public/mockServiceWorker.js'),
+    )
+  })
+
+  it('manual registration notice uses framework-aware target path', () => {
+    const ctx = createMockContext({ registerMsw: false })
+
+    copyServiceWorker(ctx, 'angular')
+
+    expect(ctx.pinion.logger.notice).toHaveBeenCalledWith(
+      expect.stringContaining('apps/test-angular/public/'),
+    )
   })
 })

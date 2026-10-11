@@ -25,5 +25,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.spec.ts'],
+    env: {
+      VITE_ENABLE_MOCKS: '',
+    },
   },
 })

@@ -13,7 +13,6 @@ import {
   eslintrc,
   indexHtml,
   mainTs,
-  metadataTs,
   tokensCss,
   stylesIndex,
   componentVue,
@@ -28,6 +27,7 @@ import { VueTenantContext } from '../models'
 import { findNextDevPort } from '../helpers/port-allocator'
 import { tenantPrompts } from '../prompts'
 import { copyServiceWorker } from '../msw/copy-service-worker'
+import { infraMetadata } from '../helpers/infra-metadata'
 import { getLog, getMissingScaffoldFiles, outDir } from '../helpers/scaffold'
 import { join } from 'node:path'
 
@@ -54,10 +54,6 @@ export const renderSourceFiles = (ctx: VueTenantContext) =>
 
 export const renderConditionalAssets = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
-    .then(when(
-      (c: VueTenantContext) => c.metadataMode === 'fixture',
-      renderTemplate(metadataTs, toFile(outDir, 'metadata.ts')),
-    ))
     .then(when(
       (c: VueTenantContext) => c.overrideComponent,
       renderTemplate(componentVue, toFile(outDir, 'src', 'components', (ctx) => `${ctx.overrideComponentName}.vue`)),
@@ -99,6 +95,8 @@ export const assignDevPort = (ctx: VueTenantContext): VueTenantContext => {
   return ctx
 }
 
+const { writeInfraMetadata } = infraMetadata()
+
 export const generate = (ctx: VueTenantContext) =>
   Promise.resolve(ctx)
     .then(prompt<VueTenantContext>(tenantPrompts))
@@ -108,6 +106,7 @@ export const generate = (ctx: VueTenantContext) =>
     .then(renderSourceFiles)
     .then(renderConditionalAssets)
     .then(renderTestInfra)
-    .then(copyServiceWorker)
+    .then(writeInfraMetadata)
+    .then((c) => copyServiceWorker(c, 'vue'))
     .then(installDeps)
     .then(verifyScaffold)

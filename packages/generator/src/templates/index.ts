@@ -16,6 +16,7 @@ const packageJson = (ctx: VueTenantContext) => `{
   },
   "dependencies": {
     "white-label-vue": "workspace:*",
+    "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
     "vue": "^3.5.34",
@@ -77,7 +78,7 @@ const indexHtml = (ctx: VueTenantContext) => `<!DOCTYPE html>
 const mainTs = (ctx: VueTenantContext) => {
   const metaImport =
     ctx.metadataMode === 'fixture'
-      ? `import { ${ctx.camelName}Map } from '../metadata'\n`
+      ? `import { ${ctx.camelName}Map } from '@repo/infra'\n`
       : ''
   const metaLine =
     ctx.metadataMode === 'fixture'
@@ -109,26 +110,23 @@ ${metaLine}
 }
 
 const metadataTs = (ctx: VueTenantContext) => {
-  const parts = ctx.name.split('-')
-  const base = parts.slice(0, -1).join('-')
-  const prefix = base ? `${base}-` : ''
-
+  // Keys MUST match getProductNames (register-tenant mock product ids)
   return `import type { ProductMeta } from '@repo/presenters'
 
 export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
-  '${prefix}alpha': {
+  '${ctx.name}-alpha': {
     title: 'Alpha Primum',
     description: 'The first of its kind, a pioneering specimen',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${prefix}beta': {
+  '${ctx.name}-beta': {
     title: 'Beta Secundus',
     description: 'Follows the pattern with distinct characteristics',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${prefix}gamma': {
+  '${ctx.name}-gamma': {
     title: 'Gamma Tertius',
     description: 'Completes the triad with unique properties',
     image: 'plant',
