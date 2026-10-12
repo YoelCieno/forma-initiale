@@ -559,18 +559,20 @@ import { getErrorMessage } from '@repo/utils/error'
 
 **Key Files**:
 
-- `src/main.ts` — Entry: imports WA styles + white-label styles, calls `createWhiteLabelApp({ routes, appShell, metaMap })`
+- `src/main.ts` — Entry: imports WA styles + white-label styles + `plantsMap` from `@repo/infra`, calls `createWhiteLabelApp({ extendRoutes, omitRoutePaths, appShell, metaMap })`
+- `src/main.spec.ts` — Factory smoke tests (zero overrides, appShell resolution, router defaults)
 - `src/App.vue` — Root SFC (nav: RouterLink / → ProductsPage, /about → AboutPage + RouterView)
 - `src/App.spec.ts` — Tests (RouterLink routes, RouterView)
 - `src/components/ProductCard.vue` — Product card with formatted pricing, logo, rating
 - `src/components/ProductCard.spec.ts` — Tests (title, description, price, Free default, previousPrice, rating)
 - `src/pages/AboutPage.vue` — About page with fe-card
 - `src/pages/AboutPage.spec.ts` — Tests (h1, fe-card, paragraph content)
-- `metadata.ts` — Plant metadata: plantsMap with 7 entries
 - `vitest.config.ts` — Test config (vue plugin, jsdom)
 - `vitest.setup.ts` — Custom element config for fe-\* components
 
-**Test Count**: 11 tests across 3 files (App: 3, ProductCard: 5, AboutPage: 3)
+**Metadata**: `plantsMap` lives in `packages/infra/src/metadata/fake-plants.ts` (app-root `metadata.ts` removed — generator writes fixture metadata to `@repo/infra` since 4.7.0).
+
+**Test Count**: 16 tests across 4 files (App: 3, ProductCard: 7, AboutPage: 3, main: 3)
 
 **Dependencies**:
 
@@ -698,19 +700,26 @@ import { createWhiteLabelApp } from './bootstrap/init'
 - `helpers/cases.spec.ts` — Case transform tests
 - `helpers/palette.ts` — Hex color validation + theme class helper
 - `helpers/palette.spec.ts` — Palette tests
+- `helpers/infra-metadata.ts` — `writeInfraMetadata()` — writes fixture metadata to `packages/infra/src/metadata/<name>.ts` + idempotent barrel line append to `packages/infra/src/index.ts` (keys `${name}-alpha/beta/gamma`)
+- `helpers/infra-metadata.spec.ts` — Metadata routing + idempotency tests
+- `helpers/scaffold.ts` — Shared scaffold utilities (fs writes used by generator pipeline)
+- `helpers/error.ts`, `helpers/mocks.ts`, `helpers/port-allocator.ts` — Error handling, mock ctx helpers, Vite dev-port allocation (base 3100)
 - `models/index.ts` — `VueTenantContext` + `Theme` type
 - `prompts/index.ts` — Interactive tenant prompts (name, description, theme, metadata, component override, MSW)
 - `prompts/index.spec.ts` — Prompt shape tests
-- `templates/index.ts` — All output templates (package.json, vite.config, main.ts, styles, tests, env)
+- `templates/index.ts` — All output templates (package.json, vite.config, main.ts, styles, tests, env, metadata)
 - `templates/index.spec.ts` — Template rendering tests
 - `msw/add-tenant.ts` — Pure fn: `addTenantConfig(configs, prefix, names)` — validates + appends tenant entry
 - `msw/add-tenant.spec.ts` — MSW config tests
+- `msw/copy-service-worker.ts` — Framework-aware worker copy: `apps/white-label-<framework>/public/` → `apps/<name>-<framework>/public/`
+- `msw/copy-service-worker.spec.ts` — Covers vue + angular targets
+- `msw/register-tenant.ts` — CLI: writes tenant entry to `packages/infra/src/mocks/data/mocked-data.json`
 
 **Dependencies**:
 
 - `@featherscloud/pinion` (^0.5.7) — Code generator framework (renderTemplate, toFile, when, prompt)
 - `inquirer` (^9) — Interactive CLI prompts
-- `@repo/infra` (indirect: writes to `packages/infra/src/mocks/data/mocked-data.json`)
+- `@repo/infra` (indirect: writes metadata to `packages/infra/src/metadata/<name>.ts` + barrel line, mock data to `packages/infra/src/mocks/data/mocked-data.json`)
 
 **Exports**:
 
@@ -741,7 +750,7 @@ const ctx = await generate({ pinion: { force: true } })
 - `src/main.ts` — imports WA styles, calls `createWhiteLabelApp({ extendRoutes, metaMap })`
 - `src/styles/tokens.css` — Brand overrides (custom theme or WA theme)
 - `src/styles/index.ts` — Style barrel
-- `metadata.ts` (fixture mode) — Placeholder product metadata entries
+- `packages/infra/src/metadata/<name>.ts` (fixture mode) — Placeholder product metadata entries (keys `<name>-alpha/beta/gamma`) + `export { <camel>Map } from './metadata/<name>'` appended to `packages/infra/src/index.ts`; idempotent, never overwrites existing file
 - `vitest.setup.ts` — jsdom custom element config for fe-* components
 - `src/App.spec.ts` — Basic app creation test
 - `.env` / `.env.example` — Environment variables with VITE_TENANT_ID

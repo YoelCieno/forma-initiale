@@ -173,7 +173,7 @@ Interactive prompts:
 - **Component override** — optionally scaffold a component stub
 - **MSW registration** — auto-register mocked product data
 
-Output: `apps/<name>-vue/` with full tenant app structure (main.ts, styles, tests, configs).
+Output: `apps/<name>-vue/` with full tenant app structure (main.ts, styles, tests, configs). Fixture metadata also writes `packages/infra/src/metadata/<name>.ts` + appends its `<camel>Map` barrel export to `packages/infra/src/index.ts` (idempotent — existing files never overwritten).
 
 ### Manual MSW registration
 
