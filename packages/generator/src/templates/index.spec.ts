@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 import {
   packageJson,
   viteConfig,
@@ -19,7 +19,7 @@ import {
   metadataTs,
 } from './index'
 
-function ctx(overrides: Partial<VueTenantContext> = {}): VueTenantContext {
+function ctx(overrides: Partial<TenantContext> = {}): TenantContext {
   return {
     name: 'test-tenant',
     Name: 'Test',
@@ -31,10 +31,11 @@ function ctx(overrides: Partial<VueTenantContext> = {}): VueTenantContext {
     overrideComponent: false,
     overrideComponentName: undefined,
     prefix: 'te',
+    framework: 'vue',
     devPort: 3103,
     cwd: '/tmp',
     argv: [],
-    pinion: {} as VueTenantContext['pinion'],
+    pinion: {} as TenantContext['pinion'],
     ...overrides,
   }
 }

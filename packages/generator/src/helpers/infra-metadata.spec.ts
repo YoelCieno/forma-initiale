@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from 'vitest'
 import { rmSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 import { infraMetadata } from './infra-metadata'
 import { createMockContext, tmpDirs } from './mocks'
 
@@ -13,12 +13,12 @@ afterAll(() => {
 
 const { writeInfraMetadata } = infraMetadata()
 
-const infraPaths = (ctx: VueTenantContext) => ({
+const infraPaths = (ctx: TenantContext) => ({
   metaFile: join(ctx.cwd, 'packages', 'infra', 'src', 'metadata', `${ctx.name}.ts`),
   barrel: join(ctx.cwd, 'packages', 'infra', 'src', 'index.ts'),
 })
 
-const seedBarrel = (ctx: VueTenantContext, content = "export { getProducts } from './adapters/get-products.adapter'\n") => {
+const seedBarrel = (ctx: TenantContext, content = "export { getProducts } from './adapters/get-products.adapter'\n") => {
   const { barrel } = infraPaths(ctx)
   mkdirSync(dirname(barrel), { recursive: true })
   writeFileSync(barrel, content)
@@ -26,7 +26,7 @@ const seedBarrel = (ctx: VueTenantContext, content = "export { getProducts } fro
 
 describe('writeInfraMetadata', () => {
   it('fixture mode: writes packages/infra/src/metadata/<name>.ts with keys matching getProductNames', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
+    const ctx: TenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
     seedBarrel(ctx)
 
     writeInfraMetadata(ctx)
@@ -41,7 +41,7 @@ describe('writeInfraMetadata', () => {
   })
 
   it('appends barrel export line exactly once on repeated runs (idempotent)', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
+    const ctx: TenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
     seedBarrel(ctx)
 
     writeInfraMetadata(ctx)
@@ -55,7 +55,7 @@ describe('writeInfraMetadata', () => {
   })
 
   it('existing metadata file: skips content write, preserves curated bytes, still ensures barrel line', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'fake-plants', camelName: 'fakePlants' })
+    const ctx: TenantContext = createMockContext({ name: 'fake-plants', camelName: 'fakePlants' })
     seedBarrel(ctx)
     const { metaFile } = infraPaths(ctx)
     mkdirSync(dirname(metaFile), { recursive: true })
@@ -71,7 +71,7 @@ describe('writeInfraMetadata', () => {
   })
 
   it('none mode: writes nothing', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'zen-plants', metadataMode: 'none' })
+    const ctx: TenantContext = createMockContext({ name: 'zen-plants', metadataMode: 'none' })
     seedBarrel(ctx)
     const before = readFileSync(infraPaths(ctx).barrel, 'utf8')
 
@@ -82,7 +82,7 @@ describe('writeInfraMetadata', () => {
   })
 
   it('creates barrel when index.ts is missing', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
+    const ctx: TenantContext = createMockContext({ name: 'zen-plants', camelName: 'zenPlants' })
 
     writeInfraMetadata(ctx)
 

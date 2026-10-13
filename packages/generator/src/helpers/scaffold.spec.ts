@@ -2,15 +2,9 @@ import { describe, it, expect, vi, afterAll } from 'vitest'
 import type { Mock } from 'vitest'
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 import { getLog, getMissingScaffoldFiles, outDir } from './scaffold'
 import { createMockContext, tmpDirs } from './mocks'
-
-afterAll(() => {
-  for (const dir of tmpDirs) {
-    rmSync(dir, { recursive: true, force: true })
-  }
-})
 
 interface MockLogger {
   notice: Mock
@@ -19,8 +13,14 @@ interface MockLogger {
   log: Mock
 }
 
-function ctxWithLogger(): { ctx: VueTenantContext; logger: MockLogger } {
-  const ctx: VueTenantContext = createMockContext()
+afterAll(() => {
+  for (const dir of tmpDirs) {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+function ctxWithLogger(): { ctx: TenantContext; logger: MockLogger } {
+  const ctx: TenantContext = createMockContext()
   const logger: MockLogger = {
     notice: vi.fn(),
     warn: vi.fn(),
@@ -33,27 +33,44 @@ function ctxWithLogger(): { ctx: VueTenantContext; logger: MockLogger } {
 
 describe('outDir', () => {
   it('targets apps/<name>-vue', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'zen-plants' })
+    const ctx: TenantContext = createMockContext({ name: 'zen-plants' })
     expect(outDir(ctx)).toBe('apps/zen-plants-vue')
+  })
+
+  it('targets apps/<name>-angular for angular framework', () => {
+    const ctx: TenantContext = createMockContext({
+      name: 'zen-plants',
+      framework: 'angular',
+    })
+    expect(outDir(ctx)).toBe('apps/zen-plants-angular')
   })
 })
 
 describe('getMissingScaffoldFiles', () => {
   it('returns all scaffold checks when nothing exists', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'missing-tenant' })
-    const missing = getMissingScaffoldFiles(ctx)
+    const ctx: TenantContext = createMockContext({ name: 'missing-tenant' })
+    const missing = getMissingScaffoldFiles(ctx, [
+      'package.json',
+      'vite.config.ts',
+      'src/main.ts',
+    ])
     expect(missing.length).toBeGreaterThan(0)
     expect(missing.every((f) => f.includes('missing-tenant-vue'))).toBe(true)
   })
 
   it('excludes files that exist on disk', () => {
-    const ctx: VueTenantContext = createMockContext({ name: 'partial-tenant' })
+    const ctx: TenantContext = createMockContext({ name: 'partial-tenant' })
     const pkg = join(ctx.cwd, outDir(ctx), 'package.json')
     mkdirSync(dirname(pkg), { recursive: true })
     writeFileSync(pkg, '{}')
 
-    const missing = getMissingScaffoldFiles(ctx)
+    const missing = getMissingScaffoldFiles(ctx, [
+      'package.json',
+      'src/main.ts',
+    ])
     expect(missing.some((f) => f.endsWith('package.json'))).toBe(false)
+    expect(missing).toHaveLength(1)
+    expect(missing[0].endsWith('src/main.ts')).toBe(true)
     expect(existsSync(pkg)).toBe(true)
   })
 })

@@ -5,7 +5,15 @@ import {
   toFile,
   when,
 } from '@featherscloud/pinion'
-import { caseTransform } from '../helpers/cases'
+import {
+  caseTransform,
+  findNextDevPort,
+  infraMetadata,
+  getLog,
+  getMissingScaffoldFiles,
+  outDir,
+  inferFramework,
+} from '../helpers'
 import {
   packageJson,
   viteConfig,
@@ -23,15 +31,24 @@ import {
   env,
   envExample,
 } from '../templates'
-import { VueTenantContext } from '../models'
-import { findNextDevPort } from '../helpers/port-allocator'
+import { TenantContext } from '../models'
 import { tenantPrompts } from '../prompts'
-import { copyServiceWorker } from '../msw/copy-service-worker'
-import { infraMetadata } from '../helpers/infra-metadata'
-import { getLog, getMissingScaffoldFiles, outDir } from '../helpers/scaffold'
+import { serviceWorker } from '../msw/copy-service-worker'
 import { join } from 'node:path'
 
-export const renderSetup = (ctx: VueTenantContext) =>
+const { copyServiceWorker } = serviceWorker()
+
+const assignDevPort = (ctx: TenantContext): TenantContext => {
+  ctx.devPort = findNextDevPort(ctx.cwd)
+  return ctx
+}
+
+const assignFramework = (entryUrl: string) => (ctx: TenantContext): TenantContext => {
+  ctx.framework = inferFramework(entryUrl)
+  return ctx
+}
+
+export const renderSetup = (ctx: TenantContext) =>
   Promise.resolve(ctx)
     .then(renderTemplate(packageJson, toFile(outDir, 'package.json')))
     .then(renderTemplate(viteConfig, toFile(outDir, 'vite.config.ts')))
@@ -39,7 +56,7 @@ export const renderSetup = (ctx: VueTenantContext) =>
     .then(renderTemplate(indexHtml, toFile(outDir, 'index.html')))
     .then(renderTemplate(eslintrc, toFile(outDir, '.eslintrc.cjs')))
 
-export const renderSourceFiles = (ctx: VueTenantContext) =>
+export const renderSourceFiles = (ctx: TenantContext) =>
   Promise.resolve(ctx)
     .then(renderTemplate(mainTs, toFile(outDir, 'src', 'main.ts')))
     .then(renderTemplate(tokensCss, toFile(outDir, 'src', 'styles', 'tokens.css')))
@@ -52,18 +69,16 @@ export const renderSourceFiles = (ctx: VueTenantContext) =>
       return c
     })
 
-export const renderConditionalAssets = (ctx: VueTenantContext) =>
-  Promise.resolve(ctx)
-    .then(when(
-      (c: VueTenantContext) => c.overrideComponent,
-      renderTemplate(componentVue, toFile(outDir, 'src', 'components', (ctx) => `${ctx.overrideComponentName}.vue`)),
-    ))
-    .then(when(
-      (c: VueTenantContext) => !c.overrideComponent,
-      renderTemplate(gitkeep, toFile(outDir, 'src', 'components', '.gitkeep')),
-    ))
+export const renderConditionalAssets = (ctx: TenantContext) =>
+  Promise.resolve(ctx).then(when(
+    (c: TenantContext) => c.overrideComponent,
+    renderTemplate(componentVue, toFile(outDir, 'src', 'components', (ctx) => `${ctx.overrideComponentName}.vue`)),
+  )).then(when(
+    (c: TenantContext) => !c.overrideComponent,
+    renderTemplate(gitkeep, toFile(outDir, 'src', 'components', '.gitkeep')),
+  ))
 
-export const renderTestInfra = (ctx: VueTenantContext) =>
+export const renderTestInfra = (ctx: TenantContext) =>
   Promise.resolve(ctx)
     .then(renderTemplate(gitkeep, toFile(outDir, 'src', 'pages', '.gitkeep')))
     .then(renderTemplate(vitestSetup, toFile(outDir, 'vitest.setup.ts')))
@@ -72,41 +87,36 @@ export const renderTestInfra = (ctx: VueTenantContext) =>
     .then(renderTemplate(env, toFile(outDir, '.env')))
     .then(renderTemplate(envExample, toFile(outDir, '.env.example')))
 
-
-export const installDeps = async (ctx: VueTenantContext): Promise<VueTenantContext> => {
+const installDeps = async (ctx: TenantContext): Promise<TenantContext> => {
   const appDir = outDir(ctx)
   ctx.pinion.logger.notice(`Installing dependencies for ${appDir}...`)
   const exitCode = await ctx.pinion.exec('bun', ['install'], { cwd: join(ctx.cwd, appDir) })
   if (exitCode !== 0) {
     ctx.pinion.logger.warn(`bun install exited with code ${exitCode} — run manually later`)
   }
+
   return ctx
 }
 
-export const verifyScaffold = (ctx: VueTenantContext): VueTenantContext => {
-  const missingFiles = getMissingScaffoldFiles(ctx)
+const verifyScaffold = (ctx: TenantContext): TenantContext => {
+  const files = ['package.json', 'vite.config.ts', 'src/main.ts', 'vitest.setup.ts', '.eslintrc.cjs']
+  const missingFiles = getMissingScaffoldFiles(ctx, files)
   getLog(ctx, missingFiles)
 
   return ctx
 }
 
-export const assignDevPort = (ctx: VueTenantContext): VueTenantContext => {
-  ctx.devPort = findNextDevPort(ctx.cwd)
-  return ctx
-}
-
-const { writeInfraMetadata } = infraMetadata()
-
-export const generate = (ctx: VueTenantContext) =>
+export const generate = (ctx: TenantContext) =>
   Promise.resolve(ctx)
-    .then(prompt<VueTenantContext>(tenantPrompts))
-    .then(caseTransform<VueTenantContext>())
+    .then(prompt<TenantContext>(tenantPrompts))
+    .then(caseTransform<TenantContext>())
+    .then(assignFramework(import.meta.url))
     .then(assignDevPort)
     .then(renderSetup)
     .then(renderSourceFiles)
     .then(renderConditionalAssets)
     .then(renderTestInfra)
-    .then(writeInfraMetadata)
-    .then((c) => copyServiceWorker(c, 'vue'))
+    .then(infraMetadata().writeInfraMetadata)
+    .then(copyServiceWorker)
     .then(installDeps)
     .then(verifyScaffold)

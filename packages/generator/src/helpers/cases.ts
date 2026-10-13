@@ -1,5 +1,5 @@
 import { caseType } from '@repo/utils/string'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 
 const { kebabToPascal, kebabToCamel, pascalToKebab } = caseType()
 
@@ -11,7 +11,7 @@ const derivePrefix = (name: string): string => {
   return name.slice(0, 2)
 }
 
-const caseTransform = <C extends VueTenantContext>() => async (ctx: C): Promise<C> => {
+const caseTransform = <C extends TenantContext>() => async (ctx: C): Promise<C> => {
   ctx.Name = kebabToPascal(ctx.name)
   ctx.camelName = kebabToCamel(ctx.name)
   ctx.prefix = derivePrefix(ctx.name)

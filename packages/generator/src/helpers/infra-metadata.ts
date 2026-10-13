@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 import { metadataTs } from '../templates'
 
 /**
@@ -10,16 +10,16 @@ import { metadataTs } from '../templates'
  * barrel line is appended at most once.
  */
 export function infraMetadata() {
-  const metaFilePath = (ctx: VueTenantContext): string =>
+  const metaFilePath = (ctx: TenantContext): string =>
     join(ctx.cwd, 'packages', 'infra', 'src', 'metadata', `${ctx.name}.ts`)
 
-  const barrelPath = (ctx: VueTenantContext): string =>
+  const barrelPath = (ctx: TenantContext): string =>
     join(ctx.cwd, 'packages', 'infra', 'src', 'index.ts')
 
-  const barrelLine = (ctx: VueTenantContext): string =>
+  const barrelLine = (ctx: TenantContext): string =>
     `export { ${ctx.camelName}Map } from './metadata/${ctx.name}'`
 
-  const ensureBarrelExport = (ctx: VueTenantContext): void => {
+  const ensureBarrelExport = (ctx: TenantContext): void => {
     const barrel = barrelPath(ctx)
     const line = barrelLine(ctx)
     const current = existsSync(barrel) ? readFileSync(barrel, 'utf8') : ''
@@ -31,7 +31,7 @@ export function infraMetadata() {
     writeFileSync(barrel, next)
   }
 
-  const writeInfraMetadata = (ctx: VueTenantContext): VueTenantContext => {
+  const writeInfraMetadata = (ctx: TenantContext): TenantContext => {
     if (ctx.metadataMode !== 'fixture') {
       return ctx
     }

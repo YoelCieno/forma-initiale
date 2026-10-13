@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from 'vitest'
 import { rmSync, existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 import {
   renderSetup,
   renderSourceFiles,
@@ -18,7 +18,7 @@ afterAll(() => {
 })
 
 function renderFiles(
-  trace: VueTenantContext['pinion']['trace'],
+  trace: TenantContext['pinion']['trace'],
 ): string[] {
   return trace
     .filter((t) => t.name === 'renderTemplate')
@@ -27,7 +27,7 @@ function renderFiles(
 
 describe('renderSetup', () => {
   it('renders vite.config.ts, tsconfig.json, index.html', async () => {
-    const ctx: VueTenantContext = createMockContext()
+    const ctx: TenantContext = createMockContext()
     const result = await renderSetup(ctx)
 
     const trace = result.pinion.trace
@@ -45,7 +45,7 @@ describe('renderSetup', () => {
 
 describe('renderSourceFiles', () => {
   it('renders main.ts, tokens.css, styles/index.ts and copies vite-env.d.ts', async () => {
-    const ctx: VueTenantContext = createMockContext()
+    const ctx: TenantContext = createMockContext()
     // Create source vite-env.d.ts for copy operation
     const sourceDir = join(ctx.cwd, 'apps/white-label-vue/src')
     mkdirSync(sourceDir, { recursive: true })
@@ -71,7 +71,7 @@ describe('renderSourceFiles', () => {
 
 describe('renderConditionalAssets', () => {
   it('never renders tenant-local metadata.ts in the app dir (fixture mode)', async () => {
-    const ctx: VueTenantContext = createMockContext({ metadataMode: 'fixture' })
+    const ctx: TenantContext = createMockContext({ metadataMode: 'fixture' })
     const result = await renderConditionalAssets(ctx)
 
     const files = renderFiles(result.pinion.trace)
@@ -79,7 +79,7 @@ describe('renderConditionalAssets', () => {
   })
 
   it('never renders tenant-local metadata.ts in the app dir (none mode)', async () => {
-    const ctx: VueTenantContext = createMockContext({ metadataMode: 'none' })
+    const ctx: TenantContext = createMockContext({ metadataMode: 'none' })
     const result = await renderConditionalAssets(ctx)
 
     const files = renderFiles(result.pinion.trace)
@@ -87,7 +87,7 @@ describe('renderConditionalAssets', () => {
   })
 
   it('renders component .vue when overrideComponent is true', async () => {
-    const ctx: VueTenantContext = createMockContext({
+    const ctx: TenantContext = createMockContext({
       overrideComponent: true,
       overrideComponentName: 'ProductCard',
     })
@@ -99,7 +99,7 @@ describe('renderConditionalAssets', () => {
   })
 
   it('renders .gitkeep when overrideComponent is false', async () => {
-    const ctx: VueTenantContext = createMockContext({ overrideComponent: false })
+    const ctx: TenantContext = createMockContext({ overrideComponent: false })
     const result = await renderConditionalAssets(ctx)
 
     const files = renderFiles(result.pinion.trace)
@@ -110,7 +110,7 @@ describe('renderConditionalAssets', () => {
 
 describe('renderTestInfra', () => {
   it('renders vitest.setup.ts, vitest.config.ts, main.spec.ts, .env, .env.example, and pages .gitkeep', async () => {
-    const ctx: VueTenantContext = createMockContext()
+    const ctx: TenantContext = createMockContext()
     const result = await renderTestInfra(ctx)
 
     const trace = result.pinion.trace
@@ -131,7 +131,7 @@ describe('renderTestInfra', () => {
 
 describe('generate', () => {
   it('chains all sub-fns and writes files to disk', async () => {
-    const ctx: VueTenantContext = createMockContext({
+    const ctx: TenantContext = createMockContext({
       metadataMode: 'fixture',
       overrideComponent: false,
     })
