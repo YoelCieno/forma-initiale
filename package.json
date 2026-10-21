@@ -22,7 +22,7 @@
     "husky": "^9.1.7",
     "prettier": "^3.2.5",
     "turbo": "^2.9.14",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.0",
     "vite-plus": "*",
     "vitest": "^4.1.7",
     "vue-eslint-parser": "^9"
