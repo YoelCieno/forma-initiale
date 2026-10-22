@@ -1,3 +1,3 @@
-export { validateHex, getThemeClass } from './helpers/palette'
+export { validateHex, getThemeClass } from './helpers'
 export { generate } from './generators/vue-tenant.tpl'
-export type { VueTenantContext, Theme } from './models'
+export type { TenantContext, Theme } from './models'

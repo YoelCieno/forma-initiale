@@ -1,12 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core'
 import '@repo/ui/fe-async-content'
 import '@repo/ui/fe-loader'
-import { ProductCard } from '../components/product-card.component'
+import { ComponentOverride } from '../components/component-override.component'
 import { ProductsService } from '../services/products.service'
 
 @Component({
   selector: 'app-products-page',
-  imports: [ProductCard],
+  imports: [ComponentOverride],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="products-page">
@@ -16,16 +16,7 @@ import { ProductsService } from '../services/products.service'
         <p slot="error" class="products-page__error">{{ error() }}</p>
         <div class="products-page__grid">
           @for (product of products(); track product.id) {
-            <app-product-card
-              [id]="product.id"
-              [title]="product.title"
-              [description]="product.description"
-              [image]="product.image"
-              [imageFamily]="product.imageFamily"
-              [price]="product.price"
-              [previousPrice]="product.previousPrice"
-              [rate]="product.rate"
-            ></app-product-card>
+            <product-card [product]="product" />
           }
         </div>
       </fe-async-content>
@@ -59,4 +50,5 @@ export class ProductsPage {
   readonly products = this.catalog.items
   readonly loading = this.catalog.loading
   readonly error = this.catalog.error
+
 }

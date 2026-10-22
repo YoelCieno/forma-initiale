@@ -1,8 +1,7 @@
-import type { VueTenantContext } from '../models'
-import { pascalToKebab } from '../helpers/cases'
-import { formatThemeTokens, getThemeTokens } from '../helpers/palette'
+import type { TenantContext } from '../models'
+import { pascalToKebab, formatThemeTokens, getThemeTokens } from '../helpers'
 
-const packageJson = (ctx: VueTenantContext) => `{
+const packageJson = (ctx: TenantContext) => `{
   "name": "${ctx.name}-vue",
   "private": true,
   "version": "0.0.0",
@@ -16,6 +15,7 @@ const packageJson = (ctx: VueTenantContext) => `{
   },
   "dependencies": {
     "white-label-vue": "workspace:*",
+    "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
     "vue": "^3.5.34",
@@ -36,7 +36,7 @@ const packageJson = (ctx: VueTenantContext) => `{
 }
 `
 
-const viteConfig = (ctx: VueTenantContext) => {
+const viteConfig = (ctx: TenantContext) => {
   const componentDir = ctx.overrideComponent
     ? "  componentDirs: ['./src/components'],"
     : "  // componentDirs: ['./src/components'],  // uncomment when adding local components"
@@ -51,7 +51,7 @@ ${componentDir}
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const tsconfigJson = (_ctx: VueTenantContext) => `{
+const tsconfigJson = (_ctx: TenantContext) => `{
   "extends": "@repo/typescript-config/vite.json",
   "include": ["src", "vite.config.ts", "vitest.config.ts", "vitest.setup.ts"],
   "compilerOptions": {
@@ -60,7 +60,7 @@ const tsconfigJson = (_ctx: VueTenantContext) => `{
 }
 `
 
-const indexHtml = (ctx: VueTenantContext) => `<!DOCTYPE html>
+const indexHtml = (ctx: TenantContext) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -74,10 +74,10 @@ const indexHtml = (ctx: VueTenantContext) => `<!DOCTYPE html>
 </html>
 `
 
-const mainTs = (ctx: VueTenantContext) => {
+const mainTs = (ctx: TenantContext) => {
   const metaImport =
     ctx.metadataMode === 'fixture'
-      ? `import { ${ctx.camelName}Map } from '../metadata'\n`
+      ? `import { ${ctx.camelName}Map } from '@repo/infra'\n`
       : ''
   const metaLine =
     ctx.metadataMode === 'fixture'
@@ -108,27 +108,24 @@ ${metaLine}
 `
 }
 
-const metadataTs = (ctx: VueTenantContext) => {
-  const parts = ctx.name.split('-')
-  const base = parts.slice(0, -1).join('-')
-  const prefix = base ? `${base}-` : ''
-
+const metadataTs = (ctx: TenantContext) => {
+  // Keys MUST match getProductNames (register-tenant mock product ids)
   return `import type { ProductMeta } from '@repo/presenters'
 
 export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
-  '${prefix}alpha': {
+  '${ctx.name}-alpha': {
     title: 'Alpha Primum',
     description: 'The first of its kind, a pioneering specimen',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${prefix}beta': {
+  '${ctx.name}-beta': {
     title: 'Beta Secundus',
     description: 'Follows the pattern with distinct characteristics',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${prefix}gamma': {
+  '${ctx.name}-gamma': {
     title: 'Gamma Tertius',
     description: 'Completes the triad with unique properties',
     image: 'plant',
@@ -138,7 +135,7 @@ export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
 `
 }
 
-const tokensCss = (ctx: VueTenantContext) => {
+const tokensCss = (ctx: TenantContext) => {
   // Custom gets inline brand override
   if (ctx.theme === 'custom') {
     return `/* ${ctx.Name} custom brand override */
@@ -162,15 +159,15 @@ ${formatThemeTokens(themeTokens)}
   // Fallback
   return `/* ${ctx.Name} — default theme */
 :where(:root) {
-  // --brand-fill-normal: #4f46e5;
+  /* --brand-fill-normal: #4f46e5; */
 }`
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stylesIndex = (_ctx: VueTenantContext) => `import './tokens.css'
+const stylesIndex = (_ctx: TenantContext) => `import './tokens.css'
 `
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const eslintrc = (_ctx: VueTenantContext) => `/** @type {import("eslint").Linter.Config} */
+const eslintrc = (_ctx: TenantContext) => `/** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
   extends: ["@repo/eslint-config/vue.js"],
@@ -195,10 +192,10 @@ module.exports = {
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const gitkeep = (_ctx: VueTenantContext) => ''
+const gitkeep = (_ctx: TenantContext) => ''
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const vitestSetup = (_ctx: VueTenantContext) => `import { vi } from 'vitest'
+const vitestSetup = (_ctx: TenantContext) => `import { vi } from 'vitest'
 import { config } from '@vue/test-utils'
 
 config.global.config.compilerOptions = {
@@ -215,7 +212,7 @@ vi.mock('@repo/ui/fe-rating', () => {
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const vitestConfig = (_ctx: VueTenantContext) => `import { defineConfig } from 'vitest/config'
+const vitestConfig = (_ctx: TenantContext) => `import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -250,7 +247,7 @@ export default defineConfig({
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mainSpec = (_ctx: VueTenantContext) => `import { describe, it, expect } from 'vitest'
+const mainSpec = (_ctx: TenantContext) => `import { describe, it, expect } from 'vitest'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 
 describe('main', () => {
@@ -264,7 +261,7 @@ describe('main', () => {
 })
 `
 
-const env = (ctx: VueTenantContext) => `# Tenant id header
+const env = (ctx: TenantContext) => `# Tenant id header
 VITE_TENANT_ID=${ctx.prefix}
 # API base URL (no trailing slash) — MSW intercepts in dev
 VITE_API_URL=http://localhost:5174/api
@@ -274,7 +271,7 @@ VITE_ENABLE_MOCKS=true
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const envExample = (_ctx: VueTenantContext) => `# Tenant id header
+const envExample = (_ctx: TenantContext) => `# Tenant id header
 VITE_TENANT_ID=your-tenant-id
 # API base URL (no trailing slash) — MSW intercepts in dev
 VITE_API_URL=http://localhost:5174/api
@@ -283,7 +280,7 @@ VITE_API_URL=http://localhost:5174/api
 VITE_ENABLE_MOCKS=true
 `
 
-const componentVue = (ctx: VueTenantContext) => {
+const componentVue = (ctx: TenantContext) => {
   const name = ctx.overrideComponentName!
   const className = pascalToKebab(name)
 

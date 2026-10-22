@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, existsSync, type Dirent } from 'node:fs'
 import { join } from 'node:path'
 
-const DEFAULT_FIRST_PORT = Number(process.env.DEFAULT_FIRST_PORT) || 3100
+const DEFAULT_FIRST_PORT = Number(process.env.DEFAULT_FIRST_PORT) || 3000
 
 const readAppsDir = (cwd: string): Dirent[] => {
   try {

@@ -1,5 +1,6 @@
 import {
   InjectionToken,
+  inject,
   provideZonelessChangeDetection,
   type ApplicationConfig,
   type Provider,
@@ -9,10 +10,42 @@ import { provideHttpClient } from '@angular/common/http'
 import { provideRouter, type Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 import { environment } from '../environments/environment'
+import { App } from '../app/app'
 
 export const META_MAP_INJECTION_KEY = new InjectionToken<Record<string, ProductMeta>>(
   'META_MAP_INJECTION_KEY',
 )
+
+/** Runtime env config injected into app services (API base URL, tenant, mocks gate) */
+export interface AppEnv {
+  apiUrl: string
+  tenantId: string
+  enableMocks: boolean
+}
+
+export const APP_ENV = new InjectionToken<AppEnv>('APP_ENV')
+
+/**
+ * Tenant component overrides keyed by white-label component name
+ * (kebab-case = white-label component file name, e.g. 'product-card').
+ * Root factory default = empty map → zero-override tenants/tests get shell defaults.
+ */
+export const COMPONENT_OVERRIDES = new InjectionToken<Record<string, Type<unknown>>>(
+  'COMPONENT_OVERRIDES',
+  { providedIn: 'root', factory: () => ({}) },
+)
+
+/**
+ * Resolve a component through the override registry with shell fallback.
+ * Each overrideable shell consumer calls this instead of importing the
+ * concrete class directly for rendering.
+ */
+export const injectComponentOverride = <T>(name: string, fallback: Type<T>): Type<T> => {
+  const overrides = inject(COMPONENT_OVERRIDES)
+  // documented boundary cast: runtime Record<string, Type<unknown>> cannot
+  // carry the per-key generic T — caller controls both name and fallback
+  return (overrides[name] as Type<T> | undefined) ?? fallback
+}
 
 export interface WhiteLabelAppOptions {
   /** FULL route override — replaces WL defaults entirely */
@@ -23,6 +56,12 @@ export interface WhiteLabelAppOptions {
   omitRoutePaths?: string[]
   /** Per-product metadata overrides keyed by product name */
   metaMap?: Record<string, ProductMeta>
+  /** Tenant component overrides keyed by white-label component name ('product-card': FpProductCard) */
+  componentOverrides?: Record<string, Type<unknown>>
+  /** Optional override for the root App component (tenant-owned shell) */
+  appShell?: () => Promise<Type<unknown>>
+  /** Runtime env config; defaults to shell environment when omitted */
+  env?: AppEnv
 }
 
 export interface WhiteLabelApp {
@@ -31,11 +70,19 @@ export interface WhiteLabelApp {
 }
 
 export function useWhiteLabelApp() {
-  const setupMocks = async (): Promise<void> => {
-    if (environment.enableMocks) {
+  const setupMocks = async (env?: AppEnv): Promise<void> => {
+    if ((env ?? environment).enableMocks) {
       const { worker } = await import('@repo/infra/mocks/browser')
       await worker.start({ onUnhandledRequest: 'bypass' })
     }
+  }
+
+  const resolveAppShell = async (opts: WhiteLabelAppOptions): Promise<Type<unknown>> => {
+    if (opts.appShell) {
+      return opts.appShell()
+    }
+
+    return App
   }
 
   const mergeRoutes = (wlRoutes: Routes, opts: WhiteLabelAppOptions): Routes => {
@@ -54,17 +101,28 @@ export function useWhiteLabelApp() {
     return [{ provide: META_MAP_INJECTION_KEY, useValue: metaMap }]
   }
 
-  const buildAppConfig = (
-    routes: Routes,
-    metaMap?: Record<string, ProductMeta>,
-  ): ApplicationConfig => ({
-    providers: [provideZonelessChangeDetection(), provideRouter(routes), provideHttpClient(), ...injectMetaMap(metaMap)],
+  const injectComponentOverrides = (overrides?: Record<string, Type<unknown>>): Provider[] =>
+    overrides
+      ? [{ provide: COMPONENT_OVERRIDES, useValue: overrides }]
+      : []
+
+  const buildAppConfig = (routes: Routes, opts?: WhiteLabelAppOptions): ApplicationConfig => ({
+    providers: [
+      provideZonelessChangeDetection(),
+      provideRouter(routes),
+      provideHttpClient(),
+      { provide: APP_ENV, useValue: opts?.env ?? environment },
+      ...injectMetaMap(opts?.metaMap),
+      ...injectComponentOverrides(opts?.componentOverrides),
+    ],
   })
 
   return {
     setupMocks,
+    resolveAppShell,
     mergeRoutes,
     buildAppConfig,
     injectMetaMap,
+    injectComponentOverrides,
   }
 }

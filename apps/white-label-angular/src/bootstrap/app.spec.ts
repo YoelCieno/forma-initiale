@@ -10,12 +10,20 @@ import { App } from '../app/app'
 
 class AboutCmp {}
 class CustomCmp {}
+class TenantShellCmp {}
 
 describe('createWhiteLabelApp', () => {
   it('returns { root, config } where root is the base App component', async () => {
     const { root, config } = await createWhiteLabelApp({})
     expect(root).toBe(App)
     expect(Array.isArray(config.providers)).toBe(true)
+  })
+
+  it('returns tenant component as root when appShell provided', async () => {
+    const { root } = await createWhiteLabelApp({
+      appShell: () => Promise.resolve(TenantShellCmp),
+    })
+    expect(root).toBe(TenantShellCmp)
   })
 
   it('appends extendRoutes to WL default routes', async () => {

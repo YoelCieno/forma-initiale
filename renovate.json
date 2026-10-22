@@ -4,6 +4,18 @@
   "automergeType": "pr",
   "packageRules": [
     {
+      "description": "eslint major blocked — repo on eslintrc CJS; flat-config migration pending (see .opencode/thoughts/2026-10-22-eslint-major-block.md)",
+      "matchPackageNames": ["eslint"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "typescript major blocked — TS7 unsupported by typescript-eslint + Angular toolchain (see .opencode/thoughts/2026-10-22-typescript-7-block.md)",
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["major"],
       "automerge": false
     }

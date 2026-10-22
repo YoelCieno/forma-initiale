@@ -21,21 +21,17 @@ So if `internals.validity.valid` or `internals.states` is touched on those targe
 
 ---
 
-## 2. The shim (`ensureInternalsComplete`)
+## 2. The shim (`elementInternalsShim` / `ensureInternalsComplete`)
 
-Source: `apps/white-label-angular/src/test-setup.ts` — runs once at test-setup time.
+Source: `packages/infra/src/testing/element-internals.ts` — ONE shared module in `@repo/infra`, self-installing on import. Both Angular apps load it as their only test setup:
+- package consumers: `import '@repo/infra/testing/element-internals'`
+- `angular.json` `setupFiles` uses the deep path `../../packages/infra/src/testing/element-internals.ts` (Angular unit-test builder joins entries to the workspace root — paths only, no bare specifiers)
 
 ```typescript
 const ensureInternalsComplete = (internals: ElementInternals): void => {
-  ensureMethod(internals, 'setValidity', () => {})
-  ensureMethod(internals, 'setFormValue', () => {})
-  ensureMethod(internals, 'checkValidity', () => true)
-  ensureMethod(internals, 'reportValidity', () => true)
-  ensureValidity(internals)        // guarantees validity.valid === true
-  ensureStates(internals)          // guarantees internals.states is *something*
-  ensureValidationMessage(internals)
-  ensureWillValidate(internals)
-  ensureShadowRoot(internals)
+  // FACE methods: setValidity, setFormValue, checkValidity, reportValidity
+  // validity.valid === true, states stub, validationMessage, willValidate, shadowRoot
+  ...
 }
 ```
 
@@ -47,7 +43,7 @@ It is reached two ways:
   - on throw / falsy return → falls back to `createFallbackInternals()`,
   - on success-but-incomplete → calls `ensureInternalsComplete(internals)`.
 
-> A second, older stub also exists at `packages/ui/vitest.setup.ts`. It returns a full `ElementInternals` stub with `states = new Set<string>()` (a real `Set`), so `:state()` styling *does* work there. Prefer the Angular `test-setup.ts` variant as the canonical reference; the `packages/ui` one is legacy.
+> A second, older stub also exists at `packages/ui/vitest.setup.ts`. It returns a full `ElementInternals` stub with `states = new Set<string>()` (a real `Set`), so `:state()` styling *does* work there. Prefer the shared `@repo/infra` module as the canonical reference; the `packages/ui` one is legacy.
 
 ---
 
@@ -75,7 +71,7 @@ It provides only `{ add, delete, has }`. A real `CustomStateSet` is **Set-like**
 
 - Use the `packages/ui/vitest.setup.ts` stub (its `states` is a real `Set<string>`), **or**
 - run under a FACE-complete engine (Chromium-based, Safari ≥ 17.4, Firefox ≥ 126), **or**
-- upgrade the `states` fallback in `test-setup.ts` to a `Set`-compatible shim if a component genuinely needs `:state()` assertions.
+- upgrade the `states` fallback in `packages/infra/src/testing/element-internals.ts` to a `Set`-compatible shim if a component genuinely needs `:state()` assertions.
 
 ---
 

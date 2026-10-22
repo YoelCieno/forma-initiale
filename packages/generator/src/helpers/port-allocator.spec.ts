@@ -25,18 +25,18 @@ describe('findNextDevPort', () => {
     writeFileSync(join(appDir, 'vite.config.ts'), config)
   }
 
-  it('returns DEFAULT_FIRST_PORT (3100) when apps dir is empty', () => {
-    expect(findNextDevPort(tmpDir)).toBe(3100)
+  it('returns DEFAULT_FIRST_PORT (3000) when apps dir is empty', () => {
+    expect(findNextDevPort(tmpDir)).toBe(3000)
   })
 
   it('returns DEFAULT_FIRST_PORT when no -vue dirs exist', () => {
     writeViteConfig('some-other-app', 3100)
-    expect(findNextDevPort(tmpDir)).toBe(3100)
+    expect(findNextDevPort(tmpDir)).toBe(3000)
   })
 
   it('returns DEFAULT_FIRST_PORT when -vue dir has no vite.config.ts', () => {
     mkdirSync(join(tmpDir, 'apps', 'empty-vue'), { recursive: true })
-    expect(findNextDevPort(tmpDir)).toBe(3100)
+    expect(findNextDevPort(tmpDir)).toBe(3000)
   })
 
   it('returns max+1 when single app has devPort', () => {
@@ -71,6 +71,6 @@ describe('findNextDevPort', () => {
 
   it('returns DEFAULT_FIRST_PORT when apps dir does not exist', () => {
     const badDir = join(tmpDir, 'nonexistent')
-    expect(findNextDevPort(badDir)).toBe(3100)
+    expect(findNextDevPort(badDir)).toBe(3000)
   })
 })

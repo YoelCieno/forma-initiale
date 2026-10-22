@@ -22,6 +22,7 @@ forma-initiale/
 │   ├── white-label-vue/    # Vue 3 SPA — layer base for tenant apps
 │   ├── white-label-angular/# Angular 22 SPA — layer base for Angular tenants
 │   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
+│   ├── fake-plants-angular/# Angular 22 tenant app — plants-themed store (port 4201)
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
@@ -228,25 +229,39 @@ packages/generator/
     ├── helpers/
     │   ├── cases.ts              # Kebab/Pascal/Camel case transforms + prefix derivation
     │   ├── cases.spec.ts         # Case transform tests
+    │   ├── error.ts              # Scaffold error helpers
+    │   ├── infra-metadata.ts     # writeInfraMetadata() — fixture metadata → packages/infra + barrel line (idempotent)
+    │   ├── infra-metadata.spec.ts
+    │   ├── mocks.ts              # Mock Pinion context for tests
     │   ├── palette.ts            # Hex validation + theme class helper
-    │   └── palette.spec.ts       # Palette tests
+    │   ├── palette.spec.ts       # Palette tests
+    │   ├── port-allocator.ts     # findNextDevPort — Vite dev-port allocation (base 3100)
+    │   ├── scaffold.ts           # Shared fs scaffold utilities (writeFileTree, etc.)
+    │   └── scaffold.spec.ts      # Scaffold tests
     │
     ├── models/
-    │   └── index.ts              # VueTenantContext + Theme type definitions
+    │   ├── index.ts              # VueTenantContext + Theme type definitions
+    │   └── main.ts               # Model helpers
     │
     ├── msw/
     │   ├── add-tenant.ts             # addTenantConfig() — validates + appends MSW tenant entry
     │   ├── add-tenant.spec.ts        # MSW config tests
+    │   ├── copy-service-worker.ts    # Framework-aware worker copy (apps/white-label-<fw>/ → apps/<name>-<fw>/public/)
+    │   ├── copy-service-worker.spec.ts # Covers vue + angular targets
     │   ├── file-io.ts                # readMockedData, writeMockedData, copyMswWorker utilities
     │   ├── file-io.spec.ts           # File I/O tests
-    │   └── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
+    │   ├── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
+    │   └── register-tenant.spec.ts   # Register-tenant CLI tests
     │
     ├── prompts/
     │   ├── index.ts              # Interactive prompts (name, description, theme, metadata, MSW)
     │   └── index.spec.ts         # Prompt shape tests
     │
+    ├── utils/
+    │   └── index.ts              # Shared utils
+    │
     └── templates/
-        ├── index.ts              # All output templates (package.json, vite.config, main.ts, etc.)
+        ├── index.ts              # All output templates (package.json, vite.config, main.ts, metadata, etc.)
         └── index.spec.ts         # Template rendering tests
 ```
 
@@ -311,19 +326,18 @@ Vue 3 tenant app — plants-themed store. Uses createWhiteLabelApp() factory fro
 ```
 apps/fake-plants-vue/
 ├── package.json             # fake-plants-vue — depends on white-label-vue, domain, ui
-├── metadata.ts              # Plant metadata mapping (plantsMap with 7 entries)
 ├── tsconfig.json            # extends vite.json
 ├── vite.config.ts           # Uses defineWhiteLabelViteConfig() from white-label-vue base
 ├── vitest.config.ts         # Vitest: jsdom, vue plugin, auto-import, components
 ├── vitest.setup.ts          # Custom element config for fe-* components
 ├── .eslintrc.cjs            # Vue ESLint config
 ├── index.html               # SPA entry HTML
-├── metadata.ts              # Plant metadata mapping (name → {title, description, image})
 ├── .env                     # Environment variables
 ├── .env.example             # Env var template
 
 └── src/
-    ├── main.ts              # Entry: imports WA styles, calls createWhiteLabelApp({ routes })
+    ├── main.ts              # Entry: imports WA styles + plantsMap (@repo/infra), createWhiteLabelApp({ extendRoutes, omitRoutePaths, appShell, metaMap })
+    ├── main.spec.ts         # Factory smoke tests (zero overrides, appShell resolution, router defaults)
     ├── App.vue              # Root SFC: nav + RouterView
     ├── App.spec.ts          # Tests for App.vue (RouterLink, RouterView)
     ├── auto-imports.d.ts    # Auto-generated global type declarations
@@ -358,10 +372,13 @@ apps/white-label-angular/
 └── src/
     ├── main.ts              # Entry: imports WA styles, bootstrap
     ├── index.html           # HTML shell
+    ├── routes.ts            # Route array (tenants merge via extendRoutes)
     ├── app/                 # Root app component
     ├── bootstrap/
-    │   ├── init.ts          # Factory: createWhiteLabelApp() + merge logic
-    │   └── init.spec.ts     # Factory tests
+    │   ├── init.ts          # Options + merge logic, tokens: META_MAP_INJECTION_KEY, APP_ENV, COMPONENT_OVERRIDES, injectComponentOverride()
+    │   ├── init.spec.ts     # Factory tests
+    │   ├── app.ts           # createWhiteLabelApp() + useWhiteLabelApp, re-exports APP_ENV
+    │   └── app.spec.ts      # App bootstrap tests
     ├── components/
     │   ├── button-container.component.ts      # Button demos (fe-button)
     │   ├── button-container.component.spec.ts # Tests
@@ -373,12 +390,16 @@ apps/white-label-angular/
     │   ├── rating-container.component.spec.ts # Tests
     │   ├── product-card.component.ts          # Product card (fe-card + fe-icon + fe-rating)
     │   ├── product-card.component.spec.ts     # Tests
+    │   ├── product-card.model.ts              # ProductCardInputs type
+    │   ├── component-override.component.ts    # Universal override host (selector: product-card; registry lookup by localName + ngComponentOutlet)
+    │   ├── component-override.component.spec.ts # Tests
+    │   ├── fe-property-shim.directive.ts      # Bare-attr → property setter shim (gotcha #5)
     │   └── fe-property-shim.directive.spec.ts # Property shim directive tests
     ├── environments/
     │   ├── environment.ts          # Production config
     │   └── environment.development.ts # Dev config
     ├── pages/
-    │   ├── products-page.component.ts      # Products page (fe-async-content)
+    │   ├── products-page.component.ts      # Products page (fe-async-content; resolves 'product-card' override via injectComponentOverride + ngComponentOutlet)
     │   ├── products-page.component.spec.ts # Tests
     │   └── components-page.component.ts    # Components showcase page
     ├── services/
@@ -387,10 +408,44 @@ apps/white-label-angular/
     ├── styles/
     │   ├── tokens.css       # DS token overrides
     │   └── themes/          # WA theme CSS
-    ├── utils/
-    │   └── type-guards.ts   # Angular-specific type guards
-    └── test-setup.ts        # ElementInternals FACE shim for jsdom
+    └── import-meta-env.d.ts # Ambient ImportMeta.env typing (gotcha #7)
 ```
+
+---
+
+## apps/fake-plants-angular
+
+```
+apps/fake-plants-angular/
+├── package.json             # fake-plants-angular — Angular 22 tenant (dev port 4201)
+├── angular.json             # Angular CLI config (deep-ref styles TEMPORAL — see AGENTS.md Key Config "white-label-angular `./styles` export is STALE")
+├── tsconfig.json            # Angular TS config
+├── tsconfig.spec.json       # Spec TS config
+├── public/
+│   └── mockServiceWorker.js # MSW worker script
+│
+└── src/
+    ├── main.ts              # Entry: createWhiteLabelApp({ appShell, extendRoutes, omitRoutePaths, metaMap })
+    ├── main.spec.ts         # Bootstrap tests
+    ├── main.wiring.spec.ts  # Env + metaMap injection wiring tests
+    ├── index.html           # HTML shell (host tag <fp-root>)
+    ├── app/
+    │   └── app.component.ts # FpApp — tenant root shell (nav: Products / About)
+    ├── components/
+    │   ├── fp-product-card.component.ts       # Photo card override, registered as 'product-card'
+    │   └── fp-product-card.component.spec.ts  # Tests
+    ├── pages/
+    │   ├── about-page.component.ts      # Tenant About page (extendRoutes)
+    │   ├── about-page.component.spec.ts # Tests
+    │   └── products-page.integration.spec.ts # Products integration (override resolution)
+    ├── environments/         # environment.ts / environment.development.ts (NG_APP_* workaround)
+    ├── import-meta-env.d.ts  # Ambient ImportMeta.env typing (gotcha #7)
+    └── styles/
+        ├── tokens.css        # Green brand overrides (9 --brand-* values)
+        └── tokens.spec.ts    # Token content tests (shell-untouched assertion)
+```
+
+ElementInternals shim loaded via `angular.json` `setupFiles` → `packages/infra/src/testing/element-internals.ts` (no app-side file — gotcha #4)
 
 ---
 

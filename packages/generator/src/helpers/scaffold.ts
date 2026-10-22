@@ -1,28 +1,22 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { VueTenantContext } from '../models'
+import { TenantContext } from '../models'
 
-const outDir = (ctx: VueTenantContext): string => `apps/${ctx.name}-vue`
+const outDir = (ctx: TenantContext): string => `apps/${ctx.name}-${ctx.framework}`
 
-const getMissingScaffoldFiles = (ctx: VueTenantContext): string[] => {
+const getMissingScaffoldFiles = (ctx: TenantContext, files: string[]): string[] => {
   const base =  join(ctx.cwd, outDir(ctx))
-  const checks = [
-    join(base, 'package.json'),
-    join(base, 'vite.config.ts'),
-    join(base, 'src/main.ts'),
-    join(base, 'src/styles/tokens.css'),
-    join(base, 'src/pages/.gitkeep'),
-    join(base, 'vitest.setup.ts'),
-    join(base, '.eslintrc.cjs')
-  ]
-  return checks.filter((file) => !existsSync(file))
+
+  return files
+    .map((file) => join(base, file))
+    .filter((path) => !existsSync(path))
 }
 
-const getLog = (ctx: VueTenantContext, missingFiles: string[]) => {
-  if (missingFiles.length < 0) {
-		return ctx.pinion.logger.notice(`✅ Tenant '${ctx.name}-vue' created successfully`)
+const getLog = (ctx: TenantContext, missingFiles: string[]) => {
+  if (missingFiles.length === 0) {
+		return ctx.pinion.logger.notice(`✅ Tenant '${ctx.name}-${ctx.framework}' created successfully`)
   }
-  return ctx.pinion.logger.warn(`⚠️  ${missingFiles} file(s) missing — check generator output`)
+  return ctx.pinion.logger.warn(`⚠️  ${missingFiles.length} file(s) missing — check generator output`)
 }
 
 export {

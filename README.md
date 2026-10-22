@@ -22,7 +22,7 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 | `apps/fake-plants-vue`      | Vue 3 tenant app (plants-themed) | Active              |
 | `apps/docs`                 | Astro + Starlight                | Active              |
 | `apps/white-label-angular`  | Angular 22 (zoneless, signals)   | Active (layer base) |
-| `apps/fake-plants-angular`  | Angular 22 tenant app            | Pending             |
+| `apps/fake-plants-angular`  | Angular 22 tenant app            | Active              |
 | `apps/web-react`            | React                            | Future              |
 
 ## Project structure
@@ -30,9 +30,11 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 ```
 forma-initiale/
 ├── apps/
-│   ├── white-label-vue/    # Vue 3 app (Vite 6 via Vite+), layer base for tenants
-│   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
-│   └── docs/             # Documentation site
+│   ├── white-label-vue/     # Vue 3 app (Vite 6 via Vite+), layer base for tenants
+│   ├── fake-plants-vue/     # Vue 3 tenant app — plants-themed store
+│   ├── white-label-angular/ # Angular 22 layer base (zoneless, signals, OnPush)
+│   ├── fake-plants-angular/ # Angular 22 tenant app — plants-themed store
+│   └── docs/                # Documentation site
 ├── packages/
 │   ├── domain/           # Pure TS models, ports
 │   ├── presenters/       # Presentation layer (domain → view models)
@@ -54,7 +56,7 @@ bun install
 bun run dev
 ```
 
-Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhost:4321).
+Starts all apps in dev mode (white-label-vue on localhost:3100, fake-plants-vue on localhost:3101, white-label-angular on localhost:4200, fake-plants-angular on localhost:4201, docs on localhost:4321).
 
 ## Commands
 
@@ -63,30 +65,21 @@ Starts all apps in dev mode (white-label-vue on localhost:5173, docs on localhos
 | `bun run dev`    | Start all apps (dev mode, persistent) |
 | `bun run build`  | Build all apps                        |
 | `bun run lint`   | Lint all packages                     |
-| `bun run test`   | Run tests (Vitest)                    |
+| `bun run test`   | Run tests (Vitest; Angular apps via `ng test`)    |
 | `bun run format` | Format code (Prettier)                |
 | `bun run generate:vue-tenant` | Scaffold a new Vue tenant app (interactive) |
 | `bun run register-tenant`     | Register MSW tenant config (`--prefix <key> --names-json '[...]'`) |
 
 ## Dependency Automation
 
-This repo uses **Renovate** via GitHub Actions to automatically create and merge PRs for outdated dependencies.
-
-### Configuration
-
-- **Schedule:** Every Monday at 5:00 AM UTC
-- **Auto-merge:** Enabled for minor & patch updates (CI must pass)
-- **Manual trigger:** Go to GitHub → Actions → `Renovate Dependencies` → `Run workflow`
-- **Config:** `.github/workflows/renovate.yml` + `renovate.json`
+This repo uses **Renovate** via GitHub Actions. Summary: weekly (Mon 5 AM UTC), auto-merge minor/patch with CI green, majors manual. Full policy: [`docs/dependency-management.md`](docs/dependency-management.md).
 
 ### Requirements
 
 - **GitHub Secret:** `RENOVATE_TOKEN` (PAT with `repo` scope) — required for PR creation & auto-merge
 - **Lockfile:** `bun.lock` (detected automatically via `renovate.json` `bun.enabled: true`)
-
-### Major Updates
-
-Major version bumps require **manual approval** (disabled auto-merge) to prevent breaking changes. Review PRs carefully before merging.
+- **Manual trigger:** GitHub → Actions → `Renovate Dependencies` → `Run workflow`
+- **Config:** `.github/workflows/renovate.yml` + `renovate.json`
 
 ## Environment variables
 
@@ -171,7 +164,7 @@ Interactive prompts:
 - **Component override** — optionally scaffold a component stub
 - **MSW registration** — auto-register mocked product data
 
-Output: `apps/<name>-vue/` with full tenant app structure (main.ts, styles, tests, configs).
+Output: `apps/<name>-vue/` with full tenant app structure (main.ts, styles, tests, configs). Fixture metadata also writes `packages/infra/src/metadata/<name>.ts` + appends its `<camel>Map` barrel export to `packages/infra/src/index.ts` (idempotent — existing files never overwritten).
 
 ### Manual MSW registration
 
@@ -183,11 +176,11 @@ Adds a tenant config entry to `packages/infra/src/mocks/data/mocked-data.json`.
 
 ## Theming & Design Tokens
 
-The project uses WebAwesome 3.7 as its design system. Styles are split into three layers:
+The project uses WebAwesome 3.11 as its design system. Styles are split into three layers:
 
-1. **WA base** (`@repo/ui/styles`) — imports `native.css` + `utilities.css` (theme-agnostic reset + utilities)
+1. **WA base** (`@repo/ui/styles`) — imports `native.css` only (theme-agnostic reset; utilities dropped — app code is BEM, 0 WA utilities)
 2. **WA theme** (`@repo/ui/styles/themes/<name>`) — each app imports its chosen theme (default, awesome, shoelace)
-3. **DS tokens** (`apps/*/src/styles/tokens/`) — app-level `--wa-*` CSS custom property overrides (brand colors, typography, spacing)
+3. **DS tokens** (`apps/*/src/styles/tokens.css`) — app-level `--wa-*` CSS custom property overrides (brand colors, typography, spacing)
 
 All apps load them via `main.ts`:
 
@@ -201,11 +194,12 @@ import './styles/tokens.css' // DS token overrides
 
 ## Tech stack
 
-- **Framework:** Vue 3 (`apps/white-label-vue`)
-- **Language:** TypeScript 5.5.4
+- **Framework:** Vue 3 (`apps/white-label-vue`), Angular 22 (`apps/white-label-angular`)
+- **Language:** TypeScript 6.0.3
 - **Build:** Vite 6 (via Vite+ `vp` CLI), Turborepo 2.9.14
 - **Package manager:** bun 1.3.13
-- **Test:** Vitest (via Vite+), Vue Test Utils, jsdom
+- **Test:** Vitest (via Vite+), Vue Test Utils, jsdom; Angular apps via `ng test`
 - **Mock:** MSW (Mock Service Worker) — handlers, browser worker, Node server
 - **Lint:** ESLint 8 (CJS), Prettier 3
+- **Design system:** WebAwesome 3.11 (via `fe-*` wrappers in `@repo/ui`)
 - **Tools:** unplugin-auto-import, unplugin-vue-components

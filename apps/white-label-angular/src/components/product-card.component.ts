@@ -19,7 +19,7 @@ import { FePropertyShimDirective } from './fe-property-shim.directive'
       <h2 slot="header" class="product-card__title">{{ title() }}</h2>
       <p class="product-card__description">{{ description() }}</p>
       <div slot="footer" class="product-card__footer">
-        <fe-rating [value]="rate()" [readonly]="true" class="product-card__rating"></fe-rating>
+        <fe-rating [value]="rate()" [readonly]="true" class="product-card__rating" />
         <div class="product-card__pricing">
           @if (previousPrice()) {
             <span class="product-card__price--previous">{{ previousPrice() }}</span>

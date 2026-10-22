@@ -1,12 +1,12 @@
 import { tmpdir } from 'node:os'
 import { mkdtempSync } from 'node:fs'
 import { join } from 'node:path'
-import type { VueTenantContext } from '../models'
+import type { TenantContext } from '../models'
 
 export const tmpDirs: string[] = []
 
 export function createMockContext<T>(
-  overrides: Partial<VueTenantContext> = {},
+  overrides: Partial<TenantContext> = {},
 ): T {
   const tmpDir = mkdtempSync(join(tmpdir(), 'gen-test-'))
   tmpDirs.push(tmpDir)
@@ -22,6 +22,7 @@ export function createMockContext<T>(
     overrideComponentName: undefined,
     registerMsw: false,
     prefix: 'te',
+    framework: 'vue',
     cwd: tmpDir,
     argv: [],
     pinion: {

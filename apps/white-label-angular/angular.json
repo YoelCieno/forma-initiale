@@ -64,6 +64,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
+            "port": 3200,
             "prebundle": false
           },
           "configurations": {
@@ -79,7 +80,9 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "setupFiles": ["src/test-setup.ts"]
+            "setupFiles": [
+              "../../packages/infra/src/testing/element-internals.ts"
+            ]
           }
         }
       }

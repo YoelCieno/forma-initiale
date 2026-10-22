@@ -11,9 +11,9 @@ See [`phase-4/README.md`](./phase-4/README.md) for full task breakdown with sub-
 | 4.1 | Risks & mitigations register (R1–R11)          | [`phase-4/4.1-risks-mitigations.md`](./phase-4/4.1-risks-mitigations.md) | ✅ COMPLETED (R1–R10 verified) |
 | 4.2 | Scaffold `apps/white-label-angular/` (Angular CLI 22) | [`phase-4/4.2-scaffold.md`](./phase-4/4.2-scaffold.md)     | ✅ COMPLETED                     |
 | 4.3 | Angular factory (`createWhiteLabelApp` equivalent)    | [`phase-4/4.3-factory.md`](./phase-4/4.3-factory.md)       | ✅ COMPLETED                     |
-| 4.4 | Angular base components (fe-* compositing, CUSTOM_ELEMENTS_SCHEMA) | [`phase-4/4.4-base-components.md`](./phase-4/4.4-base-components.md) | 🔶 IN PROGRESS |
-| 4.5 | Port pages (Products, Components, AppShell, metaMap)   | [`phase-4/4.5-pages-port.md`](./phase-4/4.5-pages-port.md) | ⏳ PENDING                       |
-| 4.6 | `fake-plants-angular` tenant (manual parity check)     | [`phase-4/4.6-fake-plants-angular.md`](./phase-4/4.6-fake-plants-angular.md) | ⏳ PENDING |
+| 4.4 | Angular base components (fe-* compositing, CUSTOM_ELEMENTS_SCHEMA) | [`phase-4/4.4-base-components.md`](./phase-4/4.4-base-components.md) | ✅ COMPLETED |
+| 4.5 | Port pages (Products, Components, AppShell, metaMap)   | [`phase-4/4.5-pages-port.md`](./phase-4/4.5-pages-port.md) | ✅ COMPLETED                     |
+| 4.6 | `fake-plants-angular` tenant (manual parity check)     | [`phase-4/4.6-fake-plants-angular.md`](./phase-4/4.6-fake-plants-angular.md) | ✅ COMPLETED (4.6.7 PENCIL open) |
 | 4.7 | `@repo/generator` Angular tenant generator             | [`phase-4/4.7-generator-angular.md`](./phase-4/4.7-generator-angular.md) | ⏳ PENDING |
 | 4.8 | Build & verify + documentation                         | [`phase-4/4.8-verify-docs.md`](./phase-4/4.8-verify-docs.md) | ⏳ PENDING |
 

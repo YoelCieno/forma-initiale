@@ -65,3 +65,44 @@ describe('safeJsonParse', () => {
     expect(() => safeJsonParse('{{{', 'my-label')).toThrow(/Invalid JSON in my-label/)
   })
 })
+
+describe('pick', () => {
+  const { pick } = object()
+
+  const fixture: Record<string, unknown> = {
+    id: 1,
+    title: 'Monstera',
+    price: 42,
+    secret: 'hidden',
+  }
+
+  it('picks only declared keys', () => {
+    const result = pick(fixture, ['id', 'title'])
+    expect(result).toEqual({ id: 1, title: 'Monstera' })
+    expect('secret' in result).toBe(false)
+  })
+
+  it('does not mutate source', () => {
+    const snapshot = { ...fixture }
+    const result = pick(fixture, ['id', 'title'])
+    expect(fixture).toEqual(snapshot)
+    expect(result).not.toBe(fixture)
+  })
+
+  it('adds own property undefined for missing source key', () => {
+    const result = pick(fixture, ['nope'])
+    expect('nope' in result).toBe(true)
+    expect(result['nope']).toBeUndefined()
+  })
+
+  it('returns empty object for empty keys', () => {
+    expect(pick(fixture, [])).toEqual({})
+  })
+
+  it('result keys follow keys arg, extra source fields never leak', () => {
+    const result = pick(fixture, ['price', 'id'])
+    expect(Object.keys(result)).toEqual(['price', 'id'])
+    expect('title' in result).toBe(false)
+    expect('secret' in result).toBe(false)
+  })
+})
