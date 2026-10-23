@@ -1,5 +1,6 @@
 import type { TenantContext } from '../models'
 import { pascalToKebab, formatThemeTokens, getThemeTokens } from '../helpers'
+import { naming } from '@repo/domain'
 
 const packageJson = (ctx: TenantContext) => `{
   "name": "${ctx.name}-vue",
@@ -109,23 +110,24 @@ ${metaLine}
 }
 
 const metadataTs = (ctx: TenantContext) => {
-  // Keys MUST match getProductNames (register-tenant mock product ids)
+  const { getProductNames } = naming()
+  const [alpha, beta, gamma] = getProductNames(ctx.name)
   return `import type { ProductMeta } from '@repo/presenters'
 
 export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
-  '${ctx.name}-alpha': {
+  '${alpha}': {
     title: 'Alpha Primum',
     description: 'The first of its kind, a pioneering specimen',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${ctx.name}-beta': {
+  '${beta}': {
     title: 'Beta Secundus',
     description: 'Follows the pattern with distinct characteristics',
     image: 'plant',
     imageFamily: 'classic',
   },
-  '${ctx.name}-gamma': {
+  '${gamma}': {
     title: 'Gamma Tertius',
     description: 'Completes the triad with unique properties',
     image: 'plant',

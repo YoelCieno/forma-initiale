@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { addTenantConfig } from './add-tenant'
 import { readMockedData, writeMockedData, copyMswWorker } from './file-io'
 import type { TenantContext } from '../models'
+import { naming } from '@repo/domain'
 
 interface ServiceWorker {
   getProductNames: (name: string) => string[]
@@ -10,9 +11,7 @@ interface ServiceWorker {
 }
 
 export function serviceWorker(): ServiceWorker {
-  const getProductNames = (name: string): string[] => {
-    return [`${name}-alpha`, `${name}-beta`, `${name}-gamma`]
-  }
+  const { getProductNames } = naming()
 
   const frameworkPaths = (ctx: TenantContext) => ({
     source: join(

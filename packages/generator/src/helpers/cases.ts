@@ -1,15 +1,9 @@
 import { caseType } from '@repo/utils/string'
+import { naming } from '@repo/domain'
 import type { TenantContext } from '../models'
 
 const { kebabToPascal, kebabToCamel, pascalToKebab } = caseType()
-
-const derivePrefix = (name: string): string => {
-  const parts = name.split('-')
-  if (parts.length >= 2) {
-    return parts[0][0] + parts[1][0]
-  }
-  return name.slice(0, 2)
-}
+const { derivePrefix } = naming()
 
 const caseTransform = <C extends TenantContext>() => async (ctx: C): Promise<C> => {
   ctx.Name = kebabToPascal(ctx.name)
