@@ -52,11 +52,13 @@ describe('fe-loader', () => {
 
   it('scales bar height with size', async () => {
     const bar = el.shadowRoot!.querySelector('.fe-loader__bar') as HTMLElement
-    expect(getComputedStyle(bar).height).toBe('0.25rem')
+    // jsdom 30+ resolves rem units in getComputedStyle against root font-size
+    // (16px): 0.25rem -> 4px, 0.75rem -> 12px. jsdom 29 passed tokens through.
+    expect(getComputedStyle(bar).height).toBe('4px')
     el.size = 'lg'
     await Promise.resolve()
     await Promise.resolve()
-    expect(getComputedStyle(bar).height).toBe('0.75rem')
+    expect(getComputedStyle(bar).height).toBe('12px')
   })
 
   // ── label ──────────────────────────────────────────────────
