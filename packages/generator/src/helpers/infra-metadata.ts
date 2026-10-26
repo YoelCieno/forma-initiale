@@ -1,11 +1,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import type { TenantContext } from '../models'
-import { metadataTs } from '../templates'
+import { metadataTs } from '../templates/common'
 
 /**
- * Writes fixture tenant metadata into packages/infra (single source of truth
- * since 2ca6d82) and ensures the barrel export line in packages/infra/src/index.ts.
+ * Writes fixture tenant metadata into packages/infra (single source of truth)
+ * and ensures the barrel export line in packages/infra/src/index.ts.
  * Idempotent: existing metadata file is never overwritten (curated content wins);
  * barrel line is appended at most once.
  */
@@ -23,9 +23,8 @@ export function infraMetadata() {
     const barrel = barrelPath(ctx)
     const line = barrelLine(ctx)
     const current = existsSync(barrel) ? readFileSync(barrel, 'utf8') : ''
-    if (current.includes(line)) {
-      return
-    }
+    if (current.includes(line)) return
+
     mkdirSync(dirname(barrel), { recursive: true })
     const next = current === '' ? `${line}\n` : `${current.replace(/\n?$/, '\n')}${line}\n`
     writeFileSync(barrel, next)

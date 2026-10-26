@@ -21,23 +21,22 @@ import {
   eslintrc,
   indexHtml,
   mainTs,
-  tokensCss,
   stylesIndex,
   componentVue,
-  gitkeep,
   vitestSetup,
   vitestConfig,
   mainSpec,
   env,
   envExample,
-} from '../templates'
+} from '../templates/vue'
+import { gitkeep, tokensCss } from '../templates/common'
 import { TenantContext } from '../models'
 import { tenantPrompts } from '../prompts'
 import { serviceWorker } from '../msw/copy-service-worker'
 import { join } from 'node:path'
 
 const assignDevPort = (ctx: TenantContext): TenantContext => {
-  ctx.devPort = findNextDevPort(ctx.cwd)
+  ctx.devPort = findNextDevPort(ctx.cwd, 'vue')
   return ctx
 }
 

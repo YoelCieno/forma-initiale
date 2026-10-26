@@ -1,5 +1,7 @@
 import { object } from '@repo/utils/object'
+import { typeGuards } from '@repo/utils/type-guards'
 
-const { safeJsonParse } = object()
+const { safeJsonParse, isObject } = object()
+const { isNumber } = typeGuards()
 
-export { safeJsonParse }
+export { safeJsonParse, isObject, isNumber }

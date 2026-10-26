@@ -1,7 +1,7 @@
-import type { QuestionCollection } from 'inquirer'
+import type { DistinctQuestion } from 'inquirer'
 import { validateHex } from '../helpers'
 
-const tenantPrompts: QuestionCollection = [
+const tenantPrompts: DistinctQuestion[] = [
   {
     type: 'input',
     name: 'name',
@@ -71,5 +71,6 @@ const tenantPrompts: QuestionCollection = [
     default: true,
   },
 ]
+
 
 export { tenantPrompts }

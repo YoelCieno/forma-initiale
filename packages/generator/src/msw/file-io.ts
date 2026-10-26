@@ -3,12 +3,12 @@ import type { MockedData } from '../models'
 import { safeJsonParse } from '../utils'
 
 
-export const readMockedData = (configPath: string): MockedData => {
+export const readFileData = <T>(configPath: string): T => {
   if (!existsSync(configPath)) {
     throw new Error(`Config file not found: ${configPath}`)
   }
   const raw = readFileSync(configPath, 'utf-8')
-  return safeJsonParse<MockedData>(raw, configPath)
+  return safeJsonParse<T>(raw, configPath)
 }
 
 export const writeMockedData = (configPath: string, data: MockedData): void => {

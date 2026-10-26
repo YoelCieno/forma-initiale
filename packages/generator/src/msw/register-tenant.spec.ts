@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { readMockedData, writeMockedData } from './file-io'
+import { readFileData, writeMockedData } from './file-io'
 import { addTenantConfig } from './add-tenant'
 import { getArgs, main } from './register-tenant'
+import { MockedData } from '../models'
 
 vi.hoisted(() => {
   // Prevent process.exit from killing the process during module import
@@ -10,7 +11,7 @@ vi.hoisted(() => {
 })
 
 vi.mock('./file-io', () => ({
-  readMockedData: vi.fn(),
+  readFileData: vi.fn(),
   writeMockedData: vi.fn(),
 }))
 
@@ -136,7 +137,7 @@ describe('main', () => {
       },
     }
 
-    vi.mocked(readMockedData).mockReturnValue(mockConfig)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockConfig)
 
     vi.mocked(addTenantConfig).mockReturnValue(mockUpdated)
 
@@ -151,8 +152,8 @@ describe('main', () => {
     )
   })
 
-  it('logs error and exits with code 1 when readMockedData throws', () => {
-    vi.mocked(readMockedData).mockImplementation(() => {
+  it('logs error and exits with code 1 when readFileData throws', () => {
+    vi.mocked(readFileData<MockedData>).mockImplementation(() => {
       throw new Error('File not found')
     })
 
@@ -170,7 +171,7 @@ describe('main', () => {
         rateType: 'random',
       },
     }
-    vi.mocked(readMockedData).mockReturnValue(mockConfig)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockConfig)
 
     vi.mocked(addTenantConfig).mockImplementation(() => {
       throw new Error('Tenant "test" already exists')
@@ -199,7 +200,7 @@ describe('main', () => {
       },
     }
 
-    vi.mocked(readMockedData).mockReturnValue(mockConfig)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockConfig)
 
     vi.mocked(addTenantConfig).mockReturnValue(mockUpdated)
 

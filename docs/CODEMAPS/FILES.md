@@ -248,7 +248,7 @@ packages/generator/
     │   ├── add-tenant.spec.ts        # MSW config tests
     │   ├── copy-service-worker.ts    # Framework-aware worker copy (apps/white-label-<fw>/ → apps/<name>-<fw>/public/)
     │   ├── copy-service-worker.spec.ts # Covers vue + angular targets
-    │   ├── file-io.ts                # readMockedData, writeMockedData, copyMswWorker utilities
+    │   ├── file-io.ts                # readFileData, writeMockedData, copyMswWorker utilities
     │   ├── file-io.spec.ts           # File I/O tests
     │   ├── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
     │   └── register-tenant.spec.ts   # Register-tenant CLI tests
@@ -261,8 +261,10 @@ packages/generator/
     │   └── index.ts              # Shared utils
     │
     └── templates/
-        ├── index.ts              # All output templates (package.json, vite.config, main.ts, metadata, etc.)
-        └── index.spec.ts         # Template rendering tests
+        ├── vue.ts                # Vue tenant templates (static entries = string constants)
+        ├── angular.ts            # Angular tenant templates
+        ├── common.ts             # Shared templates (tokensCss, metadataTs, gitkeep)
+        └── *.spec.ts             # Template rendering tests
 ```
 
 ---

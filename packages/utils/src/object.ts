@@ -7,8 +7,7 @@ export function object() {
 
   const safeJsonParse = <T = unknown>(input: string, label: string): T => {
     try {
-      // unavoidable boundary cast: JSON.parse returns any
-      return JSON.parse(input) as T
+      return JSON.parse(input)
     } catch {
       throw new Error(`Invalid JSON in ${label}`)
     }

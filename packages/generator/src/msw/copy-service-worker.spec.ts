@@ -1,10 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { TenantContext } from '../models'
+import type { MockedData, TenantContext } from '../models'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { serviceWorker } from './copy-service-worker'
+import { readFileData, writeMockedData, copyMswWorker } from './file-io'
+import { addTenantConfig } from './add-tenant'
 
 vi.mock('./file-io', () => ({
-  readMockedData: vi.fn(),
+  readFileData: vi.fn(),
   writeMockedData: vi.fn(),
   copyMswWorker: vi.fn(),
 }))
@@ -20,10 +23,6 @@ vi.mock('node:fs', async (importOriginal) => {
     existsSync: vi.fn(() => true), // default: file exists
   }
 })
-
-import { serviceWorker } from './copy-service-worker'
-import { readMockedData, writeMockedData, copyMswWorker } from './file-io'
-import { addTenantConfig } from './add-tenant'
 
 const { getProductNames, copyServiceWorker } = serviceWorker()
 
@@ -88,7 +87,7 @@ describe('copyServiceWorker', () => {
 
     expect(ctx.pinion.logger.notice).toHaveBeenCalledOnce()
     expect(result).toBe(ctx)
-    expect(readMockedData).not.toHaveBeenCalled()
+    expect(readFileData<MockedData>).not.toHaveBeenCalled()
     expect(addTenantConfig).not.toHaveBeenCalled()
     expect(writeMockedData).not.toHaveBeenCalled()
     expect(copyMswWorker).not.toHaveBeenCalled()
@@ -112,12 +111,12 @@ describe('copyServiceWorker', () => {
       },
     }
 
-    vi.mocked(readMockedData).mockReturnValue(mockData)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockData)
     vi.mocked(addTenantConfig).mockReturnValue(mockUpdated)
 
     const result = copyServiceWorker(ctx)
 
-    expect(readMockedData).toHaveBeenCalledOnce()
+    expect(readFileData<MockedData>).toHaveBeenCalledOnce()
     expect(addTenantConfig).toHaveBeenCalledWith(
       mockData,
       'te',
@@ -143,7 +142,7 @@ describe('copyServiceWorker', () => {
       },
     }
 
-    vi.mocked(readMockedData).mockReturnValue(mockData)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockData)
     vi.mocked(addTenantConfig).mockReturnValue({
       ...mockData,
       te: {
@@ -157,7 +156,7 @@ describe('copyServiceWorker', () => {
 
     expect(() => copyServiceWorker(ctx)).toThrow('MSW worker not found')
 
-    expect(readMockedData).toHaveBeenCalledOnce()
+    expect(readFileData<MockedData>).toHaveBeenCalledOnce()
     expect(addTenantConfig).toHaveBeenCalledOnce()
     expect(writeMockedData).toHaveBeenCalledOnce()
     expect(copyMswWorker).not.toHaveBeenCalled()
@@ -172,7 +171,7 @@ describe('copyServiceWorker', () => {
         rateType: 'random' as const,
       },
     }
-    vi.mocked(readMockedData).mockReturnValue(mockData)
+    vi.mocked(readFileData<MockedData>).mockReturnValue(mockData)
     vi.mocked(addTenantConfig).mockReturnValue({
       ...mockData,
       te: {
@@ -201,7 +200,7 @@ describe('copyServiceWorker framework-aware paths', () => {
 
   it('vue target: source shell + target app carry -vue', () => {
     const ctx = createMockContext()
-    vi.mocked(readMockedData).mockReturnValue({})
+    vi.mocked(readFileData<MockedData>).mockReturnValue({})
     vi.mocked(addTenantConfig).mockReturnValue({})
 
     copyServiceWorker(ctx)
@@ -214,7 +213,7 @@ describe('copyServiceWorker framework-aware paths', () => {
 
   it('angular target: source shell + target app carry -angular', () => {
     const ctx = createMockContext({ framework: 'angular' })
-    vi.mocked(readMockedData).mockReturnValue({})
+    vi.mocked(readFileData<MockedData>).mockReturnValue({})
     vi.mocked(addTenantConfig).mockReturnValue({})
 
     copyServiceWorker(ctx)

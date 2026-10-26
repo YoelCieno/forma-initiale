@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import type { QuestionCollection } from 'inquirer'
 import { tenantPrompts } from './index'
 
 interface TestPrompt {
@@ -11,10 +12,20 @@ interface TestPrompt {
   validate?: (input: string) => boolean | string
 }
 
-function findPrompt(name: string): TestPrompt {
-  const found = (tenantPrompts as TestPrompt[]).find((q) => q.name === name)
+function promptsOf(collection: QuestionCollection): TestPrompt[] {
+  if (!Array.isArray(collection)) throw new Error('expected array prompt collection')
+  // unavoidable boundary cast: inquirer QuestionCollection union → flat test shape
+  return collection as TestPrompt[]
+}
+
+function findIn(collection: QuestionCollection, name: string): TestPrompt {
+  const found = promptsOf(collection).find((q) => q.name === name)
   if (!found) throw new Error(`Prompt "${name}" not found`)
   return found
+}
+
+function findPrompt(name: string): TestPrompt {
+  return findIn(tenantPrompts, name)
 }
 
 describe('tenantPrompts', () => {
@@ -84,4 +95,10 @@ describe('tenantPrompts', () => {
     expect(p.validate!('')).not.toBe(true)
     expect(p.validate!('lowercase')).not.toBe(true)
   })
+
+  it('does NOT contain an appShell prompt (Vue flow)', () => {
+    const names = promptsOf(tenantPrompts).map((q) => q.name)
+    expect(names).not.toContain('appShell')
+  })
 })
+

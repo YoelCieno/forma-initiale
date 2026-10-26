@@ -1,8 +1,9 @@
 import type { TenantContext } from '../models'
-import { pascalToKebab, formatThemeTokens, getThemeTokens } from '../helpers'
-import { naming } from '@repo/domain'
+import { pascalToKebab } from '../helpers'
 
-const packageJson = (ctx: TenantContext) => `{
+const packageJson = (ctx: TenantContext) => {
+  // readFileData
+  return `{
   "name": "${ctx.name}-vue",
   "private": true,
   "version": "0.0.0",
@@ -36,6 +37,7 @@ const packageJson = (ctx: TenantContext) => `{
   }
 }
 `
+}
 
 const viteConfig = (ctx: TenantContext) => {
   const componentDir = ctx.overrideComponent
@@ -51,8 +53,8 @@ ${componentDir}
 `
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const tsconfigJson = (_ctx: TenantContext) => `{
+/** Static — copied verbatim, no interpolation. */
+const tsconfigJson: string = `{
   "extends": "@repo/typescript-config/vite.json",
   "include": ["src", "vite.config.ts", "vitest.config.ts", "vitest.setup.ts"],
   "compilerOptions": {
@@ -85,7 +87,7 @@ const mainTs = (ctx: TenantContext) => {
       ? `  metaMap: ${ctx.camelName}Map,`
       : '  // metaMap: myMap,'
 
-	return `import '@repo/ui/styles/main.css'
+  return `import '@repo/ui/styles/main.css'
 import '@repo/ui/styles/themes/default.css'
 import './styles'
 import { createWhiteLabelApp } from 'white-label-vue/app'
@@ -109,67 +111,12 @@ ${metaLine}
 `
 }
 
-const metadataTs = (ctx: TenantContext) => {
-  const { getProductNames } = naming()
-  const [alpha, beta, gamma] = getProductNames(ctx.name)
-  return `import type { ProductMeta } from '@repo/presenters'
-
-export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
-  '${alpha}': {
-    title: 'Alpha Primum',
-    description: 'The first of its kind, a pioneering specimen',
-    image: 'plant',
-    imageFamily: 'classic',
-  },
-  '${beta}': {
-    title: 'Beta Secundus',
-    description: 'Follows the pattern with distinct characteristics',
-    image: 'plant',
-    imageFamily: 'classic',
-  },
-  '${gamma}': {
-    title: 'Gamma Tertius',
-    description: 'Completes the triad with unique properties',
-    image: 'plant',
-    imageFamily: 'classic',
-  },
-}
+/** Static — copied verbatim, no interpolation. */
+const stylesIndex: string = `import './tokens.css'
 `
-}
 
-const tokensCss = (ctx: TenantContext) => {
-  // Custom gets inline brand override
-  if (ctx.theme === 'custom') {
-    return `/* ${ctx.Name} custom brand override */
-:where(:root) {
-  --brand-fill-normal: ${ctx.brandHex ?? '#16a34a'};
-
-  /* WA cascade derives all other brand tokens from this one variable */
-}
-`
-  }
-
-  // Preset themes get inline token blocks
-  const themeTokens = getThemeTokens(ctx.theme)
-  if (Object.keys(themeTokens).length > 0) {
-    return `/* ${ctx.Name} — ${ctx.theme} theme */
-:where(:root) {
-${formatThemeTokens(themeTokens)}
-}`
-  }
-
-  // Fallback
-  return `/* ${ctx.Name} — default theme */
-:where(:root) {
-  /* --brand-fill-normal: #4f46e5; */
-}`
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stylesIndex = (_ctx: TenantContext) => `import './tokens.css'
-`
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const eslintrc = (_ctx: TenantContext) => `/** @type {import("eslint").Linter.Config} */
+/** Static — copied verbatim, no interpolation. */
+const eslintrc: string = `/** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
   extends: ["@repo/eslint-config/vue.js"],
@@ -193,11 +140,8 @@ module.exports = {
 };
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const gitkeep = (_ctx: TenantContext) => ''
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const vitestSetup = (_ctx: TenantContext) => `import { vi } from 'vitest'
+/** Static — copied verbatim, no interpolation. */
+const vitestSetup: string = `import { vi } from 'vitest'
 import { config } from '@vue/test-utils'
 
 config.global.config.compilerOptions = {
@@ -213,8 +157,8 @@ vi.mock('@repo/ui/fe-rating', () => {
 })
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const vitestConfig = (_ctx: TenantContext) => `import { defineConfig } from 'vitest/config'
+/** Static — copied verbatim, no interpolation. */
+const vitestConfig: string = `import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -248,8 +192,8 @@ export default defineConfig({
 })
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mainSpec = (_ctx: TenantContext) => `import { describe, it, expect } from 'vitest'
+/** Static — copied verbatim, no interpolation. */
+const mainSpec: string = `import { describe, it, expect } from 'vitest'
 import { createWhiteLabelApp } from 'white-label-vue/app'
 
 describe('main', () => {
@@ -263,8 +207,9 @@ describe('main', () => {
 })
 `
 
-const env = (ctx: TenantContext) => `# Tenant id header
-VITE_TENANT_ID=${ctx.prefix}
+/** Single source for .env / .env.example body — only the tenant id differs. */
+const envFile = (tenantId: string): string => `# Tenant id header
+VITE_TENANT_ID=${tenantId}
 # API base URL (no trailing slash) — MSW intercepts in dev
 VITE_API_URL=http://localhost:5174/api
 
@@ -272,15 +217,10 @@ VITE_API_URL=http://localhost:5174/api
 VITE_ENABLE_MOCKS=true
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const envExample = (_ctx: TenantContext) => `# Tenant id header
-VITE_TENANT_ID=your-tenant-id
-# API base URL (no trailing slash) — MSW intercepts in dev
-VITE_API_URL=http://localhost:5174/api
+/** Static — copied verbatim, no interpolation. */
+const envExample = envFile('your-tenant-id')
 
-# Enable MSW mock service worker in development
-VITE_ENABLE_MOCKS=true
-`
+const env = (ctx: TenantContext): string => envFile(ctx.prefix)
 
 const componentVue = (ctx: TenantContext) => {
   const name = ctx.overrideComponentName!
@@ -309,13 +249,10 @@ export {
   viteConfig,
   tsconfigJson,
   eslintrc,
-  gitkeep,
   indexHtml,
   mainTs,
   componentVue,
   stylesIndex,
-  tokensCss,
-  metadataTs,
   vitestSetup,
   vitestConfig,
   mainSpec,

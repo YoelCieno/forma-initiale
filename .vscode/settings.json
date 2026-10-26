@@ -1,10 +1,10 @@
 {
   "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
     "*.jsx": "${capture}.js",
     "*.module.ts": "${capture}.resolver.ts, ${capture}.controller.ts, ${capture}.service.ts",
+    "*.component.ts": "${capture}.model.ts, ${capture}.spec.ts",
     "*.ts": "${capture}.js, ${capture}.*.ts",
     "*.tsx": "${capture}.ts",
     "*.vue": "${capture}.test.*, ${capture}.spec.*, ${capture}.story.vue, ${capture}.scss, ${capture}.d.ts, use${capture}.ts, ${capture}.model.ts, ${capture}.constant.ts",

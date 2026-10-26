@@ -2,7 +2,8 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { readMockedData, writeMockedData, copyMswWorker } from './file-io'
+import { readFileData, writeMockedData, copyMswWorker } from './file-io'
+import { MockedData } from '../models'
 
 let tmpDir: string
 
@@ -14,23 +15,23 @@ afterAll(() => {
   rmSync(tmpDir, { recursive: true, force: true })
 })
 
-describe('readMockedData', () => {
+describe('readFileData', () => {
   it('reads valid JSON file', () => {
     const path = join(tmpDir, 'valid.json')
     writeFileSync(path, JSON.stringify({ wl: { names: ['a'] } }))
-    const result = readMockedData(path)
+    const result = readFileData<MockedData>(path)
     expect(result).toEqual({ wl: { names: ['a'] } })
   })
 
   it('throws when file not found', () => {
     const path = join(tmpDir, 'nonexistent.json')
-    expect(() => readMockedData(path)).toThrow(/Config file not found/)
+    expect(() => readFileData<MockedData>(path)).toThrow(/Config file not found/)
   })
 
   it('throws when JSON is invalid', () => {
     const path = join(tmpDir, 'bad.json')
     writeFileSync(path, 'not-json')
-    expect(() => readMockedData(path)).toThrow(/Invalid JSON/)
+    expect(() => readFileData<MockedData>(path)).toThrow(/Invalid JSON/)
   })
 })
 

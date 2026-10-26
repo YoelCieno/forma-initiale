@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { TenantContext, Theme } from '../models'
+import type { TenantContext } from '../models'
 import {
   packageJson,
   viteConfig,
@@ -7,17 +7,14 @@ import {
   eslintrc,
   indexHtml,
   mainTs,
-  tokensCss,
   stylesIndex,
   componentVue,
-  gitkeep,
   vitestSetup,
   vitestConfig,
   mainSpec,
   env,
   envExample,
-  metadataTs,
-} from './index'
+} from './vue'
 
 function ctx(overrides: Partial<TenantContext> = {}): TenantContext {
   return {
@@ -67,7 +64,7 @@ describe('viteConfig', () => {
 
 describe('tsconfigJson', () => {
   it('extends @repo/typescript-config/vite.json and has strictNullChecks', () => {
-    const result = tsconfigJson(ctx())
+    const result = tsconfigJson
     expect(result).toContain('"extends": "@repo/typescript-config/vite.json"')
     expect(result).toContain('"strictNullChecks": true')
   })
@@ -97,53 +94,9 @@ describe('mainTs', () => {
   })
 })
 
-describe('tokensCss', () => {
-  it('contains brand hex when theme is custom', () => {
-    const result = tokensCss(ctx({ theme: 'custom', brandHex: '#ff6600' }))
-    expect(result).toContain('--brand-fill-normal: #ff6600')
-  })
-
-  it('contains theme tokens for cyberpunk theme', () => {
-    const result = tokensCss(ctx({ theme: 'cyberpunk' }))
-    expect(result).toContain('--brand-fill-normal')
-    expect(result).toContain('--color-text-body')
-    expect(result).toContain('--fs-xl')
-  })
-
-  it('contains theme tokens for coffeecup theme', () => {
-    const result = tokensCss(ctx({ theme: 'coffeecup' }))
-    expect(result).toContain('--brand-fill-normal')
-    expect(result).toContain('--color-text-body')
-    expect(result).toContain('--fs-xl')
-  })
-
-  it('contains theme tokens for silk theme', () => {
-    const result = tokensCss(ctx({ theme: 'silk' }))
-    expect(result).toContain('--brand-fill-normal')
-    expect(result).toContain('--color-text-body')
-    expect(result).toContain('--fs-xl')
-  })
-
-  const allThemes: Theme[] = ['default', 'custom', 'cyberpunk', 'coffeecup', 'silk']
-  for (const theme of allThemes) {
-    it(`emits no JS-style line comment for ${theme} theme`, () => {
-      const result = tokensCss(
-        ctx({ theme, brandHex: theme === 'custom' ? '#ff6600' : undefined }),
-      )
-      expect(result).not.toMatch(/(^|\s)\/\//)
-    })
-  }
-
-  it('uses CSS block comments for the default theme fallback', () => {
-    const result = tokensCss(ctx({ theme: 'default' }))
-    expect(result).toContain(':where(:root)')
-    expect(result).toContain('/*')
-  })
-})
-
 describe('stylesIndex', () => {
   it('imports tokens.css', () => {
-    const result = stylesIndex(ctx())
+    const result = stylesIndex
     expect(result).toContain("'./tokens.css'")
   })
 })
@@ -158,7 +111,7 @@ describe('componentVue', () => {
 
 describe('eslintrc', () => {
   it('extends @repo/eslint-config/vue.js with tenant rules', () => {
-    const result = eslintrc(ctx())
+    const result = eslintrc
     expect(result).toContain('extends: ["@repo/eslint-config/vue.js"]')
     expect(result).toContain('root: true')
     expect(result).toContain('vue/no-deprecated-slot-attribute')
@@ -166,34 +119,27 @@ describe('eslintrc', () => {
   })
 })
 
-describe('gitkeep', () => {
-  it('returns empty string', () => {
-    const result = gitkeep(ctx())
-    expect(result).toBe('')
-  })
-})
-
 describe('vitestSetup', () => {
   it('imports vitest and @vue/test-utils', () => {
-    const result = vitestSetup(ctx())
+    const result = vitestSetup
     expect(result).toContain("import { vi } from 'vitest'")
     expect(result).toContain("import { config } from '@vue/test-utils'")
   })
 
   it('configures isCustomElement for fe- prefix', () => {
-    const result = vitestSetup(ctx())
+    const result = vitestSetup
     expect(result).toContain("tag.startsWith('fe-')")
   })
 })
 
 describe('mainSpec', () => {
   it('imports createWhiteLabelApp', () => {
-    const result = mainSpec(ctx())
+    const result = mainSpec
     expect(result).toContain("import { createWhiteLabelApp } from 'white-label-vue/app'")
   })
 
   it('tests app creation with createWhiteLabelApp', () => {
-    const result = mainSpec(ctx())
+    const result = mainSpec
     expect(result).toContain('createWhiteLabelApp')
     expect(result).toContain('expect')
     expect(result).toContain('app.unmount()')
@@ -202,7 +148,7 @@ describe('mainSpec', () => {
 
 describe('vitestConfig', () => {
   it('defines jsdom environment and vue plugin', () => {
-    const result = vitestConfig(ctx())
+    const result = vitestConfig
     expect(result).toContain("defineConfig")
     expect(result).toContain("environment: 'jsdom'")
     expect(result).toContain("isCustomElement")
@@ -225,38 +171,13 @@ describe('env', () => {
 
 describe('envExample', () => {
   it('contains VITE_TENANT_ID placeholder', () => {
-    const result = envExample(ctx())
+    const result = envExample
     expect(result).toContain('VITE_TENANT_ID=')
   })
 
   it('contains VITE_API_URL and VITE_ENABLE_MOCKS', () => {
-    const result = envExample(ctx())
+    const result = envExample
     expect(result).toContain('VITE_API_URL')
     expect(result).toContain('VITE_ENABLE_MOCKS')
-  })
-})
-
-describe('metadataTs', () => {
-  it('keys match getProductNames: full name + alpha/beta/gamma', () => {
-    const result = metadataTs(ctx({ name: 'my-tenant', camelName: 'myTenant' }))
-    expect(result).toContain("'my-tenant-alpha':")
-    expect(result).toContain("'my-tenant-beta':")
-    expect(result).toContain("'my-tenant-gamma':")
-    expect(result).toContain('title:')
-    expect(result).toContain('description:')
-    expect(result).toContain("image: 'plant'")
-    expect(result).toContain("imageFamily: 'classic'")
-  })
-
-  it('works for single-segment name', () => {
-    const result = metadataTs(ctx({ name: 'zen', camelName: 'zen' }))
-    expect(result).toContain("'zen-alpha':")
-    expect(result).toContain("'zen-beta':")
-    expect(result).toContain("'zen-gamma':")
-  })
-
-  it('uses camelName for the export name', () => {
-    const result = metadataTs(ctx({ name: 'my-cool-shop', camelName: 'myCoolShop' }))
-    expect(result).toContain('export const myCoolShopMap')
   })
 })

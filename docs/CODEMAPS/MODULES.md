@@ -707,8 +707,10 @@ import { createWhiteLabelApp } from './bootstrap/init'
 - `models/index.ts` — `VueTenantContext` + `Theme` type
 - `prompts/index.ts` — Interactive tenant prompts (name, description, theme, metadata, component override, MSW)
 - `prompts/index.spec.ts` — Prompt shape tests
-- `templates/index.ts` — All output templates (package.json, vite.config, main.ts, styles, tests, env, metadata)
-- `templates/index.spec.ts` — Template rendering tests
+- `templates/vue.ts` — Vue tenant output templates (package.json, vite.config, main.ts, styles, tests, env); ctx-free entries are plain string constants
+- `templates/angular.ts` — Angular tenant output templates (package.json, angular.json, tsconfigs, environments, gitignore)
+- `templates/common.ts` — Framework-shared templates (`tokensCss`, `metadataTs`, `gitkeep`)
+- `templates/{vue,angular,common}.spec.ts` + `templates/angular.gen-component-overrides.spec.ts` — Template rendering tests
 - `msw/add-tenant.ts` — Pure fn: `addTenantConfig(configs, prefix, names)` — validates + appends tenant entry
 - `msw/add-tenant.spec.ts` — MSW config tests
 - `msw/copy-service-worker.ts` — Framework-aware worker copy: `apps/white-label-<framework>/public/` → `apps/<name>-<framework>/public/`
