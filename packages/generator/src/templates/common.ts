@@ -42,19 +42,19 @@ export const ${ctx.camelName}Map: Record<string, ProductMeta> = {
   '${alpha}': {
     title: 'Alpha Primum',
     description: 'The first of its kind, a pioneering specimen',
-    image: 'plant',
+    image: 'seedling',
     imageFamily: 'classic',
   },
   '${beta}': {
     title: 'Beta Secundus',
     description: 'Follows the pattern with distinct characteristics',
-    image: 'plant',
+    image: 'leaf',
     imageFamily: 'classic',
   },
   '${gamma}': {
     title: 'Gamma Tertius',
     description: 'Completes the triad with unique properties',
-    image: 'plant',
+    image: 'tree',
     imageFamily: 'classic',
   },
 }

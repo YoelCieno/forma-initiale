@@ -81,7 +81,9 @@ describe('metadataTs', () => {
     expect(result).toContain("'my-tenant-gamma':")
     expect(result).toContain('title:')
     expect(result).toContain('description:')
-    expect(result).toContain("image: 'plant'")
+    expect(result).toContain("image: 'seedling'")
+    expect(result).toContain("image: 'leaf'")
+    expect(result).toContain("image: 'tree'")
     expect(result).toContain("imageFamily: 'classic'")
   })
 

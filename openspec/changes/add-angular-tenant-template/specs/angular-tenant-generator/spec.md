@@ -73,12 +73,17 @@ The generator SHALL emit `scripts/gen-component-overrides.ts` that scans `src/co
 
 ### Requirement: Vue scaffold output is unchanged by the templates restructure
 
-Moving template strings into flat `templates/vue.ts` (with shared strings in `templates/common.ts`) SHALL NOT change any rendered Vue output — file set, contents, and byte-level rendering stay identical to before the restructure, including templates re-declared as context-free string constants.
+Moving template strings into flat `templates/vue.ts` (with shared strings in `templates/common.ts`) SHALL NOT change any rendered Vue output — file set, contents, and byte-level rendering stay identical to before the restructure, including templates re-declared as context-free string constants or read verbatim from `apps/mirror-tenant-vue/` (the static-template SoT, `name` patched for `package.json`).
 
 #### Scenario: Vue template assertions still hold after the move
 
 - **WHEN** the relocated Vue template specs run against the same contexts as before
 - **THEN** every emitted string matches the pre-restructure expectation (package.json, main.ts, metadataTs keys, tokens.css)
+
+#### Scenario: Static templates render equal to the mirror-tenant SoT
+
+- **WHEN** the Vue templates `eslintrc`, `vitestSetup`, `vitestConfig`, `mainSpec`, `tsconfigJson`, and `stylesIndex` are rendered, and `packageJson` is rendered with `ctx.name` set to the mirror name
+- **THEN** each static equals its `apps/mirror-tenant-vue/` counterpart byte-for-byte, and `packageJson` equals `apps/mirror-tenant-vue/package.json` by JSON equality (only `name` differs when the tenant name is not the mirror name)
 
 ### Requirement: Scaffolded naming derives from the domain contract
 

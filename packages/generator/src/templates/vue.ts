@@ -1,42 +1,19 @@
 import type { TenantContext } from '../models'
 import { pascalToKebab } from '../helpers'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { readFileData } from '../msw/file-io'
 
-const packageJson = (ctx: TenantContext) => {
-  // readFileData
-  return `{
-  "name": "${ctx.name}-vue",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vp dev",
-    "build": "vp build",
-    "preview": "vp preview",
-    "lint": "eslint \\"src/**/*.{ts,vue}\\"",
-    "test": "vp test"
-  },
-  "dependencies": {
-    "white-label-vue": "workspace:*",
-    "@repo/infra": "*",
-    "@repo/presenters": "*",
-    "@repo/ui": "*",
-    "vue": "^3.5.34",
-    "vue-router": "^4.6.4"
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
-    "@vitejs/plugin-vue": "^5.2.4",
-    "@vue/test-utils": "^2.4.10",
-    "eslint": "^8.57.1",
-    "jsdom": "^29.1.1",
-    "unplugin-auto-import": "^19.3.0",
-    "unplugin-vue-components": "^28.8.0",
-    "vite": "^0.1.24",
-    "typescript": "5.9.3"
-  }
-}
-`
+/** Repo-root mirror SoT — design decision 8 (workspace-internal, always in-repo). */
+const MIRROR_DIR = fileURLToPath(
+  new URL('../../../../apps/mirror-tenant-vue', import.meta.url),
+)
+const readMirror = (rel: string): string => readFileSync(join(MIRROR_DIR, rel), 'utf8')
+
+const packageJson = (ctx: TenantContext): string => {
+  const pkg = readFileData<Record<string, unknown>>(join(MIRROR_DIR, 'package.json'))
+  return `${JSON.stringify({ ...pkg, name: `${ctx.name}-vue` }, null, 2)}\n`
 }
 
 const viteConfig = (ctx: TenantContext) => {
@@ -53,15 +30,8 @@ ${componentDir}
 `
 }
 
-/** Static — copied verbatim, no interpolation. */
-const tsconfigJson: string = `{
-  "extends": "@repo/typescript-config/vite.json",
-  "include": ["src", "vite.config.ts", "vitest.config.ts", "vitest.setup.ts"],
-  "compilerOptions": {
-    "strictNullChecks": true
-  }
-}
-`
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/tsconfig.json (design decision 8). */
+const tsconfigJson = (): string => readMirror('tsconfig.json')
 
 const indexHtml = (ctx: TenantContext) => `<!DOCTYPE html>
 <html lang="en">
@@ -111,101 +81,20 @@ ${metaLine}
 `
 }
 
-/** Static — copied verbatim, no interpolation. */
-const stylesIndex: string = `import './tokens.css'
-`
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/src/styles/index.ts (design decision 8). */
+const stylesIndex = (): string => readMirror('src/styles/index.ts')
 
-/** Static — copied verbatim, no interpolation. */
-const eslintrc: string = `/** @type {import("eslint").Linter.Config} */
-module.exports = {
-  root: true,
-  extends: ["@repo/eslint-config/vue.js"],
-  rules: {
-    // WA custom elements (fe-*) use native slot attr (not Vue virtual slots)
-    "vue/no-deprecated-slot-attribute": "off",
-    // fe-* elements are web components — explicit closing tags needed for Vite template compat
-    "vue/html-self-closing": ["warn", {
-      html: {
-        void: "never",
-        normal: "always",
-        component: "always",
-      },
-      svg: "always",
-      math: "always",
-    }],
-    // Allow inline attributes on custom elements
-    "vue/max-attributes-per-line": "off",
-    "vue/singleline-html-element-content-newline": "off",
-  },
-};
-`
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/.eslintrc.cjs (design decision 8). */
+const eslintrc = (): string => readMirror('.eslintrc.cjs')
 
-/** Static — copied verbatim, no interpolation. */
-const vitestSetup: string = `import { vi } from 'vitest'
-import { config } from '@vue/test-utils'
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/vitest.setup.ts (design decision 8). */
+const vitestSetup = (): string => readMirror('vitest.setup.ts')
 
-config.global.config.compilerOptions = {
-  isCustomElement: (tag: string) => tag.startsWith('fe-'),
-}
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/vitest.config.ts (design decision 8). */
+const vitestConfig = (): string => readMirror('vitest.config.ts')
 
-vi.mock('@repo/ui/fe-card', () => {
-  return {}
-})
-
-vi.mock('@repo/ui/fe-rating', () => {
-  return {}
-})
-`
-
-/** Static — copied verbatim, no interpolation. */
-const vitestConfig: string = `import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag: string) => tag.startsWith('fe-'),
-        },
-      },
-    }),
-    AutoImport({
-      imports: ['vue', 'vue-router'],
-      dts: './src/auto-imports.d.ts',
-    }),
-    Components({
-      dirs: ['./src/components', './src/pages'],
-      dts: './src/components.d.ts',
-    }),
-  ],
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
-    include: ['src/**/*.spec.ts'],
-    env: {
-      VITE_ENABLE_MOCKS: '',
-    },
-  },
-})
-`
-
-/** Static — copied verbatim, no interpolation. */
-const mainSpec: string = `import { describe, it, expect } from 'vitest'
-import { createWhiteLabelApp } from 'white-label-vue/app'
-
-describe('main', () => {
-  it('creates app with createWhiteLabelApp', async () => {
-    const { app } = await createWhiteLabelApp({
-      extendRoutes: [],
-    })
-    expect(app).toBeDefined()
-    app.unmount()
-  })
-})
-`
+/** Zero-arg SoT reader — apps/mirror-tenant-vue/src/main.spec.ts (design decision 8). */
+const mainSpec = (): string => readMirror('src/main.spec.ts')
 
 /** Single source for .env / .env.example body — only the tenant id differs. */
 const envFile = (tenantId: string): string => `# Tenant id header

@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import type { TenantContext } from '../models'
 import {
   packageJson,
@@ -64,7 +66,7 @@ describe('viteConfig', () => {
 
 describe('tsconfigJson', () => {
   it('extends @repo/typescript-config/vite.json and has strictNullChecks', () => {
-    const result = tsconfigJson
+    const result = tsconfigJson()
     expect(result).toContain('"extends": "@repo/typescript-config/vite.json"')
     expect(result).toContain('"strictNullChecks": true')
   })
@@ -96,7 +98,7 @@ describe('mainTs', () => {
 
 describe('stylesIndex', () => {
   it('imports tokens.css', () => {
-    const result = stylesIndex
+    const result = stylesIndex()
     expect(result).toContain("'./tokens.css'")
   })
 })
@@ -111,7 +113,7 @@ describe('componentVue', () => {
 
 describe('eslintrc', () => {
   it('extends @repo/eslint-config/vue.js with tenant rules', () => {
-    const result = eslintrc
+    const result = eslintrc()
     expect(result).toContain('extends: ["@repo/eslint-config/vue.js"]')
     expect(result).toContain('root: true')
     expect(result).toContain('vue/no-deprecated-slot-attribute')
@@ -121,25 +123,25 @@ describe('eslintrc', () => {
 
 describe('vitestSetup', () => {
   it('imports vitest and @vue/test-utils', () => {
-    const result = vitestSetup
+    const result = vitestSetup()
     expect(result).toContain("import { vi } from 'vitest'")
     expect(result).toContain("import { config } from '@vue/test-utils'")
   })
 
   it('configures isCustomElement for fe- prefix', () => {
-    const result = vitestSetup
+    const result = vitestSetup()
     expect(result).toContain("tag.startsWith('fe-')")
   })
 })
 
 describe('mainSpec', () => {
   it('imports createWhiteLabelApp', () => {
-    const result = mainSpec
+    const result = mainSpec()
     expect(result).toContain("import { createWhiteLabelApp } from 'white-label-vue/app'")
   })
 
   it('tests app creation with createWhiteLabelApp', () => {
-    const result = mainSpec
+    const result = mainSpec()
     expect(result).toContain('createWhiteLabelApp')
     expect(result).toContain('expect')
     expect(result).toContain('app.unmount()')
@@ -148,7 +150,7 @@ describe('mainSpec', () => {
 
 describe('vitestConfig', () => {
   it('defines jsdom environment and vue plugin', () => {
-    const result = vitestConfig
+    const result = vitestConfig()
     expect(result).toContain("defineConfig")
     expect(result).toContain("environment: 'jsdom'")
     expect(result).toContain("isCustomElement")
@@ -179,5 +181,36 @@ describe('envExample', () => {
     const result = envExample
     expect(result).toContain('VITE_API_URL')
     expect(result).toContain('VITE_ENABLE_MOCKS')
+  })
+})
+
+describe('mirror-tenant SoT parity (design decision 8)', () => {
+  const mirrorRoot = join(import.meta.dirname, '../../../../apps/mirror-tenant-vue/')
+  const readMirror = (rel: string): string => readFileSync(join(mirrorRoot, rel), 'utf8')
+
+  const readers = [
+    { name: 'eslintrc', tpl: eslintrc, rel: '.eslintrc.cjs' },
+    { name: 'vitestSetup', tpl: vitestSetup, rel: 'vitest.setup.ts' },
+    { name: 'vitestConfig', tpl: vitestConfig, rel: 'vitest.config.ts' },
+    { name: 'mainSpec', tpl: mainSpec, rel: 'src/main.spec.ts' },
+    { name: 'tsconfigJson', tpl: tsconfigJson, rel: 'tsconfig.json' },
+    { name: 'stylesIndex', tpl: stylesIndex, rel: 'src/styles/index.ts' },
+  ]
+
+  it('ctx-free statics are zero-arg SoT readers, not inline strings', () => {
+    for (const { name, tpl } of readers) {
+      expect(typeof tpl, `${name} must be a () => string reader`).toBe('function')
+    }
+  })
+
+  it.each(readers)('renders $name byte-equal to apps/mirror-tenant-vue/$rel', ({ tpl, rel }) => {
+    const rendered = typeof tpl === 'function' ? tpl() : tpl
+    expect(rendered).toBe(readMirror(rel))
+  })
+
+  it('packageJson with mirror name equals mirror package.json (JSON equality)', () => {
+    expect(JSON.parse(packageJson(ctx({ name: 'mirror-tenant' })))).toEqual(
+      JSON.parse(readMirror('package.json')),
+    )
   })
 })
