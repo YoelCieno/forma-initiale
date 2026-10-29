@@ -1,19 +1,14 @@
 import type { TenantContext } from '../models'
 import { pascalToKebab } from '../helpers'
-import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { readFileData } from '../msw/file-io'
+import { fileIo, REPO_ROOT } from '../helpers/file-io'
 
-/** Repo-root mirror SoT — design decision 8 (workspace-internal, always in-repo). */
-const MIRROR_DIR = fileURLToPath(
-  new URL('../../../../apps/mirror-tenant-vue', import.meta.url),
-)
-const readMirror = (rel: string): string => readFileSync(join(MIRROR_DIR, rel), 'utf8')
+const { readFileData, readMirrorFiles } = fileIo()
+
 
 const packageJson = (ctx: TenantContext): string => {
-  const pkg = readFileData<Record<string, unknown>>(join(MIRROR_DIR, 'package.json'))
-  return `${JSON.stringify({ ...pkg, name: `${ctx.name}-vue` }, null, 2)}\n`
+  const pkgJSON = readFileData<Record<string, unknown>>(join(REPO_ROOT, MIRROR_DIR, 'package.json'))
+  return `${JSON.stringify({ ...pkgJSON, name: `${ctx.name}-vue` }, null, 2)}\n`
 }
 
 const viteConfig = (ctx: TenantContext) => {
@@ -29,9 +24,6 @@ ${componentDir}
 })
 `
 }
-
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/tsconfig.json (design decision 8). */
-const tsconfigJson = (): string => readMirror('tsconfig.json')
 
 const indexHtml = (ctx: TenantContext) => `<!DOCTYPE html>
 <html lang="en">
@@ -81,21 +73,6 @@ ${metaLine}
 `
 }
 
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/src/styles/index.ts (design decision 8). */
-const stylesIndex = (): string => readMirror('src/styles/index.ts')
-
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/.eslintrc.cjs (design decision 8). */
-const eslintrc = (): string => readMirror('.eslintrc.cjs')
-
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/vitest.setup.ts (design decision 8). */
-const vitestSetup = (): string => readMirror('vitest.setup.ts')
-
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/vitest.config.ts (design decision 8). */
-const vitestConfig = (): string => readMirror('vitest.config.ts')
-
-/** Zero-arg SoT reader — apps/mirror-tenant-vue/src/main.spec.ts (design decision 8). */
-const mainSpec = (): string => readMirror('src/main.spec.ts')
-
 /** Single source for .env / .env.example body — only the tenant id differs. */
 const envFile = (tenantId: string): string => `# Tenant id header
 VITE_TENANT_ID=${tenantId}
@@ -132,6 +109,29 @@ const componentVue = (ctx: TenantContext) => {
 </style>
 `
 }
+
+/** Mirror SoT — (workspace-internal, always in-repo). */
+const MIRROR_DIR = 'apps/mirror-tenant-vue'
+
+/** Zero-arg SoT readers — apps/mirror-tenant-vue/* */
+const {
+  'tsconfig.json': tsconfigJson,
+  'src/styles/index.ts': stylesIndex,
+  '.eslintrc.cjs': eslintrc,
+  'vitest.setup.ts': vitestSetup,
+  'vitest.config.ts': vitestConfig,
+  'src/main.spec.ts': mainSpec,
+} = readMirrorFiles(
+  [
+    'tsconfig.json',
+    'src/styles/index.ts',
+    '.eslintrc.cjs',
+    'vitest.setup.ts',
+    'vitest.config.ts',
+    'src/main.spec.ts',
+  ],
+  MIRROR_DIR,
+)
 
 export {
   packageJson,

@@ -8,7 +8,7 @@ const { derivePrefix } = naming()
 const caseTransform = <C extends TenantContext>() => async (ctx: C): Promise<C> => {
   ctx.Name = kebabToPascal(ctx.name)
   ctx.camelName = kebabToCamel(ctx.name)
-  ctx.prefix = derivePrefix(ctx.name)
+  ctx.prefix = derivePrefix(ctx.name) + ctx.framework[0]
 
   return ctx
 }

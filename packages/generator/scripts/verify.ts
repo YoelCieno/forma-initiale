@@ -7,7 +7,6 @@ import type {
   ProbeChild,
   ProbeDeps,
   ProbeFetchResponse,
-  ProbeResult,
   ProbeSpawnOptions,
   TenantContext,
   VerifyDeps,
@@ -40,7 +39,7 @@ const notImplemented = (framework: Framework): never => {
 
 const templates: Record<Framework, () => Promise<Template>> = {
   vue: () => import('../src/generators/vue-tenant.tpl'),
-  angular: () => notImplemented('angular'),
+  angular: () => import('../src/generators/angular-tenant.tpl'),
   react: () => notImplemented('react'),
 }
 
@@ -95,11 +94,10 @@ const probeDeps: ProbeDeps = {
   pollIntervalMs: 1_000,
 }
 
-const run: (appDir: string, cwd: string) => Promise<ProbeResult> = probing(probeDeps).run
-
 const makeDeps = (input: {
   cwd: string
   template: Template
+  framework: Framework
   restoreInfra: () => void
 }): VerifyDeps => ({
   makeContext: (verifyOptions: VerifyOptions, contextCwd: string): TenantContext =>
@@ -114,7 +112,7 @@ const makeDeps = (input: {
   generate: (ctx) => input.template.generate(ctx),
   exists: (path) => existsSync(path),
   exec,
-  run,
+  run: (appDir, cwd) => probing(probeDeps, input.framework).run(appDir, cwd),
   removeApp: (path) => rmSync(join(input.cwd, path), { recursive: true, force: true }),
   restoreInfra: input.restoreInfra,
 })
@@ -154,7 +152,12 @@ const main = async (): Promise<VerifyResult> => {
   const input: VerifyInput = {
     options: verifyOptions,
     cwd,
-    deps: makeDeps({ cwd, template, restoreInfra: snapshotInfra(cwd) }),
+    deps: makeDeps({
+      cwd,
+      template,
+      framework: verifyOptions.framework,
+      restoreInfra: snapshotInfra(cwd),
+    }),
     log: (message) => console.log(message),
   }
   return orchestrator.run(input)

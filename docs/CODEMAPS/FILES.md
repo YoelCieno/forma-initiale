@@ -248,7 +248,7 @@ packages/generator/
     │   ├── add-tenant.spec.ts        # MSW config tests
     │   ├── copy-service-worker.ts    # Framework-aware worker copy (apps/white-label-<fw>/ → apps/<name>-<fw>/public/)
     │   ├── copy-service-worker.spec.ts # Covers vue + angular targets
-    │   ├── file-io.ts                # readFileData, writeMockedData, copyMswWorker utilities
+    │   ├── file-io.ts                # fileIo() factory — readRepoFile, readFileData, writeFileData, copyMswWorker, readMirrorFiles
     │   ├── file-io.spec.ts           # File I/O tests
     │   ├── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
     │   └── register-tenant.spec.ts   # Register-tenant CLI tests

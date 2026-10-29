@@ -32,7 +32,7 @@ describe('findNextDevPort', () => {
     const appDir = join(tmpDir, 'apps', appName)
     mkdirSync(appDir, { recursive: true })
     const serve = port !== undefined ? { options: { port } } : {}
-    const config = { projects: { [appName]: { projectType: 'application', serve } } }
+    const config = { projects: { [appName]: { projectType: 'application', architect: { serve } } } }
     writeFileSync(join(appDir, 'angular.json'), JSON.stringify(config, null, 2))
   }
 

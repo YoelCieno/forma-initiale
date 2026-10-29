@@ -21,6 +21,8 @@ describe('derivePrefix', () => {
   it('uses first characters of the first two segments for a two-segment name', () => {
     const { derivePrefix } = naming()
     expect(derivePrefix('fake-plants')).toBe('fp')
+    expect(derivePrefix('fake-plants-vue')).toBe('fp')
+    expect(derivePrefix('fake-plants-angular')).toBe('fp')
   })
 
   it('uses only the first two segments for a three-segment name', () => {

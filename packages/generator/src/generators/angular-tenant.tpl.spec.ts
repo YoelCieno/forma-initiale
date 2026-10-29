@@ -35,7 +35,7 @@ describe('renderSetup', () => {
     expect(files.some((f) => f.endsWith('tsconfig.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.app.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.spec.json'))).toBe(true)
-    expect(files.some((f) => f.endsWith('index.html'))).toBe(true)
+    expect(files.some((f) => f.endsWith('src/index.html'))).toBe(true)
     expect(files.some((f) => f.endsWith('.eslintrc.cjs'))).toBe(true)
     expect(files.some((f) => f.endsWith('.gitignore'))).toBe(true)
   })
@@ -47,6 +47,7 @@ describe('renderSourceFiles', () => {
 
     const files = renderFiles(result.pinion.trace)
     expect(files.some((f) => f.endsWith('src/main.ts'))).toBe(true)
+    expect(files.some((f) => f.endsWith('src/main.spec.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/styles/tokens.css'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/environments/environment.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/environments/environment.development.ts'))).toBe(true)
@@ -79,20 +80,21 @@ describe('generate', () => {
     const result = await generate(ctx)
 
     // prefix derived via domain naming(): zen-plants -> zp
-    expect(result.prefix).toBe('zp')
+    expect(result.prefix).toBe('zpa')
     expect(result.framework).toBe('angular')
     // port allocated via findNextDevPort(cwd, 'angular') — no angular apps in tmp cwd
     expect(result.devPort).toBe(3200)
 
     const renderTraces = result.pinion.trace.filter((t) => t.name === 'renderTemplate')
     // 9 (setup + override-barrel pre-hook script) + 5 (source) + 1 (conditional: gitkeep) = 15
-    expect(renderTraces).toHaveLength(15)
+    expect(renderTraces).toHaveLength(16)
 
     const base = join(ctx.cwd, 'apps', 'zen-plants-angular')
     expect(existsSync(join(base, 'package.json'))).toBe(true)
     expect(existsSync(join(base, 'angular.json'))).toBe(true)
-    expect(existsSync(join(base, 'index.html'))).toBe(true)
+    expect(existsSync(join(base, 'src', 'index.html'))).toBe(true)
     expect(existsSync(join(base, 'src', 'main.ts'))).toBe(true)
+    expect(existsSync(join(base, 'src', 'main.spec.ts'))).toBe(true)
     expect(existsSync(join(base, 'src', 'styles', 'tokens.css'))).toBe(true)
     expect(existsSync(join(base, 'src', 'components', '.gitkeep'))).toBe(true)
     expect(existsSync(join(base, 'scripts', 'gen-component-overrides.ts'))).toBe(true)
@@ -107,7 +109,7 @@ describe('generate', () => {
     expect(project.architect.serve.options.port).toBe(3200)
 
     // index.html always hosts shell root — no tenant app shell emitted
-    expect(readFileSync(join(base, 'index.html'), 'utf8')).toContain('<app-root></app-root>')
+    expect(readFileSync(join(base, 'src', 'index.html'), 'utf8')).toContain('<app-root></app-root>')
     expect(existsSync(join(base, 'src', 'app'))).toBe(false)
 
     // main.ts never wires appShell

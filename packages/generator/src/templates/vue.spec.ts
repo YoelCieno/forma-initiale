@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { TenantContext } from '../models'
+import { REPO_ROOT } from '../helpers/file-io'
 import {
   packageJson,
   viteConfig,
@@ -185,7 +186,7 @@ describe('envExample', () => {
 })
 
 describe('mirror-tenant SoT parity (design decision 8)', () => {
-  const mirrorRoot = join(import.meta.dirname, '../../../../apps/mirror-tenant-vue/')
+  const mirrorRoot = join(REPO_ROOT, 'apps/mirror-tenant-vue/')
   const readMirror = (rel: string): string => readFileSync(join(mirrorRoot, rel), 'utf8')
 
   const readers = [

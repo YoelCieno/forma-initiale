@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { readFileData, writeMockedData } from './file-io'
+import { fileIo } from '../helpers/file-io'
 import { addTenantConfig } from './add-tenant'
 import { getArgs, main } from './register-tenant'
 import { MockedData } from '../models'
@@ -10,15 +10,17 @@ vi.hoisted(() => {
   vi.spyOn(process, 'exit').mockImplementation((() => {}) as never)
 })
 
-vi.mock('./file-io', () => ({
-  readFileData: vi.fn(),
-  writeMockedData: vi.fn(),
-}))
+vi.mock('../helpers/file-io', () => {
+  const io = { readFileData: vi.fn(), writeFileData: vi.fn() }
+  return { fileIo: () => io, REPO_ROOT: '/repo/' }
+})
 
 vi.mock('./add-tenant', () => ({
   addTenantConfig: vi.fn(),
 }))
 
+
+const { readFileData, writeFileData } = fileIo()
 
 const originalArgv = process.argv
 
@@ -183,7 +185,7 @@ describe('main', () => {
     expect(process.exit).toHaveBeenCalledWith(1)
   })
 
-  it('logs error and exits with code 1 when writeMockedData throws', () => {
+  it('logs error and exits with code 1 when writeFileData throws', () => {
     const mockConfig = {
       existing: {
         names: ['x'],
@@ -204,7 +206,7 @@ describe('main', () => {
 
     vi.mocked(addTenantConfig).mockReturnValue(mockUpdated)
 
-    vi.mocked(writeMockedData).mockImplementation(() => {
+    vi.mocked(writeFileData).mockImplementation(() => {
       throw new Error('Permission denied')
     })
 

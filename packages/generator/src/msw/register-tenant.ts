@@ -10,13 +10,14 @@
  */
 import { resolve } from 'node:path'
 import { addTenantConfig } from './add-tenant'
-import { readFileData, writeMockedData } from './file-io'
+import { fileIo, REPO_ROOT } from '../helpers/file-io'
 import { safeJsonParse } from '../utils'
 import { onExit } from '../helpers'
 import { MockedData } from '../models'
 
-// Resolves from repo root (always invoked from repo root via package.json script)
-const CONFIG_PATH = resolve(process.cwd(), 'packages/infra/src/mocks/data/mocked-data.json')
+const { readFileData, writeFileData } = fileIo()
+
+const CONFIG_PATH = resolve(REPO_ROOT, 'packages/infra/src/mocks/data/mocked-data.json')
 
 const throwError = (): never => {
   throw new Error(
@@ -61,7 +62,7 @@ export const main = (): void => {
   const config = onExit(() => readFileData<MockedData>(CONFIG_PATH))
   const updated = onExit(() => addTenantConfig(config, prefix, names))
 
-  onExit(() => writeMockedData(CONFIG_PATH, updated), `Failed to write ${CONFIG_PATH}`)
+  onExit(() => writeFileData(CONFIG_PATH, updated), `Failed to write ${CONFIG_PATH}`)
   console.log(`✅ Tenant "${prefix}" registered with ${names.length} name(s)`)
 }
 

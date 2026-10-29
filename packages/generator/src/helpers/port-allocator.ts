@@ -1,30 +1,12 @@
 import { readdirSync, readFileSync, existsSync, type Dirent } from 'node:fs'
 import { join } from 'node:path'
-import { DEV_PORT_PATTERN, type AngularJson, type Framework, type PortScan } from '../models'
-import { isNumber, isObject } from '../utils'
-
-/** vite.config.ts — unstructured TS source, regex is the only option. */
-const vitePort = (content: string): number | undefined => {
-  const match = content.match(DEV_PORT_PATTERN)
-  return match ? Number.parseInt(match[1], 10) : undefined
-}
-
-/** angular.json — valid JSON, parse structurally. */
-const angularPort = (content: string): number | undefined => {
-  try {
-    // boundary: JSON.parse returns any — annotated with the parsed shape
-    const parsed: AngularJson = JSON.parse(content)
-    if (!isObject(parsed)) return undefined
-
-    const ports = Object.values(parsed.projects ?? {})
-      .map((project) => project.serve?.options?.port)
-      .filter(isNumber)
-
-    return ports.length > 0 ? Math.max(...ports) : undefined
-  } catch {
-    return undefined
-  }
-}
+import {
+  vitePort,
+  angularPort,
+  type Framework,
+  type PortScan,
+} from '../models'
+import { isNumber } from '../utils'
 
 /** Fallback first ports — each overridable via `${FRAMEWORK}_FIRST_PORT` (VUE_FIRST_PORT, …). */
 const portScans = {

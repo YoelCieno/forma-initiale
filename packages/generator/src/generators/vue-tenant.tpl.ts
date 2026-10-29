@@ -106,8 +106,8 @@ const verifyScaffold = (ctx: TenantContext): TenantContext => {
 export const generate = (ctx: TenantContext): Promise<TenantContext> =>
   Promise.resolve(ctx)
     .then(prompt<TenantContext>(tenantPrompts))
-    .then(caseTransform<TenantContext>())
     .then(assignFramework(import.meta.url))
+    .then(caseTransform<TenantContext>())
     .then(assignDevPort)
     .then(renderSetup)
     .then(renderSourceFiles)

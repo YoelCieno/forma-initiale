@@ -2,10 +2,8 @@ import { join } from 'node:path'
 import {
   CONSOLE_ERROR_PATTERN,
   CONSOLE_LINE_CAP,
-  DEV_PORT_PATTERN,
-  NO_DEV_PORT_DETAIL,
   OVERLAY_DETAIL,
-  PASS_DETAIL,
+  PROBE_TARGETS,
   TEARDOWN_TERM_MS,
 } from '../models/verify'
 import type {
@@ -16,10 +14,12 @@ import type {
   ProbeResult,
 } from '../models/verify'
 import { getErrorMessage } from '../helpers'
+import type { Framework } from '../models/main'
 
 /**
- * Contract for probing(deps).run(appDir, cwd):
- * - devPort parsed from `<cwd>/<appDir>/vite.config.ts` via `/devPort:\s*(\d+)/`.
+ * Contract for probing(deps, framework).run(appDir, cwd):
+ * - devPort parsed from `<cwd>/<appDir>/vite.config.ts` via `/devPort:\s*(\d+)/`
+ *   (vue/react), or structurally from `angular.json` serve options (angular).
  * - Polls the dev server until pass/fail/deadline, then scans accumulated
  *   stdout+stderr against `/(error|unhandled|failed)/i` on BOTH paths.
  * - Teardown (SIGTERM → sleep → SIGKILL if alive) runs on every spawned path.
@@ -27,12 +27,13 @@ import { getErrorMessage } from '../helpers'
  * All I/O goes through injected deps — no node:fs / node:child_process here.
  * Constants and types (ProbeDeps, ProbeChild, etc.) live in ../models/verify.
  */
-export function probing(deps: ProbeDeps): Probe {
+export function probing(deps: ProbeDeps, framework: Framework = 'vue'): Probe {
+  const target = PROBE_TARGETS[framework]
+
   const readDevPort = (configPath: string): number | undefined => {
     if (!deps.exists(configPath)) return undefined
 
-    const match = deps.readFile(configPath).match(DEV_PORT_PATTERN)
-    return match ? Number.parseInt(match[1], 10) : undefined
+    return target.extractPort(deps.readFile(configPath))
   }
 
   /** fetchPage that never rejects — connection errors become a non-ok reply. */
@@ -40,6 +41,7 @@ export function probing(deps: ProbeDeps): Probe {
     try {
       const response = await deps.fetchPage(`http://localhost:${port}/`)
       if (!response.ok) return { ok: false, body: '' }
+
       return { ok: true, body: await response.text() }
     } catch {
       return { ok: false, body: '' }
@@ -52,11 +54,12 @@ export function probing(deps: ProbeDeps): Probe {
       await deps.sleep(deps.pollIntervalMs)
       const page = await fetchPage(port)
       if (!page.ok) continue
-      if (!page.body.includes('id="app"')) continue
+      if (!page.body.includes(target.appMarker)) continue
       if (page.body.includes('vite-error-overlay')) {
         return { ok: false, detail: OVERLAY_DETAIL }
       }
-      return { ok: true, detail: PASS_DETAIL }
+
+      return { ok: true, detail: target.passDetail }
     }
     return { ok: false, detail: `dev server did not respond within ${deps.pollTimeoutMs}ms` }
   }
@@ -98,9 +101,9 @@ export function probing(deps: ProbeDeps): Probe {
     let child: ProbeChild | undefined
     let output = ''
     try {
-      const port = readDevPort(join(appPath, 'vite.config.ts'))
+      const port = readDevPort(join(appPath, target.configFile))
       if (port === undefined) {
-        return { ok: false, detail: NO_DEV_PORT_DETAIL }
+        return { ok: false, detail: target.noPortDetail }
       }
 
       child = deps.spawn(['bun', 'run', 'dev'], {

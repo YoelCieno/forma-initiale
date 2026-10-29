@@ -1,12 +1,6 @@
 {
   "wl": {
-    "names": [
-      "react",
-      "angular",
-      "vue",
-      "svelte",
-      "solid"
-    ],
+    "names": ["react", "angular", "vue", "svelte", "solid"],
     "previousPrice": {
       "base": 29.99,
       "increment": 10
@@ -22,18 +16,6 @@
       "little-shade",
       "crimson-veil",
       "ember-leaf"
-    ],
-    "price": {
-      "base": 9.99,
-      "increment": 10
-    },
-    "rateType": "random"
-  },
-  "mt": {
-    "names": [
-      "mirror-tenant-alpha",
-      "mirror-tenant-beta",
-      "mirror-tenant-gamma"
     ],
     "price": {
       "base": 9.99,

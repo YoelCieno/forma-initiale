@@ -426,3 +426,69 @@ describe('probe — resilience', () => {
     expect(result).toEqual({ ok: false, detail: timeoutDetail(3000) })
   })
 })
+
+describe('probing — angular', () => {
+  const angularJson = (port?: number): string =>
+    JSON.stringify({
+      projects: {
+        'smoke-angular': {
+          architect: { serve: { options: port === undefined ? {} : { port } } },
+        },
+      },
+    })
+  const APP_ROOT_BODY = '<app-root></app-root>'
+  const ANGULAR_PASS_DETAIL = 'dev server responded with <app-root'
+  const ANGULAR_NO_PORT_DETAIL = 'no serve port found in angular.json'
+
+  it('reads the port from angular.json and passes on <app-root', async () => {
+    const harness = makeHarness({
+      config: angularJson(4242),
+      replies: [{ ok: true, body: APP_ROOT_BODY }],
+    })
+
+    const result = await probing(harness.deps, 'angular').run(APP_DIR, REPO_ROOT)
+
+    expect(result.ok).toBe(true)
+    expect(result.detail).toBe(ANGULAR_PASS_DETAIL)
+    expect(harness.readFilePaths[0]).toContain('angular.json')
+    expect(harness.fetchUrls).toContain('http://localhost:4242/')
+    expect(harness.spawnCalls[0]?.command).toEqual(['bun', 'run', 'dev'])
+  })
+
+  it('fails with the angular no-port detail when angular.json has no serve port', async () => {
+    const harness = makeHarness({ config: angularJson() })
+
+    const result = await probing(harness.deps, 'angular').run(APP_DIR, REPO_ROOT)
+
+    expect(result.ok).toBe(false)
+    expect(result.detail).toBe(ANGULAR_NO_PORT_DETAIL)
+    expect(harness.spawnCalls).toHaveLength(0)
+  })
+
+  it('keeps polling while the body has no <app-root>', async () => {
+    const harness = makeHarness({
+      config: angularJson(4242),
+      replies: [{ ok: true, body: '<div>loading</div>' }],
+      pollTimeoutMs: 2000,
+      pollIntervalMs: 1000,
+    })
+
+    const result = await probing(harness.deps, 'angular').run(APP_DIR, REPO_ROOT)
+
+    expect(result.ok).toBe(false)
+    expect(result.detail).toBe(timeoutDetail(2000))
+  })
+
+  it('does not treat id="app" as an angular pass', async () => {
+    const harness = makeHarness({
+      config: angularJson(4242),
+      replies: [{ ok: true, body: APP_BODY }],
+      pollTimeoutMs: 2000,
+      pollIntervalMs: 1000,
+    })
+
+    const result = await probing(harness.deps, 'angular').run(APP_DIR, REPO_ROOT)
+
+    expect(result.ok).toBe(false)
+  })
+})

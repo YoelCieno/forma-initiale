@@ -3,14 +3,13 @@ import type { MockedData, TenantContext } from '../models'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { serviceWorker } from './copy-service-worker'
-import { readFileData, writeMockedData, copyMswWorker } from './file-io'
+import { fileIo } from '../helpers/file-io'
 import { addTenantConfig } from './add-tenant'
 
-vi.mock('./file-io', () => ({
-  readFileData: vi.fn(),
-  writeMockedData: vi.fn(),
-  copyMswWorker: vi.fn(),
-}))
+vi.mock('../helpers/file-io', () => {
+  const io = { readFileData: vi.fn(), writeFileData: vi.fn(), copyMswWorker: vi.fn() }
+  return { fileIo: () => io }
+})
 
 vi.mock('./add-tenant', () => ({
   addTenantConfig: vi.fn(),
@@ -23,6 +22,8 @@ vi.mock('node:fs', async (importOriginal) => {
     existsSync: vi.fn(() => true), // default: file exists
   }
 })
+
+const { readFileData, writeFileData, copyMswWorker } = fileIo()
 
 const { getProductNames, copyServiceWorker } = serviceWorker()
 
@@ -89,7 +90,7 @@ describe('copyServiceWorker', () => {
     expect(result).toBe(ctx)
     expect(readFileData<MockedData>).not.toHaveBeenCalled()
     expect(addTenantConfig).not.toHaveBeenCalled()
-    expect(writeMockedData).not.toHaveBeenCalled()
+    expect(writeFileData).not.toHaveBeenCalled()
     expect(copyMswWorker).not.toHaveBeenCalled()
   })
 
@@ -122,8 +123,8 @@ describe('copyServiceWorker', () => {
       'te',
       ['test-alpha', 'test-beta', 'test-gamma'],
     )
-    expect(writeMockedData).toHaveBeenCalledOnce()
-    expect(writeMockedData).toHaveBeenCalledWith(
+    expect(writeFileData).toHaveBeenCalledOnce()
+    expect(writeFileData).toHaveBeenCalledWith(
       expect.any(String),
       mockUpdated,
     )
@@ -158,7 +159,7 @@ describe('copyServiceWorker', () => {
 
     expect(readFileData<MockedData>).toHaveBeenCalledOnce()
     expect(addTenantConfig).toHaveBeenCalledOnce()
-    expect(writeMockedData).toHaveBeenCalledOnce()
+    expect(writeFileData).toHaveBeenCalledOnce()
     expect(copyMswWorker).not.toHaveBeenCalled()
   })
 

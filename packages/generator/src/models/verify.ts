@@ -1,4 +1,6 @@
 import type { Framework, TenantContext } from './main'
+import type { AngularJson } from './ports'
+import { isNumber, isObject } from '../utils'
 
 export interface VerifyOptions {
   framework: Framework
@@ -32,8 +34,12 @@ export interface ProbeResult {
 export const DEV_PORT_PATTERN = /devPort:\s*(\d+)/
 export const CONSOLE_ERROR_PATTERN = /(error|unhandled|failed)/i
 export const NO_DEV_PORT_DETAIL = 'no devPort found in vite.config.ts'
+export const ANGULAR_NO_DEV_PORT_DETAIL = 'no serve port found in angular.json'
 export const OVERLAY_DETAIL = 'vite-error-overlay present in page'
 export const PASS_DETAIL = 'dev server responded with id="app"'
+export const ANGULAR_PASS_DETAIL = 'dev server responded with <app-root'
+export const APP_MARKER = 'id="app"'
+export const APP_ROOT_MARKER = '<app-root'
 export const CONSOLE_LINE_CAP = 3
 export const TEARDOWN_TERM_MS = 500
 
@@ -75,6 +81,7 @@ export interface ProbeDeps {
 }
 
 export interface Probe {
+  /** Framework selects the dev-port source (vite.config.ts vs angular.json) and app marker. */
   run: (appDir: string, cwd: string) => Promise<ProbeResult>
 }
 
@@ -96,7 +103,61 @@ export interface VerifyInput {
 }
 
 export interface Orchestrator {
-  requiredTenantFiles: string[]
+  requiredTenantFiles: (framework: Framework) => string[]
   run: (input: VerifyInput) => Promise<VerifyResult>
   summary: (result: VerifyResult) => string
+}
+
+/** vite.config.ts — unstructured TS source, regex is the only option. */
+export const vitePort = (content: string): number | undefined => {
+  const match = content.match(DEV_PORT_PATTERN)
+  return match ? Number.parseInt(match[1], 10) : undefined
+}
+
+/** angular.json — valid JSON, parse structurally. Shared with verify probe. */
+export const angularPort = (content: string): number | undefined => {
+  try {
+    // boundary: JSON.parse returns any — annotated with the parsed shape
+    const parsed: AngularJson = JSON.parse(content)
+    if (!isObject(parsed)) return undefined
+
+    const ports = Object.values(parsed.projects ?? {})
+      .map((project) => project.architect?.serve?.options?.port)
+      .filter(isNumber)
+
+    return ports.length > 0 ? Math.max(...ports) : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/** Everything the probe needs to know about one framework's dev server shape. */
+export interface ProbeTarget {
+  configFile: string
+  extractPort: (content: string) => number | undefined
+  appMarker: string
+  passDetail: string
+  noPortDetail: string
+}
+
+const viteTarget: ProbeTarget = {
+  configFile: 'vite.config.ts',
+  extractPort: vitePort,
+  appMarker: APP_MARKER,
+  passDetail: PASS_DETAIL,
+  noPortDetail: NO_DEV_PORT_DETAIL,
+}
+
+const angularTarget: ProbeTarget = {
+  configFile: 'angular.json',
+  extractPort: angularPort,
+  appMarker: APP_ROOT_MARKER,
+  passDetail: ANGULAR_PASS_DETAIL,
+  noPortDetail: ANGULAR_NO_DEV_PORT_DETAIL,
+}
+
+export const PROBE_TARGETS: Record<Framework, ProbeTarget> = {
+  vue: viteTarget,
+  angular: angularTarget,
+  react: viteTarget,
 }

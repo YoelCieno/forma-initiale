@@ -1,5 +1,6 @@
 import { join } from 'node:path'
 import { options } from './options'
+import type { Framework } from '../models/main'
 import type {
   Orchestrator,
   StepResult,
@@ -23,13 +24,12 @@ interface PlanContext {
   appDir: string
 }
 
-const REQUIRED_TENANT_FILES = [
-  'package.json',
-  'vite.config.ts',
-  'src/main.ts',
-  'vitest.setup.ts',
-  '.eslintrc.cjs',
-]
+const REQUIRED_TENANT_FILES: Record<Framework, string[]> = {
+  vue: ['package.json', 'vite.config.ts', 'src/main.ts', 'vitest.setup.ts', '.eslintrc.cjs'],
+  angular: ['package.json', 'angular.json', 'src/main.ts', 'src/main.spec.ts', '.eslintrc.cjs'],
+  // react shell is Vite-based, mirrors vue until react templates land
+  react: ['package.json', 'vite.config.ts', 'src/main.ts', 'vitest.setup.ts', '.eslintrc.cjs'],
+}
 
 /**
  * Runs a plan in order, stopping at the first failing step.
@@ -50,7 +50,7 @@ const execute = async (
 }
 
 export function verification(): Orchestrator {
-  const requiredTenantFiles = REQUIRED_TENANT_FILES
+  const requiredTenantFiles = (framework: Framework): string[] => REQUIRED_TENANT_FILES[framework]
 
   const turboCommand = (
     task: 'build' | 'test',
@@ -64,7 +64,8 @@ export function verification(): Orchestrator {
   }
 
   const filesStep = async (context: PlanContext): Promise<StepResult> => {
-    const missing = requiredTenantFiles.filter(
+    const frameworkFiles = requiredTenantFiles(context.verifyOptions.framework)
+    const missing = frameworkFiles.filter(
       (file) => !context.deps.exists(join(context.cwd, context.appDir, file)),
     )
     const hasMissingFiles = missing.length > 0
@@ -101,7 +102,7 @@ export function verification(): Orchestrator {
         run: () => generateStep(context),
       },
       {
-        message: `▶ files — checking ${requiredTenantFiles.length} required files`,
+        message: `▶ files — checking ${requiredTenantFiles(verifyOptions.framework).length} required files`,
         run: () => filesStep(context),
       },
       {

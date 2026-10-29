@@ -24,6 +24,7 @@ import {
   gitignore,
   indexHtml,
   mainTs,
+  mainSpec,
   environmentTs,
   environmentDevTs,
   importMetaEnvDts,
@@ -53,7 +54,7 @@ export const renderSetup = (ctx: TenantContext): Promise<TenantContext> =>
     .then(renderTemplate(tsconfigJson, toFile(outDir, 'tsconfig.json')))
     .then(renderTemplate(tsconfigAppJson, toFile(outDir, 'tsconfig.app.json')))
     .then(renderTemplate(tsconfigSpecJson, toFile(outDir, 'tsconfig.spec.json')))
-    .then(renderTemplate(indexHtml, toFile(outDir, 'index.html')))
+    .then(renderTemplate(indexHtml, toFile(outDir, 'src', 'index.html')))
     .then(renderTemplate(eslintrc, toFile(outDir, '.eslintrc.cjs')))
     .then(renderTemplate(gitignore, toFile(outDir, '.gitignore')))
     .then(
@@ -74,6 +75,7 @@ export const renderSourceFiles = (ctx: TenantContext): Promise<TenantContext> =>
       ),
     )
     .then(renderTemplate(importMetaEnvDts, toFile(outDir, 'src', 'import-meta-env.d.ts')))
+    .then(renderTemplate(mainSpec, toFile(outDir, 'src', 'main.spec.ts')))
 
 export const renderConditionalAssets = (ctx: TenantContext): Promise<TenantContext> =>
   Promise.resolve(ctx).then(when(
@@ -100,7 +102,7 @@ const installDeps = async (ctx: TenantContext): Promise<TenantContext> => {
 }
 
 const verifyScaffold = (ctx: TenantContext): TenantContext => {
-  const files = ['package.json', 'angular.json', 'src/main.ts', '.eslintrc.cjs']
+  const files = ['package.json', 'angular.json', 'src/main.ts', 'src/main.spec.ts', '.eslintrc.cjs']
   const missingFiles = getMissingScaffoldFiles(ctx, files)
   getLog(ctx, missingFiles)
 
@@ -110,8 +112,8 @@ const verifyScaffold = (ctx: TenantContext): TenantContext => {
 export const generate = (ctx: TenantContext): Promise<TenantContext> =>
   Promise.resolve(ctx)
     .then(prompt<TenantContext>(tenantPrompts))
-    .then(caseTransform<TenantContext>())
     .then(assignFramework(import.meta.url))
+    .then(caseTransform<TenantContext>())
     .then(assignAngularPort)
     .then(renderSetup)
     .then(renderSourceFiles)

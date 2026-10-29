@@ -85,12 +85,22 @@ const vueOptions: VerifyOptions = {
 }
 
 describe('requiredTenantFiles', () => {
-  it('lists the files a generated tenant must contain', () => {
-    expect(verification().requiredTenantFiles).toEqual([
+  it('lists the files a generated vue tenant must contain', () => {
+    expect(verification().requiredTenantFiles('vue')).toEqual([
       'package.json',
       'vite.config.ts',
       'src/main.ts',
       'vitest.setup.ts',
+      '.eslintrc.cjs',
+    ])
+  })
+
+  it('lists the files a generated angular tenant must contain (angular.json, no vite/vitest)', () => {
+    expect(verification().requiredTenantFiles('angular')).toEqual([
+      'package.json',
+      'angular.json',
+      'src/main.ts',
+      'src/main.spec.ts',
       '.eslintrc.cjs',
     ])
   })
@@ -220,6 +230,43 @@ describe('run — failure paths', () => {
 
   beforeEach(() => {
     orchestrator = verification()
+  })
+
+  it('checks angular required files for an angular run', async () => {
+    const deps: VerifyDeps = makeDeps(makeCtx('angular'), {
+      exists: vi.fn(() => false),
+    })
+    const { input } = buildInput(
+      { framework: 'angular', probe: false, keep: false },
+      deps,
+    )
+
+    const result = await orchestrator.run(input)
+
+    const files: StepResult | undefined = stepFor(result, 'files')
+    expect(files?.detail).toContain('angular.json')
+    expect(files?.detail).not.toContain('vite.config.ts')
+  })
+
+  it('uses the angular tenant name in build and test commands', async () => {
+    const deps: VerifyDeps = makeDeps(makeCtx('angular'))
+    const { input } = buildInput(
+      { framework: 'angular', probe: false, keep: false },
+      deps,
+    )
+
+    await orchestrator.run(input)
+
+    expect(deps.exec).toHaveBeenNthCalledWith(
+      2,
+      ['bun', 'x', 'turbo', 'run', 'build', '--filter=smoke-angular'],
+      REPO_ROOT,
+    )
+    expect(deps.exec).toHaveBeenNthCalledWith(
+      3,
+      ['bun', 'x', 'turbo', 'run', 'test', '--filter=smoke-angular'],
+      REPO_ROOT,
+    )
   })
 
   it('stops after a failing build and skips the test step', async () => {

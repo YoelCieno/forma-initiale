@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { addTenantConfig } from './add-tenant'
-import { readFileData, writeMockedData, copyMswWorker } from './file-io'
+import { fileIo } from '../helpers/file-io'
 import type { MockedData, TenantContext } from '../models'
 import { naming } from '@repo/domain'
 
@@ -12,6 +12,7 @@ interface ServiceWorker {
 
 export function serviceWorker(): ServiceWorker {
   const { getProductNames } = naming()
+  const { readFileData, writeFileData, copyMswWorker } = fileIo()
 
   const frameworkPaths = (ctx: TenantContext) => ({
     source: join(
@@ -42,7 +43,7 @@ Then copy mockServiceWorker.js (or use registerMsw: true during generation):
 
     const configPath = join(ctx.cwd, 'packages/infra/src/mocks/data/mocked-data.json')
     const updated = addTenantConfig(readFileData<MockedData>(configPath), ctx.prefix, getProductNames(ctx.name))
-    writeMockedData(configPath, updated)
+    writeFileData(configPath, updated)
 
     const { source, target, targetNotice } = frameworkPaths(ctx)
 

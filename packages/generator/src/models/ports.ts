@@ -9,5 +9,5 @@ export interface PortScan {
 
 /** Subset of angular.json read for serve ports. */
 export interface AngularJson {
-  projects?: Record<string, { serve?: { options?: { port?: number } } }>
+  projects?: Record<string, { architect?: { serve?: { options?: { port?: number } } } }>
 }

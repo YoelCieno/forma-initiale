@@ -43,6 +43,8 @@ describe('pascalToKebab', () => {
 describe('derivePrefix', () => {
   it('derives two-letter prefix from first two parts of kebab name', () => {
     expect(derivePrefix('my-tenant')).toBe('mt')
+    expect(derivePrefix('mirror-tenant-angular')).toBe('mt')
+    expect(derivePrefix('mirror-tenant-vue')).toBe('mt')
   })
 
   it('handles three-part kebab name', () => {
@@ -56,10 +58,10 @@ describe('derivePrefix', () => {
 
 describe('caseTransform', () => {
   it('adds Name, camelName, and prefix from name (kebab-case)', async () => {
-    const ctx: Partial<TenantContext> = { name: 'my-tenant' }
+    const ctx: Partial<TenantContext> = { name: 'my-tenant', framework: 'vue' }
     const result = await caseTransform()(ctx as TenantContext)
     expect(result.Name).toBe('MyTenant')
     expect(result.camelName).toBe('myTenant')
-    expect(result.prefix).toBe('mt')
+    expect(result.prefix).toBe('mtv')
   })
 })
