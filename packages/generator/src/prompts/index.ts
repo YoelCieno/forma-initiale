@@ -1,7 +1,9 @@
 import type { DistinctQuestion } from 'inquirer'
+import type { TenantContext } from '../models'
 import { validateHex } from '../helpers'
 
-const tenantPrompts: DistinctQuestion[] = [
+const tenantPrompts = (ctx: TenantContext): DistinctQuestion[] => {
+  const prompts: DistinctQuestion[] = [
   {
     type: 'input',
     name: 'name',
@@ -70,7 +72,19 @@ const tenantPrompts: DistinctQuestion[] = [
     message: 'Register MSW mocked data for this tenant?',
     default: true,
   },
-]
+  ]
 
+  // Conditional on ctx, not per-question `when` — pinion routes `when` to
+  // inquirer, which only sees prompt answers, never ctx.framework.
+  const appShellPrompt: DistinctQuestion = {
+    type: 'confirm',
+    name: 'appShell',
+    message: 'Does the tenant own its app shell? (different nav menu / routes)',
+    default: false,
+  }
+
+  return ctx.framework === 'angular' ? [...prompts, appShellPrompt] : prompts
+}
 
 export { tenantPrompts }
+

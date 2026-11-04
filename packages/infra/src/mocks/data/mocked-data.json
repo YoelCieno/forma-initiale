@@ -22,5 +22,29 @@
       "increment": 10
     },
     "rateType": "random"
+  },
+  "mtv": {
+    "names": [
+      "mirror-tenant-alpha",
+      "mirror-tenant-beta",
+      "mirror-tenant-gamma"
+    ],
+    "price": {
+      "base": 9.99,
+      "increment": 10
+    },
+    "rateType": "random"
+  },
+  "mta": {
+    "names": [
+      "mirror-tenant-alpha",
+      "mirror-tenant-beta",
+      "mirror-tenant-gamma"
+    ],
+    "price": {
+      "base": 9.99,
+      "increment": 10
+    },
+    "rateType": "random"
   }
 }

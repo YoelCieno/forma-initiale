@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { QuestionCollection } from 'inquirer'
+import type { TenantContext } from '../models'
 import { tenantPrompts } from './index'
+import { createMockContext } from '../helpers/mocks'
 
 interface TestPrompt {
   type: string
@@ -18,6 +20,9 @@ function promptsOf(collection: QuestionCollection): TestPrompt[] {
   return collection as TestPrompt[]
 }
 
+const promptCtx = (overrides: Partial<TenantContext> = {}): TenantContext =>
+  createMockContext<TenantContext>({ framework: 'angular', ...overrides })
+
 function findIn(collection: QuestionCollection, name: string): TestPrompt {
   const found = promptsOf(collection).find((q) => q.name === name)
   if (!found) throw new Error(`Prompt "${name}" not found`)
@@ -25,12 +30,12 @@ function findIn(collection: QuestionCollection, name: string): TestPrompt {
 }
 
 function findPrompt(name: string): TestPrompt {
-  return findIn(tenantPrompts, name)
+  return findIn(tenantPrompts(promptCtx()), name)
 }
 
 describe('tenantPrompts', () => {
-  it('exports an array of prompts', () => {
-    expect(Array.isArray(tenantPrompts)).toBe(true)
+  it('resolves to an array of prompts', () => {
+    expect(Array.isArray(tenantPrompts(promptCtx()))).toBe(true)
   })
 
   it('has a name prompt with kebab-case validation', () => {
@@ -96,8 +101,14 @@ describe('tenantPrompts', () => {
     expect(p.validate!('lowercase')).not.toBe(true)
   })
 
-  it('does NOT contain an appShell prompt (Vue flow)', () => {
-    const names = promptsOf(tenantPrompts).map((q) => q.name)
+  it('has an appShell confirm with default false, only for angular framework', () => {
+    const p = findIn(tenantPrompts(promptCtx({ framework: 'angular' })), 'appShell')
+    expect(p.type).toBe('confirm')
+    expect(p.default).toBe(false)
+  })
+
+  it('does NOT ask appShell for vue flow (framework-gated, ctx callables — pinion `when` never sees ctx.framework)', () => {
+    const names = promptsOf(tenantPrompts(promptCtx({ framework: 'vue' }))).map((q) => q.name)
     expect(names).not.toContain('appShell')
   })
 })

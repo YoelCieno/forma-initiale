@@ -12,20 +12,19 @@
   },
   "private": true,
   "dependencies": {
+    "white-label-angular": "workspace:*",
     "@angular/common": "^22.1.0",
     "@angular/compiler": "^22.1.0",
     "@angular/core": "^22.1.0",
     "@angular/forms": "^22.1.0",
     "@angular/platform-browser": "^22.1.0",
     "@angular/router": "^22.1.0",
-    "@repo/domain": "*",
     "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
     "@repo/utils": "*",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "white-label-angular": "workspace:*"
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^22.1.4",

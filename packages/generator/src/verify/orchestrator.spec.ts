@@ -35,6 +35,7 @@ function makeCtx(framework: Framework = 'vue'): TenantContext {
     registerMsw: false,
     prefix: 'sm',
     devPort: 3999,
+    appShell: false,
     framework,
     cwd: REPO_ROOT,
     argv: [],

@@ -23,6 +23,7 @@ export function createMockContext<T>(
     registerMsw: false,
     prefix: 'te',
     framework: 'vue',
+    appShell: false,
     cwd: tmpDir,
     argv: [],
     pinion: {

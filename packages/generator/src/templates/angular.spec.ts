@@ -4,6 +4,7 @@ import {
   packageJson,
   angularJson,
   indexHtml,
+  appComponentTs,
   mainTs,
   overrideComponent,
 } from './angular'
@@ -24,6 +25,7 @@ function ctx(overrides: Partial<TenantContext> = {}): TenantContext {
     overrideComponentName: undefined,
     prefix: 'zp',
     framework: 'angular',
+    appShell: false,
     devPort: 3202,
     cwd: '/tmp',
     argv: [],
@@ -115,10 +117,16 @@ describe('angularJson', () => {
 })
 
 describe('indexHtml', () => {
-  it('defaults to the shell host tag <app-root>', () => {
+  it('appShell=false: hosts shell root tag <app-root>, never tenant <prefix-root>', () => {
     const html = indexHtml(ctx())
     expect(html).toContain('<app-root></app-root>')
     expect(html).not.toContain('<zp-root>')
+  })
+
+  it('appShell=true: hosts tenant shell tag <prefix-root>, never shell <app-root>', () => {
+    const html = indexHtml(ctx({ appShell: true }))
+    expect(html).toContain('<zp-root></zp-root>')
+    expect(html).not.toContain('<app-root>')
   })
 
   it('titles from tenant Name', () => {
@@ -145,6 +153,22 @@ describe('overrideComponent', () => {
   })
 })
 
+describe('appComponentTs', () => {
+  it('emits tenant shell: <prefix>-root selector + kebabToPascal(prefix)App class', () => {
+    const out = appComponentTs(ctx())
+    expect(out).toContain("selector: 'zp-root'")
+    expect(out).toContain('export class ZpApp {}')
+    expect(out).toContain('zp-nav__link--active')
+    expect(out).toContain('router-outlet')
+  })
+
+  it('derives shell names from prefix — fp tenant mirrors fake-plants shape', () => {
+    const out = appComponentTs(ctx({ prefix: 'fp' }))
+    expect(out).toContain("selector: 'fp-root'")
+    expect(out).toContain('export class FpApp {}')
+  })
+})
+
 describe('mainTs', () => {
   it('fixture mode: infra metaMap + generated overrides barrel + slash-less omit', () => {
     const out = mainTs(ctx())
@@ -152,7 +176,7 @@ describe('mainTs', () => {
     expect(out).toContain('metaMap: zenPlantsMap,')
     expect(out).toContain("import { componentOverrides } from './components/overrides.gen'")
     expect(out).toContain("componentOverrides,")
-    expect(out).toContain("omitRoutePaths: ['components']")
+    expect(out).not.toContain('omitRoutePaths')
   })
 
   it('none mode: no metaMap import, commented hint only', () => {
@@ -161,7 +185,14 @@ describe('mainTs', () => {
     expect(out).toContain('// metaMap: myMap,')
   })
 
-  it('never wires appShell — tenant always uses shell <app-root>', () => {
-    expect(mainTs(ctx())).not.toContain('appShell:')
+  it('appShell=true: wires tenant appShell — shell class derived from prefix', () => {
+    const out = mainTs(ctx({ appShell: true }))
+    expect(out).toContain("appShell: () => import('./app/app.component').then((m) => m.ZpApp),")
+  })
+
+  it('appShell=false: no appShell line, no app component import', () => {
+    const out = mainTs(ctx())
+    expect(out).not.toContain('appShell:')
+    expect(out).not.toContain('./app/app.component')
   })
 })

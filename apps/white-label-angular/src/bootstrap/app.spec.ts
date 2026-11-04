@@ -6,7 +6,7 @@ import type { ProductMeta } from '@repo/presenters'
 // RED phase: these imports fail until bootstrap modules exist — that's the point
 import { createWhiteLabelApp } from './app'
 import { META_MAP_INJECTION_KEY } from './init'
-import { App } from '../app/app'
+import { App } from '../app/app.component'
 
 class AboutCmp {}
 class CustomCmp {}

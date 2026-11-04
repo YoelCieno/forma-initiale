@@ -42,16 +42,25 @@ describe('renderSetup', () => {
 })
 
 describe('renderSourceFiles', () => {
-  it('renders main.ts, tokens.css, environments, import-meta-env.d.ts', async () => {
-    const result = await renderSourceFiles(angularCtx())
+  it('appShell=true: renders main.ts, app.component.ts, tokens.css, environments, import-meta-env.d.ts', async () => {
+    const result = await renderSourceFiles(angularCtx({ appShell: true }))
 
     const files = renderFiles(result.pinion.trace)
     expect(files.some((f) => f.endsWith('src/main.ts'))).toBe(true)
+    expect(files.some((f) => f.endsWith('src/app/app.component.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/main.spec.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/styles/tokens.css'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/environments/environment.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/environments/environment.development.ts'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/import-meta-env.d.ts'))).toBe(true)
+  })
+
+  it('appShell=false: shell root used — app.component.ts NOT emitted', async () => {
+    const result = await renderSourceFiles(angularCtx({ appShell: false }))
+
+    const files = renderFiles(result.pinion.trace)
+    expect(files.some((f) => f.endsWith('src/app/app.component.ts'))).toBe(false)
+    expect(files.some((f) => f.endsWith('src/main.ts'))).toBe(true)
   })
 })
 
@@ -86,7 +95,7 @@ describe('generate', () => {
     expect(result.devPort).toBe(3200)
 
     const renderTraces = result.pinion.trace.filter((t) => t.name === 'renderTemplate')
-    // 9 (setup + override-barrel pre-hook script) + 5 (source) + 1 (conditional: gitkeep) = 15
+    // 9 (setup + override-barrel pre-hook script) + 6 (source, app.component.ts gated off) + 1 (conditional: gitkeep) = 16
     expect(renderTraces).toHaveLength(16)
 
     const base = join(ctx.cwd, 'apps', 'zen-plants-angular')
@@ -108,16 +117,34 @@ describe('generate', () => {
     const project = angularJson.projects['zen-plants-angular']
     expect(project.architect.serve.options.port).toBe(3200)
 
-    // index.html always hosts shell root — no tenant app shell emitted
+    // index.html hosts the shell's <app-root>, no tenant app shell
     expect(readFileSync(join(base, 'src', 'index.html'), 'utf8')).toContain('<app-root></app-root>')
-    expect(existsSync(join(base, 'src', 'app'))).toBe(false)
+    expect(existsSync(join(base, 'src', 'app', 'app.component.ts'))).toBe(false)
 
-    // main.ts never wires appShell
-    expect(readFileSync(join(base, 'src', 'main.ts'), 'utf8')).not.toContain('appShell')
+    // main.ts uses the shell root — no appShell wiring
+    const mainTs = readFileSync(join(base, 'src', 'main.ts'), 'utf8')
+    expect(mainTs).not.toContain('appShell:')
 
     // infra metadata (fixture mode) + barrel export line
     expect(existsSync(join(ctx.cwd, 'packages', 'infra', 'src', 'metadata', 'zen-plants.ts'))).toBe(true)
     const infraIndex = join(ctx.cwd, 'packages', 'infra', 'src', 'index.ts')
     expect(readFileSync(infraIndex, 'utf8')).toContain("export { zenPlantsMap } from './metadata/zen-plants'")
+  })
+
+  it('appShell=true: emits tenant shell — app.component.ts, <prefix-root> host, appShell wiring', async () => {
+    const ctx = angularCtx({ name: 'zen-plants', metadataMode: 'fixture', appShell: true })
+    const result = await generate(ctx)
+
+    const renderTraces = result.pinion.trace.filter((t) => t.name === 'renderTemplate')
+    // 9 (setup + override-barrel pre-hook script) + 7 (source incl. app.component.ts) + 1 (conditional: gitkeep) = 17
+    expect(renderTraces).toHaveLength(17)
+
+    const base = join(ctx.cwd, 'apps', 'zen-plants-angular')
+    expect(existsSync(join(base, 'src', 'app', 'app.component.ts'))).toBe(true)
+    expect(readFileSync(join(base, 'src', 'index.html'), 'utf8')).toContain('<zpa-root></zpa-root>')
+
+    // main.ts wires tenant appShell — class derived from prefix (zpa -> ZpaApp)
+    const mainTs = readFileSync(join(base, 'src', 'main.ts'), 'utf8')
+    expect(mainTs).toContain("appShell: () => import('./app/app.component').then((m) => m.ZpaApp),")
   })
 })

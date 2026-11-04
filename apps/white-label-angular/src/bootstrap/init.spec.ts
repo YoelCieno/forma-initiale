@@ -12,7 +12,7 @@ import {
   COMPONENT_OVERRIDES,
   injectComponentOverride,
 } from './init'
-import { App } from '../app/app'
+import { App } from '../app/app.component'
 
 // environment module created by coder (Phase 4.2 impl); gate toggled below
 import { environment } from '../environments/environment'

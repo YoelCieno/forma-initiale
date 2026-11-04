@@ -23,6 +23,7 @@ import {
   eslintrc,
   gitignore,
   indexHtml,
+  appComponentTs,
   mainTs,
   mainSpec,
   environmentTs,
@@ -64,6 +65,10 @@ export const renderSetup = (ctx: TenantContext): Promise<TenantContext> =>
 export const renderSourceFiles = (ctx: TenantContext): Promise<TenantContext> =>
   Promise.resolve(ctx)
     .then(renderTemplate(mainTs, toFile(outDir, 'src', 'main.ts')))
+    .then(when(
+      (c: TenantContext) => c.appShell,
+      renderTemplate(appComponentTs, toFile(outDir, 'src', 'app', 'app.component.ts')),
+    ))
     .then(renderTemplate(tokensCss, toFile(outDir, 'src', 'styles', 'tokens.css')))
     .then(
       renderTemplate(environmentTs, toFile(outDir, 'src', 'environments', 'environment.ts')),
@@ -111,8 +116,9 @@ const verifyScaffold = (ctx: TenantContext): TenantContext => {
 
 export const generate = (ctx: TenantContext): Promise<TenantContext> =>
   Promise.resolve(ctx)
-    .then(prompt<TenantContext>(tenantPrompts))
+    // framework must be known before prompts — appShell question is angular-only
     .then(assignFramework(import.meta.url))
+    .then(prompt<TenantContext>(tenantPrompts))
     .then(caseTransform<TenantContext>())
     .then(assignAngularPort)
     .then(renderSetup)

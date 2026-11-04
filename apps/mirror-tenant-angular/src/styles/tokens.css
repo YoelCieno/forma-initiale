@@ -1,0 +1,25 @@
+/* MirrorTenant — cyberpunk theme */
+:where(:root) {
+  --brand-fill-quiet: #e0d6ff;
+  --brand-fill-normal: #8b5cf6;
+  --brand-fill-loud: #7c3aed;
+  --brand-border-quiet: #ddd6fe;
+  --brand-border-normal: #e9d5ff;
+  --brand-border-loud: #c084fc;
+  --brand-on-quiet: #5b21b6;
+  --brand-on-normal: #fff;
+  --brand-on-loud: #f3e8ff;
+  --color-text-body: #e0e0ff;
+  --color-text-muted: #a0a0c0;
+  --color-text-heading: #ffffff;
+  --color-border: #4b5563;
+  --color-border-light: #374151;
+  --color-error: #ef4444;
+  --fs-xs: 0.75rem;
+  --fs-s: 0.875rem;
+  --fs-m: 1rem;
+  --fs-l: 1.25rem;
+  --fs-xl: 1.5rem;
+  --min-width-layout: 250px;
+  --max-width-layout: 1200px;
+}

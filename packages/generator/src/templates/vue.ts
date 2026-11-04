@@ -5,6 +5,8 @@ import { fileIo, REPO_ROOT } from '../helpers/file-io'
 
 const { readFileData, readMirrorFiles } = fileIo()
 
+/** Mirror SoT — (workspace-internal, always in-repo). */
+const MIRROR_DIR = 'apps/mirror-tenant-vue'
 
 const packageJson = (ctx: TenantContext): string => {
   const pkgJSON = readFileData<Record<string, unknown>>(join(REPO_ROOT, MIRROR_DIR, 'package.json'))
@@ -109,9 +111,6 @@ const componentVue = (ctx: TenantContext) => {
 </style>
 `
 }
-
-/** Mirror SoT — (workspace-internal, always in-repo). */
-const MIRROR_DIR = 'apps/mirror-tenant-vue'
 
 /** Zero-arg SoT readers — apps/mirror-tenant-vue/* */
 const {

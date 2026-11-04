@@ -15,6 +15,7 @@ function ctx(overrides: Partial<TenantContext> = {}): TenantContext {
     overrideComponentName: undefined,
     prefix: 'te',
     framework: 'vue',
+    appShell: false,
     devPort: 3103,
     cwd: '/tmp',
     argv: [],

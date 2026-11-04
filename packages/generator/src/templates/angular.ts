@@ -1,141 +1,69 @@
 import type { TenantContext } from '../models'
 import { kebabToPascal, pascalToKebab } from '../helpers'
+import { fileIo, REPO_ROOT } from '../helpers/file-io'
+import { join } from 'node:path'
+import { isObject } from '../utils'
 
-const packageJson = (ctx: TenantContext): string =>
-  JSON.stringify(
-    {
-      name: `${ctx.name}-angular`,
-      private: true,
-      version: '0.0.0',
-      scripts: {
-        ng: 'ng',
-        start: 'ng serve',
-        predev: 'bun scripts/gen-component-overrides.ts',
-        dev: 'ng serve',
-        prebuild: 'bun scripts/gen-component-overrides.ts',
-        build: 'ng build',
-        watch: 'ng build --watch --configuration development',
-        lint: 'eslint "src/**/*.ts"',
-        pretest: 'bun scripts/gen-component-overrides.ts',
-        test: 'ng test --watch=false',
-      },
-      dependencies: {
-        '@angular/common': '^22.1.0',
-        '@angular/compiler': '^22.1.0',
-        '@angular/core': '^22.1.0',
-        '@angular/forms': '^22.1.0',
-        '@angular/platform-browser': '^22.1.0',
-        '@angular/router': '^22.1.0',
-        '@repo/domain': '*',
-        '@repo/infra': '*',
-        '@repo/presenters': '*',
-        '@repo/ui': '*',
-        '@repo/utils': '*',
-        rxjs: '~7.8.0',
-        tslib: '^2.3.0',
-        'white-label-angular': 'workspace:*',
-      },
-      devDependencies: {
-        '@angular/build': '^22.1.4',
-        '@angular/cli': '^22.1.4',
-        '@angular/compiler-cli': '^22.1.0',
-        '@repo/eslint-config': '*',
-        eslint: '^8.57.1',
-        jsdom: '^28.0.0',
-        prettier: '^3.8.1',
-        typescript: '~6.0.2',
-        vitest: '^4.0.8',
-      },
-    },
-    null,
-    2,
-  )
+const { readFileData,  } = fileIo()
+
+/** Mirror SoT — (workspace-internal, always in-repo). */
+const MIRROR_DIR = 'apps/mirror-tenant-angular'
+
+const packageJson = (ctx: TenantContext): string => {
+  const pkgJSON = readFileData<Record<string, unknown>>(join(REPO_ROOT, MIRROR_DIR, 'package.json'))
+  // override-barrel hooks + ng script set are tenant-owned (gen script writes
+  // src/components/overrides.gen.ts which main.ts imports) — never rely on the
+  // mirror SoT carrying them.
+  const scripts = {
+    ...(isObject(pkgJSON.scripts) ? pkgJSON.scripts : {}),
+    dev: 'ng serve',
+    build: 'ng build',
+    test: 'ng test --watch=false',
+    predev: 'bun run scripts/gen-component-overrides.ts',
+    prebuild: 'bun run scripts/gen-component-overrides.ts',
+    pretest: 'bun run scripts/gen-component-overrides.ts',
+  }
+  return `${JSON.stringify({ ...pkgJSON, name: `${ctx.name}-angular`, scripts }, null, 2)}\n`
+}
 
 const angularJson = (ctx: TenantContext): string => {
   const name = `${ctx.name}-angular`
-  return JSON.stringify(
-    {
-      $schema: './node_modules/@angular/cli/lib/config/schema.json',
-      version: 1,
-      cli: { packageManager: 'bun' },
-      newProjectRoot: 'projects',
-      projects: {
-        [name]: {
-          projectType: 'application',
-          schematics: {},
-          root: '',
-          sourceRoot: 'src',
-          prefix: 'app',
-          architect: {
-            build: {
-              builder: '@angular/build:application',
-              options: {
-                browser: 'src/main.ts',
-                tsConfig: 'tsconfig.app.json',
-                assets: [{ glob: '**/*', input: 'public' }],
-                styles: [
-                  '../../packages/ui/styles/main.css',
-                  '../../packages/ui/styles/themes/default.css',
-                  '../white-label-angular/src/styles/tokens.css',
-                  'src/styles/tokens.css',
-                  '../white-label-angular/src/styles/base.css',
-                ],
-              },
-              configurations: {
-                production: {
-                  budgets: [
-                    {
-                      type: 'initial',
-                      maximumWarning: '500kB',
-                      maximumError: '1MB',
-                    },
-                    {
-                      type: 'anyComponentStyle',
-                      maximumWarning: '4kB',
-                      maximumError: '8kB',
-                    },
-                  ],
-                  outputHashing: 'all',
-                },
-                development: {
-                  optimization: false,
-                  extractLicenses: false,
-                  sourceMap: true,
-                  fileReplacements: [
-                    {
-                      replace: 'src/environments/environment.ts',
-                      with: 'src/environments/environment.development.ts',
-                    },
-                  ],
-                },
-              },
-              defaultConfiguration: 'production',
+  const angularJSONFile = readFileData<Record<string, unknown>>(join(REPO_ROOT, MIRROR_DIR, 'angular.json'))
+  const mirrorProjects = isObject(angularJSONFile.projects) ? angularJSONFile.projects : {}
+  const mirrorProjectName = Object.keys(mirrorProjects)[0] || ''
+  const mirrorProject = mirrorProjectName && isObject(mirrorProjects[mirrorProjectName])
+    ? mirrorProjects[mirrorProjectName]
+    : {}
+
+  return `${JSON.stringify({
+    ...angularJSONFile,
+    projects: {
+      [name]: {
+        ...mirrorProject,
+        architect: {
+          ...(isObject(mirrorProject.architect) ? mirrorProject.architect : {}),
+          serve: {
+            builder: '@angular/build:dev-server',
+            options: {
+              prebundle: false,
+              port: ctx.devPort,
             },
-            serve: {
-              builder: '@angular/build:dev-server',
-              options: {
-                prebundle: false,
-                port: ctx.devPort,
-              },
-              configurations: {
-                production: { buildTarget: `${name}:build:production` },
-                development: { buildTarget: `${name}:build:development` },
-              },
-              defaultConfiguration: 'development',
+            configurations: {
+              production: { buildTarget: `${name}:build:production` },
+              development: { buildTarget: `${name}:build:development` },
             },
-            test: {
-              builder: '@angular/build:unit-test',
-              options: {
-                setupFiles: ['../../packages/infra/src/testing/element-internals.ts'],
-              },
+            defaultConfiguration: 'development',
+          },
+          test: {
+            builder: '@angular/build:unit-test',
+            options: {
+              setupFiles: ['../../packages/infra/src/testing/element-internals.ts'],
             },
           },
         },
       },
     },
-    null,
-    2,
-  )
+  }, null, 2)}\n`
 }
 
 const indexHtml = (ctx: TenantContext): string => {
@@ -149,11 +77,68 @@ const indexHtml = (ctx: TenantContext): string => {
     <title>${ctx.Name} — Tenant</title>
   </head>
   <body>
-    <app-root></app-root>
+    <${ctx.appShell ? `${ctx.prefix}-root` : 'app-root'}></${ctx.appShell ? `${ctx.prefix}-root` : 'app-root'}>
   </body>
 </html>
 `
 }
+
+/**
+ * Tenant root shell — same shape as fake-plants-angular app.component.ts:
+ * inline template + SFC styles, BEM classes prefixed with the tenant prefix.
+ * bootstrapApplication uses the selector as the host tag, so index.html
+ * must host <prefix-root> (not the shell's <app-root>).
+ */
+const appComponentTs = (ctx: TenantContext): string => {
+  const cls = `${kebabToPascal(ctx.prefix)}App`
+  const tag = `${ctx.prefix}-root`
+  return `import { Component } from '@angular/core'
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
+
+@Component({
+  selector: '${tag}',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  template: \`
+    <nav class="${ctx.prefix}-nav">
+      <a
+        routerLink="/"
+        routerLinkActive="${ctx.prefix}-nav__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >Products</a>
+    </nav>
+
+    <main class="${ctx.prefix}-main">
+      <router-outlet />
+    </main>
+  \`,
+  styles: \`
+    .${ctx.prefix}-nav {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 1rem;
+      a {
+        margin-right: 1rem;
+        text-decoration: none;
+        color: var(--color-text-body);
+        &:hover {
+          text-decoration: underline;
+        }
+        &.${ctx.prefix}-nav__link--active {
+          color: var(--brand-fill-loud);
+          font-weight: 600;
+          text-decoration: underline;
+        }
+      }
+    }
+    .${ctx.prefix}-main {
+      margin: 0 1rem;
+    }
+  \`,
+})
+export class ${cls} {}
+`
+}
+
 
 const mainTs = (ctx: TenantContext): string => {
   const metaImport =
@@ -164,11 +149,15 @@ const mainTs = (ctx: TenantContext): string => {
     ctx.metadataMode === 'fixture'
       ? `  metaMap: ${ctx.camelName}Map,`
       : '  // metaMap: myMap,'
+  const appShellImport = ctx.appShell
+    ? `import { ${kebabToPascal(ctx.prefix)}App } from './app/app.component'\n`
+    : ''
   return `import { bootstrapApplication } from '@angular/platform-browser'
 import { createWhiteLabelApp, useWhiteLabelApp } from 'white-label-angular/app'
+${metaImport}
 import { componentOverrides } from './components/overrides.gen'
 import { environment } from './environments/environment'
-${metaImport}
+${appShellImport}
 const { setupMocks } = useWhiteLabelApp()
 
 await setupMocks(environment)
@@ -179,10 +168,9 @@ ${metaLine}
   // filename-key registry: generated from src/components/*.component.ts by pre-hooks
   componentOverrides,
 
-  // Angular route paths are slash-less ('components', not '/components') —
-  // mergeRoutes filters by exact route.path match, a leading slash silently no-ops.
-  omitRoutePaths: ['components'],
-})
+${ctx.appShell ? `  // tenant-owned shell: resolves ${kebabToPascal(ctx.prefix)}App from src/app/app.component.ts
+  appShell: () => import('./app/app.component').then((m) => m.${kebabToPascal(ctx.prefix)}App),
+` : ''}})
 bootstrapApplication(root, config).catch((err) => console.error(err))
 `
 }
@@ -410,6 +398,7 @@ export {
   packageJson,
   angularJson,
   indexHtml,
+  appComponentTs,
   mainTs,
   environmentTs,
   environmentDevTs,

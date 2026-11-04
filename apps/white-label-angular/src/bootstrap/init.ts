@@ -10,7 +10,7 @@ import { provideHttpClient } from '@angular/common/http'
 import { provideRouter, type Routes } from '@angular/router'
 import type { ProductMeta } from '@repo/presenters'
 import { environment } from '../environments/environment'
-import { App } from '../app/app'
+import { App } from '../app/app.component'
 
 export const META_MAP_INJECTION_KEY = new InjectionToken<Record<string, ProductMeta>>(
   'META_MAP_INJECTION_KEY',

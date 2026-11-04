@@ -18,6 +18,7 @@ export interface TenantContext extends PinionContext {
   prefix: string
   devPort: number
   framework: Framework
+  appShell: boolean
 }
 
 export interface MockedData {
