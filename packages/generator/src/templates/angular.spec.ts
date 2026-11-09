@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import type { TenantContext } from '../models'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { REPO_ROOT } from '../helpers/file-io'
 import {
   packageJson,
   angularJson,
@@ -7,6 +10,14 @@ import {
   appComponentTs,
   mainTs,
   overrideComponent,
+  importMetaEnvDts,
+  tsconfigJson,
+  tsconfigAppJson,
+  tsconfigSpecJson,
+  tsconfigScriptsJson,
+  eslintrc,
+  gitignore,
+  mainSpec,
 } from './angular'
 
 /** angular.json architect → target → config block → value. */
@@ -188,11 +199,35 @@ describe('mainTs', () => {
   it('appShell=true: wires tenant appShell — shell class derived from prefix', () => {
     const out = mainTs(ctx({ appShell: true }))
     expect(out).toContain("appShell: () => import('./app/app.component').then((m) => m.ZpApp),")
+    expect(out).not.toContain('//appShell:')
+    expect(out).toContain("import { ZpApp } from './app/app.component'")
+  })
+})
+
+describe('mirror-tenant-angular SoT parity', () => {
+  const mirrorRoot = join(REPO_ROOT, 'apps/mirror-tenant-angular/')
+  const readMirror = (rel: string): string => readFileSync(join(mirrorRoot, rel), 'utf8')
+
+  type StaticReader = { name: string; tpl: string | (() => string); rel: string }
+  const readers: StaticReader[] = [
+    { name: 'importMetaEnvDts', tpl: importMetaEnvDts, rel: 'src/import-meta-env.d.ts' },
+    { name: 'tsconfigJson', tpl: tsconfigJson, rel: 'tsconfig.json' },
+    { name: 'tsconfigAppJson', tpl: tsconfigAppJson, rel: 'tsconfig.app.json' },
+    { name: 'tsconfigSpecJson', tpl: tsconfigSpecJson, rel: 'tsconfig.spec.json' },
+    { name: 'tsconfigScriptsJson', tpl: tsconfigScriptsJson, rel: 'tsconfig.scripts.json' },
+    { name: 'eslintrc', tpl: eslintrc, rel: '.eslintrc.cjs' },
+    { name: 'gitignore', tpl: gitignore, rel: '.gitignore' },
+    { name: 'mainSpec', tpl: mainSpec, rel: 'src/main.spec.ts' },
+  ]
+
+  it('ctx-free statics are zero-arg SoT readers, not inline strings', () => {
+    for (const { name, tpl } of readers) {
+      expect(typeof tpl, `${name} must be a () => string reader`).toBe('function')
+    }
   })
 
-  it('appShell=false: no appShell line, no app component import', () => {
-    const out = mainTs(ctx())
-    expect(out).not.toContain('appShell:')
-    expect(out).not.toContain('./app/app.component')
+  it.each(readers)('renders $name byte-equal to apps/mirror-tenant-angular/$rel', ({ tpl, rel }) => {
+    const rendered = typeof tpl === 'function' ? tpl() : tpl
+    expect(rendered).toBe(readMirror(rel))
   })
 })

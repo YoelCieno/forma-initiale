@@ -18,7 +18,7 @@ function makeProject(componentSources: Record<string, string>): string {
   dirs.push(dir)
   mkdirSync(join(dir, 'scripts'), { recursive: true })
   mkdirSync(join(dir, 'src', 'components'), { recursive: true })
-  writeFileSync(join(dir, 'scripts', 'gen-component-overrides.ts'), genComponentOverridesScript)
+  writeFileSync(join(dir, 'scripts', 'gen-component-overrides.ts'), genComponentOverridesScript())
   for (const [file, content] of Object.entries(componentSources)) {
     writeFileSync(join(dir, 'src', 'components', file), content)
   }

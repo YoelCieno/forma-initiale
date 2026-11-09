@@ -35,6 +35,7 @@ describe('renderSetup', () => {
     expect(files.some((f) => f.endsWith('tsconfig.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.app.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('tsconfig.spec.json'))).toBe(true)
+    expect(files.some((f) => f.endsWith('tsconfig.scripts.json'))).toBe(true)
     expect(files.some((f) => f.endsWith('src/index.html'))).toBe(true)
     expect(files.some((f) => f.endsWith('.eslintrc.cjs'))).toBe(true)
     expect(files.some((f) => f.endsWith('.gitignore'))).toBe(true)
@@ -95,8 +96,8 @@ describe('generate', () => {
     expect(result.devPort).toBe(3200)
 
     const renderTraces = result.pinion.trace.filter((t) => t.name === 'renderTemplate')
-    // 9 (setup + override-barrel pre-hook script) + 6 (source, app.component.ts gated off) + 1 (conditional: gitkeep) = 16
-    expect(renderTraces).toHaveLength(16)
+    // 10 (setup incl. tsconfig.scripts.json) + 6 (source, app.component.ts gated off) + 1 (conditional: gitkeep) = 17
+    expect(renderTraces).toHaveLength(17)
 
     const base = join(ctx.cwd, 'apps', 'zen-plants-angular')
     expect(existsSync(join(base, 'package.json'))).toBe(true)
@@ -121,9 +122,10 @@ describe('generate', () => {
     expect(readFileSync(join(base, 'src', 'index.html'), 'utf8')).toContain('<app-root></app-root>')
     expect(existsSync(join(base, 'src', 'app', 'app.component.ts'))).toBe(false)
 
-    // main.ts uses the shell root — no appShell wiring
+    // main.ts: appShell line emitted as commented opt-in hint — uncommented wiring absent
     const mainTs = readFileSync(join(base, 'src', 'main.ts'), 'utf8')
-    expect(mainTs).not.toContain('appShell:')
+    expect(mainTs).toContain('//appShell:')
+    expect(mainTs).not.toMatch(/^\s+appShell: /m)
 
     // infra metadata (fixture mode) + barrel export line
     expect(existsSync(join(ctx.cwd, 'packages', 'infra', 'src', 'metadata', 'zen-plants.ts'))).toBe(true)
@@ -136,8 +138,8 @@ describe('generate', () => {
     const result = await generate(ctx)
 
     const renderTraces = result.pinion.trace.filter((t) => t.name === 'renderTemplate')
-    // 9 (setup + override-barrel pre-hook script) + 7 (source incl. app.component.ts) + 1 (conditional: gitkeep) = 17
-    expect(renderTraces).toHaveLength(17)
+    // 10 (setup incl. tsconfig.scripts.json) + 7 (source incl. app.component.ts) + 1 (conditional: gitkeep) = 18
+    expect(renderTraces).toHaveLength(18)
 
     const base = join(ctx.cwd, 'apps', 'zen-plants-angular')
     expect(existsSync(join(base, 'src', 'app', 'app.component.ts'))).toBe(true)

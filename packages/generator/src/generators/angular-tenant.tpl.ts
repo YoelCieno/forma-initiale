@@ -20,6 +20,7 @@ import {
   tsconfigJson,
   tsconfigAppJson,
   tsconfigSpecJson,
+  tsconfigScriptsJson,
   eslintrc,
   gitignore,
   indexHtml,
@@ -55,6 +56,7 @@ export const renderSetup = (ctx: TenantContext): Promise<TenantContext> =>
     .then(renderTemplate(tsconfigJson, toFile(outDir, 'tsconfig.json')))
     .then(renderTemplate(tsconfigAppJson, toFile(outDir, 'tsconfig.app.json')))
     .then(renderTemplate(tsconfigSpecJson, toFile(outDir, 'tsconfig.spec.json')))
+    .then(renderTemplate(tsconfigScriptsJson, toFile(outDir, 'tsconfig.scripts.json')))
     .then(renderTemplate(indexHtml, toFile(outDir, 'src', 'index.html')))
     .then(renderTemplate(eslintrc, toFile(outDir, '.eslintrc.cjs')))
     .then(renderTemplate(gitignore, toFile(outDir, '.gitignore')))

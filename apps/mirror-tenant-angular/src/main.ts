@@ -11,8 +11,8 @@ await setupMocks(environment)
 const { root, config } = await createWhiteLabelApp({
   env: environment,
   metaMap: mirrorTenantMap,
-
   // filename-key registry: generated from src/components/*.component.ts by pre-hooks
   componentOverrides,
+  // appShell: () => import('./app/app.component').then((m) => m.mirrorTenantApp),
 })
 bootstrapApplication(root, config).catch((err) => console.error(err))

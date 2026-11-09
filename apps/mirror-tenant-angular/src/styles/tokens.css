@@ -1,15 +1,15 @@
 /* MirrorTenant — cyberpunk theme */
 :where(:root) {
   --brand-fill-quiet: #e0d6ff;
-  --brand-fill-normal: #8b5cf6;
-  --brand-fill-loud: #7c3aed;
+  --brand-fill-normal: #7c3aed;
+  --brand-fill-loud: #5a06ea;
   --brand-border-quiet: #ddd6fe;
   --brand-border-normal: #e9d5ff;
   --brand-border-loud: #c084fc;
   --brand-on-quiet: #5b21b6;
   --brand-on-normal: #fff;
   --brand-on-loud: #f3e8ff;
-  --color-text-body: #e0e0ff;
+  --color-text-body: #813ab8;
   --color-text-muted: #a0a0c0;
   --color-text-heading: #ffffff;
   --color-border: #4b5563;

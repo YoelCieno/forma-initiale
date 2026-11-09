@@ -4,26 +4,15 @@ import { fileIo, REPO_ROOT } from '../helpers/file-io'
 import { join } from 'node:path'
 import { isObject } from '../utils'
 
-const { readFileData,  } = fileIo()
+const { readFileData, readMirrorFiles } = fileIo()
 
 /** Mirror SoT — (workspace-internal, always in-repo). */
 const MIRROR_DIR = 'apps/mirror-tenant-angular'
 
 const packageJson = (ctx: TenantContext): string => {
   const pkgJSON = readFileData<Record<string, unknown>>(join(REPO_ROOT, MIRROR_DIR, 'package.json'))
-  // override-barrel hooks + ng script set are tenant-owned (gen script writes
-  // src/components/overrides.gen.ts which main.ts imports) — never rely on the
-  // mirror SoT carrying them.
-  const scripts = {
-    ...(isObject(pkgJSON.scripts) ? pkgJSON.scripts : {}),
-    dev: 'ng serve',
-    build: 'ng build',
-    test: 'ng test --watch=false',
-    predev: 'bun run scripts/gen-component-overrides.ts',
-    prebuild: 'bun run scripts/gen-component-overrides.ts',
-    pretest: 'bun run scripts/gen-component-overrides.ts',
-  }
-  return `${JSON.stringify({ ...pkgJSON, name: `${ctx.name}-angular`, scripts }, null, 2)}\n`
+
+  return `${JSON.stringify({ ...pkgJSON, name: `${ctx.name}-angular` }, null, 2)}\n`
 }
 
 const angularJson = (ctx: TenantContext): string => {
@@ -152,6 +141,8 @@ const mainTs = (ctx: TenantContext): string => {
   const appShellImport = ctx.appShell
     ? `import { ${kebabToPascal(ctx.prefix)}App } from './app/app.component'\n`
     : ''
+  const appShellLine = `  ${!ctx.appShell ? '//' : ''}appShell: () => import('./app/app.component').then((m) => m.${kebabToPascal(ctx.prefix)}App),`
+  
   return `import { bootstrapApplication } from '@angular/platform-browser'
 import { createWhiteLabelApp, useWhiteLabelApp } from 'white-label-angular/app'
 ${metaImport}
@@ -167,10 +158,9 @@ ${metaLine}
 
   // filename-key registry: generated from src/components/*.component.ts by pre-hooks
   componentOverrides,
+${appShellLine}
+})
 
-${ctx.appShell ? `  // tenant-owned shell: resolves ${kebabToPascal(ctx.prefix)}App from src/app/app.component.ts
-  appShell: () => import('./app/app.component').then((m) => m.${kebabToPascal(ctx.prefix)}App),
-` : ''}})
 bootstrapApplication(root, config).catch((err) => console.error(err))
 `
 }
@@ -187,137 +177,6 @@ const environmentDevTs = (ctx: TenantContext): string => `export const environme
   tenantId: '${ctx.prefix}',
   apiUrl: 'https://api.example.com/api',
 }
-`
-
-/** Static — copied verbatim, no interpolation. */
-const importMetaEnvDts: string = `// Ambient typing for \`import.meta.env\` — required by @repo/infra mocks helpers
-// (\`packages/infra/src/mocks/helpers.ts\` reads \`import.meta.env.MODE\`).
-// Vite is not a dependency of this app, so vite/client types are not available.
-interface ImportMeta {
-  env: {
-    MODE?: string
-    DEV?: boolean
-    PROD?: boolean
-    [key: string]: string | boolean | undefined
-  }
-}
-`
-
-/** Static — copied verbatim, no interpolation. */
-const tsconfigJson: string = `/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
-{
-  "compileOnSave": false,
-  "compilerOptions": {
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "preserve"
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
-}
-`
-
-/** Static — copied verbatim, no interpolation. */
-const tsconfigAppJson: string = `/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "types": [],
-    "noPropertyAccessFromIndexSignature": false
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
-}
-`
-
-/** Static — copied verbatim, no interpolation. */
-const tsconfigSpecJson: string = `/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "types": ["vitest/globals", "node"]
-  },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "../../packages/infra/src/testing/element-internals.ts"]
-}
-`
-
-/** Static — copied verbatim, no interpolation. */
-const eslintrc: string = `module.exports = {
-  root: true,
-  extends: ["@repo/eslint-config/index.js"],
-};
-`
-
-/** Static — copied verbatim, no interpolation. */
-const gitignore: string = `# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/mcp.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# Generated component override barrel
-src/components/overrides.gen.ts
-
-# System files
-.DS_Store
-Thumbs.db
 `
 
 const overrideComponent = (ctx: TenantContext): string => {
@@ -341,56 +200,31 @@ const overrideComponent = (ctx: TenantContext): string => {
   ].join('\n')
 }
 
-// Pre-hook script: scans src/components/*.component.ts and generates the
-// componentOverrides barrel. Rendered to scripts/gen-component-overrides.ts
-// and wired via package.json predev/prebuild/pretest hooks.
-const genComponentOverridesScript = `// GENERATED by @repo/generator — DO NOT EDIT.
-// Regenerates src/components/overrides.gen.ts from src/components/*.component.ts.
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
-
-const componentsDir = join(import.meta.dir, '..', 'src', 'components')
-const outFile = join(componentsDir, 'overrides.gen.ts')
-
-const files = readdirSync(componentsDir).filter((f) => f.endsWith('.component.ts'))
-
-const entries: Array<{ key: string; cls: string; file: string }> = []
-for (const file of files) {
-  const source = readFileSync(join(componentsDir, file), 'utf8')
-  const match = source.match(/export class\\s+(\\w+)/)
-  if (!match) {
-    console.error('gen-component-overrides: ' + file + ' has no export class — cannot map override key')
-    process.exit(1)
-  }
-  entries.push({ key: file.replace(/\\.component\\.ts$/, ''), cls: match[1], file })
-}
-
-entries.sort((a, b) => a.key.localeCompare(b.key))
-
-const imports = entries
-  .map((e) => 'import { ' + e.cls + " } from './" + e.file.replace(/\\.ts$/, '') + "'")
-  .join('\\n')
-const map = entries.map((e) => "  '" + e.key + "': " + e.cls + ',').join('\\n')
-
-const header =
-  '// GENERATED by gen-component-overrides.ts — DO NOT EDIT.\\n' +
-  '// Source: src/components/*.component.ts (filename stem = registry key)\\n'
-const body = 'export const componentOverrides = {\\n' + map + '\\n}\\n'
-
-writeFileSync(outFile, imports ? header + imports + '\\n\\n' + body : header + body)
-`
-
-const mainSpec: string = `import { describe, expect, it } from 'vitest'
-import { createWhiteLabelApp } from 'white-label-angular/app'
-
-describe('createWhiteLabelApp (tenant scaffold)', () => {
-  it('returns shell root and config', async () => {
-    const { root, config } = await createWhiteLabelApp({})
-    expect(root).toBeTruthy()
-    expect(config).toBeTruthy()
-  })
-})
-`
+/** Zero-arg SoT readers — apps/mirror-tenant-angular/* (static, no interpolation). */
+const {
+  'tsconfig.json': tsconfigJson,
+  'tsconfig.app.json': tsconfigAppJson,
+  'tsconfig.spec.json': tsconfigSpecJson,
+  'tsconfig.scripts.json': tsconfigScriptsJson,
+  '.eslintrc.cjs': eslintrc,
+  '.gitignore': gitignore,
+  'src/import-meta-env.d.ts': importMetaEnvDts,
+  'src/main.spec.ts': mainSpec,
+  'scripts/gen-component-overrides.ts': genComponentOverridesScript,
+} = readMirrorFiles(
+  [
+    'tsconfig.json',
+    'tsconfig.app.json',
+    'tsconfig.spec.json',
+    'tsconfig.scripts.json',
+    '.eslintrc.cjs',
+    '.gitignore',
+    'src/import-meta-env.d.ts',
+    'src/main.spec.ts',
+    'scripts/gen-component-overrides.ts',
+  ],
+  MIRROR_DIR,
+)
 
 export {
   mainSpec,
@@ -406,6 +240,7 @@ export {
   tsconfigJson,
   tsconfigAppJson,
   tsconfigSpecJson,
+  tsconfigScriptsJson,
   eslintrc,
   gitignore,
   overrideComponent,
