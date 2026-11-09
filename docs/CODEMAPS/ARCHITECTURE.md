@@ -164,6 +164,26 @@ Template renders (fe-async-content → app-product-card × N)
                 ▼
            docs
            deps: astro, starlight, sharp
+
+mirror-tenant-vue ─────────────────── (generator SoT)
+      deps: white-label-vue, infra, presenters, ui
+      read at generation time by @repo/generator via readMirrorFiles
+
+mirror-tenant-angular ─────────────── (generator SoT)
+      deps: white-label-angular, @angular/*, infra, presenters, ui
+      read at generation time by @repo/generator via readMirrorFiles
+```
+
+## Mirror-SoT generator flow
+
+```
+packages/generator/templates/{vue,angular}.ts
+    │  readMirrorFiles(files, dir) — helpers/file-io.ts
+    ▼
+apps/mirror-tenant-{vue,angular}/   (single source of truth for static files)
+    │  dynamic parts (package.json, angular.json, main.ts, tokens.css...) rendered from TenantContext
+    ▼
+apps/<name>-{vue,angular}/          (new scaffolded tenant)
 ```
 
 ## Key Architectural Decisions
@@ -184,6 +204,7 @@ Template renders (fe-async-content → app-product-card × N)
 | Routing               | vue-router (hash mode)                                   | SPA hash-based routing                                                                                                                                                                      |
 | Type checking         | tsc (noEmit)                                             | Type-check only, Vite for bundling                                                                                                                                                          |
 | Layer factory pattern | `createWhiteLabelApp()` + `defineWhiteLabelViteConfig()` | White-label-vue exports factories (app bootstrap, Vite config) for tenant apps to consume via workspace deps. Single source of truth for plugin setup, router, MSW bootstrap, auto-imports. |
+| Mirror-SoT templates  | `apps/mirror-tenant-{vue,angular}` + `readMirrorFiles()`  | Generator templates read static files from in-repo mirror apps instead of duplicating blob literals — single source of truth lives in editable apps. |
 | Testing               | Vitest + jsdom + @vue/test-utils                         | Vite-native, fast                                                                                                                                                                           |
 | API mocking           | MSW (Mock Service Worker)                                | Intercepts fetch in dev (SW) + test (Node). Single pattern for both environments                                                                                                            |
 | Linting               | ESLint 8 (CJS config)                                    | Stable, widely supported                                                                                                                                                                    |

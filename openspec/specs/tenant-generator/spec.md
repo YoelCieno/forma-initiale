@@ -4,7 +4,7 @@
 
 Defines behavior of `@repo/generator` scaffolding helpers shared across frameworks: generating tenant metadata fixtures into the infra package (keys matching registered mock products, idempotent writes, barrel wiring) and copying the MSW service worker with framework-agnostic paths.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Fixture metadata is generated into infra, not the tenant app
 

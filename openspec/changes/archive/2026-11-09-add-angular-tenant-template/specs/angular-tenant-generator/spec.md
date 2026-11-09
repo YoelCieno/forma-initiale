@@ -2,18 +2,18 @@
 
 ## Purpose
 
-Defines what `@repo/generator` must emit when scaffolding an Angular tenant: the complete file set (Angular workspace config, bootstrap, environments, optional override component), port allocation across existing Angular apps, the tenant-owned shell host tag, the generated component-override barrel driven by pre-hooks, and byte-identical Vue output after the `templates/` restructure.
+Defines what `@repo/generator` must emit when scaffolding an Angular tenant: the complete file set (Angular workspace config, bootstrap, environments, optional override component), port allocation across existing Angular apps, the opt-in tenant-owned shell (host tag + bootstrap wiring), the generated component-override barrel driven by pre-hooks, and byte-identical Vue output after the `templates/` restructure.
 
 ## ADDED Requirements
 
 ### Requirement: Scaffold emits the Angular tenant file set
 
-The generator SHALL emit a complete Angular tenant: workspace config (`package.json` with the pre-hook trio, `angular.json`, three tsconfigs), bootstrap assets (`src/index.html`, tenant-owned `src/app/app.component.ts`, `src/main.ts` wiring setupMocks, the `componentOverrides` barrel, the tenant `appShell`, slash-less `omitRoutePaths`), and supporting files (`.eslintrc.cjs`, `.gitignore` incl. `overrides.gen.ts`, `tokens.css`, both environment files, static `import-meta-env.d.ts`).
+The generator SHALL emit a complete Angular tenant: workspace config (`package.json` with the pre-hook trio, `angular.json`, and four tsconfigs — solution `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `tsconfig.scripts.json`), bootstrap assets (`src/index.html`, the `componentOverrides` barrel, `src/main.ts` wiring setupMocks and the `appShell` opt-in wiring), and supporting files (`.eslintrc.cjs`, `.gitignore` incl. `overrides.gen.ts`, `tokens.css`, both environment files, static `import-meta-env.d.ts`).
 
 #### Scenario: Fixture tenant scaffold produces the core files
 
 - **WHEN** the Angular generator scaffolds tenant `zen-plants` with fixture metadata
-- **THEN** `package.json`, `angular.json`, the three tsconfigs, `src/index.html`, `src/app/app.component.ts`, `src/main.ts`, `src/styles/tokens.css`, both environment files, and `src/import-meta-env.d.ts` all exist in the output directory
+- **THEN** `package.json`, `angular.json`, the four tsconfigs, `scripts/gen-component-overrides.ts`, `src/index.html`, `src/main.ts`, `src/styles/tokens.css`, both environment files, and `src/import-meta-env.d.ts` all exist in the output directory
 
 #### Scenario: Generated package.json carries the pre-hook trio
 
@@ -39,18 +39,23 @@ The generator SHALL allocate the dev port as max+1 of `serve.options.port` value
 - **WHEN** no `apps/*-angular/angular.json` declares a serve port
 - **THEN** the scaffolded tenant receives port 3200
 
-### Requirement: Tenant owns its app shell
+### Requirement: Tenant shell is opt-in
 
-The generator SHALL emit `src/app/app.component.ts` — a tenant shell component with selector `{prefix}-root`, class `{Prefix}App` (kebab-to-pascal from the prefix), and a nav + `<router-outlet>` template — and SHALL emit `src/index.html` hosting `<{prefix}-root>` (never the shell's `<app-root>`). `src/main.ts` SHALL wire the white-label `appShell` to the emitted shell component. No shell-related prompt is offered.
+The generator SHALL offer an `appShell` confirm (default `false`, Angular tenants only) and SHALL make the tenant-owned shell opt-in based on its result. Opting in emits the tenant shell component, host tag, and bootstrap wiring; declining skips the component, keeps the shell's own host tag, and leaves the wiring as a commented hint in `src/main.ts`.
 
-#### Scenario: Scaffolded tenant hosts its own shell tag
+#### Scenario: Opted-in tenant hosts its own shell tag
 
-- **WHEN** a tenant is scaffolded with prefix `zp`
-- **THEN** `src/app/app.component.ts` contains `selector: 'zp-root'` and `export class ZpApp {}`, `src/index.html` contains `<zp-root></zp-root>` and no `<app-root>`, and `src/main.ts` wires `appShell` resolving `ZpApp` from `./app/app.component`
+- **WHEN** a tenant is scaffolded with prefix `zp` and the `appShell` confirm is accepted
+- **THEN** `src/app/app.component.ts` contains `selector: 'zp-root'` and `export class ZpApp {}`, `src/index.html` contains `<zp-root></zp-root>` and no `<app-root>`, and `src/main.ts` contains the active line `appShell: () => import('./app/app.component').then((m) => m.ZpApp),`
+
+#### Scenario: Opted-out tenant falls back to the shell tag
+
+- **WHEN** a tenant is scaffolded with the `appShell` confirm declined (default)
+- **THEN** `src/app/app.component.ts` is not emitted, `src/index.html` hosts `<app-root>`, and `src/main.ts` contains the same wiring line commented out (`// appShell: () => import('./app/app.component').then((m) => m.{Prefix}App),`)
 
 #### Scenario: fp tenant mirrors the fake-plants reference shape
 
-- **WHEN** a tenant is scaffolded with prefix `fp`
+- **WHEN** a tenant is scaffolded with prefix `fp` and the tenant shell opted in
 - **THEN** the emitted shell matches the `apps/fake-plants-angular` `src/app/app.component.ts` shape: selector `fp-root`, class `FpApp`, BEM classes prefixed `fp-`
 
 ### Requirement: Optional override component follows the white-label key scheme

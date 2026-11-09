@@ -1,6 +1,6 @@
 # forma-initiale — Agent Guide
 
-Turborepo + bun monorepo. Hexagonal layers: `domain → presenters → infra → packages/ui (framework-agnostic) → apps`. Two shells (Vue 3, Angular 22) + tenants extending shells via app factories.
+Turborepo + bun monorepo. Hexagonal layers: `domain → presenters → infra → packages/ui (framework-agnostic) → apps`. Two shells (Vue 3, Angular 22) + tenants extending shells via app factories. Mirror tenants (mirror-tenant-vue, mirror-tenant-angular) are the single-source-of-truth apps the tenant generators read their static templates from.
 
 ## Commands
 
@@ -27,6 +27,8 @@ apps/
   white-label-angular/ — Angular 22 shell (zoneless, signals). Exports ./app, ./fe-property-shim
   fake-plants-angular/ — Angular 22 tenant, extends shell
   docs/                — Astro + Starlight
+  mirror-tenant-vue/   — Vue mirror tenant (SoT for vue tenant generator statics)
+  mirror-tenant-angular/ — Angular mirror tenant (SoT for angular tenant generator statics + scripts)
 packages/
   domain/  presenters/  infra/  ui/  utils/  generator/   — @repo/* scope
   eslint-config/       — CJS ESLint 8
@@ -41,6 +43,7 @@ Layer direction is enforced: apps must consume `fe-*` wrappers from `@repo/ui`, 
 - **ESLint 8 CJS — do NOT upgrade to ESLint 9 / flat config.** Plugins (`@typescript-eslint/*`, `eslint-plugin-vue`, `vue-eslint-parser`) must stay hoisted in root `devDependencies` (bun leaves them isolated otherwise). New plugin? Mirror in root devDeps.
 - **Prettier:** `singleQuote: true`, `semi: false`.
 - **Vite+ `vp` CLI** — `vite`/`vitest` are npm-aliased to `@voidzero-dev/vite-plus-core/test` at root.
+- **Tenant generator statics = mirror SoT:** templates in `packages/generator/src/templates/{vue,angular}.ts` read files from `apps/mirror-tenant-*` via `readMirrorFiles` (helpers/file-io.ts) instead of duplicating content; edit the mirror app, not the template literals. Angular mirror `scripts/` is covered by its `tsconfig.scripts.json` project (VSCode needs `@types/node` there).
 - **Vue shell vite config:** `apps/white-label-vue/vite.config.base.ts` exports `defineWhiteLabelViteConfig()` — `isCustomElement` for `fe-*`, AutoImport (`vue`, `vue-router`), Components dirs (tenant dirs scanned FIRST so they win name clashes), `devPort` opt. `server.watch.ignored` re-includes `node_modules/@repo/**` symlinks — without it, HMR breaks on workspace packages.
 - **App factory (Vue):** `createWhiteLabelApp()` in `white-label-vue/src/bootstrap/app.ts`; tenants import `white-label-vue/app` (workspace name, not `@repo/*`). Supports `routes`, `extendRoutes`, `omitRoutePaths`, `appShell`, `metaMap`.
 - **`white-label-angular` `"./styles"` export is STALE** — points at `src/styles/index.ts` which does not exist (dir has `base.css`/`tokens.css` only). `fake-plants-angular/angular.json` deep-refs `../white-label-angular/src/styles/*` directly — accepted interim, planned for consolidation with Angular generator work.

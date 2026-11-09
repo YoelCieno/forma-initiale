@@ -661,6 +661,47 @@ import { createWhiteLabelApp } from './bootstrap/init'
 
 ---
 
+## mirror-tenant-vue
+
+**Purpose**: Vue 3 mirror tenant — generator static-file SoT. `packages/generator/src/templates/vue.ts` reads tsconfig.json, src/styles/index.ts, .eslintrc.cjs, vitest.config.ts, vitest.setup.ts, src/main.spec.ts via `readMirrorFiles`; package.json read + renamed per tenant. Edit this app to change generated tenant statics.
+
+**Location**: `apps/mirror-tenant-vue/`
+
+**Key Files**:
+
+- `src/main.ts` — `createWhiteLabelApp({ metaMap: mirrorTenantMap })` (tenant scaffold shape)
+- `package.json` — SoT for new-tenant package.json (name rewritten by generator)
+- `tsconfig.json` — SoT, copied verbatim (extends vite.json, strictNullChecks: true)
+- `vitest.config.ts` / `vitest.setup.ts` — SoT, copied verbatim
+- `src/styles/index.ts` + `tokens.css` — SoT styles entry
+- `src/main.spec.ts` — SoT tenant bootstrap spec
+- `src/components/`, `src/pages/` — placeholders (empty)
+
+**Dependencies**: white-label-vue, @repo/infra, @repo/presenters, @repo/ui, vue, vue-router
+
+---
+
+## mirror-tenant-angular
+
+**Purpose**: Angular 22 mirror tenant — generator static-file SoT (`templates/angular.ts`). Reads tsconfig*.json (incl. **tsconfig.scripts.json** for `scripts/*` with `types: ["node"]`), .eslintrc.cjs, .gitignore, src/import-meta-env.d.ts, src/main.spec.ts, scripts/gen-component-overrides.ts via `readMirrorFiles`; package.json/angular.json read + projects rewritten per tenant (serve prebundle:false + devPort, test setupFiles element-internals).
+
+**Location**: `apps/mirror-tenant-angular/`
+
+**Key Files**:
+
+- `package.json` — SoT; owns ng script set, predev/prebuild/pretest run overrides generator
+- `angular.json` — SoT; generator rewrites `projects` per tenant
+- `tsconfig.scripts.json` — Separate TS project for `scripts/**` (needs `@types/node`)
+- `scripts/gen-component-overrides.ts` — Scans `src/components/*.component.ts` for `export class`, emits `src/components/overrides.gen.ts` (`componentOverrides` registry; filename stem = key). Uses `fileURLToPath` (not `import.meta.dir`)
+- `src/main.ts` — tenant scaffold shape with appShell placeholder
+- `src/main.spec.ts`, `src/import-meta-env.d.ts` — SoT, copied verbatim
+- `src/styles/tokens.css` — cyberpunk token polish
+- `src/components/overrides.gen.ts` — GENERATED, do not edit
+
+**Dependencies**: white-label-angular, @angular/* ^22, @repo/infra, @repo/presenters, @repo/ui, @repo/utils
+
+---
+
 ## docs
 
 **Purpose**: Documentation site built with Astro + Starlight.
@@ -687,28 +728,34 @@ import { createWhiteLabelApp } from './bootstrap/init'
 
 ## @repo/generator
 
-**Purpose**: Pinion-based code generator for scaffolding new Vue tenant apps. Interactive prompts, case transforms, MSW registration integration.
+**Purpose**: Pinion-based code generator for scaffolding new tenant apps (Vue + Angular). Interactive prompts, case transforms, MSW registration integration. Static tenant files derive from the mirror apps (`apps/mirror-tenant-vue`, `apps/mirror-tenant-angular`) as single source of truth — edit the mirror, not the templates.
 
 **Location**: `packages/generator/src/`
 
 **Key Files**:
 
-- `index.ts` — Barrel exports: `generate()`, `validateHex`, `getThemeClass`
-- `generators/vue-tenant.tpl.ts` — Main generator: `generate(ctx)`, sub-fns `renderSetup`, `renderSourceFiles`, `renderConditionalAssets`, `renderTestInfra`, `mswRegistration`
+- `index.ts` — Barrel exports: `generate()` (vue-tenant), `validateHex`, `getThemeClass`, `TenantContext`, `Theme`
+- `generators/vue-tenant.tpl.ts` — Vue generator: `generate(ctx)`, sub-fns `renderSetup`, `renderSourceFiles`, `renderConditionalAssets`, `renderTestInfra`
 - `generators/vue-tenant.tpl.spec.ts` — Orchestration tests
+- `generators/angular-tenant.tpl.ts` — Angular generator: `generate(ctx)` — prompts (incl. angular-only `appShell` q), case transforms, `assignAngularPort`, then `renderSetup` (package.json, angular.json, tsconfig.json/app/spec/**scripts**, index.html, eslintrc, gitignore, `scripts/gen-component-overrides.ts`), `renderSourceFiles` (main.ts, appShell-conditional app.component.ts, tokens.css, environments, import-meta-env.d.ts, main.spec), `renderConditionalAssets` (override component or .gitkeep), `writeInfraMetadata`, `copyServiceWorker`, `installDeps`, `verifyScaffold`
+- `generators/angular-tenant.tpl.spec.ts` — Orchestration tests
 - `helpers/cases.ts` — Kebab/Pascal/Camel case transforms + prefix derivation
 - `helpers/cases.spec.ts` — Case transform tests
 - `helpers/palette.ts` — Hex color validation + theme class helper
 - `helpers/palette.spec.ts` — Palette tests
+- `helpers/file-io.ts` — `fileIo()` factory: `readRepoFile`, `readFileData<T>`, `writeFileData`, `copyMswWorker`, `readMirrorFiles(files, dir)` — returns zero-arg readers `Record<relPath, () => string>` keyed under mirror dir; exports `REPO_ROOT` anchor
+- `helpers/file-io.spec.ts` — File I/O tests
+- `helpers/framework-from-entry.ts` — `inferFramework(entryPath)` — vue | angular | react
 - `helpers/infra-metadata.ts` — `writeInfraMetadata()` — writes fixture metadata to `packages/infra/src/metadata/<name>.ts` + idempotent barrel line append to `packages/infra/src/index.ts` (keys `${name}-alpha/beta/gamma`)
 - `helpers/infra-metadata.spec.ts` — Metadata routing + idempotency tests
 - `helpers/scaffold.ts` — Shared scaffold utilities (fs writes used by generator pipeline)
-- `helpers/error.ts`, `helpers/mocks.ts`, `helpers/port-allocator.ts` — Error handling, mock ctx helpers, Vite dev-port allocation (base 3100)
-- `models/index.ts` — `VueTenantContext` + `Theme` type
-- `prompts/index.ts` — Interactive tenant prompts (name, description, theme, metadata, component override, MSW)
+- `helpers/error.ts`, `helpers/mocks.ts`, `helpers/port-allocator.ts` — Error handling, mock ctx helpers, dev-port allocation per framework
+- `helpers/index.ts` — Helper barrel (cases, error, framework-from-entry, infra-metadata, mocks, palette, port-allocator, scaffold, file-io)
+- `models/main.ts` — `TenantContext` (Pinion ctx: name/Name/camelName/description/metadataMode/theme/brandHex/overrideComponent*/prefix/devPort/framework/appShell), `Theme` ('default'|'cyberpunk'|'coffeecup'|'silk'|'custom'), `Framework` ('vue'|'angular'|'react'), `MockedData`
+- `prompts/index.ts` — Interactive tenant prompts (name, description, theme, metadata, component override, MSW; framework-specific including angular-only appShell)
 - `prompts/index.spec.ts` — Prompt shape tests
-- `templates/vue.ts` — Vue tenant output templates (package.json, vite.config, main.ts, styles, tests, env); ctx-free entries are plain string constants
-- `templates/angular.ts` — Angular tenant output templates (package.json, angular.json, tsconfigs, environments, gitignore)
+- `templates/vue.ts` — Vue tenant output templates. Dynamic: `packageJson` (mirror package.json read + renamed), `viteConfig`, `indexHtml`, `mainTs` (createWhiteLabelApp + metaMap), `componentVue`, `env`/`envExample`. Static SoT readers via `readMirrorFiles('apps/mirror-tenant-vue')`: `tsconfigJson`, `stylesIndex`, `eslintrc`, `vitestSetup`, `vitestConfig`, `mainSpec`
+- `templates/angular.ts` — Angular tenant output templates. Dynamic: `packageJson` (mirror read + renamed), `angularJson` (mirror read, projects rewritten: serve prebundle:false + devPort, test setupFiles element-internals), `indexHtml` (`<prefix-root>` host), `appComponentTs` (appShell-conditional), `mainTs`, `environmentTs`/`environmentDevTs`, `overrideComponent`. Static SoT readers via `readMirrorFiles('apps/mirror-tenant-angular')`: `tsconfigJson`, `tsconfigAppJson`, `tsconfigSpecJson`, `tsconfigScriptsJson`, `eslintrc`, `gitignore`, `importMetaEnvDts`, `mainSpec`, `genComponentOverridesScript`
 - `templates/common.ts` — Framework-shared templates (`tokensCss`, `metadataTs`, `gitkeep`)
 - `templates/{vue,angular,common}.spec.ts` + `templates/angular.gen-component-overrides.spec.ts` — Template rendering tests
 - `msw/add-tenant.ts` — Pure fn: `addTenantConfig(configs, prefix, names)` — validates + appends tenant entry
@@ -721,26 +768,30 @@ import { createWhiteLabelApp } from './bootstrap/init'
 
 - `@featherscloud/pinion` (^0.5.7) — Code generator framework (renderTemplate, toFile, when, prompt)
 - `inquirer` (^9) — Interactive CLI prompts
+- `apps/mirror-tenant-vue`, `apps/mirror-tenant-angular` — Static-file SoT read at generation time via `readMirrorFiles`/`readRepoFile` (fs, no workspace dep)
 - `@repo/infra` (indirect: writes metadata to `packages/infra/src/metadata/<name>.ts` + barrel line, mock data to `packages/infra/src/mocks/data/mocked-data.json`)
 
 **Exports**:
 
-- `generate(ctx: VueTenantContext)` — Main generator entry point (Pinion task chain)
-- `VueTenantContext` (type) — `{ name, Name, camelName, description, metadataMode, theme, brandHex?, overrideComponent, overrideComponentName?, registerMsw?, prefix }`
-- `Theme` (type) — `'default' | 'awesome' | 'shoelace' | 'custom'`
+- `generate(ctx: TenantContext)` — Main generator entry point (Pinion task chain; re-exported from vue-tenant.tpl)
+- `TenantContext` (type) — `{ name, Name, camelName, description, metadataMode, theme, brandHex?, overrideComponent, overrideComponentName?, registerMsw?, prefix, devPort, framework, appShell }`
+- `Theme` (type) — `'default' | 'cyberpunk' | 'coffeecup' | 'silk' | 'custom'`
 - `validateHex(hex: string): boolean` — Validates hex color string
 - `getThemeClass(theme: Theme): string` — Returns WA theme class name
 
 **Usage**:
 
 ```bash
-# Interactive
+# Interactive — Vue tenant
 bun run generate:vue-tenant
+
+# Interactive — Angular tenant (no root script yet — run pinion directly)
+bun x pinion packages/generator/src/generators/angular-tenant.tpl.ts
 ```
 
 ```typescript
 import { generate } from '@repo/generator'
-import type { VueTenantContext } from '@repo/generator'
+import type { TenantContext } from '@repo/generator'
 const ctx = await generate({ pinion: { force: true } })
 ```
 

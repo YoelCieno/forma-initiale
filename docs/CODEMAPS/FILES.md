@@ -23,6 +23,8 @@ forma-initiale/
 │   ├── white-label-angular/# Angular 22 SPA — layer base for Angular tenants
 │   ├── fake-plants-vue/    # Vue 3 tenant app — plants-themed store
 │   ├── fake-plants-angular/# Angular 22 tenant app — plants-themed store (port 4201)
+│   ├── mirror-tenant-vue/   # Vue mirror tenant (SoT for vue tenant generator statics)
+│   ├── mirror-tenant-angular/# Angular mirror tenant (SoT for angular tenant generator statics)
 │   └── docs/              # Astro + Starlight docs site
 │
 ├── packages/
@@ -223,33 +225,50 @@ packages/generator/
     │
     ├── generators/
     │   ├── vue-tenant.tpl.ts      # Pinion generator: renderSetup, renderSourceFiles,
-    │   │                           # renderConditionalAssets, renderTestInfra, mswRegistration
-    │   └── vue-tenant.tpl.spec.ts # Orchestration tests
+    │   │                           # renderConditionalAssets, renderTestInfra
+    │   ├── vue-tenant.tpl.spec.ts # Orchestration tests
+    │   ├── angular-tenant.tpl.ts  # Angular generator: renderSetup (incl. tsconfig.scripts.json
+    │   │                           # + scripts/gen-component-overrides.ts emission), renderSourceFiles,
+    │   │                           # renderConditionalAssets
+    │   └── angular-tenant.tpl.spec.ts # Orchestration tests
     │
     ├── helpers/
+    │   ├── index.ts              # Helper barrel
     │   ├── cases.ts              # Kebab/Pascal/Camel case transforms + prefix derivation
     │   ├── cases.spec.ts         # Case transform tests
     │   ├── error.ts              # Scaffold error helpers
+    │   ├── file-io.ts            # fileIo() factory — readRepoFile, readFileData, writeFileData,
+    │   │                         # copyMswWorker, readMirrorFiles (mirror-SoT readers) + REPO_ROOT
+    │   ├── file-io.spec.ts       # File I/O tests
+    │   ├── framework-from-entry.ts # inferFramework() — framework from generator entry URL
+    │   ├── framework-from-entry.spec.ts
     │   ├── infra-metadata.ts     # writeInfraMetadata() — fixture metadata → packages/infra + barrel line (idempotent)
     │   ├── infra-metadata.spec.ts
     │   ├── mocks.ts              # Mock Pinion context for tests
+    │   ├── mocks.spec.ts
     │   ├── palette.ts            # Hex validation + theme class helper
     │   ├── palette.spec.ts       # Palette tests
-    │   ├── port-allocator.ts     # findNextDevPort — Vite dev-port allocation (base 3100)
+    │   ├── port-allocator.ts     # findNextDevPort — dev-port allocation per framework
+    │   ├── port-allocator.spec.ts
     │   ├── scaffold.ts           # Shared fs scaffold utilities (writeFileTree, etc.)
     │   └── scaffold.spec.ts      # Scaffold tests
     │
     ├── models/
-    │   ├── index.ts              # VueTenantContext + Theme type definitions
-    │   └── main.ts               # Model helpers
+    │   ├── index.ts              # Barrel: main + ports + verify
+    │   ├── main.ts               # TenantContext (pinion ctx), Theme/Framework types, MockedData
+    │   └── ports.ts              # PortScan / AngularJson types — per-framework tenant-dir scan + dev-port extraction
+    │
+    ├── verify/
+    │   ├── index.ts              # Verify barrel
+    │   ├── options.ts            # options() factory — verification options
+    │   ├── orchestrator.ts       # verification() factory — scaffold-verification orchestrator
+    │   └── probe.ts              # probing() factory — per-framework scaffold probe
     │
     ├── msw/
     │   ├── add-tenant.ts             # addTenantConfig() — validates + appends MSW tenant entry
     │   ├── add-tenant.spec.ts        # MSW config tests
     │   ├── copy-service-worker.ts    # Framework-aware worker copy (apps/white-label-<fw>/ → apps/<name>-<fw>/public/)
     │   ├── copy-service-worker.spec.ts # Covers vue + angular targets
-    │   ├── file-io.ts                # fileIo() factory — readRepoFile, readFileData, writeFileData, copyMswWorker, readMirrorFiles
-    │   ├── file-io.spec.ts           # File I/O tests
     │   ├── register-tenant.ts        # CLI for MSW tenant registration (moved from scripts/)
     │   └── register-tenant.spec.ts   # Register-tenant CLI tests
     │
@@ -261,10 +280,79 @@ packages/generator/
     │   └── index.ts              # Shared utils
     │
     └── templates/
-        ├── vue.ts                # Vue tenant templates (static entries = string constants)
-        ├── angular.ts            # Angular tenant templates
+        ├── vue.ts                # Vue tenant templates — dynamic parts from ctx; static parts are
+        │                         # readMirrorFiles readers from apps/mirror-tenant-vue (tsconfig,
+        │                         # eslintrc, vitest config/setup, main.spec, styles index); package.json
+        │                         # read from mirror + renamed
+        ├── angular.ts            # Angular tenant templates — dynamic (package.json, angular.json,
+        │                         # indexHtml, appComponentTs, mainTs, environments, overrideComponent);
+        │                         # statics read from apps/mirror-tenant-angular via readMirrorFiles
+        │                         # (tsconfig*, eslintrc, gitignore, import-meta-env.d.ts, main.spec,
+        │                         # scripts/gen-component-overrides.ts)
         ├── common.ts             # Shared templates (tokensCss, metadataTs, gitkeep)
         └── *.spec.ts             # Template rendering tests
+```
+
+---
+
+## apps/mirror-tenant-vue
+
+Vue 3 mirror tenant — **generator SoT**. `packages/generator/src/templates/vue.ts` reads
+static files from here via `readMirrorFiles` (helpers/file-io.ts); edit this app, not template
+literals.
+
+```
+apps/mirror-tenant-vue/
+├── package.json             # Read by templates/vue.ts packageJson() — name rewritten per tenant
+├── tsconfig.json            # Copied verbatim to new tenants
+├── vite.config.ts           # Tenant-shape config (defineWhiteLabelViteConfig)
+├── vitest.config.ts         # Copied verbatim
+├── vitest.setup.ts          # Copied verbatim (fe-* custom element config)
+├── .eslintrc.cjs            # Copied verbatim
+├── .env / .env.example      # VITE_TENANT_ID template
+├── index.html               # Tenant-shaped shell
+├── public/mockServiceWorker.js
+└── src/
+    ├── main.ts              # createWhiteLabelApp({ metaMap: mirrorTenantMap })
+    ├── main.spec.ts         # Copied verbatim to new tenants
+    ├── styles/
+    │   ├── index.ts         # Copied verbatim (new tenant styles entry)
+    │   └── tokens.css       # Default theme tokens
+    ├── components/          # Placeholder (empty)
+    └── pages/               # Placeholder (empty)
+```
+
+---
+
+## apps/mirror-tenant-angular
+
+Angular 22 mirror tenant — **generator SoT**. `packages/generator/src/templates/angular.ts`
+reads static files from here via `readMirrorFiles`; `tsconfig.scripts.json` covers `scripts/*`
+(needs `@types/node`).
+
+```
+apps/mirror-tenant-angular/
+├── package.json             # Read by templates/angular.ts packageJson() — owns ng script set
+│                            # (predev/prebuild/pretest → gen-component-overrides)
+├── angular.json             # Read by templates/angular.ts angularJson() — projects rewritten per tenant
+├── tsconfig.json            # Copied verbatim to new tenants
+├── tsconfig.app.json        # Copied verbatim
+├── tsconfig.spec.json       # Copied verbatim
+├── tsconfig.scripts.json    # Copied verbatim — scripts/* project, types: ["node"]
+├── .eslintrc.cjs            # Copied verbatim
+├── public/mockServiceWorker.js
+├── scripts/
+│   └── gen-component-overrides.ts  # Regenerates src/components/overrides.gen.ts from
+│                                   # src/components/*.component.ts (filename stem = registry key)
+└── src/
+    ├── main.ts              # createWhiteLabelApp({ ... }) — tenant scaffold shape
+    ├── main.spec.ts         # Copied verbatim to new tenants
+    ├── index.html           # HTML shell
+    ├── import-meta-env.d.ts # Copied verbatim (gotcha #7)
+    ├── environments/        # environment.ts / environment.development.ts
+    ├── styles/tokens.css    # Cyberpunk token polish
+    └── components/
+        └── overrides.gen.ts # GENERATED — component-overrides registry map
 ```
 
 ---

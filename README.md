@@ -1,10 +1,10 @@
 # forma-initiale
 
-Build systems monorepo scaffold using hexagonal architecture with Turborepo + bun.
+Micro-FE multitenant solution for a White-Label product based on Layer System Strategy.
 
 ## Architecture
 
-Hexagonal (Ports & Adapters):
+Hexagonal:
 
 ```
 domain → presenters → infra → packages/ui (agnostic) → apps (framework-specific)
@@ -16,14 +16,14 @@ domain → presenters → infra → packages/ui (agnostic) → apps (framework-s
 - **packages/ui** — shared components, framework-agnostic (vanilla TS)
 - **apps** — framework-specific application wrappers
 
-| App                    | Stack                            | Status              |
-| ---------------------- | -------------------------------- | ------------------- |
-| `apps/white-label-vue`      | Vue 3 + Vite 6                   | Active (layer base) |
-| `apps/fake-plants-vue`      | Vue 3 tenant app (plants-themed) | Active              |
-| `apps/docs`                 | Astro + Starlight                | Active              |
-| `apps/white-label-angular`  | Angular 22 (zoneless, signals)   | Active (layer base) |
-| `apps/fake-plants-angular`  | Angular 22 tenant app            | Active              |
-| `apps/web-react`            | React                            | Future              |
+| App                        | Stack                            | Status              |
+| -------------------------- | -------------------------------- | ------------------- |
+| `apps/white-label-vue`     | Vue 3 + Vite 6                   | Active (layer base) |
+| `apps/fake-plants-vue`     | Vue 3 tenant app (plants-themed) | Active              |
+| `apps/docs`                | Astro + Starlight                | Active              |
+| `apps/white-label-angular` | Angular 22 (zoneless, signals)   | Active (layer base) |
+| `apps/fake-plants-angular` | Angular 22 tenant app            | Active              |
+| `apps/web-react`           | React                            | Future              |
 
 ## Project structure
 
@@ -60,14 +60,14 @@ Starts all apps in dev mode (white-label-vue on localhost:3100, fake-plants-vue 
 
 ## Commands
 
-| Command          | Action                                |
-| ---------------- | ------------------------------------- |
-| `bun run dev`    | Start all apps (dev mode, persistent) |
-| `bun run build`  | Build all apps                        |
-| `bun run lint`   | Lint all packages                     |
-| `bun run test`   | Run tests (Vitest; Angular apps via `ng test`)    |
-| `bun run format` | Format code (Prettier)                |
-| `bun run generate:vue-tenant` | Scaffold a new Vue tenant app (interactive) |
+| Command                       | Action                                                             |
+| ----------------------------- | ------------------------------------------------------------------ |
+| `bun run dev`                 | Start all apps (dev mode, persistent)                              |
+| `bun run build`               | Build all apps                                                     |
+| `bun run lint`                | Lint all packages                                                  |
+| `bun run test`                | Run tests (Vitest; Angular apps via `ng test`)                     |
+| `bun run format`              | Format code (Prettier)                                             |
+| `bun run generate:vue-tenant` | Scaffold a new Vue tenant app (interactive)                        |
 | `bun run register-tenant`     | Register MSW tenant config (`--prefix <key> --names-json '[...]'`) |
 
 ## Dependency Automation
@@ -156,6 +156,7 @@ bun run generate:vue-tenant
 ```
 
 Interactive prompts:
+
 - **Tenant name** (kebab-case, e.g. `my-tenant`)
 - **Description** — short description
 - **Metadata mode** — Fixture (static product map) or None
