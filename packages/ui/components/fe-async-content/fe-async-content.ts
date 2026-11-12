@@ -17,10 +17,15 @@ export const FeAsyncContent = define<FeAsyncContentElement>({
         return html`
           <slot name="loading">
             <div class="fe-async-content__loading">
-              <wa-spinner></wa-spinner>
-              <span>Loading...</span>
+              <wa-spinner />
             </div>
           </slot>
+        `.css`
+          .fe-async-content__loading {
+            text-align: center;
+            font-size: 7.5rem;
+            margin-top: 2.5rem;
+          }
         `
       }
       if (host.error) {

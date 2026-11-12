@@ -10,9 +10,9 @@ import { ProductsService } from '../services/products.service'
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <div class="products-page">
+      <fe-loader slot="loading" [loading]="loading()" />
       <h1 class="products-page__title">List of Products</h1>
       <fe-async-content [loading]="loading()" [error]="error()">
-        <fe-loader slot="loading"></fe-loader>
         <p slot="error" class="products-page__error">{{ error() }}</p>
         <div class="products-page__grid">
           @for (product of products(); track product.id) {
@@ -30,7 +30,7 @@ import { ProductsService } from '../services/products.service'
     }
     .products-page__title {
       font-size: var(--fs-xl);
-      margin-bottom: 1.5rem;
+      margin: 1rem 0;
     }
     .products-page__error {
       padding: 1rem;

@@ -25,9 +25,10 @@ describe('ProductsPage', () => {
     await Promise.resolve()
 
     await vi.waitFor(() => {
-      // fe-loader is in shadow DOM, so wrapper.text() won't see it.
-      // Check for fe-loader element in the loading slot instead.
+      // fe-loader is in shadow DOM and loading indicator lives in fe-async-content shadow DOM,
+      // so wrapper.text() won't see it — check the host element instead.
       expect(wrapper.find('fe-loader').exists()).toBe(true)
+      expect(wrapper.find('fe-async-content').exists()).toBe(true)
     })
     // During loading, error text is empty (error=undefined → empty interpolation).
     expect(wrapper.find('.products-page__error').text()).toBe('')

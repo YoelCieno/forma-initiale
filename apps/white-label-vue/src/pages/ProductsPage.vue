@@ -7,10 +7,9 @@ const { products, loading, error } = useProducts();
 
 <template>
   <div class="products-page">
+    <fe-loader slot="loading" :loading />
     <h1 class="products-page__title">List of Products</h1>
-
     <fe-async-content :loading :error>
-      <fe-loader slot="loading" />
       <p slot="error" class="products-page__error">{{ error }}</p>
       <div class="products-page__grid">
         <ProductCard
@@ -31,7 +30,7 @@ const { products, loading, error } = useProducts();
 }
 .products-page__title {
   font-size: var(--fs-xl);
-  margin-bottom: 1.5rem;
+  margin: 1rem 0;
 }
 .products-page__error {
   padding: 1rem;
