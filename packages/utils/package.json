@@ -4,12 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./type-guards": "./src/type-guards.ts",
-    "./object": "./src/object.ts",
-    "./string": "./src/string.ts",
-    "./validate": "./src/validate.ts",
-    "./css": "./src/css.ts",
-    "./error": "./src/error.ts"
+    ".": "./src/index.ts"
   },
   "license": "MIT",
   "scripts": {

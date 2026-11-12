@@ -1,5 +1,4 @@
-import { object } from '@repo/utils/object'
-import { typeGuards } from '@repo/utils/type-guards'
+import { object, typeGuards } from '@repo/utils'
 
 const { safeJsonParse, isObject } = object()
 const { isNumber } = typeGuards()

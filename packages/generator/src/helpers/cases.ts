@@ -1,4 +1,4 @@
-import { caseType } from '@repo/utils/string'
+import { caseType } from '@repo/utils'
 import { naming } from '@repo/domain'
 import type { TenantContext } from '../models'
 

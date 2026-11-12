@@ -431,12 +431,7 @@ const views = toProductViewList(products, metaMap)
 
 **Package Exports**:
 
-- `@repo/utils/type-guards` → `./src/type-guards.ts`
-- `@repo/utils/string` → `./src/string.ts`
-- `@repo/utils/object` → `./src/object.ts`
-- `@repo/utils/validate` → `./src/validate.ts`
-- `@repo/utils/css` → `./src/css.ts`
-- `@repo/utils/error` → `./src/error.ts`
+- `@repo/utils` → `./src/index.ts` (single barrel root; no subpath exports)
 
 **Dependencies**: None (pure TS)
 
@@ -445,9 +440,7 @@ const views = toProductViewList(products, metaMap)
 **Usage**:
 
 ```typescript
-import { isObject } from '@repo/utils/type-guards'
-import { toKebabCase } from '@repo/utils/string'
-import { getErrorMessage } from '@repo/utils/error'
+import { isObject, toKebabCase, getErrorMessage } from '@repo/utils'
 ```
 
 ---

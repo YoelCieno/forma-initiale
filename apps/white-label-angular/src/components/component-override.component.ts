@@ -8,7 +8,7 @@ import {
   type Type,
 } from '@angular/core'
 import { NgComponentOutlet } from '@angular/common'
-import { object } from '@repo/utils/object'
+import { object } from '@repo/utils'
 import { ProductCard } from './product-card.component'
 import { injectComponentOverride } from '../bootstrap/init'
 import { PRODUCT_CARD_INPUT_KEYS, type ProductCardInputs } from './product-card.model'
