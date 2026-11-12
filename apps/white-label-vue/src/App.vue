@@ -1,11 +1,7 @@
 <template>
   <nav>
-    <RouterLink to="/">
-      Products
-    </RouterLink>
-    <RouterLink to="/components">
-      Components
-    </RouterLink>
+    <RouterLink to="/">Products</RouterLink>
+    <RouterLink to="/components">Components</RouterLink>
   </nav>
 
   <main>
@@ -17,7 +13,6 @@
 nav {
   padding: 1rem;
   border-bottom: 1px solid var(--color-border);
-  margin-bottom: 1rem;
 
   a {
     margin-right: 1rem;

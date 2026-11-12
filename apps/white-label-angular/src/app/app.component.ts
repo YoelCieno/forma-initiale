@@ -22,7 +22,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
     .wl-nav {
       padding: 1rem;
       border-bottom: 1px solid var(--color-border);
-      margin-bottom: 1rem;
       a {
         margin-right: 1rem;
         text-decoration: none;

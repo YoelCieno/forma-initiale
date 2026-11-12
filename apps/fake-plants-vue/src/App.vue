@@ -13,7 +13,6 @@
 .fp-nav {
   padding: 1rem;
   border-bottom: 1px solid var(--color-border);
-  margin-bottom: 1rem;
 }
 .fp-nav a {
   margin-right: 1rem;
