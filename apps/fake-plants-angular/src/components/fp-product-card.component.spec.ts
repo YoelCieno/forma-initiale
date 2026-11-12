@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { provideZonelessChangeDetection } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { getProductImageUrl } from '@repo/infra'
 import { FpProductCard } from './fp-product-card.component'
+import { settle } from '@repo/utils'
 
 const baseInputs = {
   id: 'monstera-deliciosa',
@@ -16,6 +17,9 @@ const baseInputs = {
 }
 
 describe('FpProductCard', () => {
+  // hybrids deferred renders pending at teardown hit null parents in updateStyleElement
+  let fixtureRef: { destroy(): void } | undefined
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FpProductCard],
@@ -29,12 +33,17 @@ describe('FpProductCard', () => {
       fixture.componentRef.setInput(k as keyof typeof baseInputs, v),
     )
     fixture.detectChanges()
+    fixtureRef = fixture
     await fixture.whenStable()
-    await Promise.resolve()
-    await Promise.resolve()
+    await settle()
     fixture.detectChanges()
     return fixture
   }
+
+  afterEach(async () => {
+    await settle()
+    fixtureRef?.destroy()
+  })
 
   it('renders fe-img media from getProductImageUrl(id)', async () => {
     const fixture = await setup()

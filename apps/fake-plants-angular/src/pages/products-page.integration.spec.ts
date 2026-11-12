@@ -5,6 +5,7 @@ import { Router } from '@angular/router'
 import { createWhiteLabelApp } from 'white-label-angular/app'
 import { plantsMap } from '@repo/infra'
 import { FpProductCard } from '../components/fp-product-card.component'
+import { settle } from '@repo/utils'
 
 const sevenPlants = [
   'light-bearer',
@@ -22,11 +23,10 @@ const sevenPlants = [
   rate: (i % 5) + 1,
 }))
 
-const settle = async (n = 8): Promise<void> => {
-  for (let i = 0; i < n; i++) await Promise.resolve()
-}
-
 describe('tenant Products page — fp-product-card integration', () => {
+  // hybrids deferred renders pending at teardown hit null parents in updateStyleElement
+  let fixtureRef: { destroy(): void } | undefined
+
   beforeEach(() => {
     TestBed.resetTestingModule()
     vi.stubGlobal(
@@ -38,7 +38,9 @@ describe('tenant Products page — fp-product-card integration', () => {
     )
   })
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settle(8)
+    fixtureRef?.destroy()
     vi.unstubAllGlobals()
   })
 
@@ -57,17 +59,18 @@ describe('tenant Products page — fp-product-card integration', () => {
     }).compileComponents()
 
     const fixture = TestBed.createComponent(root)
+    fixtureRef = fixture
     fixture.detectChanges()
 
     const router = TestBed.inject(Router)
     await router.navigateByUrl('/')
-    await settle()
+    await settle(8)
     fixture.detectChanges()
     await fixture.whenStable()
-    await settle()
+    await settle(8)
     fixture.detectChanges()
 
-    const el = fixture.nativeElement as HTMLElement
+    const el: HTMLElement = fixture.nativeElement
     expect(el.querySelectorAll('fp-product-card').length).toBe(7)
     expect(el.querySelectorAll('app-product-card').length).toBe(0)
     expect(fetch).toHaveBeenCalledWith(
