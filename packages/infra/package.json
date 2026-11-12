@@ -8,7 +8,7 @@
     "./testing/element-internals": "./src/testing/element-internals.ts",
     "./mocks/browser": "./src/mocks/browser.ts",
     "./mocks/server": "./src/mocks/server.ts",
-    "./mocks/helpers": "./src/mocks/helpers/helpers.ts"
+    "./mocks/helpers": "./src/mocks/helpers/index.ts"
   },
   "license": "MIT",
   "scripts": {
