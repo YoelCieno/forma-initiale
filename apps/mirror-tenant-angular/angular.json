@@ -82,8 +82,10 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "setupFiles": [
-              "../../packages/infra/src/testing/element-internals.ts"
-            ]
+              "../../packages/infra/src/testing/element-internals.ts",
+              "../../packages/infra/src/testing/jsdom-css-noise.ts"
+            ],
+            "runnerConfig": "../../packages/infra/src/testing/jsdom-css-noise.ts"
           }
         }
       }

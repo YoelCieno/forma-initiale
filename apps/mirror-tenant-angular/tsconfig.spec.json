@@ -5,5 +5,5 @@
   "compilerOptions": {
     "types": ["vitest/globals", "node"]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "../../packages/infra/src/testing/element-internals.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts", "../../packages/infra/src/testing/element-internals.ts", "../../packages/infra/src/testing/jsdom-css-noise.ts"]
 }
