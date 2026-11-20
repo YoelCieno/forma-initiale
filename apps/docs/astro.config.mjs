@@ -5,7 +5,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Forma Initiale",
-      social: { github: "https://github.com/fer/forma-initiale" },
+      social: [
+        { label: "GitHub", href: "https://github.com/fer/forma-initiale", icon: "github" },
+      ],
       sidebar: [
         { label: "Home", link: "/" },
         {
@@ -17,7 +19,7 @@ export default defineConfig({
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          items: [{ autogenerate: { directory: "reference" } }],
         },
       ],
     }),
