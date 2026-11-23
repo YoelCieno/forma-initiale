@@ -8,5 +8,9 @@ export type TenantConfig = {
 }
 
 // TenantId is a string union derived from valid tenant keys.
-// Keep in sync with infra's mocked-data.json keys (wl, fp).
-export type TenantId = 'wl' | 'fp'
+// Keep in sync with infra's mocked-data.json keys (wl, fpv, mtv, ...).
+export type TenantId = 'wl' |
+  'fpv' |
+  'fpa' |
+  'mtv' |
+  'mta'

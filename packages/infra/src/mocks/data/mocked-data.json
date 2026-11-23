@@ -7,7 +7,23 @@
     },
     "rateType": "cyclic"
   },
-  "fp": {
+  "fpa": {
+    "names": [
+      "light-bearer",
+      "misty-biter",
+      "silent-trumpet",
+      "dancing-box",
+      "little-shade",
+      "crimson-veil",
+      "ember-leaf"
+    ],
+    "price": {
+      "base": 9.99,
+      "increment": 10
+    },
+    "rateType": "random"
+  },
+  "fpv": {
     "names": [
       "light-bearer",
       "misty-biter",

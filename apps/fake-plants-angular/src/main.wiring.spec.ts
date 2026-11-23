@@ -27,7 +27,7 @@ describe('tenant main bootstrap wiring', () => {
   it('passes tenant env and plantsMap to the factory', async () => {
     await import('./main')
 
-    expect(environment.tenantId).toBe('fp')
+    expect(environment.tenantId).toBe('fpa')
     expect(createWhiteLabelAppMock).toHaveBeenCalledTimes(1)
     expect(createWhiteLabelAppMock).toHaveBeenCalledWith(
       expect.objectContaining({

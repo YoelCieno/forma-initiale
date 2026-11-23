@@ -1,5 +1,5 @@
 export const environment = {
   enableMocks: false,
-  tenantId: 'fp',
+  tenantId: 'fpa',
   apiUrl: 'https://api.example.com/api',
 }

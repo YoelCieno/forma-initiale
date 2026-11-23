@@ -56,9 +56,9 @@ describe('products API handlers', () => {
       }
     })
 
-    it('GET /api/fp/products returns price>0, previousPrice=0', async () => {
+    it('GET /api/fpv/products returns price>0, previousPrice=0', async () => {
       const res = await fetch(`${BASE_URL}/api/fp/products`, {
-        headers: { 'x-tenant-id': 'fp' },
+        headers: { 'x-tenant-id': 'fpv' },
       })
       expect(res.status).toBe(200)
 

@@ -39,24 +39,24 @@ describe('product factory', () => {
       }
     })
 
-    it('fp tenant: price > 0, previousPrice is 0', () => {
-      const product = buildProduct('fp')
+    it('fpv tenant: price > 0, previousPrice is 0', () => {
+      const product = buildProduct('fpv')
       expect(product.price).toBeGreaterThan(0)
       expect(product.previousPrice).toBe(0)
     })
 
-    it('fp tenant: rate is 1-5 (random)', () => {
-      const products = Array.from({ length: 50 }, () => buildProduct('fp'))
+    it('fpv tenant: rate is 1-5 (random)', () => {
+      const products = Array.from({ length: 50 }, () => buildProduct('fpv'))
       for (const p of products) {
         expect(p.rate).toBeGreaterThanOrEqual(1)
         expect(p.rate).toBeLessThanOrEqual(5)
       }
     })
 
-    it('fp tenant: price increments with counter', () => {
+    it('fpv tenant: price increments with counter', () => {
       resetProductCounter()
-      const p1 = buildProduct('fp')
-      const p2 = buildProduct('fp')
+      const p1 = buildProduct('fpv')
+      const p2 = buildProduct('fpv')
       // counter 1: 9.99 + 1*10 = 19.99
       // counter 2: 9.99 + 2*10 = 29.99
       expect(p1.price).toBe(19.99)
@@ -86,8 +86,8 @@ describe('product factory', () => {
       expect(products).toHaveLength(5)
     })
 
-    it('returns correct count with fp tenant', () => {
-      const products = buildProductList('fp')
+    it('returns correct count with fpv tenant', () => {
+      const products = buildProductList('fpv')
       expect(products).toHaveLength(7)
     })
 
@@ -99,8 +99,8 @@ describe('product factory', () => {
       }
     })
 
-    it('all products in list have correct shape for fp', () => {
-      const products = buildProductList('fp')
+    it('all products in list have correct shape for fpv', () => {
+      const products = buildProductList('fpv')
       for (const p of products) {
         expect(p.price).toBeGreaterThan(0)
         expect(p.previousPrice).toBe(0)
