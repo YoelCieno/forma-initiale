@@ -21,7 +21,7 @@
     "@repo/infra": "*",
     "@repo/presenters": "*",
     "@repo/ui": "*",
-    "@vueuse/core": "^14.3.0",
+    "@vueuse/core": "^15.0.0",
     "vue": "^3.5.34",
     "vue-router": "^4.6.4"
   },
