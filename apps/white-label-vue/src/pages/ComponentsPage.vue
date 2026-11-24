@@ -35,7 +35,7 @@
   grid-template-columns: repeat(auto-fit, minmax(var(--min-width-layout), 1fr));
   column-gap: 2.25rem;
   max-width: var(--max-width-layout);
-  margin: 0 auto;
+  margin: 1.2rem auto 0;
   padding-bottom: 1.75rem;
 }
 .components-page__subsection {

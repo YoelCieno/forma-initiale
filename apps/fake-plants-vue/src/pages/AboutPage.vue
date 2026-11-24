@@ -22,15 +22,11 @@ import "@repo/ui/fe-card"
 @import '../styles/tokens.css';
 
 .about-page {
-  max-width: 50rem;
-  margin: 0 auto;
+  max-width: 75rem;
+  margin: 1.2rem auto 0;
   padding: 0 1rem;
 }
 .about-page__title {
   font-size: var(--fs-xl);
-  margin-bottom: 1.5rem;
-}
-.about-page__card {
-  padding: 1.5rem;
 }
 </style>
