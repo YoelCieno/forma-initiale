@@ -16,4 +16,4 @@ export {
   getThemeTokens,
 } from './palette'
 export { findNextDevPort } from './port-allocator'
-export { getMissingScaffoldFiles, getLog, outDir } from './scaffold'
+export { copyFavicon, getMissingScaffoldFiles, getLog, outDir } from './scaffold'

@@ -7,6 +7,7 @@ import {
 } from '@featherscloud/pinion'
 import {
   caseTransform,
+  copyFavicon,
   findNextDevPort,
   infraMetadata,
   getLog,
@@ -115,5 +116,6 @@ export const generate = (ctx: TenantContext): Promise<TenantContext> =>
     .then(renderTestInfra)
     .then(infraMetadata().writeInfraMetadata)
     .then(serviceWorker().copyServiceWorker)
+    .then(copyFavicon)
     .then(installDeps)
     .then(verifyScaffold)
